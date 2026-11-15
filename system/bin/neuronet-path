@@ -1,0 +1,55 @@
+#!/bin/bash
+# neuronet-path -- where NeuroNet is on this computer.
+#
+#   neuronet-path app     the NeuroNet app folder
+#   neuronet-path data    NeuroNet's data folder
+#   neuronet-path hidden <section>
+#                         succeeds (exit 0) when that section is switched off in
+#                         Settings -> Sections shown, so its shortcut does nothing
+#                         (Cam: hiding a section should also disable its shortcut)
+#
+# NeuroNet System plan, Stage 1 ("nothing should assume this computer"). The
+# answer is ~/.config/neuronet/paths.json, written by neuronet-setup when
+# NeuroNet is installed or moved:
+#     { "app": "/home/you/NeuroNet", "data": "/home/you/NeuroNet/neuronet_data" }
+# "data" may be left out: it's then the app's own neuronet_data folder, where
+# NeuroNet has always kept it. Everything that needs to find NeuroNet -- the
+# commands in ~/.local/bin, the desktop widgets, Game Mode -- asks here.
+set -euo pipefail
+CONF="${NEURONET_PATHS:-${XDG_CONFIG_HOME:-$HOME/.config}/neuronet/paths.json}"
+what="${1:-app}"
+[ -f "$CONF" ] || { echo "neuronet-path: $CONF is missing -- run neuronet-setup" >&2; exit 1; }
+app=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("app",""))' "$CONF")
+[ -n "$app" ] || { echo "neuronet-path: no \"app\" in $CONF" >&2; exit 1; }
+# NeuroNet's folder can't be / or a system folder (or the home folder itself):
+# the updater copies new code over it. On Cam's desktop (2026-10-01) a copy
+# made with an empty folder variable ("sudo rsync ... "$N/"") put NeuroNet in /,
+# and paths.json then said "app": "/".
+unsafe_app() {
+  case "$(realpath -m -- "$1")" in
+    /|/bin|/boot|/dev|/etc|/home|/lib|/lib64|/mnt|/media|/opt|/proc|/root|/run|/sbin|/srv|/sys|/tmp|/usr|/usr/*|/var|"$(realpath -m -- "$HOME")") return 0 ;;
+  esac; return 1
+}
+unsafe_app "$app" && { echo "neuronet-path: $CONF says NeuroNet is in $app -- that can't be right; run neuronet-setup from the NeuroNet folder" >&2; exit 1; }
+case "$what" in
+  app)  echo "$app" ;;
+  data) d=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("data") or "")' "$CONF")
+        echo "${d:-$app/neuronet_data}" ;;
+  hidden)
+        # hiddenSections in the data folder's neuronet_prefs.json; a child
+        # ("training:groups") is hidden with its parent, as in the app
+        d=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("data") or "")' "$CONF")
+        python3 - "${d:-$app/neuronet_data}/neuronet_prefs.json" "${2:?section}" <<'PY'
+import json, sys
+try:
+    hidden = json.load(open(sys.argv[1], encoding="utf-8")).get("hiddenSections") or []
+except (OSError, ValueError, AttributeError):
+    hidden = []
+key = sys.argv[2]
+# Music lives in M&T (the "stuff" section) since 2026-10-02
+top = {"music": "stuff"}.get(key.split(":")[0], key.split(":")[0])
+sys.exit(0 if key in hidden or top in hidden or key.split(":")[0] in hidden else 1)
+PY
+        ;;
+  *) echo "usage: neuronet-path app|data|hidden <section>" >&2; exit 2 ;;
+esac

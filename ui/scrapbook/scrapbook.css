@@ -1,0 +1,93 @@
+/* ==========================================================================
+   Scrapbook — the shelf of covers, and the materials panel beside Boards'
+   editor. Everything else is Boards' own (boards.css).
+   ========================================================================== */
+.sb-head, .sb-shelf, .sb-ed, .sb-cover-ed { --border: var(--line-strong, #4a3b2a); }
+
+/* ---- the shelf ---------------------------------------------------------- */
+.sb-shelf {
+  display: grid; gap: 22px 18px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+.sb-tile { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.sb-cover {
+  display: block; padding: 0; border: none; background: none; cursor: pointer;
+  align-self: flex-start; border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.08) inset;
+  transition: transform .15s ease;
+}
+.sb-cover:hover { transform: translateY(-3px) rotate(-0.6deg); }
+.sb-cover svg { display: block; border-radius: 6px; }
+.sb-cover-broken { width: 200px; height: 200px; background: var(--hover); border: 1px dashed var(--danger, #d44); }
+.sb-tile-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.sb-tile-btns .btn { padding: 3px 8px; font-size: 0.75rem; }
+.sb-tile .bd-del:hover { color: var(--danger, #d44); border-color: var(--danger, #d44); }
+
+/* ---- dialogs ------------------------------------------------------------ */
+.sb-seg { flex-wrap: wrap; }
+.sb-new-preview { display: flex; gap: 14px; align-items: flex-end; margin: 12px 0 4px; }
+.sb-new-preview svg { border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+.sb-cover-ed { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.sb-cover-pv, .sb-sticker-pv { flex: none; }
+.sb-cover-pv svg { display: block; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+.sb-sticker-pv {
+  width: 260px; min-height: 200px; display: grid; place-items: center; border-radius: 8px;
+  background: repeating-conic-gradient(#d9d9d9 0 25%, #f2f2f2 0 50%) 0 0 / 18px 18px;
+}
+.sb-sticker-pv img { max-width: 250px; max-height: 250px; filter: drop-shadow(1px 3px 4px rgba(0,0,0,.3)); }
+.sb-cover-opts { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 6px; }
+.sb-cover-opts input[type="range"] { width: 100%; }
+.sb-swatches { display: flex; flex-wrap: wrap; gap: 5px; }
+.sb-swatches .bd-sw { width: 22px; height: 22px; }
+.sb-small { align-self: flex-start; padding: 3px 8px; font-size: 0.75rem; }
+.sb-note { font-size: 0.72rem; color: var(--muted, var(--text-faint)); margin: 2px 0; }
+
+/* ---- the materials panel (Cam: "a collapseable scrapbook materials") ---- */
+.sb-mats {
+  flex: none; width: 236px; box-sizing: border-box; position: sticky; top: 0;
+  display: flex; align-items: flex-start;
+  max-height: calc(100vh - 160px);
+}
+.sb-mats-toggle {
+  flex: none; width: 18px; height: 54px; margin-right: 4px; padding: 0;
+  border: 1px solid var(--border); border-radius: 7px; cursor: pointer;
+  background: var(--card, var(--bg-elevated)); color: var(--muted, var(--text-faint));
+}
+.sb-mats-toggle:hover { color: var(--ink, var(--text)); border-color: var(--accent); }
+.sb-mats-body {
+  flex: 1; min-width: 0; max-height: calc(100vh - 160px); overflow-y: auto;
+  padding: 8px; box-sizing: border-box;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card, var(--bg-elevated));
+}
+.sb-mats.is-collapsed { width: 22px; }
+.sb-mats.is-collapsed .sb-mats-body { display: none; }
+.sb-mats-head { font-weight: 650; color: var(--ink, var(--text)); }
+.sb-group { border-top: 1px solid var(--border); padding: 6px 0; }
+.sb-group summary {
+  cursor: pointer; font-size: 0.66rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--muted, var(--text-faint)); padding: 2px 0 4px;
+}
+.sb-mats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.sb-mat {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 2px; min-width: 0; cursor: grab;
+  border: 1px solid var(--border); border-radius: 7px; background: transparent;
+  color: var(--muted, var(--text-faint)); font: inherit; font-size: 0.6rem; line-height: 1.15;
+}
+.sb-mat:hover { border-color: var(--accent); color: var(--ink, var(--text)); background: var(--hover); }
+.sb-mat svg, .sb-mat img { width: 100%; height: 42px; object-fit: contain; }
+.sb-mat span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* the photo browser: square thumbnails, the newest first */
+.sb-photo-q { width: 100%; margin: 2px 0 6px; }
+.sb-photo { padding: 2px; }
+.sb-mat .sb-photo-th { display: block; width: 100%; max-width: none; aspect-ratio: 1; border-radius: 4px;
+  background: var(--hover) center / cover no-repeat; }
+.sb-make { margin-bottom: 6px; }
+.sb-x {
+  position: absolute; top: 1px; right: 1px; width: 16px; height: 16px; padding: 0;
+  border: none; border-radius: 50%; cursor: pointer; line-height: 1;
+  background: var(--bg-app); color: var(--muted, var(--text-faint)); opacity: 0; font-size: 0.75rem;
+}
+.sb-sticker:hover .sb-x { opacity: 1; }
+.sb-x:hover { color: var(--danger, #d44); }

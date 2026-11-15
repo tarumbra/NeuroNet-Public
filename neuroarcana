@@ -1,0 +1,28 @@
+#!/bin/bash
+# neuroarcana -- open the NeuroArcana tarot card game (its own window; Super+Alt+Y).
+#
+# Where its developer copy is (~/Work/NeuroArcana, an Electron app with its node_modules), that's what opens -- the PC
+# where the game is made. Everywhere else, NeuroNet's own copy (neuroarcana.py, the same saves). Already open: it's
+# brought to the workspace in front of you. (Cam, 1 Nov 2026)
+set -u
+APP_DIR="$(dirname "$(readlink -f "$0")")"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/neuroarcana.log"
+mkdir -p "$(dirname "$LOG")"
+DEV="${NEUROARCANA_DIR:-$HOME/Work/NeuroArcana}"
+
+if [ -x "$DEV/node_modules/.bin/electron" ] && [ -x "$DEV/tools/neuroarcana" ]; then
+  exec "$DEV/tools/neuroarcana" "$@"
+fi
+# already open: bring it here
+if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+  addr=$(hyprctl clients -j 2>/dev/null | jq -r '[.[] | select(.class == "NeuroArcana" or .initialClass == "NeuroArcana" or .title == "NeuroArcana")][0].address // empty')
+  if [ -n "$addr" ]; then
+    target=$(hyprctl activeworkspace -j | jq -r .name)
+    hyprctl dispatch "hl.dsp.window.move({ window = \"address:$addr\", workspace = \"$target\" })" >/dev/null 2>&1
+    hyprctl dispatch "hl.dsp.focus({ window = \"address:$addr\" })" >/dev/null 2>&1
+    exit 0
+  fi
+fi
+run=(python3 "$APP_DIR/neuroarcana.py" --gui qt)
+if command -v uwsm-app >/dev/null 2>&1; then run=(uwsm-app -- "${run[@]}"); fi
+cd "$APP_DIR" && setsid -f "${run[@]}" >"$LOG" 2>&1

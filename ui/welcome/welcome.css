@@ -1,0 +1,27 @@
+/* The first-boot welcome (ui/welcome/welcome.js). Over the whole app, in the
+   theme's own colours; the name in NeuroNet's brand green (--brand). */
+.wel-veil {
+  position: fixed; inset: 0; z-index: 900;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(6px);
+}
+.wel-card {
+  width: min(560px, calc(100vw - 48px));
+  padding: 32px 34px 26px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--elevated, var(--panel));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px color-mix(in srgb, var(--brand) 25%, transparent);
+  text-align: left;
+}
+.wel-mark {
+  width: 44px; height: 4px; border-radius: 2px; margin-bottom: 18px;
+  background: linear-gradient(90deg, var(--brand), color-mix(in srgb, var(--brand) 35%, #00b8d0));
+}
+.wel-card h1 { margin: 0 0 12px; font-size: 1.6rem; font-weight: 800; color: var(--ink, var(--text)); }
+.wel-brand { color: var(--brand); }
+.wel-lead { margin: 0 0 10px; font-size: 1rem; line-height: 1.55; color: var(--text); }
+.wel-card .stamp { line-height: 1.55; }
+.wel-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 10px; }
+.wel-fine { margin: 0; opacity: 0.75; }

@@ -1,0 +1,85 @@
+{
+ "BOSS_TELLS": {
+  "//": "Creature tells (approved with the ideas in note 13, 'Parts 4-8, bosses first'; built in the gap-filling after Part 14, 16 October). Every `every` rounds a boss winds up instead of attacking and says what's coming; the round after, if it's held (trapped, netted, stunned, slowed), lost in smoke, or meets a raised shield (Aegis), the move breaks and it's stunned a round -- the right answer beats it. Otherwise the blow lands harder -- `mult` by the boss's ground level ([below, times]: the first bosses gently, a new player has few answers) -- and fighting Defensively braces you for half the extra (`acc` more likely to hit). Each boss its own move and words; `answer` is what the fight suggests. Mage duels have none (a duel is its own thing). Gideon, the very first boss (combat 6, before a player has any answer), doesn't tell: the boss balance test keeps him a fair first fight.",
+  "every": 5,
+  "acc": 1.3,
+  "stagger": 1,
+  "list": {
+   "billy": {
+    "move": "Headbutt",
+    "wind": "paws the ground and lowers his horns",
+    "hit": "rams you"
+   },
+   "jack": {
+    "move": "Mad dash",
+    "wind": "starts thumping, faster and faster",
+    "hit": "slams into you"
+   },
+   "bambi": {
+    "move": "Stampede",
+    "wind": "rears up, hooves high",
+    "hit": "comes down on you"
+   },
+   "snapjaw": {
+    "move": "Death roll",
+    "wind": "opens its jaws wide and waits",
+    "hit": "snaps and rolls"
+   },
+   "grizz": {
+    "move": "Maul",
+    "wind": "rises onto its hind legs",
+    "hit": "brings both paws down"
+   },
+   "basilisk": {
+    "move": "Burrowing strike",
+    "wind": "sinks into the earth -- the ground ripples",
+    "hit": "bursts up beneath you"
+   },
+   "yeti": {
+    "move": "Avalanche",
+    "wind": "beats its chest and roars at the snow above",
+    "hit": "brings the snow down"
+   },
+   "sphinx": {
+    "move": "The last riddle",
+    "wind": "smiles, and gathers itself to spring",
+    "hit": "springs"
+   },
+   "kingnile": {
+    "move": "Tail of the river",
+    "wind": "draws its great tail back through the water",
+    "hit": "lashes its tail"
+   },
+   "tombguardian": {
+    "move": "Sentence",
+    "wind": "raises its blade over its head",
+    "hit": "brings the blade down"
+   },
+   "pharaoh": {
+    "move": "Curse of the sun",
+    "wind": "lifts his crook, and the light dims",
+    "hit": "lets the curse fall"
+   },
+   "morvane": {
+    "move": "Grave's call",
+    "wind": "opens the Blood Book -- the candles gutter",
+    "hit": "reads the last line aloud"
+   }
+  },
+  "answers": "a net, a trap, a stun, a slow, smoke or a raised shield -- or fight Defensively to brace",
+  "mult": [
+   [
+    15,
+    1.3
+   ],
+   [
+    40,
+    1.6
+   ],
+   [
+    99,
+    2.5
+   ]
+  ]
+ }
+}

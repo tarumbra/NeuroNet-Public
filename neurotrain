@@ -1,0 +1,42 @@
+#!/bin/bash
+# neurotrain -- open NeuroTrain, the training program planner (its own window; Super+Alt+T, the key Training had).
+#
+#     neurotrain            open it, or bring the open one here
+#     neurotrain toggle     the same, but if it's already on this workspace, tuck it away (Super+Alt+T; PT84 f3:
+#                           pressing it again "couldnt close the window down")
+#     neurotrain calculators   open it on its Calculators (NeuroNet Training's link, Q20 q1: they moved there)
+#
+# Where it's on this computer (~/Work/NeuroTrain, an Electron app with its node_modules), that's what opens. Tucked
+# away it waits in a Hyprland scratchpad (special:neurotrain), as NeuroCafe does. Everywhere else (not installed yet),
+# NeuroNet's own Training section opens as before.
+# (Cam, 10 Nov 2026: "use the same shortcut that neuronets own app uses to launch the training application")
+set -u
+APP_DIR="$(dirname "$(readlink -f "$0")")"
+PAGE=""; for a in "$@"; do [ "$a" = calculators ] && PAGE="--page=calculators"; done
+DEV="${NEUROTRAIN_DIR:-$HOME/Work/NeuroTrain}"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/neurotrain.log"
+mkdir -p "$(dirname "$LOG")"
+
+if [ -x "$DEV/node_modules/.bin/electron" ] && [ -x "$DEV/tools/neurotrain" ]; then
+  # already open: bring it to the workspace in front of you, or (toggle) tuck it away if it's already there
+  if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    j=$(hyprctl clients -j 2>/dev/null | jq -c '[.[] | select(.class == "neurotrain" or .initialTitle == "NeuroTrain")][0] // empty')
+    if [ -n "$j" ]; then
+      win="address:$(jq -r .address <<<"$j")"; ws=$(jq -r .workspace.name <<<"$j")
+      target=$(hyprctl activeworkspace -j | jq -r .name)
+      if [ "${1:-}" = toggle ] && [ "$ws" = "$target" ]; then
+        hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"special:neurotrain\", follow = false })" >/dev/null 2>&1
+        exit 0
+      fi
+      [ "$ws" != "$target" ] && hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\" })" >/dev/null 2>&1
+      hyprctl dispatch "hl.dsp.focus({ window = \"$win\" })" >/dev/null 2>&1
+      [ -z "$PAGE" ] && exit 0
+      # a page asked for: a second start hands it to the open one and quits at once
+      cd "$DEV" && exec setsid -f "$DEV/tools/neurotrain" "$PAGE" >>"$LOG" 2>&1
+    fi
+  fi
+  run=("$DEV/tools/neurotrain"); [ -n "$PAGE" ] && run+=("$PAGE")
+  if command -v uwsm-app >/dev/null 2>&1; then run=(uwsm-app -- "${run[@]}"); fi
+  cd "$DEV" && exec setsid -f "${run[@]}" >"$LOG" 2>&1
+fi
+exec "$APP_DIR/neuronet-quick" training

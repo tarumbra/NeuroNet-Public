@@ -1,0 +1,16 @@
+{
+ "MOVE_TOMES": {
+  "//": "Battle Re-work Part 14 (PT11 x6 -- note 06: 'move tomes (drops and shops)'): a tome teaches a battle pet one move of its type, from another type than its own, up to the pet's battle level; two tome moves a pet at most. A tome's move fights with its own type in the matchups. Warden Briar sells them (price, a coin sink); a boss you beat leaves one behind now and then (bossChance, on its own dice).",
+  "price": 2500,
+  "max": 3,
+  "bossChance": 0.04,
+  "items": {
+   "tomebeast": {"name": "Beast move tome", "gem": 6, "price": 1100, "moveTome": "beast"},
+   "tomebird": {"name": "Bird move tome", "gem": 6, "price": 1100, "moveTome": "bird"},
+   "tomebug": {"name": "Bug move tome", "gem": 6, "price": 1100, "moveTome": "bug"},
+   "tomereptile": {"name": "Reptile move tome", "gem": 6, "price": 1100, "moveTome": "reptile"},
+   "tomespirit": {"name": "Spirit move tome", "gem": 6, "price": 1100, "moveTome": "spirit"},
+   "tomewater": {"name": "Water move tome", "gem": 6, "price": 1100, "moveTome": "water"}
+  }
+ }
+}

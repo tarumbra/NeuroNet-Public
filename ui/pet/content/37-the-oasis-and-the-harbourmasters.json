@@ -1,0 +1,129 @@
+{
+  "//": [
+    "Content for ui/pet/core/37-the-oasis-and-the-harbourmasters.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "REGIONS.oasis": {
+    "name": "Oasis",
+    "x": 92,
+    "y": 58,
+    "level": 45,
+    "isle": "desert",
+    "needs": {"item": "desertkit", "skills": {"crafting": 40}, "how": "to cross the sands"},
+    "blurb": "Palms, cool water and shade -- and on still nights, a merchant who may not be there at all."
+  },
+  "SECRETS.oasis": [
+    {
+      "id": "sunkenurn",
+      "kind": "cache",
+      "name": "An urn in the spring",
+      "text": "Sealed with wax, and cold from the water",
+      "coins": 2200,
+      "items": {"lapis": 3, "ironcrate": 1}
+    },
+    {
+      "id": "lostsatchel",
+      "kind": "cache",
+      "name": "A traveller's satchel",
+      "text": "Left in the palms' roots -- whoever owned it never came back",
+      "coins": 1500,
+      "items": {"stardust": 2, "woodcrate": 2}
+    }
+  ],
+  "PEOPLE.oasis": {
+    "id": "yusuf",
+    "name": "Spring-keeper Yusuf",
+    "look": {"skin": 3, "hair": 3, "outfit": 1},
+    "says": "Drink, rest, and leave the water as you found it.",
+    "quests": [
+      {
+        "id": "cleanspring",
+        "name": "A clean spring",
+        "text": "\"The reeds choke the water. Cut back the palms and bring me what grows by the spring.\"",
+        "needs": [{"bring": {"palmlog": 60, "aloe": 60}}],
+        "reward": {"coins": 3000, "xp": {"foraging": 1500}}
+      },
+      {
+        "id": "nightvisitor",
+        "name": "The night visitor",
+        "text": "\"A merchant comes when the moon's up, and he's gone by dawn. Buy something from him and tell me he's real.\"",
+        "needs": [{"bring": {"stardust": 1}}],
+        "reward": {"coins": 2500, "items": {"ironcrate": 1}}
+      }
+    ]
+  },
+  "WORKSHOPS.mirage": {
+    "name": "Mirage merchant",
+    "who": "Sahir",
+    "npc": true,
+    "trade": 1,
+    "night": true,
+    "region": "oasis",
+    "isle": "desert",
+    "look": {"skin": 3, "hair": 0, "outfit": 2},
+    "says": "You see me? Good. Not everyone does. Look quickly -- I'm gone by sunrise.",
+    "recipes": []
+  },
+  "MIRAGE_STOCK": [
+    ["nileegg", 4500],
+    ["rareegg", 3000],
+    ["nemes", 7000],
+    ["linenrobe", 7000],
+    ["khopesh", 9000],
+    ["ankhring", 8000],
+    ["petnemes", 4500],
+    ["bastetcollar", 6500],
+    ["lapis", 350],
+    ["stardust", 450],
+    ["ironcrate", 1500],
+    ["superhealing", 400]
+  ],
+  "CONTRACT_PORTS": {
+    "sandport": {
+      "//": "the Farm's goods (2026-10-13)",
+      "isle": "desert",
+      "who": "Harbourmaster Nefer",
+      "goods": [
+        ["arcticchar", 300],
+        ["snowberries", 300],
+        ["frostcrystal", 40],
+        ["yakhide", 15],
+        ["snowpelt", 10],
+        ["steel", 20],
+        ["plank", 30],
+        ["hardplank", 20],
+        ["rope", 25],
+        ["cloth", 20],
+        ["leather", 20],
+        ["ironbar", 30],
+        ["smokedfish", 40],
+        ["cheese", 15],
+        ["honey", 25],
+        ["candle", 20]
+      ]
+    },
+    "frosthaven": {
+      "isle": "frostpeak",
+      "who": "Harbourmaster Ingrid",
+      "goods": [
+        ["dates", 300],
+        ["papyrus", 250],
+        ["sandstone", 300],
+        ["acacia", 200],
+        ["palmlog", 200],
+        ["tilapia", 250],
+        ["lapis", 20],
+        ["steel", 20],
+        ["plank", 30],
+        ["rope", 25],
+        ["cloth", 20],
+        ["leather", 20],
+        ["ironbar", 30],
+        ["smokedfish", 40],
+        ["wool", 60],
+        ["butter", 15],
+        ["candle", 25]
+      ]
+    }
+  }
+}

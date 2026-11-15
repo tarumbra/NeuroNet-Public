@@ -1,0 +1,205 @@
+{
+ "HOW_TO_PLAY": {
+  "//": "The How to Play book (2026-10-20, Cam: \"a how to play book you get after the tutorial you can read which will be a detailed stylized guide of the game and all the features including photos (also store as a pdf within the ebook section of scribe\"). One source: the game's book reads these chapters, and tools/make_guide.js prints the same chapters, with the photos in ui/pet/art/guide/, to ui/pet/guide/NeuroPets - How to Play.pdf. shot: a photo (art/guide/<shot>.webp); tips: the short list at the foot of a chapter. Keep it true to the game: when a feature changes, change its chapter.",
+  "title": "How to Play",
+  "subtitle": "An adventurer's guide to Neurovale, from Amunet's own notes",
+  "item": {
+   "id": "howtoplay",
+   "name": "How to Play",
+   "gem": 2,
+   "bound": true,
+   "about": "Amunet's guide to Neurovale: the Kit, gathering, making, fighting, the classes, your pet and your Estate. Read it from your bag -- a copy sits in NeuroNet's Scribe, under Ebooks."
+  },
+  "chapters": [
+   {
+    "id": "welcome",
+    "title": "Welcome to Neurovale",
+    "shot": "map",
+    "paras": [
+     "Neurovale is a chain of islands, and you start on the main one with a pet egg, an empty bag and Amunet to show you around. You gather, make, fight and explore; your pet grows up beside you and goes on expeditions of its own.",
+     "The world keeps going while you're away. A trip you started carries on gathering, a hunt keeps hunting, crops grow and eggs hatch -- NeuroPets works out what happened from the time that passed when you open it again.",
+     "Press Map above any page to see where you are. Click a region to go there, and a painted place in it to use it. Estate takes you home."
+    ],
+    "tips": [
+     "Super+Alt+G opens and hides NeuroPets.",
+     "Each save slot is a separate game; Adventure, Hardcore and Hell decide how hard a fall is."
+    ]
+   },
+   {
+    "id": "kit",
+    "title": "The Kit: your bag and more",
+    "shot": "kit-bag",
+    "paras": [
+     "The Kit sits at the side of the screen, like an adventurer's satchel with five tabs: Bag, Gear, Combat, Magic and Skills. Almost everything you carry or change is done from here.",
+     "Bag: click a thing to do the obvious -- eat food, wear gear, drink a draught, read a page. Right-click for the rest: use it with something, put it on a quick slot, bank it (at the bank), drop it, or look at it closely. Drag a thing onto a quick slot to set it. The search box finds anything by name.",
+     "Gear: your equipment, laid out like a body. Click a slot to change it; save what you're wearing as a gear set and put it all back on with one click.",
+     "Skills: every skill with your level and the top level, 50. Hover one to see your xp, the xp the next level needs and what's left; click it to see everything it unlocks -- greyed until you reach its level."
+    ],
+    "tips": [
+     "Each kind of thing takes one slot; a slot holds a stack. You start with 25 slots.",
+     "What you're wearing is listed under the bag, so you can use it with things without taking it off."
+    ]
+   },
+   {
+    "id": "gather",
+    "title": "Gathering",
+    "shot": "region",
+    "paras": [
+     "Gathering skills -- Foraging, Fishing, Mining, Lumbering, Digging and Runecrafting -- are trained out in the world. Open a region on the Map and click a place to gather there. You keep gathering on your own until you stop, or your bag fills up.",
+     "Better places open with your level, and many need a tool: a pickaxe for ore, a hatchet for logs, a net or a rod for fish. Carry the tool from your bag (Carry it). Tools wear as you use them and break in the end -- make another.",
+     "When your bag fills, a window lists your least valuable stacks to drop or recycle, and the trip carries on collecting once there's room."
+    ],
+    "tips": [
+     "Bare hands still pick up twigs and leaf litter in the woods.",
+     "Your pet's kind can speed up one skill when it's your companion."
+    ]
+   },
+   {
+    "id": "make",
+    "title": "Making things",
+    "shot": "bench",
+    "paras": [
+     "Every bench belongs to a skill: the crafting bench to Crafting, the anvil to Smithing, the furnace to Smelting, the fletching table to Fletching, the kitchen to Cooking, and more. They're in your Workshop at the Estate.",
+     "Open a bench, pick a recipe on the left, and the right shows what it needs, ticked or crossed, and a slider for how many. Benches at home can use what's in your bank too.",
+     "Some things need no bench: field recipes are made right in the bag. Right-click a thing and choose Use with..., and what it combines with lights up. A Hunter knows a few from the start; everyone else learns them from recipe pages found on creatures and in quests."
+    ],
+    "tips": [
+     "Flint arrows: a chisel on flint makes flint arrowheads; a shaft on a head, with a feather, makes the arrow.",
+     "Bandages: a cloth with herbs, from Beekeeper Nell's page."
+    ]
+   },
+   {
+    "id": "estate",
+    "title": "Your Estate",
+    "shot": "estate",
+    "paras": [
+     "The Estate is home: the House (your pet, the Character sheet and expeditions), the Workshop (your benches), the Library (spellbook, enchants, herbarium, bestiary and Petapedia), the Storeroom, the Graveyard, the Farm and the Beast Pen.",
+     "The Storeroom is your Bank. What's in it is safe, even if you fall. Tabs along the top keep it sorted -- drag a thing onto a tab to move it. The recycle stash turns what you don't need into materials and points.",
+     "The Farm opens through Fern: hens first, then more animals and buildings as your Husbandry grows."
+    ],
+    "tips": [
+     "The cart takes goods to Marlow and comes back with coins.",
+     "Better rooms in the House let your benches make better things."
+    ]
+   },
+   {
+    "id": "pet",
+    "title": "Your pet",
+    "shot": "pet",
+    "paras": [
+     "Feed your pet from your bag, play with it and keep its room clean. A rug, a bed and a toy box make it happier, and a happy companion helps you more.",
+     "Eggs you find go in the Hatchery in the Nursery; hatched pets live in the Den. After a few days a pet is old enough for expeditions: it explores on its own for hours and comes back with materials, crates and sometimes eggs.",
+     "Some pets become battle pets in the Beast Pen, where they train, rest and learn moves -- a Beast Master's whole way of fighting."
+    ],
+    "tips": [
+     "Breeding two pets can bring new colours.",
+     "Pets lost on expeditions are remembered in the Graveyard."
+    ]
+   },
+   {
+    "id": "fight",
+    "title": "Fighting",
+    "shot": "fight",
+    "paras": [
+     "Hunting grounds are on the Map. Click one and press Hunt here. Fights play out round by round: your blow, then the creature's. Win enough fights in a ground and its boss appears.",
+     "You fight from the Kit. Bag: click food to eat, a weapon or armour to wear it, a draught to drink it, a trap or net to lay it -- each costs your next attack. Combat: your stance (Accurate hits more often, Aggressive harder, Defensive takes less), your special's bar and every special to pick, and Run. Magic: click a loaded spell to make it your next cast.",
+     "Quick slots sit under the fight: four of them, used with Shift+1 to 4. Drag food, a draught or a trap onto one. Eating from a quick slot doesn't cost your attack.",
+     "A bow takes an arrow every shot, from your quiver. Load it by wearing arrows, or by using arrows with the quiver in your bag; the Gear tab shows how many are in it. When it's empty you fight on with a hunting knife from your bag, or your fists, until you reload. Weapons wear with every blow; re-temper one once at the Grindstone before it breaks."
+    ],
+    "tips": [
+     "Nobody eats or runs for you: watch your health, eat in time, or press Run.",
+     "Fall and you lose what you carry. In Adventure you keep your three most valuable things; the rest waits in a gravestone for half an hour, and opening it costs half of what's inside.",
+     "Bosses can be fought on Manual: the fight waits for each of your moves."
+    ]
+   },
+   {
+    "id": "classes",
+    "title": "Classes and the Guild hall",
+    "shot": "guild",
+    "paras": [
+     "The Guild hall in the village is where you choose a class: Hunter (bows, traps and nets), Thief (daggers, poisons and throwing knives), Berserker (great weapons and fury), Paladin (sword, shield and devotion), Arcane (staves, wands and the elements) or Beast Master (a pack of battle pets). An Arcane can later become a Necromancer.",
+     "Each class levels as you fight its way and earns talent points for its tree. Techniques you learn from other classes come with you at a part of their strength. Each tutor has a lesson, and each class a book.",
+     "Armour is Heavy, Light or Cloth. Your class's own weight suits you best; the wrong one costs you -- metal plate makes spells miss."
+    ],
+    "tips": [
+     "Your first class is free; switching later costs coins.",
+     "Specials fill a bar as you fight (a Berserker's fury, a Paladin's devotion) and wait for you to fire them."
+    ]
+   },
+   {
+    "id": "magic",
+    "title": "Magic",
+    "shot": "kit-magic",
+    "paras": [
+     "Spells need a wand or a staff in hand and runes in your bag. Choose up to three for your fights in the Kit's Magic tab or the Spellbook in the Library.",
+     "Runes are made by Runecrafting at the shrines, from essence you mine. The mage tower's duels raise your rank from Novice to Archmage, and each rank opens stronger spells and robes."
+    ],
+    "tips": [
+     "Elements matter: some creatures are weak to fire, water, earth or air.",
+     "Out of runes, a staff still bashes."
+    ]
+   },
+   {
+    "id": "people",
+    "title": "People, quests and the story",
+    "shot": "village",
+    "paras": [
+     "The people of Neurovale need help, and helping them tells the island's story. Farmer Giles in the Farmyard has the first chapter. Click a person in a region to talk; the notice board in the village has more work.",
+     "A face on a thing in your bag means someone wants it for a quest -- click the face to find them."
+    ],
+    "tips": [
+     "Quests open new benches, places and recipes.",
+     "Towns on the other islands have their own shops and inns."
+    ]
+   },
+   {
+    "id": "sail",
+    "title": "Sailing to other islands",
+    "shot": "",
+    "paras": [
+     "This island is only the beginning. Build a boat with Old Salt at the Coast's shipyard and sail to the Desert Island, Frostpeak and beyond -- each with its own towns, creatures and secrets. A bigger ship goes further.",
+     "On another island, its own estate can become your home there."
+    ],
+    "tips": [
+     "Provisions keep a crew going on long voyages."
+    ]
+   },
+   {
+    "id": "skills",
+    "title": "Skills and levels",
+    "shot": "kit-skills",
+    "paras": [
+     "There are 24 skills, each up to level 50: gathering skills, making skills and combat skills. Each level brings something -- a new place, a recipe, a tool, a piece of gear -- and a level-up shows you what it opened.",
+     "Your combat level comes from Attack, Ranged, Magic, Defence and Hitpoints, and opens tougher hunting grounds."
+    ],
+    "tips": [
+     "Hover a skill in the Kit for your xp and what the next level needs."
+    ]
+   },
+   {
+    "id": "ngplus",
+    "title": "New Game Plus",
+    "shot": "",
+    "paras": [
+     "Beat the Basilisk, the Jungle's boss, and New Game Plus opens in the save slots. Start again with a legacy from your finished game: a gift from your highest class, free talent points for it, every technique you learned, and a prestige mark.",
+     "You also keep the weapons and armour of every class you levelled. A Hunter who was once a Berserker can carry a bow and a great axe, and change how they fight mid-hunt -- some creatures are weak to arrows, others to a heavy blow."
+    ],
+    "tips": [
+     "Creatures are tougher in every new cycle.",
+     "At three prestige marks, one respec a game is free."
+    ]
+   },
+   {
+    "id": "neuronet",
+    "title": "NeuroPets and NeuroNet",
+    "shot": "",
+    "paras": [
+     "NeuroPets is part of NeuroNet. This guide is also on NeuroNet's Scribe shelf, under Ebooks, so you can read it beside the game. The sandbox is a copy of the game for trying things out -- nothing there touches your real game."
+    ],
+    "tips": [
+     "Your saves live in NeuroNet's data folder and move with it."
+    ]
+   }
+  ]
+ }
+}

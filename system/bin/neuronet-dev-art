@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+"""neuronet-dev-art -- the games' art, kept in step between the computers NeuroNet is developed on (2026-10-25, Cam:
+"make the neuronet-dev pull from now on copy new art across"). Run by `neuronet-dev pull` and `neuronet-dev art`.
+
+The art folders (~/Pictures/NeuroCafe Art Assets ...) aren't in git -- only the pictures cut from them are -- so a
+sheet saved on the laptop never reached the PC. Now an `art` branch on GitHub (the private NeuroNet repository) holds
+the art that's NEW since the laptop's kit was made on 24 October (both computers had that art then -- BASELINE.tsv
+lists it, so it's never sent again: 1 GB stays where it is). Each time:
+
+  down  every file on the branch that this computer hasn't got is copied into its folder (nothing here is ever
+        overwritten: if both computers have a different file under one name, yours is kept, and it says so)
+  up    every file here that's neither in the baseline nor on the branch is sent (one commit, pushed)
+
+Never deletes anything, on either side. Files over 90 MB are left out (GitHub won't take them).
+
+    neuronet-dev-art <the NeuroNet checkout>
+
+NEURONET_ART_HOME (default ~/Pictures), NEURONET_ART_FOLDERS (":"-separated folder names) and NEURONET_ART_BASELINE
+(the 24 October art, to start the branch from) are for the tests.
+"""
+import filecmp
+import os
+import shutil
+import socket
+import subprocess
+import sys
+
+FOLDERS = ["NeuroCafe Art Assets", "NeuroFarm Art Assets", "NeuroPets Art Assets", "NeuroPets Reference UI", "Pixel Pet Asset Art"]
+BIG = 90 * 1024 * 1024
+SKIP = (".directory", ".DS_Store", "Thumbs.db", "desktop.ini")
+
+
+def main():
+    app = os.path.abspath(sys.argv[1])
+    state = os.path.join(os.environ.get("XDG_STATE_HOME") or os.path.expanduser("~/.local/state"), "neuronet")
+    here = os.environ.get("NEURONET_ART_HOME") or os.path.expanduser("~/Pictures")
+    folders = [f for f in os.environ.get("NEURONET_ART_FOLDERS", "").split(":") if f] or FOLDERS
+    sync = os.path.join(state, "art-sync")
+    env = dict(os.environ)
+
+    def git(*args, cwd=None):
+        return subprocess.run(["git", *args], cwd=cwd or sync, env=env, capture_output=True, text=True)
+
+    remote = git("remote", "get-url", "origin", cwd=app).stdout.strip()
+    ssh = git("config", "core.sshCommand", cwd=app).stdout.strip()
+    if ssh:
+        env["GIT_SSH_COMMAND"] = ssh
+    who = [git("config", k, cwd=app).stdout.strip() for k in ("user.name", "user.email")]
+    ident = ["-c", f"user.name={who[0] or 'NeuroNet'}", "-c", f"user.email={who[1] or 'neuronet@localhost'}"]
+    if not remote:
+        print("art: no GitHub remote in the checkout -- not kept in step")
+        return 1
+
+    # ---- the art branch here: a shallow copy of it, brought up to date -- or started
+    os.makedirs(state, exist_ok=True)
+    if not os.path.isdir(os.path.join(sync, ".git")):
+        has = git("ls-remote", "--heads", remote, "art", cwd=state)
+        if has.returncode != 0:
+            print(f"art: couldn't reach GitHub ({has.stderr.strip()[:120]}) -- try again later")
+            return 1
+        if has.stdout.strip():
+            r = git("clone", "-q", "--depth", "1", "--single-branch", "--branch", "art", remote, sync, cwd=state)
+            if r.returncode != 0:
+                print(f"art: couldn't download the art branch ({r.stderr.strip()[:120]})")
+                return 1
+        else:
+            base = os.environ["NEURONET_ART_BASELINE"] if "NEURONET_ART_BASELINE" in os.environ else next((p for p in (os.path.join(os.path.dirname(app), "NeuroNet-laptop-dev", "art"),
+                                                                            "/mnt/Cams_Collective/NeuroNet-laptop-dev/art") if os.path.isdir(p)), "")
+            if not base:
+                print("art: there's no art branch on GitHub yet -- run `neuronet-dev pull` on the PC first (it starts it from the art both computers had)")
+                return 0
+            git("init", "-q", "-b", "art", sync, cwd=state)
+            rows = []
+            for folder in folders:
+                for root, _, files in os.walk(os.path.join(base, folder)):
+                    for n in files:
+                        p = os.path.join(root, n)
+                        rows.append(f"{os.path.relpath(p, base)}\t{os.path.getsize(p)}")
+            with open(os.path.join(sync, "BASELINE.tsv"), "w", encoding="utf-8") as f:
+                f.write("# the art both computers had on 24 October 2026 (the laptop's kit): never sent -- path<TAB>size\n" + "\n".join(sorted(rows)) + "\n")
+            with open(os.path.join(sync, "README.txt"), "w", encoding="utf-8") as f:
+                f.write("The games' art made since 24 October 2026, kept in step between Cam's computers by `neuronet-dev pull`\n"
+                        "(system/bin/neuronet-dev-art). files/<folder>/... mirrors ~/Pictures/<folder>/...\n")
+            git("add", "-A")
+            git(*ident, "commit", "-qm", f"art: started ({len(rows)} files both computers had on 24 October)")
+            git("remote", "add", "origin", remote)
+            r = git("push", "-q", "-u", "origin", "art")
+            if r.returncode != 0:
+                print(f"art: couldn't start the art branch on GitHub ({r.stderr.strip()[:120]})")
+                shutil.rmtree(sync, ignore_errors=True)
+                return 1
+            print("art: started the art branch on GitHub")
+    else:
+        r = git("fetch", "-q", "--depth", "1", "origin", "art")
+        if r.returncode != 0:
+            print(f"art: couldn't reach GitHub ({r.stderr.strip()[:120]}) -- art not kept in step this time")
+            return 1
+        git("reset", "-q", "--hard", "origin/art")
+
+    baseline = {}
+    bpath = os.path.join(sync, "BASELINE.tsv")
+    if os.path.isfile(bpath):
+        for line in open(bpath, encoding="utf-8"):
+            if line.startswith("#") or "\t" not in line:
+                continue
+            rel, size = line.rstrip("\n").rsplit("\t", 1)
+            baseline[rel] = int(size)
+    shared = os.path.join(sync, "files")
+
+    # ---- down: what the other computer made
+    got, kept = 0, []
+    for root, _, files in os.walk(shared):
+        for n in files:
+            src = os.path.join(root, n)
+            rel = os.path.relpath(src, shared)
+            dst = os.path.join(here, rel)
+            if not os.path.exists(dst):
+                os.makedirs(os.path.dirname(dst), exist_ok=True)
+                shutil.copy2(src, dst)
+                got += 1
+            elif not filecmp.cmp(src, dst, shallow=False):
+                kept.append(rel)
+
+    # ---- up: what this computer made
+    sent, big = 0, []
+    for folder in folders:
+        for root, dirs, files in os.walk(os.path.join(here, folder)):
+            dirs[:] = [d for d in dirs if not d.startswith(".")]
+            for n in files:
+                if n.startswith(".") or n in SKIP:
+                    continue
+                p = os.path.join(root, n)
+                rel = os.path.relpath(p, here)
+                size = os.path.getsize(p)
+                if baseline.get(rel) == size or os.path.exists(os.path.join(shared, rel)):
+                    continue
+                if size > BIG:
+                    big.append(rel)
+                    continue
+                os.makedirs(os.path.dirname(os.path.join(shared, rel)), exist_ok=True)
+                shutil.copy2(p, os.path.join(shared, rel))
+                sent += 1
+    if sent:
+        git("add", "-A", "files")
+        git(*ident, "commit", "-qm", f"art: {sent} new from {socket.gethostname()}")
+        r = git("push", "-q", "origin", "HEAD:art")
+        if r.returncode != 0:
+            print(f"art: couldn't send {sent} new file(s) to GitHub ({r.stderr.strip()[:120]}) -- they'll go next time")
+            git("reset", "-q", "--hard", "origin/art")
+            sent = 0
+
+    print(f"art: {got} new from the other computer, {sent} sent from here" + (f"; kept yours of {len(kept)} that differ there (e.g. {kept[0]})" if kept else "")
+          + (f"; left out {len(big)} over 90 MB" if big else ""))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

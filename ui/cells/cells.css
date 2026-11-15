@@ -1,0 +1,69 @@
+/* ==========================================================================
+   Cells — the page around the grid. The grid itself is styled by
+   notes/grid.css, which covers both a note and a Cells page.
+   ========================================================================== */
+/* The grid's styles are written in NOTES' colour names, which only exist
+   inside Notes' shell — outside it, "border: 1px solid var(--border)" has no
+   colour and the whole declaration is dropped, so a sheet lost its borders.
+   The same mapping Notes uses, applied here, so one stylesheet serves both. */
+.ss-cells {
+  --bg-app:        var(--bg);
+  --bg-elevated:   var(--elevated);
+  --bg-hover:      var(--hover);
+  --bg-active:     var(--active);
+  --border:        var(--line-strong);
+  --border-faint:  var(--line);
+  --text-muted:    var(--muted);
+  --text-faint:    var(--faint, var(--muted));
+  --accent-dim:    var(--accent-tint);
+
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ce-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 8px 10px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card, var(--bg-elevated));
+}
+.ce-name { margin-right: 4px; }
+.ce-bar-right { margin-left: auto; display: flex; gap: 6px; }
+/* ==========================================================================
+   A SHEET TAKES THE WHOLE PANE
+   ==========================================================================
+   Cam: "increase the size of the workspace for cells."
+
+   Measured before this, in a 1440x900 window: the pane was 1014x824 and the
+   sheet was 922x546 -- ninety pixels of width and two hundred and seventy
+   eight of height sitting empty below and beside a spreadsheet.
+
+   The height came from `max-height: calc(100vh - 210px)`, and the mistake in
+   it is the same one the Vault's tables had: 100vh is the WINDOW, and a
+   sheet does not live in the window. It lives in a pane under the top bar,
+   above the location bar, beside two sidebars. The arithmetic happened to be
+   close at one window size and was wrong at every other, and it could never
+   respond to a sidebar being collapsed.
+
+   Nothing is calculated now. The page is a column, the grid is the part of
+   it that stretches, and the scrolling area takes whatever is left -- so the
+   sheet is exactly as big as the room it is given, at any window size, with
+   any combination of sidebars open.
+
+   #ss-app in front is needed, not decoration: grid.css sets these with
+   ":is(#cx-shell, .grid-page) ...", which carries an id and outranks a plain
+   class rule -- the sheet stayed at the 460px meant for a grid inside a note.
+   ========================================================================== */
+.ss-cells { flex: 1; min-height: 0; }
+#ss-app .ss-cells.grid-page { display: flex; flex-direction: column; }
+#ss-app .ss-cells .ce-bar { flex: none; }
+/* The grid is the one part that grows. */
+#ss-app .ss-cells .ss-grid { flex: 1; min-height: 0; margin: 0; display: flex; }
+#ss-app .grid-page .ssg { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+#ss-app .grid-page .ssg-bar { flex: none; }
+/* max-height: none, not a bigger number. A cap of any size is a guess about
+   a window nobody has measured; flex:1 is the room that is actually there. */
+#ss-app .grid-page .ssg-scroll { flex: 1; min-height: 0; max-height: none; }
+/* The toolbars under the sheet stay put while the sheet above them grows. */
+#ss-app .grid-page .ssg-tools { flex: none; }
+/* The closing note is worth keeping but not worth a line of the workspace
+   once the sheet is doing its job. */
+#ss-app .ss-cells > .stamp { flex: none; margin: 0; }

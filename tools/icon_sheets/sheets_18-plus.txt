@@ -1,0 +1,34 @@
+# Planned sheets (2026-10-10), from the notes in NeuroPets/Icon Sets/ -- the order matches each note's list.
+# A sheet that isn't in ~/Pictures/NeuroPets Art Assets/Icons yet is skipped.
+18: minnow,rawsardine,rawshrimp,sardine,shrimps,crabmeat,grilledtrout,herring,rawanchovy,rawherring,trout,crayfish,perch,cookedpike,pike,cookedsalmon
+19: catfish,crabcakes,eel,fishpie,rainbowfish,rawrainbow,salmon,rawtuna,tuna,grilledchar,snapper,lobster,monkfish,piranha,rawlobster,rawmonkfish
+20: earthworm,berry,carrot,goatmilk,potato,anchovies,apple,bakedpotato,berrytart,blackberry,cabbage,carrotsoup,hazelnut,minttea,mushroom,omelette
+21: pear,roastchicken,roastpork,samphire,strawberry,thinstew,treat,banana,cabbagesoup,chamomiletea,elderberry,honeycake,honeycomb,melon,muttonstew,pumpkin
+22: rosemarychicken,steak,strawberrytart,sweetcorn,thymepork,venisonsteak,cactusfruit,cornchowder,dates,dragonfruit,heartystew,herbstew,lavendertea,mango,mintlamb,pumpkinpie
+23: commonegg,farmyardegg,pastureegg,uncommonegg,forestegg,meadowegg,deepforestegg,rareegg,burrowegg,dewyegg,jungleegg,owlegg,speckledegg,woollyegg,desertegg,duskegg
+24: frostpeakegg,moonlitegg,mossyegg,nileegg,pearlyegg,reedwovenegg,rimeegg,shadowedegg,shoalegg,stormegg,sunbakedegg,coralegg,crystalegg,frostedegg,orcaegg,stripedegg
+25: bronzebolt,clothhood,cottonshirt,ironarrow,leatherboots,leathercap,leathergloves,leathertrousers,bonebracers,bonechaps,bonecowl,bonevest,hardboots,hardchaps,hardcap,hardvambraces
+26: ironbolt,leathertunic,steelarrow,batboots,batvambraces,batcap,batchaps,hardbody,mithrilarrow,snakeboots,snakechaps,snakecap,snakevambraces,steelbolt,adamantarrow,armadilloboots
+27: armadillovambraces,armadillochaps,armadillocap,batbody,fleetboots,fleetcap,fleetgloves,fleettrousers,fleettunic,mithrilbolt,nimbleboots,nimblebreeches,nimblegloves,nimblehood,nimblejerkin,snakebody
+28: sylvanboots,sylvancrown,sylvangrips,sylvanlegs,sylvanmail,adamantbolt,armadillobody,runearrow,furhood,runebolt,linenrobe,nemes,furcoat,pharaohamulet,pharaohcrown,pharaohrobe
+29: airrune,earthrune,runeessence,mindrune,waterrune,chaosrune,firerune,cosmicrune,naturerune,pureessence,astralrune,lawrune,deathrune,diggingessence,fishingessence,foragingessence
+30: climbinggear,archivekey,desertkit,boat,scrollfrostnova,tomeflaming,tomekeen,tomeswift,tomethorns,tomevitality,tomewarding,tomewanderer,relic,scrollstorm,tomefocus,tomearcanist
+31: acacia,acorn,ancientbark,ballofwool,bindweed,lotus,chamomile,chamomileseed,chickweed,comfrey,cotton,dragonroot,driftwood,feverfew,flax,clover
+32: ginsengseed,herb,lavender,lavenderseed,mandrake,marigold,mint,mintseed,moonpetal,moss,nettle,palmlog,papyrus,pine,pondweed,rosemary
+33: rosemaryseed,saffron,saffroncorm,sage,sap,seaweed,silk,thyme,thymeseed,twigs,valerian,flower,wolfsbane,wool,yarrow,armadillohide
+34: armadilloleather,basiliskscale,batleather,batwing,bearpelt,bigcatpelt,bones,bowstring,camelhide,cloth,cowhide,crossbowstring,feather,foxpelt,gatorhide,bearclaw
+35: hardleather,hippotusk,jackalpelt,satchel,mammothivory,orcablubber,quill,ramhorn,rope,sailcloth,seashell,slyfur,snakeleather,snapshell,snowpelt,leather
+36: thread,viperfang,whaleblubber,wolfpelt,yakhide,yetifur,chalk,clay,bowl,mug,claypot,copperfrag,dung,explorerpack,fairystone,flint
+37: frostcrystal,goldnugget,granite,lapis,obsidian,sand,sandstone,soil,stardust,stone,sulphur,tinfrag,aloe,ambergris,bottomlessbag,couchgrass
+38: crossbowstock,dandelion,chickenegg,exoticegg,fossil,frostlichen,glowcap,horsehair,antler,boot,oldcoin,orchid,pearl,peat,petbed,piedish
+39: pitch,plantpot,potofwater,potshard,nileperch,arcticchar,rawbeef,cavefish,icetrout,rawmutton,rawpork,rawpoultry,rawrabbit,tilapia,resin,roughgem
+40: rawswordfish,swordfish,darkcrab,grilledcavefish,rawdarkcrab,rawshark,rawstingray,sturgeon,shark,cookedsturgeon,mantaray,rawhammerhead,rawmanta,rawgreatwhite,rabbitstew,snowberries
+41: comingofagecake,dragonfruittart,grilledtilapia,starfruit,grillednileperch,grilledstingray,richstew,starfruitpie,goldapple,hammerheadsteak,greatwhitesteak,vineegg,plagueegg,pearlescentegg,sarcophagusegg,whaleegg
+42: wrappedegg,carrotseed,potatoseed,cabbageseed,cottonseed,flaxseed,melonseed,strawberryseed,cornseed,dragonfruitseed,pumpkinseed,starfruitseed,stonehatchet,stonepick,smallnet,twigbasket
+43: flyrod,lobstercage,willowbasket,maplebasket,papyrusnet,yewbasket,magicbasket,woodenclub,shortbow,bonebow,crossbow,longbow,compoundbow,steelcrossbow,mithrilcrossbow,yewbow
+44: adamantcrossbow,antlerbow,quickshotbow,magicbow,pharaohsceptre,pharaohsandals,leafhat,leatherpetboots,leatherpetcap,leatherpetcoat,pawboots,wovenvest,bobblehat,tailribbon,woollyjumper,petfurcoat
+45: petnemes,bastetcollar,lumberingessence,miningessence,woodcrate,nest,ironcrate,ancientchest,tomefortified,tomevampiric,glyphankh,glyphlocust,glyphreed,glyphscarab,scrollmeteor,glyphserpent
+46: glyphsun,tomefortune,tomesage,royaljelly,rucksack,scarab,stinger,sealskin,snakeskin,starbloom,harefoot,thistle,toybox,truffle,vanilla,venison
+47 [2x1]: ginseng,rug
+# planned (2026-10-11): the Floral rug, a pink-and-green rug of woven flowers -- paint with the next sheet
+53 [1x1] {@crops/floralrug-from-sheet-69.png}: floralrug   # repainted by Cam on his sheet 69 (16 October evening), cropped from it

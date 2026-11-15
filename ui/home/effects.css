@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Personal Effects — the catalogue's own look.
+   ==========================================================================
+   Borrows the list furniture the rest of Notes already uses (.bd-head,
+   .bd-list, .bd-row, .bd-name) so a row of films reads exactly like a row
+   of boards or sheets. Only what is new to this screen is here: the
+   section headings, the tick-list of sections, and the types dialog.
+   ========================================================================== */
+
+:is(#ss-main, .mt-host) .pe-search {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 0 14px;
+}
+:is(#ss-main, .mt-host) .pe-search .input { flex: 1; min-width: 0; }
+
+/* The tick-list. Cam: "the ability to select specific sections that i only
+   want to print ... select VHS, DVD, BLURAY then click print".
+
+   Laid out as a wrapping row of labels rather than a column: with thirty
+   types a column would be a screen of its own before the collection even
+   started, and the point of this control is to glance at it and tick
+   three. */
+:is(#ss-main, .mt-host) .pe-picker {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: 11px 13px;
+  margin: 0 0 18px;
+}
+:is(#ss-main, .mt-host) .pe-picks {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  margin: 8px 0 0;
+}
+:is(#ss-main, .mt-host) .pe-pick {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 10px 5px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--elevated);
+  cursor: pointer;
+  font-size: 0.84rem;
+  user-select: none;
+}
+:is(#ss-main, .mt-host) .pe-pick:hover { border-color: var(--accent-deep, var(--accent)); }
+/* A ticked section is meant to be obvious at a glance -- it decides what
+   comes out of the printer. :has so the whole pill reacts, not just the
+   box, with a plain fallback for an engine without it. */
+:is(#ss-main, .mt-host) .pe-pick:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-tint, var(--hover));
+}
+:is(#ss-main, .mt-host) .pe-pick input { accent-color: var(--accent); margin: 0; }
+:is(#ss-main, .mt-host) .pe-pick-tools { display: flex; gap: 7px; margin: 10px 0 0; }
+
+:is(#ss-main, .mt-host) .pe-count {
+  display: inline-grid; place-items: center;
+  min-width: 20px; height: 19px; padding: 0 6px;
+  border-radius: 10px;
+  background: var(--hover); color: var(--muted);
+  font-size: 0.72rem; font-weight: 700;
+}
+
+:is(#ss-main, .mt-host) .pe-section { margin: 0 0 22px; }
+:is(#ss-main, .mt-host) .pe-h {
+  display: flex; align-items: center; gap: 9px;
+  margin: 0 0 8px;
+  font-size: 0.95rem; font-weight: 700; color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+
+:is(#ss-main, .mt-host) .pe-typelist {
+  max-height: 46vh; overflow: auto;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  margin: 0 0 12px;
+}
+:is(#ss-main, .mt-host) .pe-typerow {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 11px;
+  border-bottom: 1px solid var(--line);
+}
+:is(#ss-main, .mt-host) .pe-typerow:last-child { border-bottom: 0; }
+:is(#ss-main, .mt-host) .pe-typerow > span:first-child { flex: 1; }
+:is(#ss-main, .mt-host) .pe-typerow .btn[disabled] { opacity: .45; cursor: not-allowed; }

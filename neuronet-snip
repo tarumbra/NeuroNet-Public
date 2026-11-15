@@ -1,0 +1,249 @@
+#!/usr/bin/env python3
+"""neuronet-snip -- NeuroNet's snip tool (15 November 2026).
+
+    neuronet-snip [smart|region|windows|fullscreen|scroll]   take a snip
+    neuronet-snip list [--all]          the snips in ~/Documents/NeuroNet Picture References/NeuroNet Snips
+    neuronet-snip name N "Definition"   Save as: 261115 - Snip N - (Definition)
+    neuronet-snip archive N [N ...]     done with: into NeuroNet Snips/Archive
+    neuronet-snip unarchive N
+    neuronet-snip folder                print the folder
+
+The capture IS Omarchy's screenshot tool (omasnap): the same smart selection
+(drag a box, click a window, click empty space for the screen), region,
+window, full screen and scrolling captures, the floating preview with Pin,
+Copy and Edit, the annotation editor and the clipboard copy. The only
+difference, as Cam asked: what it saves goes into a private folder that this
+watches, and each picture becomes the next snip -- named "YYMMDD - Snip N",
+copied into ~/Documents/NeuroNet Picture References/NeuroNet Snips and into NeuroNet's Photos, folder
+"NeuroNet Snips". Editing the capture in omasnap and saving replaces that
+snip's picture (same number). A notification says it's saved; clicking it
+opens NeuroNet's Save as, where the "(Definition)" goes.
+
+Super+Alt+X (neuronet-capture) and the Snip button in NeuroNet's top bar run
+this; the button passes --from-app, and NeuroNet then asks for the name
+itself instead of a notification.
+"""
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, HERE)
+import snips  # noqa: E402
+
+MODES = {"smart": [], "region": ["--capture-region"], "windows": ["--capture-window"],
+         "window": ["--capture-window"], "fullscreen": ["--capture-fullscreen"], "scroll": ["--scroll"]}
+
+
+def have(cmd):
+    return shutil.which(cmd) is not None
+
+
+def notify(title, body, image=None, exec_args=None, urgent=False):
+    if have("omarchy-notification-send"):
+        cmd = ["omarchy-notification-send", "--app-name", "NeuroNet", "-g", "󰩫"]
+        if urgent:
+            cmd += ["-u", "critical"]
+        if image:
+            cmd += ["--image", image]
+        cmd += [title, body]
+        if exec_args:
+            cmd += ["--exec"] + exec_args
+    else:
+        cmd = ["notify-send", "-a", "NeuroNet"] + (["-i", image] if image else []) + [title, body]
+    try:
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def call_app(action, payload):
+    """NeuroNet's own hands (neuronet-call -> SS.boardDo in ui/app.js); it is
+    started, hidden, when it isn't running. -> its answer, or {error}."""
+    if os.environ.get("NEURONET_SNIP_NO_APP"):
+        return {"error": "NeuroNet is off for this run."}
+    caller = os.environ.get("NEURONET_SNIP_CALL") or os.path.join(HERE, "neuronet-call")   # tests: a stand-in
+    try:
+        r = subprocess.run([caller, action, json.dumps(payload)],
+                           capture_output=True, text=True, timeout=60)
+        return json.loads(r.stdout.strip().splitlines()[-1]) if r.stdout.strip() else {"error": "NeuroNet did not answer."}
+    except (OSError, subprocess.SubprocessError, ValueError, IndexError):
+        return {"error": "NeuroNet did not answer."}
+
+
+def app_running():
+    """Only tell NeuroNet when it's already open: archiving from a terminal
+    (Claude, after using a snip) must never start it."""
+    if os.environ.get("NEURONET_SNIP_NO_APP"):
+        return False
+    if os.environ.get("NEURONET_SNIP_CALL"):
+        return True
+    try:      # the same test neuronet-call makes: does anyone own org.neuronet.App?
+        r = subprocess.run(["busctl", "--user", "call", "org.freedesktop.DBus", "/org/freedesktop/DBus",
+                            "org.freedesktop.DBus", "NameHasOwner", "s", "org.neuronet.App"],
+                           capture_output=True, text=True, timeout=5)
+        return "true" in r.stdout
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def photos_hidden():
+    """Photos hidden in Settings -> Sections shown (neuronet-path hidden photos):
+    the snip still goes to Documents, but no copy is filed in Photos."""
+    if not have("neuronet-path"):
+        return False
+    try:
+        return subprocess.run(["neuronet-path", "hidden", "photos"], timeout=5,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def clipboard_image():
+    """The clipboard's PNG (bytes), or b'' -- for a capture that was only
+    copied (omasnap's autosave turned off, or a copy-only scroll capture)."""
+    if not have("wl-paste"):
+        return b""
+    try:
+        r = subprocess.run(["wl-paste", "--no-newline", "--type", "image/png"], capture_output=True, timeout=3)
+        return r.stdout if r.returncode == 0 else b""
+    except (OSError, subprocess.SubprocessError):
+        return b""
+
+
+class Session:
+    """One capture: the first picture saved becomes a snip, later ones (an
+    edit saved from omasnap's editor) replace its picture."""
+
+    def __init__(self, from_app):
+        self.from_app = from_app
+        self.snip = None
+        self.to_photos = not photos_hidden()
+
+    def take(self, path):
+        if self.snip is None:
+            self.snip = snips.add(path)
+            s = self.snip
+            res = call_app("snip.add", {"path": s["path"], "n": s["n"], "name": s["name"][:-4],
+                                        "ask": self.from_app}) if self.to_photos else {"ok": True}
+            where = "NeuroNet Picture References/NeuroNet Snips" + (" and Photos" if self.to_photos and res.get("ok") else "")
+            if not self.from_app or not res.get("ok"):
+                notify("Snip %d saved" % s["n"], "%s · in %s. Click to name it." % (s["name"][:-4], where),
+                       image=s["path"], exec_args=[os.path.join(HERE, "neuronet-open"), "snip", str(s["n"])])
+            if res.get("error") and self.to_photos:
+                notify("Snip %d is in Documents only" % s["n"], res["error"], urgent=True)
+        else:
+            e = snips.replace(self.snip["n"], path)
+            if e and self.to_photos:
+                call_app("snip.replace", {"n": e["n"], "path": e["path"]})
+
+
+def capture(mode, from_app):
+    run_dir = os.path.join(os.environ.get("XDG_RUNTIME_DIR") or "/tmp", "neuronet-snip", str(os.getpid()))
+    os.makedirs(run_dir, exist_ok=True)
+    session = Session(from_app)
+    try:
+        if have("omasnap"):
+            before = hashlib.sha1(clipboard_image()).hexdigest()
+            env = dict(os.environ, OMASNAP_SCREENSHOT_DIR=run_dir)
+            proc = subprocess.Popen(["omasnap"] + MODES[mode], env=env,
+                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            seen, done = {}, {}
+
+            def look():
+                try:
+                    names = sorted(os.listdir(run_dir))
+                except OSError:
+                    return
+                for name in names:
+                    if not name.endswith(".png") or name.endswith(".thumb.png") or name.startswith("."):
+                        continue
+                    path = os.path.join(run_dir, name)
+                    try:
+                        st = os.stat(path)
+                    except OSError:
+                        continue
+                    key = (st.st_size, st.st_mtime_ns)
+                    # settled (the same size and time twice running) and not taken yet at this key
+                    if st.st_size and seen.get(path) == key and done.get(path) != key:
+                        done[path] = key
+                        session.take(path)
+                    seen[path] = key
+
+            while proc.poll() is None:
+                look()
+                time.sleep(0.4)
+            for _ in range(3):
+                look()
+                time.sleep(0.3)
+            if session.snip is None:                      # copied, never saved: take the clipboard's
+                img = clipboard_image()
+                if img and hashlib.sha1(img).hexdigest() != before:
+                    path = os.path.join(run_dir, "clipboard.png")
+                    with open(path, "wb") as f:
+                        f.write(img)
+                    session.take(path)
+        else:
+            # without Omarchy (a plain Hyprland, KDE): a box, a window or the screen
+            path = os.path.join(run_dir, "snip.png")
+            if os.environ.get("XDG_CURRENT_DESKTOP", "").find("KDE") >= 0 and have("spectacle"):
+                how = {"fullscreen": "-f", "windows": "-a", "window": "-a"}.get(mode, "-r")
+                subprocess.run(["spectacle", "-b", "-n", how, "-o", path], capture_output=True)
+            elif have("grim"):
+                if mode == "fullscreen":
+                    subprocess.run(["grim", path], capture_output=True)
+                elif have("slurp"):
+                    box = subprocess.run(["slurp"], capture_output=True, text=True).stdout.strip()
+                    if box:
+                        subprocess.run(["grim", "-g", box, path], capture_output=True)
+            if os.path.isfile(path):
+                session.take(path)
+    finally:
+        shutil.rmtree(run_dir, ignore_errors=True)
+    return 0
+
+
+def main(argv):
+    args = [a for a in argv if not a.startswith("--")]
+    flags = {a for a in argv if a.startswith("--")}
+    cmd = args[0] if args else "smart"
+    if cmd in MODES:
+        return capture(cmd, "--from-app" in flags)
+    if cmd == "folder":
+        print(snips.snips_dir())
+        return 0
+    if cmd == "list":
+        for e in snips.list_snips(include_archive="--all" in flags):
+            print("%s%s" % (e["path"], "  (archived)" if e["archived"] else ""))
+        return 0
+    if cmd in ("archive", "unarchive") and len(args) > 1:
+        bad = 0
+        for n in args[1:]:
+            e = (snips.archive if cmd == "archive" else snips.unarchive)(int(n))
+            if not e:
+                print("No snip %s." % n, file=sys.stderr)
+                bad = 1
+                continue
+            print(e["path"])
+            if app_running():          # the copy in Photos follows it (NeuroNet Snips / Archive)
+                call_app("snip.archive", {"n": e["n"], "archived": cmd == "archive"})
+        return bad
+    if cmd == "name" and len(args) > 1:
+        e = snips.rename(int(args[1]), " ".join(args[2:]))
+        if not e:
+            print("No snip %s." % args[1], file=sys.stderr)
+            return 1
+        print(e["path"])
+        if app_running():
+            call_app("snip.rename", {"n": e["n"], "name": e["name"][:-4]})
+        return 0
+    print(__doc__.split("\n\n")[1], file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

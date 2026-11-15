@@ -1,0 +1,13 @@
+{
+  "//": [
+    "Content for ui/pet/core/40-zzz-d-the-tutorial.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "GUIDE": {
+    "name": "Amunet",
+    "title": "Keeper of Neurovale",
+    "look": {"body": "f"},
+    "gear": {"helmet": "pharaohcrown", "torso": "pharaohrobe", "feet": "pharaohsandals"}
+  },
+  "TUTORIAL_FINAL": {"rareegg": 1, "ironcrate": 5, "howtoplay": 1}
+}

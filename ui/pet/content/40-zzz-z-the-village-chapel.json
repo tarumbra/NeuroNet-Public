@@ -1,0 +1,8 @@
+{
+ "WORKSHOPS.chapel": {
+  "//": "The Village chapel (an idea Cam approved in note 13: 'the Paladin's tutor, holy water, and a bless-your-weapon service'; Part 8 and 9 left it for later; built 16 October when Cam painted it). Sister Maren, the Paladin's tutor, sells holy water -- a flask blesses your blade from the bag, as it always has (one way to bless). Switching to the Paladin stays at the Guild hall (one home).",
+  "name": "The Chapel", "who": "Sister Maren", "npc": true, "trade": 1, "look": {"skin": 0, "hair": 1, "outfit": 2, "pic": "maren"},
+  "says": "Sit a while, if you like. And take some holy water for the road -- a blessed blade bites the dead.", "recipes": []
+ },
+ "CHAPEL_STOCK": [["holywater", 60]]
+}

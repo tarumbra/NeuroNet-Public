@@ -1,0 +1,132 @@
+#!/bin/bash
+# neuronet-doctor -- why isn't NeuroNet working here? Everything needed to
+# tell, in one text file to send back.
+#
+#   neuronet-doctor            writes ~/neuronet-doctor.txt
+#   neuronet-doctor --no-start ... without trying to start NeuroNet
+#
+# (2026-09-29) NeuroNet installed on Cam's second computer, and "NeuroNet
+# didn't open" -- with nothing on that computer to say why. This gathers
+# what would: Omarchy and the graphics card, where NeuroNet is, the software
+# it needs, the shell plugins switched on (docks included), the shell's own
+# log, what NeuroNet said the last time it started, and -- unless told not
+# to -- a start of NeuroNet with what it says, stopped after 25 seconds.
+#
+# It only reads, apart from that test start. Nothing in it is secret:
+# folder names, plugin names, versions, error messages.
+set -uo pipefail
+
+OUT="${1:-}"; NOSTART=""
+[ "$OUT" = "--no-start" ] && { NOSTART=1; OUT=""; }
+OUT="${OUT:-$HOME/neuronet-doctor.txt}"
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/neuronet/paths.json"
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}"
+SHELLJSON="$HOME/.config/omarchy/shell.json"
+
+section() { printf '\n==================== %s\n' "$*"; }
+run() { printf '$ %s\n' "$*"; bash -c "$*" 2>&1 | sed 's/^/  /'; }
+
+APP=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("app",""))' "$CONF" 2>/dev/null)
+[ -z "$APP" ] && APP="$(cd "$(dirname "$(readlink -f "$0")")/../.." 2>/dev/null && pwd)"
+
+{
+  echo "NeuroNet doctor -- $(date '+%Y-%m-%d %H:%M:%S') on $(hostname)"
+
+  # Known causes, said first and plainly -- the details follow below.
+  section "Problems found"
+  found=0
+  if grep -qi 'QT cannot be loaded' "$STATE/neuronet/start.log" 2>/dev/null; then
+    echo "  ! NeuroNet started WITHOUT Qt (pywebview fell back to GTK) -- see start.log below."
+    echo "    Its window then can't be found by the shortcuts. Usual cause: python-qtpy missing."
+    echo "    Fix: omarchy pkg add python-qtpy   (then restart NeuroNet)"
+    found=1
+  fi
+  python3 -c 'import qtpy' >/dev/null 2>&1 || { echo "  ! python-qtpy is missing -- NeuroNet can't use Qt. Fix: omarchy pkg add python-qtpy"; found=1; }
+  odd=$(hyprctl clients -j 2>/dev/null | jq -r '.[] | select(.title == "NeuroNet" and .class != "NeuroNet") | .class' | head -1)
+  [ -n "$odd" ] && { echo "  ! NeuroNet's window is named \"$odd\", not \"NeuroNet\" -- shortcuts look for \"NeuroNet\"."; found=1; }
+  [ "$found" = 0 ] && echo "  (none of the known ones)"
+
+  section "Omarchy"
+  run "omarchy version"
+  run "cat $STATE/omarchy/current/theme.name"
+  run "echo session: \$XDG_SESSION_TYPE  desktop: \$XDG_CURRENT_DESKTOP"
+
+  section "Graphics"
+  run "lspci | grep -iE 'vga|3d|display'"
+  run "lsmod | grep -E '^(nvidia|nvidia_drm|nouveau|amdgpu|i915|xe) ' | cut -c1-60"
+  run "cat /sys/module/nvidia_drm/parameters/modeset 2>/dev/null || echo '(no nvidia_drm)'"
+
+  section "Where NeuroNet is"
+  run "cat $CONF"
+  run "ls -la '$APP' | head -40"
+  run "ls -la ~/.local/bin/ | grep -i neuronet"
+
+  section "Software NeuroNet needs"
+  run "python3 --version"
+  while read -r kind name how; do
+    case "$kind" in ''|\#*) continue ;; esac
+    case "$kind" in
+      python) python3 -c "import $name" >/dev/null 2>&1 && echo "  ok       $name" \
+                || echo "  MISSING  $name  -- $(python3 -c "import $name" 2>&1 | tail -1)" ;;
+      *) command -v "$name" >/dev/null 2>&1 && echo "  ok       $name" || echo "  MISSING  $name ($kind)" ;;
+    esac
+  done < "$APP/integration/deps.txt"
+  run "pacman -Q python-pywebview python-pyqt6 python-pyqt6-webengine qt6-webengine 2>&1"
+
+  section "Shell plugins switched on (docks included)"
+  run "jq -c '[.plugins[]?.id]' '$SHELLJSON'"
+  run "jq -c '.bar.layout | map_values([.[]?.id])' '$SHELLJSON'"
+  run "ls ~/.config/omarchy/plugins/"
+  run "ls /usr/share/omarchy/shell/plugins/ | grep -i -E 'dock|launcher|taskbar' || echo '(no built-in dock)'"
+  run "cat $STATE/omarchy/neuronet-dock.json"
+
+  section "Shortcuts"
+  run "sed -n '/>>> NeuroNet/,/<<< NeuroNet/p' ~/.config/hypr/bindings.lua | head -12"
+  run "hyprctl binds -j | jq -r '[.[] | select(.description | startswith(\"NeuroNet\"))] | \"\\(length) NeuroNet shortcuts loaded\"'"
+  run "cat $STATE/omarchy/neuronet-gamemode.json 2>/dev/null || echo 'Game Mode: never switched on (no state file)'"
+  # What a shortcut sees: Hyprland runs it, not this terminal, and with
+  # Hyprland's own PATH. So ask Hyprland to run the checks.
+  seen=$(mktemp)
+  hyprctl dispatch "hl.dsp.exec_cmd(\"sh -c 'echo PATH=\$PATH; echo neuronet-quick: \$(command -v neuronet-quick || echo NOT FOUND); echo python3: \$(command -v python3); python3 -c \\\"import PyQt6.QtWebEngineWidgets; print(\\\\\\\"PyQt6 WebEngine: ok\\\\\\\")\\\" 2>&1 | tail -1; neuronet-path app 2>&1' > $seen 2>&1\")" >/dev/null 2>&1
+  sleep 3
+  echo "$ (what Hyprland sees, when a shortcut runs)"
+  sed 's/^/  /' "$seen"; [ -s "$seen" ] || echo "  (Hyprland ran nothing -- its exec didn't work)"
+  rm -f "$seen"
+
+  section "The installer's log"
+  run "tail -60 $STATE/neuronet/install.log"
+
+  section "Hyprland"
+  run "hyprctl configerrors"
+  run "hyprctl clients -j | jq -r '.[] | \"\\(.class)  \\(.title[0:40])  ws \\(.workspace.name)\"'"
+
+  section "The shell's log (NeuroNet, docks, errors)"
+  L=$(ls -t /run/user/$(id -u)/quickshell/by-id/*/log.qslog 2>/dev/null | head -1)
+  if [ -n "$L" ]; then qs log "$L" 2>&1 | grep -v 'Qt.atob' | grep -i -E 'neuronet|dock|error|fail|unavailable' | tail -60 | sed 's/^/  /'
+  else echo "  (no shell log found)"; fi
+
+  section "What NeuroNet said the last time it started"
+  run "tail -80 $STATE/neuronet/start.log"
+  run "tail -20 '$APP/neuronet.log'"
+
+  section "NeuroNet, started now"
+  if pgrep -f '^(/usr/bin/)?python3? [^ ]*neuronet\.py' >/dev/null; then
+    echo "  NeuroNet is running (not started again):"
+    pgrep -af '^(/usr/bin/)?python3? [^ ]*neuronet\.py' | sed 's/^/  /'
+  elif [ -n "$NOSTART" ]; then
+    echo "  (not tried: --no-start)"
+  else
+    echo "  Starting it for 25 seconds -- a window may appear, and closes again."
+    t=$(mktemp)
+    (cd "$APP" && WEBKIT_DISABLE_DMABUF_RENDERER=1 timeout 25 python3 "$APP/neuronet.py" --gui qt >"$t" 2>&1)
+    code=$?
+    tail -150 "$t" | sed 's/^/  /'; rm -f "$t"
+    echo "  (exit: $code -- 124 means it was still running after 25 s, so it did start)"
+  fi
+
+  section "Install record"
+  run "cat $STATE/neuronet/install.json"
+} > "$OUT" 2>&1
+
+echo "Written: $OUT"
+echo "Send it back with LocalSend."

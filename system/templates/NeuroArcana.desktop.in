@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroArcana
+Comment=Collect tarot cards and duel with them under the stars -- a card battle game
+Exec=neuroarcana
+Path=@APP@
+Icon=@APP@/icons/NeuroArcana.png
+Terminal=false
+Categories=Game;CardGame;
+StartupNotify=true
+StartupWMClass=NeuroArcana

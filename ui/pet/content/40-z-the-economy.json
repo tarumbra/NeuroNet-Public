@@ -1,0 +1,8 @@
+{
+  "//": [
+    "Content for ui/pet/core/40-z-the-economy.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "VALUABLE_IDS": ["roughgem", "amethyst", "opal", "jade", "pearl", "lapis", "fossil", "scarab", "oldcoin", "ambergris"],
+  "ECON": {"budget": {}, "scaled": {}}
+}

@@ -1,0 +1,267 @@
+#!/usr/bin/env python3
+"""neuronet-dev-mirror -- make this computer a copy of the main PC, NeuroNet-wise (2026-11-08, Cam: "think like this
+laptop becomes a duplicate of the main PC ... that should be consistent on all dev machines in the future"). Run by
+`neuronet-dev mirror`.
+
+`neuronet-dev pull` keeps the code, the art and the working notes in step through GitHub, but not the rest of the data
+(92 GB on the PC: the pictures, the decks at full size, the cafe, the money books...) nor the games' own saves. This
+copies them straight from the main PC over the home network (ssh + rsync), PC -> here, never the other way:
+
+  NeuroNet's data folder        the PC's `neuronet-path data` -> this computer's, all but the working notes (collab,
+                                notes, ebooks): `neuronet-dev pull` keeps those in step both ways already, and a copy of
+                                the PC's older one over a newer note here would reach GitHub as a deletion
+  the games' own folders        ~/.local/share/NeuroArcana, NeuroArcana-dev, NeuroCafe, NeuroCafe-dev (those the PC has)
+
+Afterwards this computer's data is the PC's, file for file; anything here it replaces or deletes is kept in
+<state>/mirror-replaced/<when>/ first (the last 3 runs). The PC's own folder names inside the data (its NeuroNet is in
+/mnt/Cams_Collective) are changed to this computer's. Nothing runs while NeuroNet or a game is open here: it would save
+its old copy over the new one.
+
+    neuronet-dev-mirror <checkout> setup [user@pc]   the key, put on the PC (asks the PC's password once), and a test
+    neuronet-dev-mirror <checkout> check [user@pc]   what a copy would bring, and how much
+    neuronet-dev-mirror <checkout> copy  [user@pc]   the copy
+
+The PC's address is remembered in ~/.config/neuronet/mirror.json after the first time. NEURONET_MIRROR_RSH (a command
+that takes the host and then the command, like ssh), NEURONET_MIRROR_CONF and NEURONET_MIRROR_OPEN (what counts as
+NeuroNet or a game being open) are for the tests.
+"""
+import json
+import os
+import re
+import shlex
+import shutil
+import subprocess
+import sys
+import time
+
+LEFT_TO_PULL = ("collab", "notes", "ebooks")   # neuronet-dev-data's areas in the data folder
+GAMES = ("NeuroArcana", "NeuroArcana-dev", "NeuroCafe", "NeuroCafe-dev")
+KEEP_RUNS = 3
+OPEN_HERE = os.environ.get("NEURONET_MIRROR_OPEN") or r"neuronet\.py|neurocafe\.py|neuroarcana\.py|electron.*Work/Neuro(Cafe|Arcana)"
+KEY = os.path.expanduser("~/.ssh/neuronet_mirror")
+REWRITE_MAX = 50 * 1024 * 1024
+HOME = os.path.expanduser("~")
+
+
+def conf_path():
+    return os.environ.get("NEURONET_MIRROR_CONF") or os.path.join(
+        os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config"), "neuronet", "mirror.json")
+
+
+def rsh():
+    if os.environ.get("NEURONET_MIRROR_RSH"):
+        return shlex.split(os.environ["NEURONET_MIRROR_RSH"])
+    return ["ssh", "-i", KEY, "-o", "IdentitiesOnly=yes", "-o", "BatchMode=yes", "-o", "ConnectTimeout=8",
+            "-o", "StrictHostKeyChecking=accept-new"]
+
+
+def remote(host, script):
+    return subprocess.run(rsh() + [host, "sh -c " + shlex.quote(script)], capture_output=True, text=True)
+
+
+def where_there(host):
+    """The PC's NeuroNet app and data folders, its home, and which game folders it has -- or an error."""
+    games = " ".join(GAMES)
+    r = remote(host, 'p="$HOME/.local/bin/neuronet-path"; echo "app=$("$p" app)"; echo "data=$("$p" data)"; '
+                     'echo "home=$HOME"; for g in ' + games + '; do [ -d "$HOME/.local/share/$g" ] && echo "game=$g"; done; '
+                     'pgrep -u "$(id -u)" -f ' + shlex.quote(OPEN_HERE) + ' | grep -qvx "$$" && echo open=yes; true')
+    # (grep -v $$: pgrep leaves itself out, but not this shell, whose own command names the programs)
+    if r.returncode != 0:
+        return None, (r.stderr.strip() or r.stdout.strip() or f"ssh to {host} failed")
+    out = {"games": []}
+    for line in r.stdout.splitlines():
+        k, _, v = line.partition("=")
+        if k == "game":
+            out["games"].append(v)
+        elif k:
+            out[k] = v
+    if not out.get("data") or not out.get("app"):
+        return None, f"{host} answered, but its NeuroNet couldn't say where it is (neuronet-path): {r.stdout.strip()}"
+    return out, None
+
+
+def where_here():
+    def p(what):
+        return subprocess.run(["neuronet-path", what], capture_output=True, text=True).stdout.strip()
+    return {"app": p("app"), "data": p("data"), "home": HOME}
+
+
+def pairs(there, here):
+    """(name, the PC's folder, this computer's folder, folders left out) for everything copied."""
+    out = [("NeuroNet's data", there["data"], here["data"], LEFT_TO_PULL)]
+    share = os.environ.get("XDG_DATA_HOME") or os.path.join(HOME, ".local", "share")
+    for g in there["games"]:
+        out.append((g, f"{there['home']}/.local/share/{g}", os.path.join(share, g), ()))
+    return out
+
+
+def rsync(host, src, dst, dry, backup=None, leave=()):
+    cmd = ["rsync", "-a", "--delete", "--stats", "-e", shlex.join(rsh())] + [f"--exclude=/{d}/" for d in leave]
+    if dry:
+        cmd.append("-n")
+    if backup:
+        cmd += ["--backup", "--backup-dir", backup]
+    if not dry and sys.stdout.isatty():
+        cmd.append("--info=progress2")
+    os.makedirs(dst, exist_ok=True)
+    r = subprocess.run(cmd + [f"{host}:{src.rstrip('/')}/", dst.rstrip("/") + "/"], text=True,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stats = {}
+    for line in r.stdout.splitlines():
+        m = re.match(r"(Number of regular files transferred|Number of deleted files|Total transferred file size): ([\d,]+)", line)
+        if m:
+            stats[m.group(1)] = int(m.group(2).replace(",", ""))
+    return r.returncode, stats, r.stderr.strip()
+
+
+def size(n):
+    for unit in ("bytes", "KB", "MB", "GB"):
+        if n < 1024 or unit == "GB":
+            return f"{n:.0f} {unit}" if unit == "bytes" else f"{n:.1f} {unit}"
+        n /= 1024
+
+
+def rewrite(top, swaps):
+    """The PC's folder names inside the JSON files under top, changed to this computer's. Returns files changed."""
+    changed = 0
+    for root, _dirs, files in os.walk(top):
+        for n in files:
+            p = os.path.join(root, n)
+            if not n.endswith(".json") or os.path.islink(p) or os.path.getsize(p) > REWRITE_MAX:
+                continue
+            try:
+                s = open(p, encoding="utf-8").read()
+            except (OSError, UnicodeDecodeError):
+                continue
+            t = s
+            for a, b in swaps:
+                t = t.replace(a, b)
+            if t != s:
+                st = os.stat(p)
+                with open(p + ".mirror-tmp", "w", encoding="utf-8") as f:
+                    f.write(t)
+                os.chmod(p + ".mirror-tmp", st.st_mode & 0o7777)
+                os.utime(p + ".mirror-tmp", ns=(st.st_atime_ns, st.st_mtime_ns))
+                os.replace(p + ".mirror-tmp", p)
+                changed += 1
+    return changed
+
+
+def only_there(top, limit=8):
+    """Folders the data names that aren't on this computer (a music library on the PC's own drive, say)."""
+    seen = {}
+    for root, _dirs, files in os.walk(top):
+        for n in files:
+            p = os.path.join(root, n)
+            if n.endswith(".json") and not os.path.islink(p) and os.path.getsize(p) <= REWRITE_MAX:
+                try:
+                    s = open(p, encoding="utf-8").read()
+                except (OSError, UnicodeDecodeError):
+                    continue
+                for m in re.finditer(r'"(/(?:mnt|media|run/media|home)/[^"]+)"', s):
+                    d = m.group(1)
+                    if not os.path.exists(d):
+                        seen.setdefault(os.path.dirname(d) if "." in os.path.basename(d) else d, os.path.relpath(p, top))
+    return list(seen.items())[:limit]
+
+
+def setup(host):
+    if not os.path.exists(KEY):
+        os.makedirs(os.path.dirname(KEY), mode=0o700, exist_ok=True)
+        subprocess.run(["ssh-keygen", "-q", "-t", "ed25519", "-N", "", "-C", f"neuronet mirror ({os.uname().nodename})", "-f", KEY], check=True)
+        print(f"made the key {KEY}")
+    if remote(host, "true").returncode != 0:
+        cmd = ["ssh-copy-id", "-i", KEY + ".pub", host]
+        if not sys.stdin.isatty():
+            print(f"to put the key on the PC (it asks for the PC's password once), run:\n  {shlex.join(cmd)}")
+            return 1
+        if subprocess.run(cmd).returncode != 0:
+            print("couldn't put the key on the PC -- is it on, with ssh switched on (sudo systemctl enable --now sshd)?")
+            return 1
+    there, err = where_there(host)
+    if err:
+        print(f"the PC answers, but: {err}")
+        return 1
+    print(f"the PC is ready: NeuroNet's data at {there['data']}, games: {', '.join(there['games']) or 'none'}")
+    return 0
+
+
+def main():
+    app = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else ""
+    what = sys.argv[2] if len(sys.argv) > 2 else "check"
+    cf = conf_path()
+    try:
+        conf = json.load(open(cf))
+    except (OSError, ValueError):
+        conf = {}
+    host = sys.argv[3] if len(sys.argv) > 3 else conf.get("main")
+    if what not in ("setup", "check", "copy") or not app:
+        print("neuronet-dev mirror setup|check|copy [user@pc]")
+        return 2
+    if not host:
+        print("which computer is the main PC? e.g.  neuronet-dev mirror setup cam@192.168.1.150")
+        return 2
+    if conf.get("main") != host:
+        os.makedirs(os.path.dirname(cf), exist_ok=True)
+        conf["main"] = host
+        with open(cf, "w") as f:
+            json.dump(conf, f, indent=1)
+    if what == "setup":
+        return setup(host)
+
+    there, err = where_there(host)
+    if err:
+        print(f"can't reach the main PC ({host}): {err}\n  (is it on? first time: neuronet-dev mirror setup {host})")
+        return 1
+    here = where_here()
+    if not here["data"]:
+        print("this computer's NeuroNet couldn't say where its data goes (neuronet-path data) -- run neuronet-setup")
+        return 1
+    if os.path.realpath(here["data"]) == os.path.realpath(there["data"]) and host in ("localhost", "127.0.0.1"):
+        print("that's this computer")
+        return 1
+    if what == "copy" and subprocess.run(["pgrep", "-u", str(os.getuid()), "-f", OPEN_HERE], capture_output=True).returncode == 0:
+        print("NeuroNet or a game is open on this computer -- close it first (it would save its old copy over the new one)")
+        return 1
+    if there.get("open"):
+        print("note: NeuroNet or a game is open on the PC -- what it hasn't saved yet won't come (close it there for a clean copy)")
+
+    state = os.path.join(os.environ.get("XDG_STATE_HOME") or os.path.join(HOME, ".local", "state"), "neuronet")
+    stamp = time.strftime("%Y-%m-%d_%H%M%S")
+    keep = os.path.join(state, "mirror-replaced", stamp)
+    total, bad = 0, 0
+    for name, src, dst, leave in pairs(there, here):
+        rc, st, e = rsync(host, src, dst, what == "check", os.path.join(keep, name.replace("'", "").replace(" ", "-")) if what == "copy" else None, leave)
+        n, gone, b = st.get("Number of regular files transferred", 0), st.get("Number of deleted files", 0), st.get("Total transferred file size", 0)
+        total += b
+        verb = "would bring" if what == "check" else "brought"
+        if rc != 0:
+            bad += 1
+            print(f"{name}: rsync stopped ({rc}): {e.splitlines()[-1] if e else ''}")
+        else:
+            print(f"{name}: {verb} {n} files ({size(b)})" + (f", {'would take out' if what == 'check' else 'took out'} {gone} not on the PC" if gone else ""))
+        if what == "copy" and rc == 0:
+            swaps = [(there["data"], here["data"]), (there["app"], here["app"])]
+            if there["home"] != here["home"]:
+                swaps.append((there["home"] + "/", here["home"] + "/"))
+            swaps = [(a, b) for a, b in swaps if a and a != b]
+            fixed = sum(rewrite(os.path.join(dst, d), swaps) for d in os.listdir(dst) if d not in leave) if swaps else 0
+            if fixed:
+                print(f"  the PC's folder names changed to this computer's in {fixed} files")
+            for d, f in only_there(dst):
+                print(f"  only on the PC: {d}  (named in {f})")
+    if what == "check":
+        print(f"in all: {size(total)} to bring from {host}" + ("" if total else " -- this computer already matches"))
+    else:
+        if os.path.isdir(keep):
+            print(f"what was here before is in {keep}")
+        d = os.path.dirname(keep)
+        if os.path.isdir(d):
+            for old in sorted(os.listdir(d))[:-KEEP_RUNS]:
+                shutil.rmtree(os.path.join(d, old), ignore_errors=True)
+        print("The notes, Collaboration and ebooks come with neuronet-dev pull. Then open NeuroNet (and the games)." if not bad else "Some of it didn't come -- run it again.")
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

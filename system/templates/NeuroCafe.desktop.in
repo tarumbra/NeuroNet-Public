@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroCafe
+Comment=Cook, serve and grow a little cafe -- a cafe game
+Exec=neurocafe show
+Path=@APP@
+Icon=@APP@/icons/NeuroCafe.png
+Terminal=false
+Categories=Game;
+StartupNotify=true
+StartupWMClass=NeuroCafe

@@ -1,0 +1,9 @@
+[Unit]
+Description=NeuroNet: check for a newer NeuroNet and put it in place (neuronet-update)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin
+ExecStart=%h/.local/bin/neuronet-update

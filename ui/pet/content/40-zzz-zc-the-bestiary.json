@@ -1,0 +1,132 @@
+{
+ "QUARRY": {
+  "//": "V6 (carried 10-0 + Cam, 2026-10-18), 'Know your quarry': every creature you (or your pack, or your pets) beat is counted, and what you know of it fills in -- `tiers`: its weak weapon style at 10, what it resists at 50, its elements at 150. MASTERY (Cam's q1 b, the Mathematician's): about `hours` of hunting the ground it shows up most on, worked out per creature from how often it turns up and how long a fight there takes, rounded to `round`, between `min` and `max`. A mastered creature takes `bonus.dmg` more from you and drops `bonus.drops` more, and now and then (`dropChance`) drops its own special thing (MASTERY_DROPS) -- bound, never sold (the Economist).",
+  "tiers": {
+   "style": 10,
+   "resist": 50,
+   "elements": 150
+  },
+  "hours": 40,
+  "round": 10,
+  "min": 150,
+  "max": 1500,
+  "dropChance": 0.02,
+  "bonus": {
+   "dmg": 0.1,
+   "drops": 0.1
+  }
+ },
+ "MASTERY_DROPS": {
+  "//": "The Game Developer's first list (V6): the farmyard and the crypt. Every other creature's mastery gives the trophy and the +10% now; its own drop comes once Cam has read the rest of the list (collab N8). `does` is what the item sheet says; the effects are wired in core/40-zzz-zc (quarry*). Icons borrow another's picture (iconAs) until the Art Director's sheet is painted.",
+  "chicken": "goldenfeather",
+  "duck": "emeraldfly",
+  "pig": "luckytrotter",
+  "fox": "foxbrush",
+  "skeleton": "ancientfemur",
+  "ghoul": "gravesalt",
+  "cryptbat": "echobell",
+  "wraith": "wraithveil",
+  "wisp": "wispjar"
+ },
+ "QUARRY_ITEMS": {
+  "goldenfeather": {
+   "name": "Golden feather",
+   "gem": 6,
+   "bound": true,
+   "iconAs": "feather",
+   "about": "A chicken's mastery: for the patient. A plume for any hat, once the Art Director paints it -- for now, a trophy in your Bestiary."
+  },
+  "emeraldfly": {
+   "name": "Emerald fly",
+   "gem": 6,
+   "bound": true,
+   "iconAs": "flyrod",
+   "about": "A duck's mastery, tied as a fly: in the bag, +5% speed at every fly-fishing spot."
+  },
+  "luckytrotter": {
+   "name": "Lucky trotter",
+   "gem": 6,
+   "bound": true,
+   "iconAs": "rawpork",
+   "about": "A pig's mastery, a charm: in the bag, +2% rare finds when digging."
+  },
+  "foxbrush": {
+   "name": "Fox's brush",
+   "gem": 6,
+   "bound": true,
+   "iconAs": "silk",
+   "about": "A fox's mastery: a tail scarf, once the Art Director paints it -- for now, a trophy in your Bestiary."
+  },
+  "ancientfemur": {
+   "name": "Ancient femur",
+   "gem": 7,
+   "bound": true,
+   "iconAs": "bones",
+   "about": "A skeleton's mastery: the crafting bench makes a Grand bone staff with it (+15% to the risen)."
+  },
+  "gravesalt": {
+   "name": "Grave salt",
+   "gem": 6,
+   "bound": true,
+   "iconAs": "holywater",
+   "about": "A ghoul's mastery: a Paladin blesses a blade with it like holy water, for twice as many hits.",
+   "bless": {
+    "hits": 60,
+    "maxHit": 1
+   }
+  },
+  "echobell": {
+   "name": "Echo bell",
+   "gem": 7,
+   "bound": true,
+   "iconAs": "lantern",
+   "about": "A crypt bat's mastery: in the bag, the Hollow Crypt's night creatures come 10% more often (more wisps, more life essence)."
+  },
+  "wraithveil": {
+   "name": "Wraith's veil",
+   "gem": 7,
+   "bound": true,
+   "iconAs": "cloth",
+   "about": "A wraith's mastery: in the bag, the undead's first hit in each fight is halved."
+  },
+  "wispjar": {
+   "name": "Wisp in a jar",
+   "gem": 7,
+   "bound": true,
+   "iconAs": "lifeessence",
+   "about": "A wisp's mastery: a light for your house. Once a week, a vigil at the graves always meets a wisp."
+  },
+  "grandbonestaff": {
+   "name": "Grand bone staff",
+   "gem": 7,
+   "iconAs": "bonestaff",
+   "price": 1400,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 18,
+    "risenDmg": 0.15,
+    "req": {
+     "magic": 45
+    }
+   },
+   "about": "A Necromancer's staff, made with an ancient femur: +15% to the risen."
+  }
+ },
+ "QUARRY_RECIPES": {
+  "crafting": [
+   {
+    "make": "grandbonestaff",
+    "needs": {
+     "bones": 60,
+     "bloodrune": 40,
+     "maple": 4,
+     "ancientfemur": 1
+    },
+    "level": 45,
+    "xp": 320
+   }
+  ]
+ }
+}

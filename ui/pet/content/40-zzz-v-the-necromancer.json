@@ -1,0 +1,638 @@
+{
+ "REGIONS.hollowcrypt": {
+  "//": "Battle Re-work Part 13a (note 07): the Hollow Crypt, under the Misty Isle -- reached from the Isle's page; not on the painted map yet (WORLD_SOON), a drawn scene until Cam paints it (note 10).",
+  "name": "Hollow Crypt",
+  "x": 7,
+  "y": 93,
+  "level": 40,
+  "needs": {
+   "ship": 1,
+   "item": "lantern",
+   "how": "to cross to the Isle and see where the steps go"
+  },
+  "blurb": "Steps under the Misty Isle, older than the pirates. Lanterns that nobody lights, and something that keeps the dead awake."
+ },
+ "HUNTS.hollowcrypt": {
+  "name": "Hollow Crypt",
+  "level": 40,
+  "time": 125,
+  "boss": "morvane",
+  "kills": 200,
+  "monsters": [
+   [
+    "skeleton",
+    25
+   ],
+   [
+    "ghoul",
+    25
+   ],
+   [
+    "cryptbat",
+    20
+   ],
+   [
+    "wraith",
+    15,
+    "night"
+   ],
+   [
+    "wisp",
+    20,
+    "night"
+   ]
+  ]
+ },
+ "CRYPT_MONSTERS": {
+  "//": "Level 38-42 creatures (V8, was 44-48), set against the Jungle. Wisps: the only life essence there is (Cam's rule), about one in eight; they dodge and shrug off blades, so magic and nets do best (note 07). Blood essence from the crypt's dead, for blood runes. Every kill drops bones (the game's rule) -- even a wraith's, even a wisp's: what's left of whoever it was.",
+  "skeleton": {
+   "name": "Skeleton",
+   "hp": 54,
+   "att": 19,
+   "def": 21,
+   "maxHit": 7,
+   "xp": 98,
+   "atk": "slash",
+   "weak": {
+    "crush": 1.5
+   },
+   "resist": {
+    "pierce": 0.6,
+    "slash": 0.75
+   },
+   "drops": [
+    [
+     "bones",
+     2,
+     4,
+     1
+    ],
+    [
+     "bloodessence",
+     1,
+     1,
+     0.25
+    ]
+   ]
+  },
+  "ghoul": {
+   "name": "Ghoul",
+   "hp": 70,
+   "att": 18,
+   "def": 16,
+   "maxHit": 8,
+   "xp": 102,
+   "atk": "slash",
+   "weak": {
+    "slash": 1.25
+   },
+   "drops": [
+    [
+     "bones",
+     1,
+     2,
+     1
+    ],
+    [
+     "bloodessence",
+     1,
+     2,
+     0.35
+    ]
+   ]
+  },
+  "cryptbat": {
+   "name": "Crypt bat",
+   "hp": 39,
+   "att": 21,
+   "def": 12,
+   "maxHit": 6,
+   "xp": 85,
+   "atk": "pierce",
+   "eva": 0.35,
+   "weak": {
+    "pierce": 1.5
+   },
+   "drops": [
+    [
+     "bones",
+     1,
+     1,
+     1
+    ],
+    [
+     "bloodessence",
+     1,
+     1,
+     0.15
+    ]
+   ]
+  },
+  "wraith": {
+   "name": "Wraith",
+   "hp": 61,
+   "att": 23,
+   "def": 17,
+   "maxHit": 8,
+   "xp": 115,
+   "atk": "magic",
+   "eva": 0.2,
+   "night": true,
+   "weak": {
+    "magic": 1.25
+   },
+   "resist": {
+    "slash": 0.75,
+    "crush": 0.75,
+    "pierce": 0.75
+   },
+   "drops": [
+    [
+     "bones",
+     1,
+     1,
+     1
+    ],
+    [
+     "bloodessence",
+     1,
+     2,
+     0.4
+    ]
+   ]
+  },
+  "wisp": {
+   "name": "Wisp",
+   "hp": 42,
+   "att": 21,
+   "def": 19,
+   "maxHit": 6,
+   "xp": 106,
+   "atk": "magic",
+   "eva": 0.45,
+   "night": true,
+   "weak": {
+    "magic": 1.3
+   },
+   "resist": {
+    "slash": 0.6,
+    "crush": 0.6,
+    "pierce": 0.6
+   },
+   "drops": [
+    [
+     "bones",
+     1,
+     1,
+     1
+    ],
+    [
+     "lifeessence",
+     1,
+     1,
+     0.125
+    ]
+   ]
+  },
+  "morvane": {
+   "name": "Morvane the Lich",
+   "boss": true,
+   "hp": 560,
+   "att": 35,
+   "def": 30,
+   "maxHit": 12,
+   "xp": 2400,
+   "atk": "magic",
+   "eva": 0.1,
+   "weak": {
+    "crush": 1.25
+   },
+   "resist": {
+    "pierce": 0.75,
+    "magic": 0.85
+   },
+   "drops": [
+    [
+     "bloodessence",
+     4,
+     8,
+     1
+    ],
+    [
+     "bones",
+     4,
+     6,
+     1
+    ],
+    [
+     "bloodbook",
+     1,
+     1,
+     0.03
+    ],
+    [
+     "ancientchest",
+     1,
+     1,
+     0.06
+    ]
+   ]
+  }
+ },
+ "SECRETS.hollowcrypt": [
+  {
+   "id": "sexton",
+   "kind": "cache",
+   "name": "The sexton's strongbox",
+   "text": "Tithes for candles, never spent",
+   "coins": 3200,
+   "items": {
+    "ironcrate": 1
+   }
+  },
+  {
+   "id": "cradle",
+   "kind": "egg",
+   "name": "In a stone cradle",
+   "text": "Warm, somehow, among the cold",
+   "egg": "duskegg"
+  }
+ ],
+ "PEOPLE.hollowcrypt": {
+  "id": "hobb",
+  "name": "Sexton Hobb",
+  "look": {
+   "skin": 1,
+   "hair": 4,
+   "outfit": 3
+  },
+  "says": "Mind the third step. And the fourth. Actually, mind all of them.",
+  "quests": [
+   {
+    "id": "restless",
+    "name": "Restless",
+    "text": "\"They won't lie still with her down there. Put fifty of them back to sleep -- gently, mind.\"",
+    "needs": [
+     {
+      "kills": [
+       "hollowcrypt",
+       50
+      ]
+     }
+    ],
+    "reward": {
+     "coins": 4000,
+     "items": {
+      "ironcrate": 1
+     },
+     "xp": {
+      "magic": 1500
+     }
+    }
+   },
+   {
+    "id": "candles",
+    "name": "Candles for the crypt",
+    "text": "\"Morvane put the lanterns out. I'd like them lit again. Twenty candles, if you would.\"",
+    "needs": [
+     {
+      "bring": {
+       "candle": 20
+      }
+     }
+    ],
+    "reward": {
+     "coins": 3000,
+     "items": {
+      "ancientchest": 1
+     }
+    }
+   },
+   {
+    "id": "ossuary",
+    "name": "The ossuary",
+    "text": "\"The ossuary's half empty. Not because they've left -- they wander. Bring me bones and I'll put them back where they belong.\"",
+    "needs": [
+     {
+      "bring": {
+       "bones": 150
+      }
+     }
+    ],
+    "reward": {
+     "coins": 3500,
+     "xp": {
+      "crafting": 1200
+     }
+    }
+   },
+   {
+    "id": "redink",
+    "name": "Red ink",
+    "text": "\"The old altar still works, if you can stand it. Fifty blood runes -- I keep the crypt's register in them.\"",
+    "needs": [
+     {
+      "bring": {
+       "bloodrune": 50
+      }
+     }
+    ],
+    "reward": {
+     "coins": 4500,
+     "xp": {
+      "runecrafting": 1500
+     }
+    }
+   },
+   {
+    "id": "deeper",
+    "name": "Deeper down",
+    "text": "\"Further down, they're older and crosser. Two hundred, and the lower halls are quiet again.\"",
+    "needs": [
+     {
+      "kills": [
+       "hollowcrypt",
+       200
+      ]
+     }
+    ],
+    "reward": {
+     "coins": 6000,
+     "items": {
+      "ancientchest": 1
+     }
+    }
+   },
+   {
+    "id": "crannies",
+    "name": "Every cranny",
+    "text": "\"Sextons hide things. I should know -- so did the last one. Find it all.\"",
+    "needs": [
+     {
+      "secrets": [
+       "hollowcrypt",
+       2
+      ]
+     }
+    ],
+    "reward": {
+     "coins": 3000,
+     "items": {
+      "ironcrate": 1
+     }
+    }
+   }
+  ]
+ },
+ "WORKSHOPS.cryptmerchant": {
+  "name": "The crypt merchant",
+  "who": "Sexton Hobb",
+  "npc": true,
+  "trade": 1,
+  "region": "hollowcrypt",
+  "look": {
+   "skin": 1,
+   "hair": 4,
+   "outfit": 3
+  },
+  "says": "A little life essence, for them as can't catch a wisp. It isn't cheap. Nothing down here is.",
+  "recipes": []
+ },
+ "AREA_COINS.hollowcrypt": [
+  6,
+  12
+ ],
+ "BOSS_PURSE.hollowcrypt": [
+  800,
+  1500
+ ],
+ "NECRO_ITEMS": {
+  "//": "Icon sheet 72. Life essence: wisps only (and a little from the crypt merchant). Blood essence: the crypt's dead, made into blood runes at the Blood altar (Runecrafting 38, V8). The Blood Book: Morvane's, the first time you beat her. The potion of life essence (apothecary, Herblore 40, V8) heals a risen pet; nothing else but Necromancy does. The bone staff: a Necromancer's staff (+10% to the risen), and the Necromancer's New Game Plus gift.",
+  "lifeessence": {
+   "name": "Life essence",
+   "gem": 7,
+   "price": 400
+  },
+  "bloodessence": {
+   "name": "Blood essence",
+   "gem": 5,
+   "price": 12
+  },
+  "bloodrune": {
+   "name": "Blood rune",
+   "gem": 6,
+   "rune": "blood",
+   "price": 8
+  },
+  "bloodbook": {
+   "name": "The Blood Book",
+   "gem": 9,
+   "price": 5000,
+   "about": "Morvane's. Sorceress Nyx wants it."
+  },
+  "lifepotion": {
+   "name": "Potion of life essence",
+   "gem": 7,
+   "price": 480,
+   "risenHeal": 0.5
+  },
+  "bonestaff": {
+   "name": "Bone staff",
+   "gem": 6,
+   "price": 900,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 16,
+    "risenDmg": 0.1,
+    "req": {
+     "magic": 40
+    }
+   }
+  }
+ },
+ "NECRO_RECIPES": {
+  "apothecary": [
+   {
+    "make": "lifepotion",
+    "needs": {
+     "lifeessence": 1,
+     "herb": 10,
+     "honeycomb": 2
+    },
+    "level": 40,
+    "xp": 200
+   }
+  ],
+  "crafting": [
+   {
+    "make": "bonestaff",
+    "needs": {
+     "bones": 60,
+     "bloodrune": 40,
+     "maple": 4
+    },
+    "level": 40,
+    "xp": 250
+   }
+  ]
+ },
+ "CRYPT_STOCK": {
+  "//": "The crypt merchant: life essence at a high price, three a day at most (the Economist's sink, and a help for the unlucky).",
+  "lifeessence": {
+   "price": 3000,
+   "daily": 3
+  }
+ },
+ "NECRO_SPELLS": {
+  "//": "Note 07's eight, in the Spellbook once you've learnt Necromancy (an Arcane's): `gate` = points in the Necromancy branch it waits for. raise / mend / army / rites take your turn and deal nothing; the rest are cast like any spell. Runes: blood (the Blood altar) and death.",
+  "raisefallen": {
+   "name": "Raise the fallen",
+   "level": 40,
+   "runes": {
+    "blood": 2,
+    "death": 1
+   },
+   "base": 0,
+   "necro": "raise",
+   "gate": 0,
+   "about": "Brings one of your risen into this fight"
+  },
+  "menddead": {
+   "name": "Mend the dead",
+   "level": 40,
+   "runes": {
+    "blood": 1,
+    "nature": 2
+   },
+   "base": 0,
+   "necro": "mend",
+   "gate": 0,
+   "about": "Heals your most hurt risen a quarter"
+  },
+  "wither": {
+   "name": "Wither",
+   "level": 40,
+   "runes": {
+    "blood": 1,
+    "death": 1
+   },
+   "base": 6,
+   "necro": "wither",
+   "gate": 0,
+   "about": "A curse: they hit softer for 4 rounds"
+  },
+  "bonespear": {
+   "name": "Bone spear",
+   "level": 40,
+   "runes": {
+    "blood": 1,
+    "death": 2
+   },
+   "base": 11,
+   "acc": 1.15,
+   "gate": 3,
+   "about": "Goes through a guard: much likelier to land"
+  },
+  "gravechill": {
+   "name": "Grave chill",
+   "level": 40,
+   "runes": {
+    "blood": 2,
+    "water": 2
+   },
+   "base": 10,
+   "necro": "chill",
+   "gate": 6,
+   "about": "Slows them for 2 rounds"
+  },
+  "soulsiphon": {
+   "name": "Soul siphon",
+   "level": 40,
+   "runes": {
+    "blood": 2,
+    "death": 2
+   },
+   "base": 12,
+   "necro": "siphon",
+   "gate": 6,
+   "about": "Heals your risen for half of what it deals"
+  },
+  "armydead": {
+   "name": "Army of the dead",
+   "level": 40,
+   "runes": {
+    "blood": 5,
+    "death": 5
+   },
+   "base": 0,
+   "necro": "army",
+   "gate": 9,
+   "about": "Every risen acts twice this round"
+  },
+  "lastrites": {
+   "name": "Last rites",
+   "level": 40,
+   "runes": {
+    "blood": 3
+   },
+   "base": 0,
+   "necro": "rites",
+   "gate": 12,
+   "needs": {
+    "lifeessence": 1
+   },
+   "about": "A risen that falls this fight stands up once, at 30%"
+  }
+ },
+ "NECRO": {
+  "//": "The rules (note 07, with the Mathematician's numbers). quest: what Sorceress Nyx wants (V8: 120 blood runes, was 200). offerRank: the tower rank whose mage offers it (V8: 4, Nyx; was the Archmage). raise: life essence = a risen's battle level / perLevel, rounded up, x step for every time it was raised before. slots: risen in a fight at once (the tree adds). In a fight: each risen strikes once a round (dmg x its numbers); the creature turns on one of them `target` of the time. They don't heal on their own -- only Mend the dead, Soul siphon and the potion. xpShare: half a pet's battle xp (Cam: 'trained after death but at a slower rate'). Old graves (no battle level): half the pet's level, plus its rarity's bonus, at least 5 and at most 30 (Q9). vigil: a Necromancer at the graveyard at night, once a night, may meet a wisp (chance). raisedBy: the line a risen says it with, by its type (the Narrative Designer: 'a line from each pet when it's raised').",
+  "quest": {
+   "bloodbook": 1,
+   "bloodrune": 120
+  },
+  "raise": {
+   "perLevel": 5,
+   "step": 1.5
+  },
+  "slots": 1,
+  "risenDmg": 0.25,
+  "target": 0.35,
+  "xpShare": 0.5,
+  "oldGrave": {
+   "min": 5,
+   "max": 30,
+   "rarity": {
+    "Common": 0,
+    "Uncommon": 2,
+    "Rare": 4,
+    "Epic": 6,
+    "Legendary": 8,
+    "Mythic": 10
+   }
+  },
+  "vigil": {
+   "chance": 0.35,
+   "hours": [
+    21,
+    5
+   ]
+  },
+  "offer": "\"Now that you've beaten me, let me teach you something the tower forgot -- an older line of magic than any of ours. I'll teach it to you, if you wish.\"",
+  "accepted": "\"Then you'll need the Blood Book. Morvane the Lich keeps it in the Hollow Crypt, under the Misty Isle. Bring it to me, with a hundred and twenty blood runes, and I'll open it for you.\"",
+  "declined": "\"As you like. The offer stands -- I'm not going anywhere.\"",
+  "taught": "Nyx opens the Blood Book. The letters move. \"Gently, now. You bring them back -- you don't own them. They'll thank you for it.\"",
+  "raised": "opens its eyes, and knows you. It seems glad.",
+  "raisedBy": {
+   "beast": "shakes itself, sniffs your hand, and leans against your leg as if it had never been away.",
+   "bird": "ruffles feathers that aren't quite there, and hops up onto your arm.",
+   "water": "blinks, cool and pale as river mist, and swims a slow circle round your feet.",
+   "reptile": "stretches in a patch of light that isn't there, and settles beside you, content.",
+   "bug": "clicks softly, three times -- the way it always used to when you came home.",
+   "spirit": "was half a ghost already. It looks rather pleased to be one properly, and to see you."
+  },
+  "offerRank": 4,
+  "ilse": "Ilse, back at the tower, catches your sleeve on the stairs: \"Nyx told me. It's a long road -- here's the whole of it, so you don't lose the thread.\""
+ }
+}

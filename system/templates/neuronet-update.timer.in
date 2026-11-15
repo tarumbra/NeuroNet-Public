@@ -1,0 +1,17 @@
+[Unit]
+Description=NeuroNet: look for a newer NeuroNet daily (neuronet-update)
+
+[Timer]
+# A user timer starts when you log in, not when the computer boots. It used to
+# say OnBootSec=10min + OnUnitActiveSec=1d: logged in more than 10 minutes after
+# boot, the boot time was already past and nothing had run yet to count a day
+# from, so the timer sat "elapsed" with nothing scheduled and never checked
+# (Cam's desktop, 2026-10-03). Now: 10 minutes after login, and once a day by
+# the calendar -- a day missed while the computer was off is caught up on.
+OnStartupSec=10min
+OnCalendar=daily
+RandomizedDelaySec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

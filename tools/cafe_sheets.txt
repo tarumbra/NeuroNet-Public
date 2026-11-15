@@ -1,0 +1,290 @@
+# NeuroCafe's sheets (tools/cut_cafe_art.py): file (under ~/Pictures/NeuroCafe Art Assets/Icons) | grid | largest side | ids
+# L = facing left, R = facing right; the other two turns are these mirrored (V19 q3).
+Building/Icon - Sheet 02 - Floors.jpeg | 4x4 | 256 | floor-grey, floor-lightgrey, floor-white, floor-checker, floor-terracotta, floor-paleblue, floor-sage, floor-stone, floor-oak, floor-walnut, floor-maple, floor-herringbone, floor-red, floor-berber, floor-blue, floor-green
+Building/Icon - Sheet 03 - Appliances.jpeg | 4x4 holes | 300 | stove-l, stove-r, stove-dirty-l, stove-dirty-r, -, -, -, -, -, -, vending-l, vending-r, table, chair-fl, chair-bl, fern
+Characters/Icon - Sheet 01.jpeg | 4x4 | 300 | woman-tl, woman-tr, woman-al, woman-ar, oldman-tl, oldman-tr, oldman-al, oldman-ar, boy-tl, boy-tr, boy-al, boy-ar, chef-l, chef-r, chef-stir, chef-plate
+Food/Icon - Sheet 01 - Cooking.jpeg | 4x4 | 160 | cook-pancakes, cook-waffles, cook-frenchtoast, cook-benedict, cook-florentine, cook-avocado, cook-eggsbacon, cook-omelette, cook-scrambled, cook-burrito, cook-shakshuka, cook-fullbreakfast, cook-hashbrowns, cook-porridge, cook-fruitoats, cook-oatbowl
+Food/Icon - Sheet 01 - Servery.jpeg | 4x4 | 200 | dish-pancakes, dish-waffles, dish-frenchtoast, dish-benedict, dish-florentine, dish-avocado, dish-eggsbacon, dish-omelette, dish-scrambled, dish-burrito, dish-shakshuka, dish-fullbreakfast, dish-hashbrowns, dish-porridge, dish-fruitoats, dish-oatbowl
+# V23 q5: spoiling -- Cam's breakfast Spoiled sheet (painted 20 October, cut now); other dishes show a stand-in
+Food/Icon - Sheet 01 - Spoiled.jpeg | 4x4 | 200 | spoil-pancakes, spoil-waffles, spoil-frenchtoast, spoil-benedict, spoil-florentine, spoil-avocado, spoil-eggsbacon, spoil-omelette, spoil-scrambled, spoil-burrito, spoil-shakshuka, spoil-fullbreakfast, spoil-hashbrowns, spoil-porridge, spoil-fruitoats, spoil-oatbowl
+Food/Icon - Sheet 01 - Burnt.jpeg | 4x4 | 160 | burnt-pancakes, burnt-waffles, burnt-frenchtoast, burnt-benedict, burnt-florentine, burnt-avocado, burnt-eggsbacon, burnt-omelette, burnt-scrambled, burnt-burrito, burnt-shakshuka, burnt-fullbreakfast, burnt-hashbrowns, burnt-porridge, burnt-fruitoats, burnt-oatbowl
+Icon  - Sheet 01 - Cookbook.jpeg | 4x4 | 720 | book-open, -, -, -, panel, -, scroll, notice, -, ribbons, -, tag, book-closed, -, -, -
+# V20: walls and doors cut by the template's shape (tools/make_cafe_templates.py); single one-tile counters
+Building/Icon - Sheet 04 - Walls and Doors.jpeg | walls | 360 | wall-l, wall-r, door-l, door-r
+Building/Icon - Sheet 05 - Counters.jpeg | 2x2 | 300 | counter-l, counter-r, till-l, till-r
+# 2026-10-21 (N34): skipped until they're painted -- street textures (flat squares the game tips onto the floor's angle),
+# street things (each on its floor tile), walking frames (tl = towards you, ar = away; the other two are these mirrored)
+Building/Icon - Sheet 06 - Street textures.jpeg | 2x2 texture | 512 | tex-grass, tex-pavement, tex-road, tex-grass2
+Building/Icon - Sheet 07 - Street things.jpeg | 4x4 holes | 300 | prop-lamp, prop-tree, prop-tree2, prop-bench, prop-hedge, prop-planter, prop-bin, prop-aframe, prop-bush, prop-flowerbed, prop-postbox, prop-bikerack, prop-picnic, prop-bollard, prop-fence, prop-sign
+# Gemini's first walking sheet (21 Oct): the woman towards you is all four; cell 6 morphs into the old man, row 3's last two
+# walk away (one used as an away frame), cell 15 has a frying pan -- so the woman away has 3 frames, the old man towards 2
+# (PT47: her towards frames, once all facing one way, have the same legs -- no step; she sways until N36's frames)
+# Characters/Icon - Sheet 02 - Walking.jpeg | 4x4 guides | 300 | woman-tl-1, woman-tl-2:flip, woman-tl-3, woman-tl-4:flip, -, -, -, -, -, -, -, -, -, -, -, -
+# 2026-10-21 (N35): street things facing down-left (l) and down-right (r) -- the other two turns mirrored. Gemini put a
+# second planter where the sign's other facing should be, so the sign's is mirrored.
+Building/Icon - Sheet 08 - Street things facing.jpeg | 4x4 holes | 300 | prop-bench-l, prop-bench-r, prop-aframe-l, prop-aframe-r, prop-sign-l, -, prop-bikerack-l, prop-bikerack-r, prop-picnic-l, prop-picnic-r, prop-fence-l, prop-fence-r, prop-planter-l, prop-planter-r, prop-hedge-l, prop-hedge-r
+Building/Icons - Sheet 09 - Bins and post box facing.jpeg | 2x2 holes | 300 | prop-bin-l, prop-bin-r, prop-postbox-l, prop-postbox-r
+# PT47 (measured: each frame's head and body against frame 1, as painted and mirrored): the woman's towards frames
+# from Sheet 03 all had the same legs, so hers come from Sheet 02's first row; frames drawn turned the other way are
+# mirrored (:flip). The old man's were all one way already. PT48: the boy's away step as a whole faced up-RIGHT
+# (Cam's screenshot), so every one of its frames is turned again. Sheet 03: holes cleared (the pink under the chair).
+# walking (N35). Gemini didn't keep the rows: its "away" frames come in two facings (up-left and up-right) with one leg
+# position each -- alternating them was the "changing direction" (PT46). Only up-left ones are used (the face on the
+# left, as Sheet 01's ar), mirrored for up-right; towards you it painted two leg positions, used as a two-pose step.
+# Picked by eye from each cell's head and legs: tl = towards down-left, ar = away up-left; 1-4 the step's order.
+Characters/Icon - Sheet 03 - Woman Walking.jpeg | 4x4 guides | 300 | -, -, -, woman-ar-1, -, -, -, -, woman-ar-3:flip, -, -, -, woman-ar-4, woman-ar-2, -, -
+Characters/Icon - Sheet 04 - Old Man Walking.jpeg | 4x4 guides | 300 | -, -, -, -, -, -, -, oldman-ar-4, -, -, -, -, oldman-ar-2, oldman-ar-3, -, oldman-ar-1
+Characters/Icon - Sheet 05 - Boy Walking.jpeg | 4x4 guides | 300 | -, -, boy-ar-1:flip, -, -, -, -, -, -, -, -, -, boy-ar-3, boy-ar-2, boy-ar-4:flip, -
+# N36 (2026-10-21): people sitting -- f on the chair seen from the front (facing down-left), b from the back (up-right)
+# sit-f faces down-left, sit-b up-left (like chair-fl and chair-bl); the woman's front one was painted facing down-right
+Characters/Icon - Sheet 06 - Sitting.jpeg | 4x4 lines | 300 | woman-sit-f:flip, woman-sit-b, oldman-sit-f, oldman-sit-b, boy-sit-f, boy-sit-b, -, -, -, -, -, -, -, -, -, -
+# the woman's steps towards you, by editing one picture (N36): the base is frame 1, the edits 2-4
+# ../References/Walk base - Woman towards.png | 1x1 guides | 300 | woman-tl-1
+# (N36: Gemini's edit came back unchanged -- not used; N37 has the new way)
+# Characters/Woman towards - passing.jpeg | 1x1 guides | 300 | woman-tl-2
+# Characters/Woman towards - other foot.png | 1x1 guides | 300 | woman-tl-3
+# N37 (the Gemini specialist): the woman towards you, one drawing per frame from a pose picture, lined up by her body
+Characters/Woman towards 1.png | 1x1 align lines | 300 | woman-tl-1
+Characters/Woman towards 2.png | 1x1 align lines | 300 | woman-tl-2
+Characters/Woman towards 3.png | 1x1 align lines | 300 | woman-tl-3
+Characters/Woman towards 4.png | 1x1 align lines | 300 | woman-tl-4
+# Sheets 10 and 11 (N36): pairs of cells (left, right) row by row -- a wallpaper (its doors made with Sheet 04's door) and
+# a counter style (its buffet made from it)
+Building/Icon - Sheet 10 - Wallpapers.jpeg | wallpapers | 360 | stripes, sage, damask, tiles, brick, woodpanel, mint, floral
+Building/Icon - Sheet 11 - Counter styles.jpeg | counters | 300 | marble, walnut, oak, mint, cream, red, slate, pink
+# Sheet 12: each chair's first cell is its front (facing down-left); the second is NOT the front facing down-right, as
+# asked, but its back facing up-left -- not used (Sheet 13's backs are); the stool and the decorations look the same every way
+Building/Icon - Sheet 12 - Tables chairs and decor.jpeg | 4x4 holes | 300 | table_square, table_bistro, table_garden, table_coffee, chair_bistro-l, -, armchair-l, -, stool, -, chair_garden-l, -, palm, floorlamp, bookshelf, coatstand:main
+# N39: the Sheet 12 chairs seen from the back. Gemini swapped each pair: the LEFT cell faces up-right (br), the right
+# cell up-left (bl) -- the backrest is nearer to us than the seat in both. Front (-l) mirrored gives down-right.
+Building/Icon - Sheet 13 - Chairs From Back.jpeg | 4x4 holes | 300 | chair_bistro-br, chair_bistro-bl, chair_garden-br, chair_garden-bl, armchair-br, armchair-bl, -, -, -, -, -, -, -, -, -, -
+# N44 (PT50): the same pose-mannequin drawings for the others -- the old man and the boy walking towards you, and all
+# three walking away (up-left). One drawing per frame; cut lined up by the body. These come after the old sheet cells
+# above, so once painted they replace those frames (comment the old cells out then, so a half-done set doesn't mix).
+Characters/Old man towards/1.png | 1x1 align lines | 300 | oldman-tl-1
+Characters/Old man towards/2.png | 1x1 align lines | 300 | oldman-tl-2
+Characters/Old man towards/3.png | 1x1 align lines | 300 | oldman-tl-3
+Characters/Old man towards/4.jpeg | 1x1 align lines | 300 | oldman-tl-4
+Characters/Young boy towards/1.png | 1x1 align lines | 300 | boy-tl-1
+Characters/Young boy towards/2.png | 1x1 align lines | 300 | boy-tl-2
+Characters/Young boy towards/3.png | 1x1 align lines | 300 | boy-tl-3
+Characters/Young boy towards/4.png | 1x1 align lines | 300 | boy-tl-4
+Characters/Woman away 1.png | 1x1 align lines | 300 | woman-ar-1
+Characters/Woman away 2.png | 1x1 align lines | 300 | woman-ar-2
+Characters/Woman away 3.png | 1x1 align lines | 300 | woman-ar-3
+Characters/Woman away 4.png | 1x1 align lines | 300 | woman-ar-4
+Characters/Old man away 1.png | 1x1 align lines | 300 | oldman-ar-1
+Characters/Old man away 2.png | 1x1 align lines | 300 | oldman-ar-2
+Characters/Old man away 3.png | 1x1 align lines | 300 | oldman-ar-3
+Characters/Old man away 4.png | 1x1 align lines | 300 | oldman-ar-4
+Characters/Boy away 1.png | 1x1 align lines | 300 | boy-ar-1
+Characters/Boy away 2.png | 1x1 align lines | 300 | boy-ar-2
+Characters/Boy away 3.png | 1x1 align lines | 300 | boy-ar-3
+Characters/Boy away 4.png | 1x1 align lines | 300 | boy-ar-4
+# N44 (N41): sitting on the tall stool -- facing down-left (f) and up-left with their back to us (b), person only
+Characters/Icon - Sheet 07 - Sitting on stools.jpeg | 4x4 lines stoolpink | 300 | woman-stool-f, woman-stool-b, oldman-stool-f, oldman-stool-b, boy-stool-f, boy-stool-b, -, -, -, -, -, -, -, -, -, -
+# N45 (PT51): wall paintings, each painted into the slanted frame on a left-wall panel (the right wall mirrors it); the
+# painted cells are 0, 2, 5, 7, 8, 10, 13, 15 (every other one)
+Building/Icon - Sheet 14 - Wall paintings.jpeg | 4x4 holes | 300 | painting-1, -, painting-2, -, -, painting-3, -, painting-4, painting-5, -, painting-6, -, -, painting-7, -, painting-8
+# N45: the coin machines -- Gemini painted each one four ways, a row each: front facing down-left (-l), down-right (-r),
+# then the backs: facing up-right (-br), up-left (-bl). The piano's second front repeats the first (Cam couldn't fix it):
+# its -r is the -l mirrored. (Two copies were saved; this lower-case one is the later, kept.)
+Building/Icon - Sheet 15 - Coin machines.jpeg | 4x4 holes | 300 | jukebox-l, jukebox-r, jukebox-br, jukebox-bl, arcade-l, arcade-r, arcade-br, arcade-bl, pinball-l, pinball-r, pinball-br, pinball-bl, piano-l, -, piano-br, piano-bl
+# N46: the same eight paintings for the RIGHT wall (frames falling to the right); without these the left ones are mirrored
+Building/Icon - Sheet 16 - Wall paintings right.jpeg | 4x4 holes | 300 | painting-1-r, -, painting-2-r, -, -, painting-3-r, -, painting-4-r, painting-5-r, -, painting-6-r, -, -, painting-7-r, -, painting-8-r
+# N46 / V22 q6: Lunch -- eight dishes in the first two rows, three states like the breakfasts
+Food/Icon - Sheet 02 - Cooking.jpeg | 4x4 | 160 | cook-tomatosoup, cook-grilledcheese, cook-clubsandwich, cook-caesarsalad, cook-fishchips, cook-cheeseburger, cook-spaghetti, cook-lasagne, -, -, -, -, -, -, -, -
+Food/Icon - Sheet 02 - Servery.jpeg | 4x4 | 200 | dish-tomatosoup, dish-grilledcheese, dish-clubsandwich, dish-caesarsalad, dish-fishchips, dish-cheeseburger, dish-spaghetti, dish-lasagne, -, -, -, -, -, -, -, -
+Food/Icon - Sheet 02 - Burnt.jpeg | 4x4 | 160 | burnt-tomatosoup, burnt-grilledcheese, burnt-clubsandwich, burnt-caesarsalad, burnt-fishchips, burnt-cheeseburger, burnt-spaghetti, burnt-lasagne, -, -, -, -, -, -, -, -
+# (Cam saved most of the Cooking/Burnt ones as "Icon- ...", no space -- named as saved)
+# PT53 / N47: NeuroPets' cooked dishes, laid out as food sheets by tools/make_cafe_neuropets_food.py (Servery = NeuroPets'
+# own icons, cut now); Gemini paints the Cooking and Burnt sheets from them, cell for cell -- until then the game
+# shows the served picture in the pan, and darkened when burnt
+Food/NeuroPets/Icon - NeuroPets Sheet 1 - Servery.png | 4x4 | 200 | dish-berrytart, dish-honeycake, dish-carrotcake, dish-custardtart, dish-strawberrytart, dish-dragonfruittart, dish-starfruitpie, dish-pumpkinpie, dish-strawberrycream, dish-creamtea, dish-honeyyoghurt, dish-minttea, dish-chamomiletea, dish-lavendertea, -, -
+Food/NeuroPets/Icon- NeuroPets Sheet 1 - Cooking.jpeg | 4x4 | 160 | cook-berrytart, cook-honeycake, cook-carrotcake, cook-custardtart, cook-strawberrytart, cook-dragonfruittart, cook-starfruitpie, cook-pumpkinpie, cook-strawberrycream, cook-creamtea, cook-honeyyoghurt, cook-minttea, cook-chamomiletea, cook-lavendertea, -, -
+Food/NeuroPets/Icon - NeuroPets Sheet 1 - Burnt.jpeg | 4x4 | 160 | burnt-berrytart, burnt-honeycake, burnt-carrotcake, burnt-custardtart, burnt-strawberrytart, burnt-dragonfruittart, burnt-starfruitpie, burnt-pumpkinpie, burnt-strawberrycream, burnt-creamtea, burnt-honeyyoghurt, burnt-minttea, burnt-chamomiletea, burnt-lavendertea, -, -
+Food/NeuroPets/Icon - NeuroPets Sheet 2 - Servery.png | 4x4 | 200 | dish-cabbagesoup, dish-carrotsoup, dish-cornchowder, dish-bakedpotato, dish-mashedpotato, dish-cheeseomelette, dish-duckeggomelette, dish-truffleomelette, dish-cheesepie, dish-cheeseboard, dish-fishpie, dish-butteredfish, dish-grilledtrout, dish-crabcakes, dish-cookedsalmon, dish-lobster
+Food/NeuroPets/Icon- NeuroPets Sheet 2 - Cooking.jpeg | 4x4 | 160 | cook-cabbagesoup, cook-carrotsoup, cook-cornchowder, cook-bakedpotato, cook-mashedpotato, cook-cheeseomelette, cook-duckeggomelette, cook-truffleomelette, cook-cheesepie, cook-cheeseboard, cook-fishpie, cook-butteredfish, cook-grilledtrout, cook-crabcakes, cook-cookedsalmon, cook-lobster
+Food/NeuroPets/Icon- NeuroPets Sheet 2 - Burnt.jpeg | 4x4 | 160 | burnt-cabbagesoup, burnt-carrotsoup, burnt-cornchowder, burnt-bakedpotato, burnt-mashedpotato, burnt-cheeseomelette, burnt-duckeggomelette, burnt-truffleomelette, burnt-cheesepie, burnt-cheeseboard, burnt-fishpie, burnt-butteredfish, burnt-grilledtrout, burnt-crabcakes, burnt-cookedsalmon, burnt-lobster
+Food/NeuroPets/Icon - NeuroPets Sheet 3 - Servery.png | 4x4 | 200 | dish-roastchicken, dish-rosemarychicken, dish-roastpork, dish-thymepork, dish-mintlamb, dish-steak, dish-venisonsteak, dish-muttonstew, dish-rabbitstew, dish-herbstew, dish-trufflestew, -, -, -, -, -
+Food/NeuroPets/Icon- NeuroPets Sheet 3 - Cooking.jpeg | 4x4 | 160 | cook-roastchicken, cook-rosemarychicken, cook-roastpork, cook-thymepork, cook-mintlamb, cook-steak, cook-venisonsteak, cook-muttonstew, cook-rabbitstew, cook-herbstew, cook-trufflestew, -, -, -, -, -
+Food/NeuroPets/Icon- NeuroPets Sheet 3 - Burnt.jpeg | 4x4 | 160 | burnt-roastchicken, burnt-rosemarychicken, burnt-roastpork, burnt-thymepork, burnt-mintlamb, burnt-steak, burnt-venisonsteak, burnt-muttonstew, burnt-rabbitstew, burnt-herbstew, burnt-trufflestew, -, -, -, -, -
+
+# 2026-10-22 (Cam): Aunty's secret recipes (her daily deliveries) -- NeuroPets' icons again, Sheet 4; the Cooking and Burnt
+# sheets wait for Gemini (the served picture stands in, in the pan)
+Food/NeuroPets/Icon - NeuroPets Sheet 4 - Servery.png | 4x4 | 200 | dish-bread, dish-heartystew, dish-smokedfish, dish-comingofagecake, dish-richstew, dish-cookedsturgeon, dish-grilledchar, dish-greatwhitesteak, dish-hammerheadsteak, dish-grilledstingray, -, -, -, -, -, -
+# Food/NeuroPets/Icon- NeuroPets Sheet 4 - Cooking.jpeg | 4x4 | 160 | cook-bread, cook-heartystew, cook-smokedfish, cook-comingofagecake, cook-richstew, cook-cookedsturgeon, cook-grilledchar, cook-greatwhitesteak, cook-hammerheadsteak, cook-grilledstingray, -, -, -, -, -, -
+# Food/NeuroPets/Icon- NeuroPets Sheet 4 - Burnt.jpeg | 4x4 | 160 | burnt-bread, burnt-heartystew, burnt-smokedfish, burnt-comingofagecake, burnt-richstew, burnt-cookedsturgeon, burnt-grilledchar, burnt-greatwhitesteak, burnt-hammerheadsteak, burnt-grilledstingray, -, -, -, -, -, -
+
+# 2026-10-22 (Cam): NeuroVale's visitors -- the request cart, the guild hall tutors, their keepsakes (NeuroPets' pictures,
+# laid out by tools/make_cafe_neurovale.py)
+# (not cut: tools/make_cafe_neurovale.py puts NeuroPets' pictures, already clear-edged, straight into the game)
+
+# N47 (Cam, 2026-10-21): Halloween -- food in Icons/Food/Halloween, the rest in Icons/Halloween; in the game when V23's seasons are built
+Halloween/Icon - Halloween - Cooking.jpeg | 4x4 | 160 | cook-pumpkinsoup, cook-toffeeapple, cook-spidercupcake, cook-ghostmeringue, cook-witchfingers, cook-mummyhotdog, cook-graveyardbrownie, cook-cauldronstew, -, -, -, -, -, -, -, -
+Halloween/Icon - Halloween - Servery.jpeg | 4x4 | 200 | dish-pumpkinsoup, dish-toffeeapple, dish-spidercupcake, dish-ghostmeringue, dish-witchfingers, dish-mummyhotdog, dish-graveyardbrownie, dish-cauldronstew, -, -, -, -, -, -, -, -
+Halloween/Icon - Halloween - Burnt.jpeg | 4x4 | 160 | burnt-pumpkinsoup, burnt-toffeeapple, burnt-spidercupcake, burnt-ghostmeringue, burnt-witchfingers, burnt-mummyhotdog, burnt-graveyardbrownie, burnt-cauldronstew, -, -, -, -, -, -, -, -
+Halloween/Icon - Halloween - Decor.jpeg | 4x4 holes dehalo | 300 | jackolantern-l:pair, -, pumpkinpile-l, pumpkinpile-r, cauldron-l, cauldron-r, skeleton-l, skeleton-r, blackcat-l, blackcat-r, candelabra-l, candelabra-r, coffinshelf-l, coffinshelf-r, witchhat-l, witchhat-r
+Halloween/Icon - Halloween - Paintings.jpeg | 4x4 holes | 300 | painting-hw1, -, painting-hw2, -, -, painting-hw3, -, painting-hw4, painting-hw5, -, painting-hw6, -, -, painting-hw7, -, painting-hw8
+# N47 a4 (Cam: "the wallpapers look a bit off ... work the same as the other wallpapers"): painted as room corners, so
+# made into panels by logic (cut_chevrons: a patch of each laid into the stripes panel's shape, cap and door)
+Halloween/Icon - Halloween - Wallpapers.jpeg | chevrons | 360 | bats, pumpkinstripe, cobweb, spookydamask, moonlit, candycorn, graveyard, -
+Halloween/Icon - Halloween - Machines.jpeg | 4x4 holes | 300 | fortune-l, fortune-r, fortune-br, fortune-bl, claw-l, claw-r, claw-br, claw-bl, apples-l, apples-r, apples-br, apples-bl, hauntedhouse-l, hauntedhouse-r, hauntedhouse-br, hauntedhouse-bl
+Halloween/Icon - Halloween - Street things.jpeg | 4x4 holes dehalo | 300 | prop-hw_pumpkins, prop-hw_scarecrow, prop-hw_graves, prop-hw_ghost, prop-hw_haybale, prop-hw_deadtree, prop-hw_witchsign, prop-hw_cauldron, prop-hw_crow, prop-hw_lantern, prop-hw_spiderarch, prop-hw_coffin, -, -, -, -
+
+# slant=<depth> (N48, PT: "not in line with the wall", "not 3D"): sheared to the left wall's exact slope with a 3D edge
+# that deep (of its width); the right wall's <id>-r is it mirrored
+# N48 (V23 q8-q9): windows, curtains and blinds, clocks and wall things (painted into Sheet 14's slanted frames);
+# dividers (Sheet 12's pairs); entertainment four ways; two-tile games (-l lying along x, -r along y)
+Building/Icon - Sheet 17 - Windows.jpeg | 4x4 holes window slant=0.025 | 300 | window-1, -, window-2, -, -, window-3, -, window-4, window-5, -, window-6, -, -, window-7, -, window-8
+Building/Icon - Sheet 18 - Curtains and blinds.jpeg | 4x4 holes curtain slant=0.025 | 300 | curtain-1, -, curtain-2, -, -, curtain-3, -, curtain-4, blind-1, -, blind-2, -, -, blind-3, -, blind-4
+Building/Icon - Sheet 19 - Clock and wall things.jpeg | 4x4 holes slant=0.07 | 300 | clock-1, -, clock-2, -, -, clock-3, -, clock-4, clock-5, -, dartboard, -, -, mirror, -, shelf
+Building/Icon - Sheet 20 - Dividers.jpeg | 4x4 holes divider | 300 | halfwall-l, halfwall-r, halfbrick-l, halfbrick-r, screen-l, screen-r, vipropes-l, vipropes-r, planterwall-l, planterwall-r, standmirror-l, standmirror-r, lattice-l, lattice-r, barrier-l, barrier-r
+# N53: painted with Template - Front and back.png (front down-left, back up-left); :pair mirrors each for the other turn
+Building/Icon - Sheet 21 - Entertainment.jpeg | 4x4 holes | 300 | skeeball-l:pair, skeeball-bl:pair, basketball-l:pair, basketball-bl:pair, karaoke-l:pair, karaoke-bl:pair, foosball-l:pair, foosball-bl:pair, lightgun-l:pair, lightgun-bl:pair, airhockey-l:pair, airhockey-bl:pair, dance-l:pair, dance-bl:pair, whackamole-l:pair, whackamole-bl:pair
+Building/Icon - Sheet 22 - Two-tile games.jpeg | 2x4 holes band=8 | 420 | pooltable-l, pooltable-r, pingpong-l, pingpong-r, airhockey2-l, airhockey2-r, shuffleboard-l, shuffleboard-r
+# 2026-10-24: Cam's blue sofa set (Templates/Template - Furniture four ways.png, saved as "Sheet 16- Blue Couch Furni
+# Set"). Gemini painted the sofas across the grid lines ("unline" takes them off the pink) and swapped the fronts: the
+# top-left sofa faces down-RIGHT (-r), the top-right one down-left (-l); backs: left one up-right (-br), right up-left (-bl).
+# The table's third cell is painted upside down and the lamp is the same every way: one picture each.
+Building/Icon - Sheet 16- Blue Couch Furni Set.jpeg | free unline | 400 | table_wood:main@0:0:512:512, lamp_blue:main@0:512:512:1024, sofa-r:sofa@0:1010:1024:1540, sofa-l:sofa@1024:1010:2048:1540, sofa-br:sofa@0:1540:1024:2048, sofa-bl:sofa@1024:1540:2048:2048
+# N51 (2026-10-24): empty 3D weapon mounts painted into Sheet 14's slanted frames (left) and Sheet 16's (right); the game
+# sets each wall weapon into its mount. Sheet 25: eight hero pieces painted whole (optional).
+Building/Icon - Sheet 23 - Weapon mounts.jpeg | 4x4 holes panel slant=0.06 | 300 | mount-oak, -, mount-walnut, -, -, mount-shield, -, mount-shadowbox, mount-driftwood, -, mount-pegs, -, -, mount-gilded, -, mount-roundel
+# (N53: the right wall's mounts are Sheet 23's mirrored, so they match exactly)
+# Building/Icon - Sheet 24 - Weapon mounts right.jpeg | 4x4 holes | 300 | mount-oak-r, -, mount-walnut-r, -, -, mount-shield-r, -, mount-shadowbox-r, mount-driftwood-r, -, mount-pegs-r, -, -, mount-gilded-r, -, mount-roundel-r
+# (N54: left wall only, slanted and mirrored by the cutter like Sheet 23)
+Building/Icon - Sheet 25 - Weapon hero pieces.jpeg | 4x4 holes slant=0.06 | 300 | hero-runearms, -, hero-adamantarms, -, -, hero-mithrilcrossed, -, hero-stavescrossed, hero-magicbow, -, hero-mysticstaff, -, -, hero-runecrossed, -, hero-fangspear
+# 2026-10-24: the furniture store building, four ways (Cam's Gemini sheet; the second cell's smeared gable and roof were
+# rebuilt from the first cell flipped, keeping its own sign, windows and door): door facing down-right, down-left, then
+# the backs -- front away up-left (-bl), up-right (-br). Street things turn to -bl/-br when they're painted (no mirroring:
+# the sign would read backwards).
+Building/Icon - Furniture store.jpeg | 4x1 holes house | 520 | prop-furnstore-r:main, prop-furnstore-l:main, prop-furnstore-bl:main, prop-furnstore-br:main
+# (prop-furnstore, the shop card and Aunty's pictures, is a copy of prop-furnstore-l)
+
+# N54 (2026-10-24), the new workflow (N53). Not painted yet: each is skipped till its file is saved.
+# Sheet 25 (2026-10-24): the event houses, Template - Front and back -- one building a row, cells 1-2 its front and
+# back (cells 3-4 Gemini's second try, unused); the mirror gives all four turns, "house" straightens their bases.
+# The haunted house takes the mansion's place (its id stays "mansion"). Then copy each <id>-l over prop-<id>.webp (cards).
+Building/Icon - Sheet 25 - Event houses.jpeg | 4x4 holes house | 520 | prop-mansion-l:pair, prop-mansion-bl:pair, -, -, prop-santa-l:pair, prop-santa-bl:pair, -, -, prop-warren-l:pair, prop-warren-bl:pair, -, -, prop-longhouse-l:pair, prop-longhouse-bl:pair, -, -
+# The farm, Template - One way: the paddock fence in iso (N47 a6's drag tool joins it up) and N50's next farm things
+Building/Icon - Sheet 27 - Farm.jpeg | 4x4 holes | 300 | prop-farm_fence-l:pair, prop-farm_sprinkler-l:pair, prop-farm_ditch-l:pair, prop-farm_larder-l:pair, prop-farm_granary-l:pair, prop-farm_icehouse-l:pair, prop-farm_eggcrate-l:pair, prop-farm_byre-l:pair, prop-farm_goatshed-l:pair, prop-farm_sty-l:pair, prop-farm_churns-l:pair, prop-farm_cheesepress-l:pair, prop-farm_jamstall-l:pair, prop-farm_hayrack-l:pair, prop-farm_trough-l:pair, prop-farm_produce-l:pair
+# The fire kits, Template - Sheet 14 (left wall): slanted and given depth like the clocks; the cutter mirrors the right
+Building/Icon - Sheet 28 - Fire kits.jpeg | 4x4 holes slant=0.07 | 300 | firekit-w, -, firekit2-w, -, -, -, -, -, -, -, -, -, -, -, -, -
+# V24 (2026-10-25) the patio, N53's prompts: its railings like Sheet 20's dividers (pairs running along a tile edge; the
+# divider flag measures each one's run so a row joins post to post) -- stand-ins from tools/make_cafe_patio.py until then
+Building/Icon - Sheet 29 - Patio railings.jpeg | 4x4 holes divider | 300 | prop-rail_wood-l, prop-rail_wood-r, prop-rail_picket-l, prop-rail_picket-r, prop-rail_iron-l, prop-rail_iron-r, prop-rail_glass-l, prop-rail_glass-r, prop-rail_rope-l, prop-rail_rope-r, prop-rail_hedge-l, prop-rail_hedge-r, prop-rail_spooky-l, prop-rail_spooky-r, prop-rail_bamboo-l, prop-rail_bamboo-r
+# and its outdoor floors, laid out like Sheet 02
+Building/Icon - Sheet 30 - Patio floors.jpeg | 2x2 | 256 | floor-deck, floor-flagstone, floor-brickpave, floor-gravel
+
+# V24 step 2 (2026-10-25), N54's prompts: the patio's outdoor appliances (Template - One way: all facing down-left, :pair
+# mirrors each for down-right; like the stove, no backs) -- clean in cells 1-5, the same dirty in 6-10. Stand-ins from
+# tools/make_cafe_outdoor.py until then.
+# (PT57: Gemini painted the dirty smoker turned round -- chimney and firebox swapped ends, so no mirror fixes it: it's
+# skipped, and made from the clean one after cutting: python3 tools/make_cafe_outdoor.py --dirty smoker)
+Building/Icon - Sheet 31 - Outdoor appliances.jpeg | 4x4 holes | 300 | bbq-l:pair, pizzaoven-l:pair, tandoor-l:pair, spit-l:pair, smoker-l:pair, bbq-dirty-l:pair, pizzaoven-dirty-l:pair, tandoor-dirty-l:pair, spit-dirty-l:pair, -, -, -, -, -, -, -
+# their forty dishes, three ways like every dish, in book order (barbecue, pizza oven | tandoor, spit | smoker)
+Food/Outdoor/Icon - Outdoor Sheet 1 - Servery.jpeg | 4x4 | 200 | dish-corncob, dish-bbqsausages, dish-bbqribs, dish-bbqburger, dish-halloumi, dish-bbqwings, dish-lambleg, dish-plankfish, dish-garlicbread, dish-margherita, dish-focaccia, dish-pepperoni, dish-sourdough, dish-fourcheese, dish-roastveg, dish-calzone
+Food/Outdoor/Icon - Outdoor Sheet 1 - Cooking.jpeg | 4x4 | 160 | cook-corncob, cook-bbqsausages, cook-bbqribs, cook-bbqburger, cook-halloumi, cook-bbqwings, cook-lambleg, cook-plankfish, cook-garlicbread, cook-margherita, cook-focaccia, cook-pepperoni, cook-sourdough, cook-fourcheese, cook-roastveg, cook-calzone
+Food/Outdoor/Icon - Outdoor Sheet 1 - Burnt.jpeg | 4x4 | 160 | burnt-corncob, burnt-bbqsausages, burnt-bbqribs, burnt-bbqburger, burnt-halloumi, burnt-bbqwings, burnt-lambleg, burnt-plankfish, burnt-garlicbread, burnt-margherita, burnt-focaccia, burnt-pepperoni, burnt-sourdough, burnt-fourcheese, burnt-roastveg, burnt-calzone
+Food/Outdoor/Icon - Outdoor Sheet 2 - Servery.jpeg | 4x4 | 200 | dish-naan, dish-paneertikka, dish-tandoorichicken, dish-seekh, dish-raan, dish-chickentikka, dish-lambchops, dish-tandooriprawns, dish-gyros, dish-spitpineapple, dish-rotisserie, dish-shawarma, dish-hogroast, dish-churrasco, dish-spitduck, dish-porchetta
+Food/Outdoor/Icon - Outdoor Sheet 2 - Cooking.jpeg | 4x4 | 160 | cook-naan, cook-paneertikka, cook-tandoorichicken, cook-seekh, cook-raan, cook-chickentikka, cook-lambchops, cook-tandooriprawns, cook-gyros, cook-spitpineapple, cook-rotisserie, cook-shawarma, cook-hogroast, cook-churrasco, cook-spitduck, cook-porchetta
+Food/Outdoor/Icon - Outdoor Sheet 2 - Burnt.jpeg | 4x4 | 160 | burnt-naan, burnt-paneertikka, burnt-tandoorichicken, burnt-seekh, burnt-raan, burnt-chickentikka, burnt-lambchops, burnt-tandooriprawns, burnt-gyros, burnt-spitpineapple, burnt-rotisserie, burnt-shawarma, burnt-hogroast, burnt-churrasco, burnt-spitduck, burnt-porchetta
+Food/Outdoor/Icon - Outdoor Sheet 3 - Servery.jpeg | 4x4 | 200 | dish-smokedalmonds, dish-smokedcheese, dish-smokedmac, dish-pulledpork, dish-smokedsalmon, dish-burntends, dish-smokedturkey, dish-brisket, -, -, -, -, -, -, -, -
+Food/Outdoor/Icon - Outdoor Sheet 3 - Cooking.jpeg | 4x4 | 160 | cook-smokedalmonds, cook-smokedcheese, cook-smokedmac, cook-pulledpork, cook-smokedsalmon, cook-burntends, cook-smokedturkey, cook-brisket, -, -, -, -, -, -, -, -
+Food/Outdoor/Icon - Outdoor Sheet 3 - Burnt.jpeg | 4x4 | 160 | burnt-smokedalmonds, burnt-smokedcheese, burnt-smokedmac, burnt-pulledpork, burnt-smokedsalmon, burnt-burntends, burnt-smokedturkey, burnt-brisket, -, -, -, -, -, -, -, -
+# 2026-10-25 (Cam: "bring the game's artwork back up to date"): the garden and the homes, painted over the stand-ins
+# from tools/make_cafe_nature.py (Template - One way). Their on-screen heights are fixed in cafe.js NATURE_H; re-measure
+# HOME_FOOT (cafecore.js) off the painted homes once they're cut. (Sheet 33's file name has a space before .jpeg, as
+# saved; the cottage and bungalow were painted with their doors facing down-right, so they're mirrored first.)
+Building/Icon - Sheet 32 - Rocks and plants.jpeg | 4x4 holes | 300 | prop-rock_pebbles, prop-rock_small, prop-rock_flat, prop-rock_round, prop-rock_mossy, prop-rock_pile, prop-rock_tall, prop-rock_boulder, -, prop-plant_fern, prop-plant_grass, prop-plant_flowers, prop-plant_lavender, prop-plant_mushrooms, -, -
+# (the stepping stone came with a pink fringe under it: cut on its own with the fringe taken off)
+Building/Icon - Sheet 32 - Rocks and plants.jpeg | 4x4 holes dehalo | 300 | -, -, -, -, -, -, -, -, prop-rock_slab, -, -, -, -, -, -, -
+Building/Icon - Sheet 33 - Trees .jpeg | 4x4 holes | 400 | prop-tree_stump, prop-tree_log, prop-tree_dead, prop-tree_dead2, prop-tree_pine, prop-tree_apple, -, prop-tree_maple, prop-tree_willow, prop-tree_cypress, -, -, -, -, -, -
+# (the cherry blossom's pale pink is too near the background's: no hole clearing, or its blossom gets holes in it.
+# Then run tools/fix_cafe_trees.py -- the pine and cypress came with a bush and flowers painted behind them, and the
+# stepping stone with a pink smear under it)
+Building/Icon - Sheet 33 - Trees .jpeg | 4x4 | 400 | -, -, -, -, -, -, prop-tree_cherry, -, -, -, -, -, -, -, -, -
+Building/Icon - Sheet 34 - Homes.jpeg | 4x4 holes | 520 | prop-home_cottage-l:pair:flip, prop-home_bungalow-l:pair:flip, prop-home_terrace-l:pair, prop-home_townhouse-l:pair, -, prop-home_shopfront-l:pair, -, -, -, -, -, -, -, -, -, -
+# (2026-10-25, Cam: "the house had the bottom taken off") the farmhouse was painted over its cell's bottom line: its own box, down into the empty cell below
+Building/Icon - Sheet 34 - Homes.jpeg | free holes gridfill | 520 | prop-home_farmhouse-l:pair@0:516:512:1080
+
+# N55 (2026-10-25, Cam in N53: "more variety of floors and walls inside the cafe and the patio") -- each goes into
+# FLOORS / WALLPAPERS / RAILS (cafecore.js) once it's cut; patio floors get patio: true
+Building/Icon - Sheet 35 - Floors 2.jpeg | 4x4 | 256 | floor-slate, floor-marble, floor-blackmarble, floor-hexwhite, floor-mosaic, floor-encaustic, floor-cork, floor-bamboo, floor-cherry, floor-whitewash, floor-greyoak, floor-chevron, floor-cream, floor-purple, floor-persian, floor-concrete
+# (painted as small panels, not on Sheet 10's template: a clean patch of each paper laid into the stripes panel, like N47's)
+Building/Icon - Sheet 36 - Wallpapers 2.jpeg | chevrons panels | 360 | subway, palms, greystone, deco, hearts, stars, planks, coffee
+Building/Icon - Sheet 37 - Patio floors 2.jpeg | 4x4 | 256 | floor-ptile, floor-slatepave, floor-cobbles, floor-crazypave, floor-compdeck, floor-cedar, floor-bark, floor-lawn, floor-hexpave, floor-outmarble, floor-medtile, floor-basket, floor-setts, floor-pebbles, floor-sandslab, floor-bamdeck
+# (painted like Sheet 29: the page takes them the other way round from the fence stand-ins -- see patioHTML)
+Building/Icon - Sheet 38 - Patio Railings 2.jpeg | 4x4 holes divider | 300 | prop-rail_balustrade-l, prop-rail_balustrade-r, prop-rail_ivyiron-l, prop-rail_ivyiron-r, prop-rail_wicker-l, prop-rail_wicker-r, prop-rail_corten-l, prop-rail_corten-r, prop-rail_trellis-l, prop-rail_trellis-r, prop-rail_festoon-l, prop-rail_festoon-r, prop-rail_chain-l, prop-rail_chain-r, prop-rail_pastel-l, prop-rail_pastel-r
+
+# N57 (2026-10-25, Cam: "the prompts for the wall lights and the ceiling lights"): painted over make_cafe_lights.py's
+# stand-ins. Then re-measure cafe.js BULB_AT (each sconce's bulb) and CEIL_W.
+# (Cam, 25 Oct: Gemini painted the lights ON the template's wall panels and guide boxes -- can't be cut clean; repainted
+# without the template as Sheet 39 - Wall lights 2 (N61), the cutter slants them)
+# Building/Icon - Sheet 39 - Wall lights.jpeg | 4x4 holes unglow slant=0.07 | 300 | sconce-1, -, sconce-2, -, sconce-3, -, sconce-4, -, sconce-5, -, lightswitch-on, -, lightswitch-off, -, -, -
+# (N61's repaint, saved over the old name -- rows 3-4 are leftovers of the template, skipped)
+Building/Icon - Sheet 39 - Wall lights.jpeg | 4x4 holes unglow slant=0.07 | 300 | sconce-1, sconce-2, sconce-3, sconce-4, sconce-5, -, -, -, -, -, -, -, -, -, -, -
+Building/Icon - Sheet 39 - Wall lights.jpeg | 4x4 holes slant=0.07 | 300 | -, -, -, -, -, lightswitch-on, lightswitch-off, -, -, -, -, -, -, -, -, -
+# N61 (2026-10-25, Cam: clocks and wall things "as detailed as the wall sconces"): repainted front-on, no template
+Building/Icon - Sheet 19 - Clocks and wall things 2.jpeg | 4x4 holes slant=0.07 | 300 | clock-1, clock-2, clock-3, clock-4, clock-5, dartboard, mirror, shelf, -, -, -, -, -, -, -, -
+Building/Icon - Sheet 40 - Ceiling lights.jpeg | 4x4 holes unpink | 300 | ceil-led, ceil-lantern, ceil-cage, ceil-wire, ceil-globe, ceil-edison, ceil-tiffany, ceil-chandelier, -, -, -, -, -, -, -, -
+# N58 (2026-10-25, for N56): skipped till painted; the things go into the game after V25's vote
+# (as painted: each low thing twice in a row (one used); the round table and the pouf reach over their cells' tops -- cut by taller boxes; Gemini put the table's runner, candle and skull on cells 11-12's
+# cushions, so the bat cushion is cut by its own box from under them)
+Building/Icon - Sheet 41 - Low tables and readers.jpeg | 4x4 holes | 300 | table_low-l:main:pair, -, cushion:main, -, -, -, -, -, -, -, -, -, crystalball-l:main:pair, crystalball-bl:main:pair, tarotreader-l:main:pair, tarotreader-bl:main:pair
+Building/Icon - Sheet 41 - Low tables and readers.jpeg | free holes gridfill | 300 | table_lowround:main@40:430:480:800, pouf:main@1060:420:1520:790
+Building/Icon - Sheet 41 - Low tables and readers.jpeg | free holes unline | 300 | cushion_hw:main@1090:1270:1470:1500, table_lowhw-l:main:pair@0:940:512:1530
+# (the cobweb tree's and lamp's thin pale strands went with the fringe cleaner: cut on their own line, without it)
+Halloween/Icon - Halloween - Town 2.jpeg | 4x4 holes | 300 | prop-hw_webtree, prop-hw_weblamp, -, -, -, -, -, -, -, -, -, -, -, -, -, -
+Halloween/Icon - Halloween - Town 2.jpeg | 4x4 holes dehalo | 300 | -, -, prop-hw_bigweb, prop-hw_broom, prop-hw_turnips, prop-hw_deckchair, prop-hw_skulls, prop-hw_mummy, prop-hw_gargoyle, prop-hw_postbox, prop-hw_sweets, prop-hw_patch, prop-hw_barrow, prop-hw_crowpost, prop-hw_rocker, prop-hw_fog
+# (as painted: three of the webs on the template's panels -- tools/fix_cafe_trees.py takes the panel off after cutting)
+Halloween/Icon - Halloween - Walls 2.jpeg | 4x4 holes slant=0.07 | 300 | -, -, -, -, frame-tarotgold, -, frame-crows, -, frame-stars, -, -, hw_broomwall, -, -, -, -
+# (the webs came already at the wall's slant: no slant step -- just the panel taken off after, tools/fix_cafe_trees.py)
+# (after cutting these and running fix_cafe_trees.py: python3 tools/cut_cafe_art.py --silk web-1 web-2 web-3 web-4 prop-hw_bigweb prop-hw_webtree prop-hw_weblamp)
+Halloween/Icon - Halloween - Walls 2.jpeg | 4x4 holes | 300 | web-1, web-2, web-3, -, -, -, -, web-4, -, -, -, -, -, -, -, -
+Characters/Icon - Sheet 08 - Sitting on the floor.jpeg | 4x4 lines | 300 | woman-floor-f, woman-floor-b, oldman-floor-f, oldman-floor-b, boy-floor-f, boy-floor-b, -, -, -, -, -, -, -, -, -, -
+# (the witch's and Pumpkinhead's walking-away cells were painted facing us: skipped, their stand-ins kept -- N61 asks again)
+Characters/Icon - Sheet 09 - Halloween Guests.jpeg | 4x4 | 300 | dracula-tl, dracula-ar, dracula-sit-f, dracula-sit-b, frank-tl, frank-ar, frank-sit-f, frank-sit-b, witch-tl, -, witch-sit-f, witch-sit-b, pumpkinhead-tl, -, pumpkinhead-sit-f, pumpkinhead-sit-b
+Characters/Icon - Sheet 10 - Halloween Guests sitting low.jpeg | 4x4 | 300 | dracula-floor-f, dracula-floor-b, dracula-stool-f, dracula-stool-b, frank-floor-f, frank-floor-b, frank-stool-f, frank-stool-b, witch-floor-f, witch-floor-b, witch-stool-f, witch-stool-b, pumpkinhead-floor-f, pumpkinhead-floor-b, pumpkinhead-stool-f, pumpkinhead-stool-b
+# 2026-10-27 (Cam's Halloween furniture, N67): tables, the stools, the plant, the bookcase and the coat stand look the same
+# every way. The cobweb and skull chairs' second cells are their fronts mirrored (not used); the pumpkin armchair's second
+# is its back facing up-left (mirrored for up-right). The plain stool and the lamp (its glow painted on the pink) come
+# from Sheet 57 instead.
+Halloween/Icon - Halloween - Furniture.jpeg | 4x4 holes | 300 | table_hwpumpkin, table_hwweb, table_hwslime, table_hwskull, chair_web-l, -, armchair_hw-l, armchair_hw-bl:pair, stool_hwbat, -, chair_skull-l, -, pot_hwtree, -, bookshelf_hw, coatstand_hw
+# N67 Sheet 57: the skull chair from the back -- left cell up-right (br), right up-left (bl), as Sheet 13 came; the lamp
+# without its glow, the plain stool clean. The cobweb chair's backs came wrong (one straight-on, one its front): N67 asks
+# again. Rows 3-4 are the furniture sheet copied over: not used.
+Halloween/Icon - Halloween - Chair Backs.jpeg | 4x4 holes | 300 | -, -, chair_skull-br, chair_skull-bl, -, -, lamp_hw, stool_hw, -, -, -, -, -, -, -, -
+# 2026-10-27 (Cam's Haunted Faves): NeuroPets Sheet 2's 16 dishes painted for Halloween, cell for cell -- shown instead
+# of the usual pictures while Halloween is on (cafe.js art()). After cutting: --steam on all 48 (pink steam made neutral)
+Food/Halloween/Icon - Halloween - Haunted Faves - Cooking.jpeg | 4x4 | 160 | cook-cabbagesoup-hw, cook-carrotsoup-hw, cook-cornchowder-hw, cook-bakedpotato-hw, cook-mashedpotato-hw, cook-cheeseomelette-hw, cook-duckeggomelette-hw, cook-truffleomelette-hw, cook-cheesepie-hw, cook-cheeseboard-hw, cook-fishpie-hw, cook-butteredfish-hw, cook-grilledtrout-hw, cook-crabcakes-hw, cook-cookedsalmon-hw, cook-lobster-hw
+Food/Halloween/Icon - Halloween - Haunted Faves - Servery.jpeg | 4x4 | 200 | dish-cabbagesoup-hw, dish-carrotsoup-hw, dish-cornchowder-hw, dish-bakedpotato-hw, dish-mashedpotato-hw, dish-cheeseomelette-hw, dish-duckeggomelette-hw, dish-truffleomelette-hw, dish-cheesepie-hw, dish-cheeseboard-hw, dish-fishpie-hw, dish-butteredfish-hw, dish-grilledtrout-hw, dish-crabcakes-hw, dish-cookedsalmon-hw, dish-lobster-hw
+Food/Halloween/Icon - Halloween - Haunted Faves - Burnt.jpeg | 4x4 | 160 | burnt-cabbagesoup-hw, burnt-carrotsoup-hw, burnt-cornchowder-hw, burnt-bakedpotato-hw, burnt-mashedpotato-hw, burnt-cheeseomelette-hw, burnt-duckeggomelette-hw, burnt-truffleomelette-hw, burnt-cheesepie-hw, burnt-cheeseboard-hw, burnt-fishpie-hw, burnt-butteredfish-hw, burnt-grilledtrout-hw, burnt-crabcakes-hw, burnt-cookedsalmon-hw, burnt-lobster-hw
+# N60 (2026-10-25, Cam: potted lavender, flowers and ferns for indoors) -- then run tools/make_cafe_fabric.py (their pot swatches)
+Building/Icon - Sheet 44 - Potted plants.jpeg | 4x4 holes | 300 | pot_lavender, pot_flowers, pot_ferns, -, -, -, -, -, -, -, -, -, -, -, -, -
+# N61: the witch's and Pumpkinhead's walking-away pictures (Sheet 09's came facing us) -- then mirror each to -al (tools/fix_cafe_trees.py --guests)
+# (Gemini repainted the whole guest sheet: only the witch's and Pumpkinhead's walking-away cells are taken)
+Characters/Icon - Sheet 11 - Guests walking away.jpeg | 4x4 | 300 | -, -, -, -, -, -, -, -, witch-ar, -, -, -, -, pumpkinhead-ar, -, -
+# N62 (25 Oct night, V26)
+Building/Icon - Sheet 45 - Carts and cinema.jpeg | 4x4 holes | 300 | prop-icecart, prop-coffeecart, prop-popcart, prop-cinema, prop-icecart-shut, prop-coffeecart-shut, prop-popcart-shut, -, -, -, -, -, -, -, -, -
+# (then tools/make_cafe_cinema.py: the night screen, prop-cinema-on)
+Building/Icon - Sheet 46 - Drinks machines and counters.jpeg | 4x4 holes | 300 | shakevend-l:pair, shakevend-bl:pair, energyvend-l:pair, energyvend-bl:pair, espresso-l:pair, espresso-bl:pair, shakebar-l:pair, shakebar-bl:pair, sushibar-l:pair, sushibar-bl:pair, popcorn-l:pair, popcorn-bl:pair, -, -, -, -
+Building/Icon - Sheet 47 - Ponds and garden.jpeg | 4x4 holes | 300 | prop-pond_small, prop-pond_big, prop-pond_koi, prop-pond_lily, prop-fountain, prop-birdbath, prop-well, prop-bridge, prop-gazebo, prop-pergola, prop-rosearch, prop-sundial, prop-gnome, prop-statue, prop-birdhouse, prop-stonelantern
+# (then tools/fix_cafe_grass.py: takes away the grass each was painted standing on)
+# the counters' food (saved in Icons/Counters/): sushi 1-8, shakes 9-16; coffees 1-8, ice creams 9-15, popcorn 16
+Counters/Icon - Counter Sheet 1 - Servery.jpeg | 4x4 | 200 | dish-salmonnigiri, dish-tunamaki, dish-californiaroll, dish-tempuraroll, dish-dragonroll, dish-sashimi, dish-pokebowl, dish-bento, dish-strawshake, dish-chocshake, dish-vanillamalt, dish-bananashake, dish-cookieshake, dish-mintshake, dish-caramelshake, dish-rainbowshake
+Counters/Icon - Counter Sheet 1 - Cooking.jpeg | 4x4 | 160 | cook-salmonnigiri, cook-tunamaki, cook-californiaroll, cook-tempuraroll, cook-dragonroll, cook-sashimi, cook-pokebowl, cook-bento, cook-strawshake, cook-chocshake, cook-vanillamalt, cook-bananashake, cook-cookieshake, cook-mintshake, cook-caramelshake, cook-rainbowshake
+Counters/Icon - Counter Sheet 1 - Burnt.jpeg | 4x4 | 160 | burnt-salmonnigiri, burnt-tunamaki, burnt-californiaroll, burnt-tempuraroll, burnt-dragonroll, burnt-sashimi, burnt-pokebowl, burnt-bento, burnt-strawshake, burnt-chocshake, burnt-vanillamalt, burnt-bananashake, burnt-cookieshake, burnt-mintshake, burnt-caramelshake, burnt-rainbowshake
+Counters/Icon - Counter Sheet 2 - Servery.jpeg | 4x4 | 200 | dish-espresso, dish-cappuccino, dish-flatwhite, dish-latte, dish-mocha, dish-icedcoffee, dish-macchiato, dish-affogato, dish-vanillacone, dish-strawsundae, dish-choccone, dish-icelolly, dish-mintcup, dish-bubblegum, dish-bananasplit, dish-popcornbag
+Counters/Icon - Counter Sheet 2 - Cooking.jpeg | 4x4 | 160 | cook-espresso, cook-cappuccino, cook-flatwhite, cook-latte, cook-mocha, cook-icedcoffee, cook-macchiato, cook-affogato, cook-vanillacone, cook-strawsundae, cook-choccone, cook-icelolly, cook-mintcup, cook-bubblegum, cook-bananasplit, cook-popcornbag
+Counters/Icon - Counter Sheet 2 - Burnt.jpeg | 4x4 | 160 | burnt-espresso, burnt-cappuccino, burnt-flatwhite, burnt-latte, burnt-mocha, burnt-icedcoffee, burnt-macchiato, burnt-affogato, burnt-vanillacone, burnt-strawsundae, burnt-choccone, burnt-icelolly, burnt-mintcup, burnt-bubblegum, burnt-bananasplit, burnt-popcornbag
+# N63 outside ground (uncomment when saved):
+# Building/Icon - Sheet 48 - Snow.jpeg | 2x2 texture | 512 | tex-snow, tex-snow_trod, tex-snow_thin, tex-ice
+# Building/Icon - Sheet 49 - Norse meadow.jpeg | 2x2 texture | 512 | tex-norse, tex-norse_flower, tex-norse_rocky, tex-norse_autumn
+# Building/Icon - Sheet 50 - Long grass.jpeg | 2x2 texture | 512 | tex-longgrass, tex-longgrass_flower, tex-longgrass_dry, tex-longgrass_wind
+# Building/Icon - Sheet 51 - Beach sand.jpeg | 2x2 texture | 512 | tex-beach, tex-beach_wet, tex-beach_dune, tex-beach_pebble
+# Building/Icon - Sheet 52 - Water.jpeg | 2x2 texture | 512 | tex-water, tex-water-2, tex-deepwater, tex-deepwater-2
+# Building/Icon - Sheet 53 - Sea and shore.jpeg | 2x2 texture | 512 | tex-sea, tex-sea-2, tex-pondlily, tex-mudbank
+# N64 the pantry cupboard (uncomment when saved; then tools/make_cafe_fabric.py for its paint layer):
+# Building/Icon - Sheet 54 - Pantry cupboard.jpeg | 4x4 holes | 300 | cupboard, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -

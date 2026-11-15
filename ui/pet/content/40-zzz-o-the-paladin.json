@@ -1,0 +1,277 @@
+{
+ "PALADIN_ITEMS": {
+  "//": "Battle Re-work Part 8 (2026-10-15): the Paladin's shields -- worn in the off hand (shield: true), they count as armour (def) and block (block: the chance a blow does nothing). Holy water blesses your blade (bless: hits it lasts; +maxHit, and x undead against the undead). For the Paladin now; any class carries a buckler with Shield training (Part 9).",
+  "woodenbuckler": {
+   "name": "Wooden buckler",
+   "price": 38,
+   "gem": 1,
+   "gear": {
+    "who": "player",
+    "slot": "offhand",
+    "shield": true,
+    "def": 1,
+    "block": 0.04,
+    "cls": "paladin",
+    "req": {
+     "defence": 1
+    }
+   }
+  },
+  "bronzekiteshield": {
+   "name": "Bronze kite shield",
+   "price": 46,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "offhand",
+    "shield": true,
+    "def": 2,
+    "block": 0.06,
+    "cls": "paladin",
+    "req": {
+     "defence": 1
+    }
+   }
+  },
+  "ironkiteshield": {
+   "name": "Iron kite shield",
+   "price": 136,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "offhand",
+    "shield": true,
+    "def": 4,
+    "block": 0.07,
+    "cls": "paladin",
+    "req": {
+     "defence": 10
+    }
+   }
+  },
+  "steelkiteshield": {
+   "name": "Steel kite shield",
+   "price": 250,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "offhand",
+    "shield": true,
+    "def": 6,
+    "block": 0.08,
+    "cls": "paladin",
+    "req": {
+     "defence": 20
+    }
+   }
+  },
+  "mithrilkiteshield": {
+   "name": "Mithril kite shield",
+   "price": 531,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "offhand",
+    "shield": true,
+    "def": 8,
+    "block": 0.09,
+    "cls": "paladin",
+    "req": {
+     "defence": 30
+    }
+   }
+  },
+  "adamantkiteshield": {
+   "name": "Adamant kite shield",
+   "price": 764,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "offhand",
+    "shield": true,
+    "def": 10,
+    "block": 0.1,
+    "cls": "paladin",
+    "req": {
+     "defence": 40
+    }
+   }
+  },
+  "runekiteshield": {
+   "name": "Rune kite shield",
+   "price": 1020,
+   "gem": 9,
+   "gear": {
+    "who": "player",
+    "slot": "offhand",
+    "shield": true,
+    "def": 12,
+    "block": 0.11,
+    "cls": "paladin",
+    "req": {
+     "defence": 50
+    }
+   }
+  },
+  "holywater": {
+   "name": "Holy water",
+   "price": 27,
+   "gem": 3,
+   "bless": {
+    "hits": 30,
+    "maxHit": 1,
+    "undead": 1.5
+   }
+  }
+ },
+ "PALADIN_RECIPES": {
+  "//": "The buckler at your crafting bench; kite shields at the anvil; holy water at the apothecary table (silver and lavender, in a clean pot).",
+  "crafting": [
+   {
+    "make": "woodenbuckler",
+    "needs": {
+     "plank": 2,
+     "leather": 1
+    },
+    "level": 2,
+    "xp": 12
+   }
+  ],
+  "anvil": [
+   {
+    "make": "bronzekiteshield",
+    "needs": {
+     "bronzebar": 4,
+     "leather": 1
+    },
+    "level": 5,
+    "xp": 19,
+    "fee": 5
+   },
+   {
+    "make": "ironkiteshield",
+    "needs": {
+     "ironbar": 6,
+     "leather": 1
+    },
+    "level": 15,
+    "xp": 37,
+    "fee": 14
+   },
+   {
+    "make": "steelkiteshield",
+    "needs": {
+     "steel": 4,
+     "leather": 1
+    },
+    "level": 23,
+    "xp": 89,
+    "fee": 15
+   },
+   {
+    "make": "mithrilkiteshield",
+    "needs": {
+     "mithrilbar": 4,
+     "leather": 1
+    },
+    "level": 33,
+    "xp": 183,
+    "fee": 25
+   },
+   {
+    "make": "adamantkiteshield",
+    "needs": {
+     "adamantbar": 4,
+     "leather": 1
+    },
+    "level": 43,
+    "xp": 280,
+    "fee": 35
+   },
+   {
+    "make": "runekiteshield",
+    "needs": {
+     "runebar": 4,
+     "leather": 1
+    },
+    "level": 50,
+    "xp": 380,
+    "fee": 45
+   }
+  ],
+  "apothecary": [
+   {
+    "make": "holywater",
+    "n": 3,
+    "needs": {
+     "silverbar": 1,
+     "lavender": 5,
+     "potofwater": 1
+    },
+    "level": 18,
+    "xp": 70
+   }
+  ]
+ },
+ "PALADIN": {
+  "//": "The Paladin (Battle Re-work Part 8). DEVOTION, its meter (pl.devotion -- lasts the hunt, fades at home): perRound, perBlock, and take x (damage taken / max health). bash: the shield bash -- damage [least, most] plus your shield's defence / bashDef, stuns 1 round (diminishing returns, a boss's half), then cooldown rounds. twin: each blow with a sword in both hands (two a round, no shield). xpSplit: a kill's xp to Attack and Defence half each (the plan: 'Trains Attack and Defence'). layHeal: Lay on hands heals this much of your health. aegis: rounds Aegis blocks everything. undead: who Smite and holy water hit hardest.",
+  "perRound": 1,
+  "perBlock": 12,
+  "take": 50,
+  "max": 100,
+  "bash": [
+   1,
+   3
+  ],
+  "bashDef": 4,
+  "bashCooldown": 4,
+  "twin": 0.55,
+  "xpSplit": true,
+  "layHeal": 0.35,
+  "aegis": 3,
+  "undead": [
+   "tombguardian",
+   "pharaoh",
+   "skeleton",
+   "ghoul",
+   "wraith",
+   "morvane"
+  ]
+ },
+ "PALADIN_CLASS": {
+  "name": "Paladin",
+  "style": "melee",
+  "about": "A sword and a shield (or two swords), and devotion. Trains Attack and Defence.",
+  "resist": {
+   "slash": 0.85,
+   "crush": 0.85
+  },
+  "weak": {
+   "magic": 1.25
+  },
+  "specials": {
+   "layonhands": {
+    "minLevel": 10,
+    "name": "Lay on hands",
+    "cost": 60,
+    "heal": true,
+    "about": "Heals you a third of your health -- it takes your turn. 60 devotion."
+   },
+   "smite": {
+    "name": "Smite",
+    "cost": 45,
+    "acc": 1.2,
+    "dmg": 1.8,
+    "smite": true,
+    "about": "A holy blow: 80% more damage, three times against the undead. 45 devotion."
+   },
+   "aegis": {
+    "minLevel": 20,
+    "name": "Aegis",
+    "cost": 70,
+    "aegis": true,
+    "about": "For 3 rounds nothing gets past your shield. 70 devotion."
+   }
+  }
+ }
+}

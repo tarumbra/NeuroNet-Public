@@ -1,0 +1,34 @@
+/* ==========================================================================
+   Archive — Scribe's attic (2026-11-02). Laid out like Collaboration: a list on the left, the chosen one on the right.
+   ========================================================================== */
+.ar-page { display: grid; grid-template-columns: minmax(240px, 320px) 1fr; gap: 18px; min-height: 0; }
+.ar-side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ar-search { width: 100%; }
+.ar-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.ar-filter { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--muted); font: inherit; font-size: .8125rem; cursor: pointer; }
+.ar-filter.on { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.ar-list { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+.ar-group { margin: 10px 2px 2px; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ar-group small { font-weight: 400; }
+.ar-row { display: flex; gap: 10px; align-items: center; width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ar-row:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.ar-row.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.ar-ref { flex: 0 0 auto; min-width: 2.6em; padding: 2px 6px; border-radius: 6px; text-align: center; font-size: .75rem; font-weight: 700;
+  color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.ar-ref.big { font-size: .95rem; padding: 4px 10px; }
+.ar-row-main { display: flex; flex-direction: column; min-width: 0; }
+.ar-row-main b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ar-row-main small { color: var(--muted); font-size: .75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ar-empty { padding: 10px 4px; }
+.ar-main { min-width: 0; }
+.ar-head { display: flex; align-items: center; gap: 12px; }
+.ar-head h2 { margin: 0; }
+.ar-acts { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 16px; }
+.ar-del:hover { color: var(--danger); border-color: var(--danger); }
+.ar-body { border-top: 1px solid var(--line); padding-top: 12px; line-height: 1.55; }
+.ar-body h3 { font-size: .95rem; margin: 14px 0 4px; }
+.ar-body ul { margin: 0 0 8px; padding-left: 20px; }
+.ar-ans { color: var(--muted); font-size: .875rem; white-space: pre-wrap; margin: 2px 0 6px; }
+.ar-intro p { margin: 0 0 8px; }
+.ar-files { columns: 2; font-size: .875rem; }
+@media (max-width: 760px) { .ar-page { grid-template-columns: 1fr; } }

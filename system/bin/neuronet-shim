@@ -1,0 +1,7 @@
+#!/bin/bash
+# The NeuroNet command this file is named after (neuronet-quick, neuronet-music,
+# ...), run from wherever NeuroNet is on this computer. Installed into
+# ~/.local/bin by neuronet-setup under each command's name, so shortcuts,
+# the launcher and services say just "neuronet-quick notes" -- no folder.
+app="$(neuronet-path app)" || exit 1
+exec "$app/$(basename "$0")" "$@"

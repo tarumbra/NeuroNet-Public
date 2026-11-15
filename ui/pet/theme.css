@@ -1,0 +1,249 @@
+/* ==========================================================================
+   NeuroPets -- the parchment look (2026-10-10). Loaded LAST, after pet.css and game.css.
+
+   Cam: "the dark brown would be for the background and the lighter brown color would be for the cards in game"
+   (the reference is ~/Pictures/retroui.webp; NeuroPets only, not the rest of NeuroNet). Dark brown wood behind
+   everything, parchment cards with dark brown ink on them, brown plates for buttons. The colours are taken from
+   the picture. The tokens are set here, then every place game.css/pet.css wrote a dark-slate colour is re-said.
+   ========================================================================== */
+:root {
+  --bg: #45281a;            /* the wood behind it all */
+  --bg2: #3a2115;
+  --side: #331d12;          /* the sidebar, a shade darker */
+  --side-ink: #ecd6ae;
+  --side-hover: #4c2c1b;
+  --side-on: #5c3521;
+  --panel: #d8b67f;         /* parchment */
+  --elevated: #e2c38f;
+  --hover: #cca46c;
+  --sunk: #c49a62;          /* wells in a card: bars, inputs, little chips */
+  --line: #a97a49;
+  --line-strong: #814832;
+  --ink: #3b2213;           /* dark brown ink */
+  --text: #3b2213;
+  --muted: #6f4a2b;
+  --faint: #8a6643;
+  --plate: #7a3c25;         /* a button: a dark brown plate */
+  --plate-hover: #8c4a2f;
+  --plate-ink: #f5e2bd;
+  --good: #4e8a2c;
+  --good-hi: #79b44a;
+  --info: #2d6a94;
+  --warn: #b5671b;
+  --bad: #a8322a;
+  --danger: #a8322a;
+  --pink: #b8577e;
+  --frame: #814832;         /* the carved edge of a card */
+  color-scheme: light;
+}
+body.np { background: var(--bg); color: var(--ink); }
+a { color: var(--info); }
+::-webkit-scrollbar-thumb { background: var(--frame); border-color: var(--bg); }
+.pp-page ::-webkit-scrollbar-thumb, .pp-modal-card ::-webkit-scrollbar-thumb { border-color: var(--panel); }
+
+/* ---- the shell ---- */
+.np-side { background: var(--side); border-right: 2px solid #22130b; }
+.np-brand, .np-side-foot { border-color: #22130b; }
+.np-brand b { color: var(--side-ink); }
+.np-row { color: var(--side-ink); }
+.np-row:hover { background: var(--side-hover); color: #fff4dc; }
+.np-row.on { background: var(--side-on); color: #fff4dc; }
+.np-group > h6, .np-brand small, .np-side-foot, .np-switch { color: #b8946a; }
+.np-top { background: linear-gradient(180deg, #8a4a2e, #6a351f); border-bottom: 3px solid var(--accent); color: #fff4dc; }
+.np-top-icon { background: var(--panel); box-shadow: inset 0 0 0 2px var(--frame); }
+.np-top-hint { color: #f0d9b0; }
+.np-chip { background: rgba(30, 14, 6, .35); color: #fff4dc; }
+.np-menu { border-color: rgba(255, 236, 200, .35); color: #fff4dc; }
+.np-pathbar .np-path, .np-path { background: var(--plate); color: var(--plate-ink); border-color: #4e2414; }
+.np-path:hover:not(:disabled) { background: var(--plate-hover); }
+.np-path.on { background: var(--panel); color: var(--ink); box-shadow: inset 0 0 0 2px var(--frame); }
+.np-path:disabled { opacity: .5; }
+.np-toast { background: var(--elevated); color: var(--ink); border: 2px solid var(--frame); }
+
+/* ---- cards: parchment, a carved brown edge, the page's colour on top ---- */
+.np-panel, .pp-modal-card, .pl-card, .np-card, .pp-room, .pp-recipe, .pp-item, .pp-villager, .pp-stage {
+  box-shadow: 0 0 0 1px var(--frame), 0 3px 10px rgba(20, 8, 2, .35); }
+.pp-stage { background: linear-gradient(180deg, var(--elevated), var(--panel) 70%); }
+.pp-subarea { background: var(--sunk); }
+.pp-subarea.essence, .np-card.essence { background: linear-gradient(135deg, #d9c0a0, #c9b08f); border-color: #7d5aa8; }
+.pp-item { border-top-color: var(--line-strong); }
+.pp-log li { border-bottom-color: var(--line); }
+.pp-label, .np-card-sub, .np-sp-stat { color: var(--muted); }
+.pp-chest { background: var(--elevated); border-color: var(--line); }
+
+/* ---- buttons, inputs, badges ---- */
+.btn { background: var(--plate); color: var(--plate-ink); }
+.btn:hover:not(:disabled) { background: var(--plate-hover); color: #fff4dc; }
+.btn-primary { background: var(--good); color: #fff8e6; }
+.btn-primary:hover:not(:disabled) { background: #5c9c36; }
+.btn-quiet { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.btn-quiet:hover:not(:disabled) { background: var(--hover); color: var(--ink); }
+.btn:disabled { background: #b8946a; color: #6f4a2b; }
+.input, select.input { background: #ecd3a4; color: #3b2213; border-color: var(--line); }   /* always parchment, so always dark ink, on the wood too */
+.input::placeholder { color: #8a6643; }
+.np-badge { background: var(--plate); color: var(--plate-ink); }
+.np-badge.warn { color: #2a1600; }
+.np-badge.pink { color: #fff4f8; }
+
+/* ---- bars: a sunk groove, a green fill ---- */
+.np-sp-bar, .pp-bar, .np-card-bar, .pl-hp-bar, .pl-skill-bar { background: var(--sunk); box-shadow: inset 0 1px 2px rgba(40, 18, 6, .35); }
+.np-sp-bar span, .pp-bar span, .np-card-bar span, .pl-hp-bar span, .pl-skill-bar span { background: linear-gradient(90deg, var(--good), var(--good-hi)); }
+
+/* ---- words that were pale green / pale red on the dark ---- */
+.pp-boost { color: #2f6b14; }
+.pp-need-chip.lack, .np-need.lack, .np-card.blocked .np-card-state { color: var(--bad); }
+.np-need { background: var(--sunk); color: var(--ink); }
+.np-need.lack { background: #e3b7a0; }
+.np-area.here .np-area-h, .np-card.here .np-card-state { color: #2f6b14; }
+.pp-stack-full { color: var(--warn); }
+
+/* ---- two kinds of ground: light words on the wood, dark ink on parchment ---- */
+.np-host {
+  --ink: #f1dcb4; --text: #f1dcb4; --muted: #d2b083; --faint: #ab8961; --line: #6a3f27; --line-strong: #8a5434;
+  --good: #8cc45a; --bad: #f08a6e; --warn: #f0b25a; --info: #8cc0e8;
+  color: var(--ink); }
+.np-card, .np-panel, .pl-card, .pl-hero, .pl-stat, .pl-out, .pp-area, .pp-beast, .pp-cheer-card, .pp-chest, .pp-class, .pp-dash-card,
+.pp-dash-hero, .pp-dash-row, .pp-dex-card, .pp-egg, .pp-gather-card, .pp-hunt-fold, .pp-hunt-sum, .pp-incubator, .pp-item, .pp-land-now,
+.pp-load-slot, .pp-modal-card, .pp-mode-pick, .pp-monster, .pp-nature, .pp-petcard, .pp-plot, .pp-pot, .pp-prize, .pp-reveal, .pp-reveal-row,
+.pp-room, .pp-sheet-cols section, .pp-shop, .pp-skill, .pp-slot-card, .pp-stage, .pp-stat-tile, .pp-trip, .pp-villager, .pp-world-row,
+.pp-recipe, .np-toast {
+  --ink: #3b2213; --text: #3b2213; --muted: #6f4a2b; --faint: #8a6643; --line: #a97a49; --line-strong: #814832;
+  --good: #4e8a2c; --bad: #a8322a; --warn: #b5671b; --info: #2d6a94;
+  color: var(--ink); }
+.pp-gem { color: #2d6a94; }
+/* the battle's message box: a dark wooden board instead of slate */
+.pp-msg { background: linear-gradient(180deg, #4e2d1b, #3a2014); border-color: #22130b; color: #f5e2bd; }
+.pp-msg-dim { color: #cfae80; }
+
+/* ==========================================================================
+   The carved frames (2026-10-10, Cam's pictures in ~/Pictures/NeuroPets Art Assets/Parchment UI, cut out and
+   shrunk to their real pixel size in art/ui/). Card and pop-up frames and the planks are stored at 2x/3x so
+   they're drawn at their own size; buttons, the top ribbon and the window headers are stretched pixel-crisp
+   (they hold nothing painted, so that's safe -- image-rendering is passed down to what's inside).
+   ========================================================================== */
+.np-scroll { background: var(--bg) url(art/ui/planks.png) 0 0 / 666px 348px repeat; }
+
+/* cards: the carved wooden frame, parchment inside */
+:is(.np-panel, .pl-card, .pl-hero, .np-card, .pp-room, .pp-item, .pp-villager, .pp-dash-card, .pp-dash-hero, .pp-chest,
+    .pp-hunt-fold, .pp-gather-card, .pp-dex-card, .pp-slot-card, .pp-shop, .pp-trip, .pp-incubator, .pp-prize, .pp-reveal,
+    .pp-stage, .pp-area, .pp-load-slot, .pp-egg),
+:is(.np-panel, .pl-card, .pl-hero, .np-card, .pp-room, .pp-item, .pp-villager, .pp-dash-card, .pp-dash-hero, .pp-chest,
+    .pp-hunt-fold, .pp-gather-card, .pp-dex-card, .pp-slot-card, .pp-shop, .pp-trip, .pp-incubator, .pp-prize, .pp-reveal,
+    .pp-stage, .pp-area, .pp-load-slot, .pp-egg):hover {
+  border: 12px solid transparent; border-image: url(art/ui/card-frame.png) 24 fill / 24px stretch;
+  background: transparent; border-radius: 0; box-shadow: none; filter: drop-shadow(0 3px 5px rgba(20, 8, 2, .45)); }
+.np-card:hover:not(.locked), .pp-villager:hover, .pp-area:hover, .pp-egg:hover { filter: drop-shadow(0 3px 5px rgba(20, 8, 2, .45)) brightness(1.05); }
+.np-card.locked, .pp-egg.locked { filter: grayscale(.45) brightness(.82); }
+.np-card.here { filter: drop-shadow(0 0 6px rgba(255, 210, 90, .8)); }
+
+/* pop-ups: the larger leafy frame, a vine under the heading */
+.pp-modal-card { border: 18px solid transparent; border-image: url(art/ui/popup-frame.png) 36 fill / 36px stretch;
+  background: transparent; border-radius: 0; box-shadow: none; filter: drop-shadow(0 8px 18px rgba(10, 4, 0, .6)); }
+.pp-modal-card .pp-shop-head { padding-bottom: 46px; margin-bottom: 4px; image-rendering: pixelated;
+  background: url(art/ui/divider.png) center bottom / 285px 42px no-repeat; }
+
+/* buttons: the dark plate; pressed, chosen or the main thing to do: the light one */
+.btn, .np-path { border-style: solid; border-color: transparent; border-width: 5px 10px; border-radius: 0; box-shadow: none;
+  border-image: url(art/ui/button.png) 5 12 fill / 7px 16px stretch; background: transparent; color: var(--plate-ink); image-rendering: pixelated; }
+.btn:hover:not(:disabled), .np-path:hover:not(:disabled) { background: transparent; filter: brightness(1.18); color: #fff4dc; }
+.btn-primary, .np-path.on, .btn:active:not(:disabled) {
+  border-image: url(art/ui/button-on.png) 5 12 fill / 7px 16px stretch; background: transparent; color: var(--ink); box-shadow: none; }
+.btn-primary:hover:not(:disabled) { color: var(--ink); }
+.btn:disabled, .np-path:disabled { background: transparent; color: var(--plate-ink); opacity: .5; filter: grayscale(.3); }
+.btn-quiet, .btn-quiet:hover:not(:disabled) { border: 0; border-image: none; background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+
+/* the top bar: the carved title ribbon, dark ink on it */
+.np-top { border-style: solid; border-color: transparent; border-width: 9px 44px; border-image: url(art/ui/title-ribbon.png) 9 42 fill / 9px 44px stretch;
+  background: transparent; color: var(--ink); image-rendering: pixelated; padding: 0 6px; }
+.np-top h1 { color: var(--ink); }
+.np-top-hint { color: var(--muted); opacity: 1; }
+.np-top-icon { background: transparent; box-shadow: none; }
+.np-menu { border-color: var(--line-strong); color: var(--ink); background: rgba(129, 72, 50, .12); }
+.np-chip { background: rgba(83, 45, 25, .9); color: #fff4dc; }
+
+/* item slots behind the icons in the bag and at the benches */
+.pp-item > img, .pp-recipe > img { box-sizing: content-box; padding: 7px; background: url(art/ui/item-slot.png) center / 100% 100% no-repeat; }
+/* the skill panel (level, xp, tool) and the boosted/here cards: still the frame (they set their own borders) */
+.np-skillpanel.pp-skill, .pp-skill { border: 12px solid transparent; border-image: url(art/ui/card-frame.png) 24 fill / 24px stretch;
+  background: transparent; border-radius: 0; filter: drop-shadow(0 3px 5px rgba(20, 8, 2, .45)); }
+.pp-gather-card.here, .pp-skill.boosted, .pp-hunt-fold.here { box-shadow: none; filter: drop-shadow(0 0 6px rgba(255, 210, 90, .8)); }
+/* a recipe row: room for the icon in its slot */
+.pp-recipe { grid-template-columns: 46px minmax(0, 1fr) auto; }
+.pp-world-row, .pp-world-row:hover { border: 12px solid transparent; border-image: url(art/ui/card-frame.png) 24 fill / 24px stretch;
+  background: transparent; border-radius: 0; box-shadow: none; filter: drop-shadow(0 3px 5px rgba(20, 8, 2, .45)); }
+
+/* painted item icons (2026-10-10 audit, H-6) are smooth paintings, not pixel art: scale them smoothly */
+img[src^="art/icons/"] { image-rendering: auto; object-fit: contain; }
+/* painted pets (2026-10-10): smooth, not pixel; the Petapedia's mystery is a dark silhouette */
+img[src^="art/pets/"] { image-rendering: auto; object-fit: contain; }
+.pp-dex-mystery img[src^="art/pets/"] { filter: brightness(0) opacity(.6); }
+/* (2026-10-10, Cam: "When i hover over a popup, another frame appears in the pop up window") -- a sheet's own section (a
+   person, the material archive) has no frame of its own: the pop-up's frame is enough. The card-frame rules above match on
+   :hover too, and beat pet.css's ".pp-sec-card > .pp-shop" there -- so this restates it, hover and all. */
+.pp-sec-card > .pp-shop, .pp-sec-card > .pp-shop:hover, .pp-sec-card .pp-materials, .pp-sec-card .pp-materials:hover {
+  border: 0; border-image: none; padding: 0; background: none; box-shadow: none; filter: none; }
+/* painted creatures (2026-10-10): smooth, not pixel */
+img[src^="art/creatures/"] { image-rendering: auto; object-fit: contain; }
+/* a painted foe in battle: larger than the 16-pixel sprites, feet on the same ground line */
+.pp-sprite.foe[src^="art/creatures/"] { width: 150px; height: 150px; object-fit: contain; object-position: center bottom; top: calc(41% - 120px); right: calc(9% + 30px); image-rendering: auto; }
+.pp-sprite.foe.boss[src^="art/creatures/"] { width: 185px; height: 185px; top: calc(41% - 150px); right: calc(9% + 12px); }
+@media (max-width: 760px) { .pp-sprite.foe[src^="art/creatures/"] { width: 104px; height: 104px; top: calc(41% - 84px); } }
+/* painted people (2026-10-10): smooth; in battle, the painted you is taller than the 16-pixel one, feet on the ground line */
+img[src^="art/player/"] { image-rendering: auto; object-fit: contain; }
+.pp-sprite.you[src^="art/player/"] { width: 150px; height: 170px; object-position: center bottom; bottom: calc(7% + 14px); left: calc(5% + 50px); }
+.pl-avatar[src^="art/player/"], .pp-avatar-big[src^="art/player/"] { background: none; }
+/* you with worn armour (2026-10-11): the body and each worn piece are the same size, stacked in one box */
+.pp-you-pic { display: inline-block; vertical-align: middle; }
+.pp-you-pic:not(.pp-sprite) { position: relative; }
+.pp-you-pic > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; image-rendering: auto; }
+.pp-sprite.you.pp-you-pic { width: 150px; height: 170px; bottom: calc(7% + 14px); left: calc(5% + 50px); }
+.pp-sprite.you.pp-you-pic > img { object-position: center bottom; }
+.pl-avatar.pp-you-pic, .pp-avatar-big.pp-you-pic { background: none; }
+/* the pet's room is a painting now (2026-10-10): smooth, and the canvas fills its frame */
+.pp-stage canvas { image-rendering: auto; border-radius: 4px; }
+/* Amunet's tutorial (2026-10-11): bottom left, over pages and pop-ups (the messages stay on top) */
+.np-tutor { position: fixed; left: 18px; bottom: 18px; z-index: 9300; max-width: min(560px, calc(100vw - 36px)); }
+.np-tutor-card { display: flex; gap: 12px; align-items: flex-end; padding: 14px 16px 14px 8px; color: var(--ink);
+  background: var(--panel); border: 14px solid transparent; border-image: url(art/ui/popup-frame.png) 36 fill / 28px stretch;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45); animation: np-tutor-in .35s ease-out; }
+@keyframes np-tutor-in { from { opacity: 0; transform: translateY(14px); } }
+.np-tutor-pic { flex: 0 0 auto; width: 104px; height: 170px; align-self: flex-end; }
+.np-tutor-pic.painted { object-fit: contain; object-position: bottom; }   /* a painted tutor's portrait (2026-10-17) */
+.np-tutor-pic.painted.big { width: 170px; height: 276px; }
+.np-tutor-bubble .np-tutor-pic.painted.big { width: 86px; height: 140px; }
+@media (max-width: 640px) { .np-tutor-pic.painted.big { width: 96px; height: 156px; } }
+.np-tutor-main { flex: 1; min-width: 0; font-size: .9rem; }
+.np-tutor-main p { margin: 0 0 7px; line-height: 1.4; }
+.np-tutor-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.np-tutor-head b { font-size: 1.05rem; }
+.np-tutor-x { margin-left: auto; border: 0; background: none; color: var(--muted); font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 0 4px; }
+.np-tutor-goal { margin: 4px 0 8px; padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,.08); font-weight: 600; }
+.np-tutor-goal.met { background: rgba(76,195,122,.22); color: #2f7d4f; }
+.np-tutor-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.np-tutor-skip { margin-left: auto; }
+.np-tutor-name, .np-tutor-gifts { display: flex; flex-direction: column; gap: 6px; margin: 6px 0; }
+.np-tutor-gifts { flex-direction: row; flex-wrap: wrap; }
+.np-tutor #np-tutor-skill { margin: 4px 0 6px; width: 100%; }
+.np-tutor.min { max-width: none; }
+.np-tutor-bubble { position: relative; width: 86px; height: 86px; border-radius: 50%; overflow: hidden; cursor: pointer;
+  border: 3px solid var(--frame, #8a5a3a); background: var(--panel); box-shadow: 0 6px 18px rgba(0,0,0,.4); padding: 0; }
+.np-tutor-bubble .np-tutor-pic { width: 86px; height: 140px; position: absolute; left: 0; top: 2px; }
+.np-tutor-dot { position: absolute; right: 4px; top: 4px; width: 22px; height: 22px; border-radius: 50%; background: #ffd633; color: #2a1d00;
+  font-weight: 800; display: grid; place-items: center; animation: pp-spec-ready 1s ease-in-out infinite; }
+@media (max-width: 640px) { .np-tutor-pic { width: 70px; height: 116px; } }
+body.np-tutor-on #np-scroll { padding-bottom: 330px; }
+/* the red box over the click the tutorial wants (2026-10-11): grows and shrinks */
+.np-tutor-ring { position: fixed; z-index: 9350; pointer-events: none; border: 4px solid #e0302a; border-radius: 12px;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.55), 0 0 22px rgba(224,48,42,.8); animation: np-ring 1s ease-in-out infinite; transition: left .15s, top .15s, width .15s, height .15s; }
+@keyframes np-ring { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .np-tutor-ring { animation: none; } }
+.np-tutor-body { display: flex; gap: 10px; margin: 6px 0; }
+.np-tutor-pick { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 14px; border-radius: 10px; cursor: pointer;
+  border: 2px solid var(--frame, #8a5a3a); background: rgba(255,255,255,.35); font: inherit; color: inherit; }
+.np-tutor-pick:hover { background: rgba(255,214,51,.35); }
+.np-tutor-pick img { height: 120px; }
+.np-tutor.right { left: auto; right: 18px; bottom: 90px; }
+/* a button that throws something away (V7's Drop, 2026-10-19): the same shape as the rest, in a warning red */
+/* (the plate is a picture, button.png: tinted red rather than recoloured, so it stays the game's wooden button) */
+.btn.btn-danger { filter: hue-rotate(-28deg) saturate(2.4) brightness(.92); }
+.btn.btn-danger:hover:not(:disabled) { filter: hue-rotate(-28deg) saturate(2.8) brightness(1.05); }

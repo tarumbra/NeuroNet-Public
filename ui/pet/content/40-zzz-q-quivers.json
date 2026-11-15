@@ -1,0 +1,128 @@
+{
+ "QUIVERS": {
+  "//": "Battle Re-work Part 10 (2026-10-16), Cam (PT7): \"quivers ... will have a certain capacity and can hold only up to a certain tier of arrow. For example early game improvised quiver can hold only the wood arrows whittled.\" cap: arrows (or bolts) a hunt; tier: the best arrows it holds (ARROW_TIER). Without one, loose: a handful (loose) of anything else; arrows and bolts need a quiver (N19, 2026-10-19).",
+  "loose": 50,
+  "items": {
+   "improvisedquiver": {
+    "name": "Improvised quiver",
+    "price": 19,
+    "gem": 1,
+    "gear": {
+     "who": "player",
+     "slot": "quiver",
+     "quiver": {
+      "cap": 60,
+      "tier": 0
+     },
+     "req": {
+      "ranged": 1
+     }
+    }
+   },
+   "leatherquiver": {
+    "name": "Leather quiver",
+    "price": 50,
+    "gem": 2,
+    "gear": {
+     "who": "player",
+     "slot": "quiver",
+     "quiver": {
+      "cap": 200,
+      "tier": 2
+     },
+     "req": {
+      "ranged": 5
+     }
+    }
+   },
+   "studdedquiver": {
+    "name": "Studded quiver",
+    "price": 80,
+    "gem": 4,
+    "gear": {
+     "who": "player",
+     "slot": "quiver",
+     "quiver": {
+      "cap": 500,
+      "tier": 4
+     },
+     "req": {
+      "ranged": 20
+     }
+    }
+   },
+   "gatorquiver": {
+    "name": "Gator-hide quiver",
+    "price": 101,
+    "gem": 6,
+    "gear": {
+     "who": "player",
+     "slot": "quiver",
+     "quiver": {
+      "cap": 1000,
+      "tier": 6
+     },
+     "req": {
+      "ranged": 40
+     }
+    }
+   }
+  },
+  "recipes": [
+   {
+    "make": "improvisedquiver",
+    "needs": {
+     "twigs": 10,
+     "thread": 2
+    },
+    "level": 2,
+    "xp": 10
+   },
+   {
+    "make": "leatherquiver",
+    "needs": {
+     "leather": 3,
+     "thread": 2
+    },
+    "level": 12,
+    "xp": 30
+   },
+   {
+    "make": "studdedquiver",
+    "needs": {
+     "leather": 4,
+     "ironbar": 2
+    },
+    "level": 26,
+    "xp": 70
+   },
+   {
+    "make": "gatorquiver",
+    "needs": {
+     "gatorhide": 3,
+     "leather": 2
+    },
+    "level": 42,
+    "xp": 130
+   }
+  ]
+ },
+ "ARROW_TIER": {
+  "//": "An arrow's (or bolt's) tier for quivers: what you make yourself 0, then bronze 1 to rune 6.",
+  "improvisedarrow": 0,
+  "bonearrow": 0,
+  "flintarrow": 0,
+  "bronzearrow": 1,
+  "bronzebolt": 1,
+  "ironarrow": 2,
+  "ironbolt": 2,
+  "steelarrow": 3,
+  "steelbolt": 3,
+  "mithrilarrow": 4,
+  "mithrilbolt": 4,
+  "adamantarrow": 5,
+  "adamantbolt": 5,
+  "runearrow": 6,
+  "runebolt": 6
+ }
+}

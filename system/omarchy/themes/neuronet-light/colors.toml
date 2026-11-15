@@ -1,0 +1,39 @@
+# NeuroNet Light -- sage paper instead of black. The green is NeuroNet's
+# --brand-deep (#2E6B38): ui/shared.css measures the logo green #5FA665 at
+# under 3:1 on light grounds, so the app itself switches to the deeper green
+# on light themes. The signal colours are the dark theme's, deepened to read
+# on a pale background.
+mode = "light"
+
+accent = "#2E6B38"
+selection = "#c3dbc9"
+muted = "#98ad9e"
+
+background = "#e9f0ea"
+dark_background = "#dde7df"
+darker_background = "#d0ddd3"
+lighter_background = "#f5f9f5"
+
+foreground = "#1b2a1f"
+dark_foreground = "#5e7364"
+light_foreground = "#34473a"
+bright_foreground = "#0c150f"
+
+hyprland_active_border = "rgba(2e6b38ff) rgba(007c8cff) 45deg"
+hyprland_inactive_border = "rgba(98ad9e88)"
+
+red = "#c0283f"
+yellow = "#9a6700"
+orange = "#a8661a"
+green = "#2E6B38"
+cyan = "#007c8c"
+blue = "#1f5fbf"
+magenta = "#b0188f"
+brown = "#6b5320"
+
+bright_red = "#d6475c"
+bright_yellow = "#b07d00"
+bright_green = "#3f8a4b"
+bright_cyan = "#0096a8"
+bright_blue = "#3a78d6"
+bright_magenta = "#c43aa6"

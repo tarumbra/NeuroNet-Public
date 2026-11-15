@@ -1,0 +1,32 @@
+{
+  "//": [
+    "Content for ui/pet/core/01-the-bag-s-room.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "PET_SIZE": {
+    "small": [
+      "cat",
+      "bunny",
+      "frog",
+      "chicken",
+      "duck",
+      "hare",
+      "hedgehog",
+      "spider",
+      "snake",
+      "crab",
+      "gull",
+      "mole",
+      "tarantula",
+      "owl",
+      "scorpion",
+      "viper",
+      "camelspider",
+      "ibis",
+      "locust"
+    ],
+    "large": ["cow", "horse", "elk", "bear", "tiger", "camel", "alligator", "hippo", "yak", "yeti", "orca", "whale"]
+  },
+  "PACK": {"small": {"kinds": 3, "stack": 50}, "medium": {"kinds": 6, "stack": 100}, "large": {"kinds": 10, "stack": 200}},
+  "FOODS": {"kibble": {"name": "Kibble", "full": 30, "happy": 2, "clean": 0}}
+}

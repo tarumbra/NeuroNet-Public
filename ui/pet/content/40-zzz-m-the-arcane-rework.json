@@ -1,0 +1,583 @@
+{
+ "ARCANE_ITEMS": {
+  "//": "Battle Re-work Part 6 (2026-10-15): the Arcane's staves. A battle staff is a magic weapon held in both hands (twoHanded) whose bash is a real blow (bashAtt: like a sword's attack, swung with your Magic) -- so an Arcane out of runes still fights. An elemental battle staff also gives its element's runes free (element) and makes that element's effect likelier (elemBoost). Enchanted ones add burnPow (a fiercer burn), slowRounds (a longer slow), drain (heal that much of a spell's damage) or double (now and then a second cast).",
+  "oakbattlestaff": {
+   "name": "Oak battle staff",
+   "price": 43,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 5,
+    "battle": true,
+    "bashAtt": 8,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 10
+    }
+   }
+  },
+  "maplebattlestaff": {
+   "name": "Maple battle staff",
+   "price": 139,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 9,
+    "battle": true,
+    "bashAtt": 12,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 20
+    }
+   }
+  },
+  "yewbattlestaff": {
+   "name": "Yew battle staff",
+   "price": 289,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 14,
+    "battle": true,
+    "bashAtt": 16,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 30
+    }
+   }
+  },
+  "magicbattlestaff": {
+   "name": "Magic battle staff",
+   "price": 432,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 19,
+    "battle": true,
+    "bashAtt": 20,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 40
+    }
+   }
+  },
+  "airbattlestaff": {
+   "name": "Air battle staff",
+   "price": 105,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 7,
+    "battle": true,
+    "bashAtt": 10,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 15
+    },
+    "element": "air",
+    "elemBoost": 0.1
+   }
+  },
+  "waterbattlestaff": {
+   "name": "Water battle staff",
+   "price": 312,
+   "gem": 5,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 11,
+    "battle": true,
+    "bashAtt": 14,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 25
+    },
+    "element": "water",
+    "elemBoost": 0.1
+   }
+  },
+  "earthbattlestaff": {
+   "name": "Earth battle staff",
+   "price": 587,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 16,
+    "battle": true,
+    "bashAtt": 18,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 35
+    },
+    "element": "earth",
+    "elemBoost": 0.1
+   }
+  },
+  "firebattlestaff": {
+   "name": "Fire battle staff",
+   "price": 809,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 21,
+    "battle": true,
+    "bashAtt": 22,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 45
+    },
+    "element": "fire",
+    "elemBoost": 0.1
+   }
+  },
+  "enchantedstormstaff": {
+   "name": "Battle staff of storms",
+   "price": 328,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 9,
+    "battle": true,
+    "bashAtt": 12,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 30
+    },
+    "element": "air",
+    "elemBoost": 0.15,
+    "double": 0.06
+   }
+  },
+  "enchantedfroststaff": {
+   "name": "Battle staff of frost",
+   "price": 755,
+   "gem": 7,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 13,
+    "battle": true,
+    "bashAtt": 15,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 36
+    },
+    "element": "water",
+    "elemBoost": 0.15,
+    "slowRounds": 1
+   }
+  },
+  "enchanteddrainstaff": {
+   "name": "Battle staff of draining",
+   "price": 1281,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 18,
+    "battle": true,
+    "bashAtt": 19,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 40
+    },
+    "element": "earth",
+    "elemBoost": 0.15,
+    "drain": 0.1
+   }
+  },
+  "enchantedburningstaff": {
+   "name": "Battle staff of burning",
+   "price": 1727,
+   "gem": 9,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "magic",
+    "att": 23,
+    "battle": true,
+    "bashAtt": 23,
+    "twoHanded": true,
+    "cls": "arcane",
+    "req": {
+     "magic": 46
+    },
+    "element": "fire",
+    "elemBoost": 0.2,
+    "burnPow": 2
+   }
+  }
+ },
+ "ARCANE_RECIPES": {
+  "//": "Battle staves at the altar (Enchanting), enchanted ones at the enchanting table.",
+  "altar": [
+   {
+    "make": "oakbattlestaff",
+    "needs": {
+     "oak": 20,
+     "ironbar": 2
+    },
+    "level": 10,
+    "xp": 60
+   },
+   {
+    "make": "airbattlestaff",
+    "needs": {
+     "oakbattlestaff": 1,
+     "airrune": 200,
+     "opal": 1
+    },
+    "level": 15,
+    "xp": 110
+   },
+   {
+    "make": "maplebattlestaff",
+    "needs": {
+     "maple": 20,
+     "steel": 2
+    },
+    "level": 20,
+    "xp": 110
+   },
+   {
+    "make": "waterbattlestaff",
+    "needs": {
+     "maplebattlestaff": 1,
+     "waterrune": 200,
+     "sapphire": 1
+    },
+    "level": 25,
+    "xp": 170
+   },
+   {
+    "make": "yewbattlestaff",
+    "needs": {
+     "yew": 20,
+     "mithrilbar": 2
+    },
+    "level": 30,
+    "xp": 170
+   },
+   {
+    "make": "earthbattlestaff",
+    "needs": {
+     "yewbattlestaff": 1,
+     "earthrune": 200,
+     "emerald": 1
+    },
+    "level": 35,
+    "xp": 230
+   },
+   {
+    "make": "magicbattlestaff",
+    "needs": {
+     "magiclog": 20,
+     "adamantbar": 2
+    },
+    "level": 40,
+    "xp": 230
+   },
+   {
+    "make": "firebattlestaff",
+    "needs": {
+     "magicbattlestaff": 1,
+     "firerune": 200,
+     "ruby": 1
+    },
+    "level": 45,
+    "xp": 280
+   }
+  ],
+  "enchanting": [
+   {
+    "make": "enchantedstormstaff",
+    "needs": {
+     "airbattlestaff": 1,
+     "enchantedopal": 1,
+     "airrune": 300
+    },
+    "level": 30,
+    "xp": 200
+   },
+   {
+    "make": "enchantedfroststaff",
+    "needs": {
+     "waterbattlestaff": 1,
+     "enchantedsapphire": 1,
+     "waterrune": 300
+    },
+    "level": 36,
+    "xp": 240
+   },
+   {
+    "make": "enchanteddrainstaff",
+    "needs": {
+     "earthbattlestaff": 1,
+     "enchantedemerald": 1,
+     "earthrune": 300
+    },
+    "level": 40,
+    "xp": 260
+   },
+   {
+    "make": "enchantedburningstaff",
+    "needs": {
+     "firebattlestaff": 1,
+     "enchantedruby": 1,
+     "firerune": 300
+    },
+    "level": 46,
+    "xp": 290
+   }
+  ]
+ },
+ "SPELL_ELEMENT": {
+  "//": "Each spell's element (Battle Re-work Part 6).",
+  "windstrike": "air",
+  "waterstrike": "water",
+  "earthstrike": "earth",
+  "firestrike": "fire",
+  "windbolt": "air",
+  "bind": "earth",
+  "waterbolt": "water",
+  "earthbolt": "earth",
+  "hartsblessing": "earth",
+  "firebolt": "fire",
+  "tricksterflurry": "air",
+  "frostnova": "water",
+  "windblast": "air",
+  "petrify": "earth",
+  "fireblast": "fire",
+  "storm": "air",
+  "meteor": "fire"
+ },
+ "ELEMENTS": {
+  "//": "The plan (note 03): \"Fire burns over time. Water slows (the creature acts every other round for 2 rounds). Earth lowers its defence. Air pushes it off balance (-accuracy).\" A spell that lands puts its element's effect on the creature with this chance (more with an elemental staff and the Elements branch): fx, rounds, and for a burn its damage a round (power: the spell's base / burnDiv, at least 1).",
+  "fire": {
+   "name": "Fire",
+   "fx": "burning",
+   "chance": 0.3,
+   "rounds": 3,
+   "burnDiv": 4
+  },
+  "water": {
+   "name": "Water",
+   "fx": "slowed",
+   "chance": 0.25,
+   "rounds": 2
+  },
+  "earth": {
+   "name": "Earth",
+   "fx": "brokenguard",
+   "chance": 0.3,
+   "rounds": 2
+  },
+  "air": {
+   "name": "Air",
+   "fx": "offbalance",
+   "chance": 0.3,
+   "rounds": 2
+  }
+ },
+ "OFF_BALANCE": {
+  "group": "balance",
+  "name": "Off balance",
+  "accMult": 0.8,
+  "icon": "🌀",
+  "says": "is knocked off balance"
+ },
+ "ELEMENT_WEAK": {
+  "//": "Elemental weaknesses (weak: x weak) and resistances (x resist) -- cold creatures fear fire, desert ones water, birds the wind, the heavy shrug it off. V6 (2026-10-18), the Combat Designer: every hunted creature now fears one element and shrugs off something -- the crypt as Cam asked (PT15 c3): ghoul, skeleton, wraith, wisp and Morvane fear fire; the crypt bat wind.",
+  "weak": 1.3,
+  "resist": 0.75,
+  "fire": {
+   "weak": [
+    "spider",
+    "giantspider",
+    "bat",
+    "sheep",
+    "snowleopard",
+    "arcticfox",
+    "mountaingoat",
+    "yak",
+    "icewolf",
+    "snowyowl",
+    "yeti",
+    "pig",
+    "bunny",
+    "hare",
+    "jack",
+    "wolf",
+    "brownbear",
+    "grizz",
+    "skeleton",
+    "ghoul",
+    "wraith",
+    "wisp",
+    "morvane"
+   ],
+   "resist": [
+    "viper",
+    "sandscorpion",
+    "deathstalker",
+    "camel",
+    "jackal",
+    "sphinx",
+    "cattledog",
+    "wildcat",
+    "tiger",
+    "camelspider"
+   ]
+  },
+  "water": {
+   "weak": [
+    "viper",
+    "sandscorpion",
+    "deathstalker",
+    "camelspider",
+    "camel",
+    "jackal",
+    "sphinx",
+    "fox",
+    "gideon",
+    "cattledog",
+    "wildcat",
+    "straydog",
+    "hedgehog",
+    "armadillo",
+    "tiger",
+    "leopard"
+   ],
+   "resist": [
+    "crab",
+    "seal",
+    "frog",
+    "alligator",
+    "hippo",
+    "flamingo",
+    "ibis",
+    "snapjaw",
+    "kingnile",
+    "duck",
+    "sheep",
+    "anaconda",
+    "cobra",
+    "snowleopard",
+    "arcticfox",
+    "icewolf",
+    "yeti",
+    "skeleton",
+    "wraith",
+    "wisp",
+    "morvane"
+   ]
+  },
+  "earth": {
+   "weak": [
+    "crab",
+    "seal",
+    "snapjaw",
+    "frog",
+    "cobra",
+    "horse",
+    "deer",
+    "elk",
+    "bambi",
+    "alligator",
+    "hippo",
+    "kingnile"
+   ],
+   "resist": [
+    "armadillo",
+    "gull",
+    "owl",
+    "bat",
+    "snowyowl",
+    "flamingo",
+    "ibis",
+    "chicken",
+    "pig",
+    "fox",
+    "gideon",
+    "cow",
+    "goat",
+    "billy",
+    "bunny",
+    "straydog",
+    "hedgehog",
+    "snake",
+    "boar",
+    "wolf",
+    "leopard",
+    "giantspider",
+    "basilisk",
+    "mountaingoat",
+    "ghoul",
+    "cryptbat"
+   ]
+  },
+  "air": {
+   "weak": [
+    "gull",
+    "owl",
+    "snowyowl",
+    "flamingo",
+    "ibis",
+    "duck",
+    "chicken",
+    "cow",
+    "goat",
+    "billy",
+    "snake",
+    "boar",
+    "anaconda",
+    "basilisk",
+    "cryptbat"
+   ],
+   "resist": [
+    "brownbear",
+    "hippo",
+    "yak",
+    "elk",
+    "grizz",
+    "armadillo",
+    "horse",
+    "hare",
+    "jack",
+    "spider",
+    "deer",
+    "bambi"
+   ]
+  }
+ }
+}

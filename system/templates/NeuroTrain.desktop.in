@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroTrain
+Comment=Plan training programs: phases, blocks and weeks, sessions by drag and drop, athletes and calculators
+Exec=neurotrain
+Path=@APP@
+Icon=@APP@/icons/NeuroTrain.png
+Terminal=false
+Categories=Education;Sports;
+StartupNotify=true
+StartupWMClass=neurotrain

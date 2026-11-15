@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Notes → Books. Training's books, in NeuroNet's own colour names.
+   ==========================================================================
+   The list of books reuses .bd-row / .bd-list from Boards, which Cells
+   already borrows too -- three lists of documents in one section should
+   not be three different-looking lists. What is here is only what a book
+   has that a board and a sheet do not: a cover, and an ordered contents.
+   ========================================================================== */
+.ss-books { max-width: 900px; }
+
+.bk-head {
+  display: flex; align-items: flex-start; gap: 16px;
+  margin-bottom: 16px;
+}
+.bk-head > div { flex: 1; min-width: 0; }
+.bk-head .stamp { margin-top: 4px; }
+
+.bk-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 10px; margin-bottom: 16px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--panel);
+}
+.bk-name { color: var(--ink); }
+.bk-bar-right { margin-left: auto; display: flex; gap: 6px; }
+
+/* ---- the cover, as it will be printed ---- */
+/* Shown here so what you set is what you get: the same brand line, rule,
+   title and subtitle the printed first page carries. Not a live preview of
+   the print stylesheet -- that is paper-coloured and would look wrong in a
+   dark app -- but the same shape in the app's own colours. */
+.bk-cover {
+  text-align: center;
+  padding: 34px 24px 30px;
+  border: 1px solid var(--line); border-radius: 12px;
+  background: var(--panel);
+}
+.bk-cover-brand {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+}
+.bk-cover-rule {
+  width: 56px; height: 3px; border-radius: 2px;
+  background: var(--accent); margin: 10px auto 16px;
+}
+.bk-cover-title { font-size: 1.6rem; font-weight: 750; color: var(--ink); line-height: 1.2; }
+.bk-cover-sub { margin-top: 8px; font-size: 0.95rem; color: var(--muted); font-style: italic; }
+
+/* ---- contents ---- */
+.bk-h {
+  display: flex; align-items: center; gap: 10px;
+  margin: 22px 0 10px; font-size: 0.95rem; color: var(--ink);
+}
+.bk-warn {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: .04em;
+  padding: 2px 8px; border-radius: 999px;
+  background: var(--accent-tint); color: var(--accent-hover, var(--accent));
+}
+.bk-items { display: flex; flex-direction: column; gap: 6px; }
+.bk-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--panel);
+}
+/* A reference that has gone is marked here as well as on the printed page.
+   Finding out at the printer is too late. */
+.bk-item.is-missing { border-style: dashed; border-color: var(--accent); }
+.bk-item.is-missing .bk-n { background: var(--accent-tint); color: var(--accent-hover, var(--accent)); }
+.bk-n {
+  flex: none; width: 26px; height: 26px; border-radius: 7px;
+  display: grid; place-items: center;
+  background: var(--elevated); color: var(--muted);
+  font-size: 0.75rem; font-weight: 700;
+}
+.bk-item-main { flex: 1; min-width: 0; }
+.bk-item-name { color: var(--text); font-size: 0.875rem; }
+.bk-item-meta { margin-top: 2px; font-size: 0.75rem; color: var(--faint); }
+.bk-item-tools { display: flex; gap: 4px; flex: none; }
+.bk-item-tools .btn { padding: 4px 9px; }
+.bk-add { margin-top: 12px; }
+
+/* ---- adding something ---- */
+.bk-kinds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.bk-kind, .bk-pick {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  width: 100%; text-align: left; padding: 10px 12px;
+}
+.bk-kind span, .bk-pick span {
+  font-size: 0.75rem; color: var(--faint); font-weight: 400;
+}
+.bk-filter { width: 100%; margin-bottom: 10px; }
+/* Bounded, because a vault can hold hundreds of notes and a dialog that
+   grows past the window has no scroll of its own to fall back on. */
+.bk-picks {
+  display: flex; flex-direction: column; gap: 6px;
+  max-height: 46vh; overflow-y: auto;
+}

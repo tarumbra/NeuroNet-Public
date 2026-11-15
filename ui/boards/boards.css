@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Boards — the list. Drawn in the app's own colours, so it belongs to
+   Cam's Collective S rather than looking like a visitor.
+   ========================================================================== */
+.bd-head { margin-bottom: 18px; }
+.bd-head .stamp { max-width: 62ch; }
+.bd-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+.bd-list { display: flex; flex-direction: column; gap: 8px; }
+.bd-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card, var(--bg-elevated));
+}
+.bd-row:hover { border-color: var(--accent); }
+.bd-row-main { flex: 1; min-width: 0; }
+.bd-name { font-weight: 650; color: var(--ink, var(--text)); }
+.bd-meta {
+  margin-top: 2px;
+  font-size: 0.75rem; letter-spacing: .02em;
+  color: var(--muted, var(--text-faint));
+}
+.bd-row .bd-del:hover { color: var(--danger, #d44); border-color: var(--danger, #d44); }
+.bd-row.is-broken { border-color: var(--danger, #d44); }
+.bd-empty { color: var(--muted, var(--text-faint)); }
+
+/* ---- the editor ---------------------------------------------------------- */
+/* Boards' borders: --border is only defined inside Notes and Cells, so here
+   it resolved to nothing and the tool buttons had no edges. */
+.bd-ed, .bd-head, .bd-list { --border: var(--line-strong, #4a3b2a); }
+.bd-ed { display: flex; flex-direction: column; gap: 8px; }
+.bd-ed-bar {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  padding: 8px 10px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card, var(--bg-elevated));
+}
+.bd-ed-bar2 { padding: 6px 10px; }
+.bd-ed-name { margin-right: 6px; }
+.bd-ed-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.bd-tools { display: flex; flex-wrap: wrap; gap: 4px; }
+.bd-tool {
+  padding: 4px 9px;
+  border: 1px solid var(--border); border-radius: 7px;
+  background: transparent; color: var(--muted, var(--text-faint));
+  font: inherit; font-size: 0.75rem; cursor: pointer;
+}
+.bd-tool:hover { background: var(--hover); color: var(--ink, var(--text)); }
+.bd-tool.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.bd-lbl { font-size: 0.72rem; color: var(--muted, var(--text-faint)); }
+.bd-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
+.bd-swatches { display: inline-flex; gap: 3px; }
+.bd-sw { width: 18px; height: 18px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 0; }
+.bd-sw:hover { outline: 2px solid var(--accent); outline-offset: 1px; }
+.bd-danger:hover { color: var(--danger, #d44); border-color: var(--danger, #d44); }
+
+/* ---- the side toolbar (Cam: "a side buildbar on the side of the canvas
+   (like a photoshop, paint tool bar)") ---------------------------------- */
+.bd-ed-body { display: flex; gap: 8px; align-items: flex-start; min-width: 0; }
+.bd-side {
+  flex: none; width: 112px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--card, var(--bg-elevated));
+  position: sticky; top: 0;
+  max-height: calc(100vh - 160px); overflow-y: auto; overflow-x: hidden;
+}
+.bd-tgroup-wrap { display: flex; flex-direction: column; gap: 4px; }
+.bd-tgroup-wrap + .bd-tgroup-wrap { padding-top: 8px; border-top: 1px solid var(--border); }
+.bd-tgroup-lbl { font-size: 0.66rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted, var(--text-faint)); }
+.bd-tgroup { display: grid; grid-template-columns: repeat(2, 38px); gap: 4px; }
+.bd-side .bd-tool {
+  width: 38px; height: 34px; padding: 0;
+  display: grid; place-items: center;
+}
+.bd-side .bd-tool svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* the colour indicator: line colour in front (a ring), fill behind */
+.bd-wells { position: relative; width: 78px; height: 56px; }
+.bd-well {
+  position: absolute; width: 34px; height: 34px; padding: 0; cursor: pointer;
+  border-radius: 6px; border: 1px solid var(--border);
+}
+.bd-well-stroke { left: 0; top: 0; z-index: 2; background: var(--bg-elevated, #222); box-shadow: inset 0 0 0 7px var(--c, #1f2430); }
+.bd-well-fill { left: 18px; top: 18px; z-index: 1; background: var(--c, #fff); }
+.bd-well.is-none, .bd-now i.is-none {
+  background: linear-gradient(to top left, #fff calc(50% - 1.5px), #d33 50%, #fff calc(50% + 1.5px));
+}
+.bd-well.on { outline: 2px solid var(--accent); outline-offset: 2px; z-index: 3; }
+.bd-swap {
+  position: absolute; right: 0; top: 0; width: 22px; height: 22px; padding: 0;
+  border: none; background: transparent; color: var(--muted, var(--text-faint)); cursor: pointer; font-size: 0.9rem;
+}
+.bd-swap:hover { color: var(--ink, var(--text)); }
+.bd-palette { display: grid; grid-template-columns: repeat(4, 17px); gap: 4px 5px; }
+.bd-palette .bd-sw { width: 17px; height: 17px; }
+.bd-sw.on { outline: 2px solid var(--accent); outline-offset: 1px; }
+.bd-sw-none { background: linear-gradient(to top left, #fff calc(50% - 1px), #d33 50%, #fff calc(50% + 1px)); }
+.bd-sw-none:disabled { opacity: .3; cursor: not-allowed; }
+.bd-sw-custom {
+  position: relative; overflow: hidden;
+  background: conic-gradient(#e33, #ee3, #3e3, #3ee, #33e, #e3e, #e33);
+}
+.bd-sw-custom input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.bd-widths { display: flex; flex-direction: column; gap: 3px; }
+.bd-width {
+  height: 18px; padding: 0 6px; display: flex; align-items: center;
+  border: 1px solid var(--border); border-radius: 5px; background: transparent; cursor: pointer;
+}
+.bd-width span { display: block; width: 100%; background: var(--ink, var(--text)); border-radius: 3px; }
+.bd-width.on { border-color: var(--accent); background: var(--accent-tint, transparent); }
+.bd-now { display: flex; flex-direction: column; gap: 3px; font-size: 0.66rem; color: var(--muted, var(--text-faint)); }
+.bd-now span { display: flex; align-items: center; gap: 5px; overflow: hidden; white-space: nowrap; }
+.bd-now i { flex: none; width: 10px; height: 10px; border-radius: 2px; border: 1px solid var(--border); }
+
+.bd-stage {
+  position: relative;
+  flex: 1; min-width: 0;
+  overflow: auto;
+  max-height: calc(100vh - 200px);
+  padding: 10px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--bg-app);
+}
+.bd-stage.is-drawing { cursor: crosshair; }
+.bd-canvas { display: block; box-shadow: 0 6px 24px rgba(0,0,0,.35); }
+.bd-canvas [data-id] { cursor: move; }
+.bd-stage.is-drawing .bd-canvas [data-id] { cursor: crosshair; }
+.bd-handle { cursor: nwse-resize; }
+.bd-pt { cursor: move; }
+.bd-pt-bend { cursor: grab; }
+.bd-hint { font-size: 0.72rem; color: var(--text-faint); }
+
+.bd-pages { display: flex; align-items: center; gap: 6px; }
+.bd-pages #bd-page-n { font-size: 0.75rem; color: var(--muted, var(--text-faint)); min-width: 34px; text-align: center; }
+.bd-snap { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 0.8125rem; }
+.bd-snap span { flex: 1; min-width: 0; color: var(--muted, var(--text-faint)); }
+
+.bd-pick { display: flex; align-items: center; gap: 10px; padding: 5px 2px; font-size: 0.875rem; }
+.bd-pick span { flex: 1; min-width: 0; }
+.bd-pick em { font-style: normal; font-size: 0.72rem; color: var(--muted, var(--text-faint)); }
+
+/* typing into a text box, where it sits */
+.bd-type {
+  position: absolute; z-index: 5; box-sizing: border-box;
+  margin: 0; padding: 0 4px; resize: none; overflow: hidden;
+  font-family: Georgia, serif; white-space: pre;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px dashed var(--accent, #2b6cb0); border-radius: 4px;
+  outline: none;
+}

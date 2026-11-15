@@ -1,0 +1,88 @@
+{
+  "//": [
+    "Content for ui/pet/core/35-frostpeak-island-s-places-islands.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "REGIONS.icecavern": {
+    "name": "Ice Cavern",
+    "x": 14,
+    "y": 8,
+    "level": 45,
+    "isle": "frostpeak",
+    "needs": {"item": "lantern", "also": ["rope"], "skills": {"mining": 40}, "how": "to find your way under the ice"},
+    "blurb": "Blue light through a mile of ice, and a lake nobody has seen the bottom of."
+  },
+  "REGIONS.summit": {
+    "name": "Frostpeak Summit",
+    "x": 12,
+    "y": 3,
+    "level": 48,
+    "isle": "frostpeak",
+    "needs": {"item": "climbinggear", "skills": {"defence": 35}, "how": "to climb -- and survive the cold"},
+    "blurb": "Above the clouds, wind and the last cairn. Something big lives up here."
+  },
+  "SECRETS.icecavern": [
+    {
+      "id": "frozenpack",
+      "kind": "cache",
+      "name": "A frozen pack",
+      "text": "A climber's, from long ago",
+      "coins": 2800,
+      "items": {"ironcrate": 1, "frostcrystal": 2}
+    },
+    {"id": "rime", "kind": "egg", "name": "In a cave of blue ice", "text": "Cold, heavy, and faintly warm inside", "egg": "rimeegg"}
+  ],
+  "SECRETS.summit": [
+    {
+      "id": "lastcairn",
+      "kind": "cache",
+      "name": "The last cairn",
+      "text": "Every climber leaves something",
+      "coins": 3500,
+      "items": {"ancientchest": 1}
+    },
+    {"id": "storm", "kind": "egg", "name": "Where the wind nests", "text": "It crackles when you touch it", "egg": "stormegg"}
+  ],
+  "PEOPLE.icecavern": {
+    "id": "bjorn",
+    "name": "Hermit Bjorn",
+    "look": {"skin": 0, "hair": 3, "outfit": 2},
+    "says": "Quiet down here. That's the point.",
+    "quests": [
+      {
+        "id": "cavefish",
+        "name": "Fish without eyes",
+        "text": "\"The lake's fish have never seen the sun. Bring me some -- I'll show you how to cook them.\"",
+        "needs": [{"bring": {"cavefish": 12}}],
+        "reward": {"coins": 3000, "xp": {"cooking": 1800}}
+      },
+      {
+        "id": "crystals",
+        "name": "Crystal light",
+        "text": "\"Frost crystals glow for years. Bring me some for the dark months.\"",
+        "needs": [{"bring": {"frostcrystal": 6}}],
+        "reward": {"coins": 4500, "items": {"ancientchest": 1}}
+      }
+    ]
+  },
+  "PEOPLE.summit": {
+    "id": "cairn",
+    "name": "The Cairn Keeper",
+    "look": {"skin": 1, "hair": 1, "outfit": 3},
+    "says": "Few get this far. Fewer get further.",
+    "quests": [
+      {
+        "id": "yeti",
+        "name": "The thing at the top",
+        "text": "\"It took my brother's sled and my patience. Show it who climbs this mountain now.\"",
+        "needs": [{"boss": "frostpeak"}],
+        "reward": {"coins": 5000, "items": {"ancientchest": 1}, "xp": {"defence": 2500}}
+      }
+    ]
+  },
+  "more BOOSTS": {"yak": "construction", "yeti": "maxhit"},
+  "more PET_ATTACKS": {"yak": "crush", "yeti": "crush"},
+  "AREA_COINS.frostpeak": [7, 14],
+  "BOSS_PURSE.frostpeak": [800, 1500],
+  "BOSS_UNLOCKS.yeti": [[10, "yeti/cub", "frostpeak"]]
+}

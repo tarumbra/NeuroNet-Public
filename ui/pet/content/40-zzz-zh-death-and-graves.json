@@ -1,0 +1,16 @@
+{
+ "DEATH": {
+  "//": ["V16 (carried -- Cam's yes, 2026-10-19: \"a grave stone with a real cost (for that late game money sink) ... it needs to hurt to die\"; Q6 q7: \"You should respawn with the 3 most valuable items already and it will be your choice to return then, given how quick navigation is give player half the time to return\").",
+         "keep: Adventure -- the most valuable things you carry that you wake up still holding (worn or in the bag). Hardcore keeps none; Hell ends the run.",
+         "grave: minutes your gravestone stands where you fell, by mode. fee: opening it costs this share of what's inside (coins included) -- paid first from the grave's own coins, then your purse.",
+         "line: (no longer used -- PT30, Cam: \"No ambiguity no auto running, whether idle or not. This will make idle combat only a later game choice when you are stronger.\")",
+         "bonus: the harder modes' reasons -- xp and rare-drop chance multiplied."],
+  "keep": {"adventure": 3, "hardcore": 0},
+  "grave": {"adventure": 30, "hardcore": 15},
+  "fee": 0.5,
+  "line": 0.3,
+  "bonus": {"adventure": {"xp": 1, "drop": 1}, "hardcore": {"xp": 1.25, "drop": 1.5}, "hell": {"xp": 1.5, "drop": 2}},
+  "rare": 0.05,
+  "quick": 4
+ }
+}

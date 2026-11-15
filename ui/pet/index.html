@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeuroPets</title>
+<!-- NeuroPets, the game in its own window (neuropets.py). pet.css draws the pages,
+     game.css is the game's own look on top (Melvor-style), game.js the shell. -->
+<link rel="stylesheet" href="pet.css">
+<link rel="stylesheet" href="game.css">
+<link rel="stylesheet" href="theme.css">
+</head>
+<body class="np">
+<div class="np-app">
+  <aside class="np-side">
+    <div class="np-brand"><img id="np-logo" alt="" src="logo.png"><div><b>NeuroPets</b><small id="np-version">Pixel edition</small></div></div>
+    <div class="np-side-chips" id="np-chips" aria-label="You, your coins and what you're doing"></div>
+    <nav class="np-nav" id="np-nav" aria-label="The game"></nav>
+    <div class="np-side-foot">
+      <label class="np-switch" title="A copy of the game to test in -- nothing in it touches your real game"><input type="checkbox" id="np-sandbox"> Sandbox (developer)</label>
+    </div>
+  </aside>
+  <main class="np-main">
+    <header class="np-top" id="np-top">
+      <button class="np-menu" id="np-menu" aria-label="Show or hide the sidebar" title="Show or hide the sidebar">☰</button>
+      <div class="np-top-icon"><img id="np-top-img" alt=""></div>
+      <div class="np-top-title"><div class="np-title-row"><button class="np-back" id="np-back" hidden></button><h1 id="np-title">NeuroPets</h1></div><span class="np-top-hint" id="np-hint"></span></div>
+      <div class="np-top-right" id="np-chips-top"></div>
+    </header>
+    <div class="np-scroll" id="np-scroll"><nav class="np-pathbar" id="np-pathbar" aria-label="Back, Map and Home"></nav><div class="np-host" id="np-host"></div></div>
+  </main>
+  <aside class="np-kit" id="np-kit" aria-label="Your kit: bag, gear and magic" hidden></aside>
+</div>
+<div class="np-toasts" id="np-toasts" aria-live="polite"></div>
+<script src="petcore.js"></script>
+<script src="petart.js"></script>
+<script src="art/icons/manifest.js"></script>
+<script src="art/pets/manifest.js"></script>
+<script src="art/pets/spectral/manifest.js"></script>
+<script src="art/creatures/manifest.js"></script>
+<script src="art/player/manifest.js"></script>
+<script src="art/people/manifest.js"></script>
+<script src="art/worn/manifest.js"></script>
+<script src="art/livestock/manifest.js"></script>
+<script src="art/guide/manifest.js"></script>
+<script src="art/places.js"></script>
+<script src="pet.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

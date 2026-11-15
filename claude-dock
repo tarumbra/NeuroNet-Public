@@ -1,0 +1,5 @@
+#!/bin/bash
+# claude-dock -- the Claude dock (Super+Alt+U; the ✳ on the top bar): Claude Code chats tucked into the bar,
+# flashing when one replies. Installed into ~/.local/bin by neuronet-setup; the widget is
+# system/omarchy/plugins/neuronet.claudedock, and install.sh adds Claude Code's Stop and Notification hooks.
+exec python3 "$(dirname "$(readlink -f "$0")")/system/omarchy/plugins/neuronet.claudedock/claudedock.py" "$@"

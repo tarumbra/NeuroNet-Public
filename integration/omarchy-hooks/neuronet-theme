@@ -1,0 +1,13 @@
+#!/bin/bash
+# NeuroNet: repaint with the new Omarchy theme ("Follow Omarchy" theme).
+#
+# Omarchy runs this after `omarchy theme set <name>` ($1 = the theme). If
+# NeuroNet is running it's asked to re-read the theme's colours (Do
+# "theme.omarchy" on org.neuronet.App, the same door the desktop board uses).
+# A NeuroNet that isn't running is left alone -- it reads the colours itself
+# when it starts. Only NeuroNet set to "Follow Omarchy" changes colour.
+busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
+  NameHasOwner s org.neuronet.App 2>/dev/null | grep -q true || exit 0
+busctl --user --timeout=10 call org.neuronet.App /org/neuronet/App \
+  org.neuronet.App Do ss theme.omarchy '{}' >/dev/null 2>&1 &
+exit 0

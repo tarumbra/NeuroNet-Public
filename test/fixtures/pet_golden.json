@@ -1,0 +1,26 @@
+{
+  "hash": "f017acd8913d7f161f613e9b56cdb1dd81dc37fde242842bacf1c7afbccc18f8",
+  "steps": [
+    "player:ok",
+    "hatch:ok",
+    "name:ok",
+    "trip:ok",
+    "home:ok",
+    "trip:ok",
+    "home:ok",
+    "craft:ok",
+    "craft:ok",
+    "craft:ok",
+    "craft:ok",
+    "store:ok",
+    "chestname:ok",
+    "equip:ok",
+    "hunt:ok",
+    "home:no",
+    "pettrip:ok",
+    "petmerge:ok",
+    "feed:ok",
+    "trip:ok"
+  ],
+  "note": "node test/test_pet_golden.js --update after a deliberate rules change"
+}

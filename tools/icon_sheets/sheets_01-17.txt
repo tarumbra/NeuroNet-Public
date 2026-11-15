@@ -1,0 +1,19 @@
+# Cam's painted icon sheets (2026-10-10), ~/Pictures/NeuroPets Art Assets/Icons/icon- sheet N.jpeg -- 4x4, left to right,
+# top to bottom. "-" = not an item in the game (kept for later). Re-cut them all: python3 tools/cut_icon_sheets.py
+1: copper,tin,iron,silver,gold,mithril,adamantite,runite,bronzebar,ironbar,steel,mithrilbar,adamantbar,runebar,coal,-
+2: silverbar,goldbar,bronzepick,bronzehatchet,bronzerod,bronzearrowheads,bronzetrowel,bronzehelm,bronzeboots,bronzegloves,bronzelegs,bronzesword,bronzeplate,bronzepetcap,bronzepetboots,bronzepetcoat
+3: chisel,needle,rake,hoe,wateringcan,bonehelm,boneboots,bonegauntlets,bonetreads,bonegreaves,boneplate,boneaxe,harpoon,ironpick,ironhatchet,ironrod
+4: ironarrowheads,irontrowel,ironhelm,ironboots,irongloves,ironpethelm,ironlegs,ironpetmail,ironsword,ironplate,slystriker,brawlerhelm,brawlerplate,brawlergauntlets,brawlergreaves,brawlerboots
+5: hornmaul,ironpetcap,ironpetboots,steelpick,steelhatchet,ironpetcoat,steelhelm,steelboots,steelgloves,steelrod,steelspade,steellegs,steelsword,steelwateringcan,steelarrowheads,steelplate
+6: snapshellhelm,snapshellplate,snapshellgauntlets,snapshellgreaves,snapshellboots,snappincers,steelpetcap,steelpetboots,steelpetcoat,lantern,mithrilpick,mithrilhatchet,mithrilhelm,mithrilboots,mithrilgloves,grizzlyhelm
+7: grizzlyplate,grizzlygauntlets,grizzlygreaves,grizzlyboots,grizzclaws,mithrilrod,mithrilspade,mithrillegs,mithrilsword,mithrilarrowheads,mithrilplate,mithrilpetcap,mithrilpetboots,machete,gorgonhelm,gorgonplate
+8: gorgongauntlets,gorgongreaves,gorgonboots,fangspear,adamantpick,adamanthatchet,adamanthelm,adamantboots,adamantrod,adamantspade,adamantgloves,adamantarrowheads,adamantlegs,adamantsword,adamantplate,mithrilpetcoat
+9: adamantpetcap,adamantpetboots,adamantpetcoat,khopesh,runepetcap,runepick,runehatchet,runehelm,runeboots,runerod,runespade,runepetboots,runegloves,runearrowheads,runepetcoat,runeplate
+10: runelegs,runesword,poultice,joydraught,tonic,feverfewtonic,petvigour,marigoldbalm,salve,minorhealing,attackpotion,petfury,growthelixir,gatherdraught,sagedraught,petguard
+11: defencepotion,comfreypoultice,rangingpotion,strongsalve,healingpotion,petswift,strengthpotion,valeriandraught,superdraught,stoneskin,fortunedraught,superattack,restorative,berserkerbrew,superdefence,huntersdraught
+12: superhealing,superranging,dragonsblood,superstrength,moonlightdraught,starbloomdraught,isleelixir,quartz,copperring,amethyst,clovercharm,opal,huntercharm,opalring,jade,pearlcharm
+13: jadenecklace,topaz,wardcharm,amethystcharm,topazring,sapphire,seasonscharm,sapphirering,quartzring,swiftcharm,emerald,emeraldnecklace,ruby,rubyring,foragingamulet,fishingamulet
+14: miningamulet,lumberingamulet,diggingamulet,diamond,diamondnecklace,obsidiannecklace,ankhring,willowwand,wizardhat,airstaff,oakwand,apprenticehat,apprenticecloak,waterstaff,maplewand,adepthood
+15: adeptcloak,earthstaff,slywand,yewwand,antlerwand,magehat,magecloak,firestaff,sorcerercrown,sorcerercloak,magicwand,basiliskstaff,mysticstaff,archmagecirclet,archmagecloak,enchantedopal
+16: enchantedsapphire,enchantedemerald,enchantedruby,enchanteddiamond,unidherb,-,plank,-,-,hardplank,-,-,fineplank,-,birch,oak
+17: willow,ash,teak,mahogany,yew,magiclog,applewood,maple,fertiliser,richfertiliser,arrowshaft,-,flintarrowheads,flintarrow,fishingrod,bronzearrow

@@ -1,0 +1,18 @@
+{
+ "TALKS": {
+  "//": "People explaining things, in their own words (PT20, 2026-10-18: Cam -- Ranger Ash 'didn't tell me how it works at all and i didn't get shown the golden feather'; Hobb's stall 'didnt make sense to me, maybe [Sexton] can explain again'; the talent tree 'need this explained in the game maybe by some dialogue'). A talk shows once by itself (s.seen[key]); a button brings it back. `who` is a PEOPLE region, a WORKSHOPS id or 'tutor' (your class's Guild tutor); `show` are item icons shown large; {numbers} are filled in by the game.",
+  "quarry": {"who": "forest", "title": "Ranger Ash: know your quarry", "show": ["goldenfeather"],
+   "lines": ["\"Ten chickens -- good. Now you know something about them you didn't this morning. That's what the Bestiary is: your Library keeps one, and it fills in by itself as you hunt.\"",
+             "\"Beat ten of anything and you'll know where to hit it. Fifty, and what it shrugs off. A hundred and fifty, and which elements it fears -- fire, water, earth or wind. In a fight, look at its card: what you know shows there.\"",
+             "\"And for the patient --\" he turns a golden feather in the light -- \"beat enough of one kind, and it's mastered: you hit it harder, it drops more, and some creatures give you something of their own. A chicken gives this. About nine hundred and sixty of them, mind. Every creature has its number.\""],
+   "go": ["pet:bestiary", "Open the Bestiary"]},
+  "hobb": {"who": "cryptmerchant", "title": "Sexton Hobb: about life essence", "show": ["lifeessence"],
+   "lines": ["\"Life essence, that's what you're after. It's what brings a lost pet back -- a Necromancer raises a pet from its grave with it, at the Graveyard on your Estate.\"",
+             "\"The wisps carry it. They only come out at night, down here, and only one in eight leaves any behind. That's the honest way to get it.\"",
+             "\"For them as can't wait, I keep a little: {price} coins a piece, and no more than {daily} a day -- come back tomorrow for the rest. How much does a pet need? Its battle level divided by five, rounded up -- a level-30 pet takes six -- and half as much again every time it's raised after.\""]},
+  "talents": {"who": "tutor", "title": "Your talent tree", "show": [],
+   "lines": ["\"Every two class levels you earn a talent point. Spend it on a badge in one of your three branches -- the tree's yours to shape.\"",
+             "\"A branch opens a row at a time: the badges further down need points spent higher up the same branch first, and some follow the one above them (the line between them shows it). Until then they're dim -- locked.\"",
+             "\"The big gold badges at the bottom are keystones: one point, a big change. A dashed ring means one of two -- take either, not both. Changed your mind? Respec is free up to class level {free}; after that it costs a little.\""]}
+ }
+}

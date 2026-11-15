@@ -1,0 +1,252 @@
+/* Scoped to Notes' shell AND to a Cells page: the same grid is used in both
+   -- Cam: "This will be the grid based system found in the vault on the tool
+   bar. However it will be a complete standalone notes page". One stylesheet,
+   so a sheet cannot look different from a grid inside a note.
+   ==========================================================================
+   Grid — styles. Scoped to #cx-shell and drawn in Notes' own colour names,
+   so a grid follows whatever theme NeuroNet is in rather than carrying a
+   palette of its own.
+   ========================================================================== */
+:is(#cx-shell, .grid-page) .ss-grid { margin: 14px 0; }
+
+:is(#cx-shell, .grid-page) .ssg {
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 8px);
+  background: var(--bg-elevated, var(--bg-app));
+  overflow: hidden;
+  outline: none;
+  font-size: 0.8125rem;
+}
+:is(#cx-shell, .grid-page) .ssg:focus-within { border-color: var(--accent); }
+
+/* The formula bar: which cell, and what is really in it — the formula, not
+   its answer. */
+:is(#cx-shell, .grid-page) .ssg-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-faint, var(--border));
+}
+:is(#cx-shell, .grid-page) .ssg-addr {
+  flex: none; min-width: 42px; text-align: center;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 0.75rem; color: var(--text-muted);
+}
+:is(#cx-shell, .grid-page) .ssg-formula {
+  flex: 1; min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--border-faint, var(--border));
+  border-radius: 5px;
+  background: var(--bg-app);
+  color: var(--text);
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 0.8125rem;
+}
+:is(#cx-shell, .grid-page) .ssg-formula:focus { outline: none; border-color: var(--accent); }
+
+/* The table scrolls inside the grid, so a long grid does not stretch the
+   note — and so the frozen header has something to stay in view against. */
+:is(#cx-shell, .grid-page) .ssg-scroll { max-height: 460px; overflow: auto; }
+:is(#cx-shell, .grid-page) .ssg-table {
+  border-collapse: separate; border-spacing: 0;
+  table-layout: fixed;
+  margin: 0;
+}
+:is(#cx-shell, .grid-page) .ssg-table th,
+:is(#cx-shell, .grid-page) .ssg-table td {
+  border: 0;
+  border-right: 1px solid var(--border-faint, var(--border));
+  border-bottom: 1px solid var(--border-faint, var(--border));
+  padding: 4px 7px;
+  height: 26px; box-sizing: border-box;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--text);
+  background: var(--bg-elevated, var(--bg-app));
+}
+:is(#cx-shell, .grid-page) .ssg-rownum-col { width: 42px; }
+
+/* Column letters and row numbers. */
+:is(#cx-shell, .grid-page) .ssg-head th {
+  position: sticky; top: 0; z-index: 3;
+  background: var(--bg-hover, var(--bg-app));
+  color: var(--text-muted);
+  font-weight: 600; font-size: 0.72rem; text-align: center;
+  user-select: none;
+}
+:is(#cx-shell, .grid-page) .ssg-rowh {
+  position: sticky; left: 0; z-index: 2;
+  background: var(--bg-hover, var(--bg-app)) !important;
+  color: var(--text-faint);
+  font-weight: 600; font-size: 0.72rem; text-align: center;
+  user-select: none;
+}
+:is(#cx-shell, .grid-page) .ssg-corner { position: sticky; left: 0; z-index: 4; }
+
+/* The frozen header stays in view; grid-view.js measures each row's offset. */
+:is(#cx-shell, .grid-page) tr.ssg-frozen td,
+:is(#cx-shell, .grid-page) tr.ssg-frozen th {
+  position: sticky; z-index: 2;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border);
+}
+:is(#cx-shell, .grid-page) tr.ssg-frozen th.ssg-rowh { z-index: 3; }
+
+:is(#cx-shell, .grid-page) .ssg-cell { cursor: cell; user-select: none; }
+:is(#cx-shell, .grid-page) .ssg-cell.is-num { text-align: right; font-variant-numeric: tabular-nums; }
+:is(#cx-shell, .grid-page) .ssg-cell.is-err { color: var(--danger, #d44); font-weight: 600; }
+/* The selection is a tint laid OVER a cell's own fill, not a replacement for
+   it. It used to replace the background outright, so a cell filled pale
+   yellow -- with dark text chosen to read on it -- showed dark text on the
+   dark selection colour while selected. A gradient layer sits on top of
+   background-color without removing it. */
+:is(#cx-shell, .grid-page) .ssg-cell.is-sel {
+  background-image: linear-gradient(var(--accent-dim, rgba(120,120,255,.15)),
+                                    var(--accent-dim, rgba(120,120,255,.15)));
+}
+:is(#cx-shell, .grid-page) .ssg-cell.is-active {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+/* The box a cell is typed into. */
+:is(#cx-shell, .grid-page) .ssg-edit {
+  width: 100%; height: 100%;
+  margin: -4px -7px; padding: 4px 7px;
+  box-sizing: content-box;
+  border: 0; outline: 2px solid var(--accent);
+  background: var(--bg-app); color: var(--text);
+  font: inherit;
+}
+
+:is(#cx-shell, .grid-page) .ssg-colh { position: relative; }
+:is(#cx-shell, .grid-page) .ssg-resize {
+  position: absolute; top: 0; right: -3px; bottom: 0; width: 7px;
+  cursor: col-resize; z-index: 5;
+}
+:is(#cx-shell, .grid-page) .ssg-resize:hover { background: var(--accent); opacity: .5; }
+
+:is(#cx-shell, .grid-page) .ssg-tools {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+  padding: 6px 8px;
+  border-top: 1px solid var(--border-faint, var(--border));
+}
+:is(#cx-shell, .grid-page) .ssg-tools button {
+  padding: 3px 9px;
+  border: 1px solid var(--border-faint, var(--border));
+  border-radius: 5px;
+  background: transparent; color: var(--text-muted);
+  font: inherit; font-size: 0.75rem; cursor: pointer;
+}
+:is(#cx-shell, .grid-page) .ssg-tools button:hover { background: var(--bg-hover); color: var(--text); }
+:is(#cx-shell, .grid-page) .ssg-tools button.on { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+:is(#cx-shell, .grid-page) .ssg-sep { width: 1px; height: 16px; background: var(--border); margin: 0 3px; }
+
+/* Read-only view: shown, selectable and copyable, but not editable. */
+:is(#cx-shell, .grid-page) .ssg.is-readonly .ssg-tools { display: none; }
+:is(#cx-shell, .grid-page) .ssg.is-readonly .ssg-resize { display: none; }
+
+:is(#cx-shell, .grid-page) .ssg-broken {
+  padding: 12px 14px;
+  border: 1px solid var(--danger, #d44);
+  border-radius: var(--radius, 8px);
+  color: var(--text-muted);
+}
+:is(#cx-shell, .grid-page) .ssg-broken pre { margin-top: 8px; max-height: 200px; overflow: auto; }
+
+/* ---- formatting, sort, filter, rules ------------------------------------ */
+:is(#cx-shell, .grid-page) .ssg { position: relative; }
+:is(#cx-shell, .grid-page) .ssg-fmt { border-top-style: dashed; }
+:is(#cx-shell, .grid-page) .ssg-numfmt {
+  padding: 3px 6px;
+  border: 1px solid var(--border-faint, var(--border)); border-radius: 5px;
+  background: var(--bg-app); color: var(--text-muted);
+  font: inherit; font-size: 0.75rem;
+}
+
+/* The filter notice: a filter must never look like missing rows. */
+:is(#cx-shell, .grid-page) .ssg-status {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 6px 10px;
+  border-top: 1px solid var(--border-faint, var(--border));
+  background: var(--accent-dim, rgba(120,120,255,.12));
+  color: var(--text); font-size: 0.75rem;
+}
+:is(#cx-shell, .grid-page) .ssg-status[hidden] { display: none; }
+:is(#cx-shell, .grid-page) .ssg-status button {
+  padding: 2px 8px; border: 1px solid var(--accent); border-radius: 5px;
+  background: transparent; color: var(--accent); font: inherit; cursor: pointer;
+}
+
+/* The small panels for colours, filter and rules. */
+:is(#cx-shell, .grid-page) .ssg-pop {
+  position: absolute; z-index: 20;
+  min-width: 230px; max-width: 320px;
+  padding: 10px;
+  border: 1px solid var(--border); border-radius: var(--radius, 8px);
+  background: var(--bg-elevated, var(--bg-app));
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  font-size: 0.8125rem;
+}
+:is(#cx-shell, .grid-page) .ssg-pop[hidden] { display: none; }
+:is(#cx-shell, .grid-page) .ssg-pop-h { margin: 2px 0 8px; font-weight: 600; color: var(--text); }
+:is(#cx-shell, .grid-page) .ssg-pop-op, #cx-shell .ssg-pop-val {
+  width: 100%; box-sizing: border-box; margin-bottom: 6px;
+  padding: 5px 7px; border: 1px solid var(--border); border-radius: 5px;
+  background: var(--bg-app); color: var(--text); font: inherit;
+}
+:is(#cx-shell, .grid-page) .ssg-pop-row { display: flex; gap: 6px; margin-top: 4px; }
+:is(#cx-shell, .grid-page) .ssg-pop-btn {
+  padding: 4px 10px; border: 1px solid var(--border); border-radius: 5px;
+  background: transparent; color: var(--text-muted); font: inherit; cursor: pointer;
+}
+:is(#cx-shell, .grid-page) .ssg-pop-btn.is-primary { border-color: var(--accent); color: var(--accent); }
+:is(#cx-shell, .grid-page) .ssg-pop-note { margin: 8px 0 0; font-size: 0.72rem; color: var(--text-faint); }
+:is(#cx-shell, .grid-page) .ssg-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 4px 0 8px; }
+:is(#cx-shell, .grid-page) .ssg-sw {
+  height: 24px; border: 1px solid var(--border); border-radius: 5px; cursor: pointer; padding: 0;
+}
+:is(#cx-shell, .grid-page) .ssg-sw:hover { outline: 2px solid var(--accent); outline-offset: 1px; }
+:is(#cx-shell, .grid-page) .ssg-rule { display: flex; align-items: center; gap: 7px; padding: 3px 0; color: var(--text-muted); }
+:is(#cx-shell, .grid-page) .ssg-rule-sw { padding: 0 5px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.7rem; }
+:is(#cx-shell, .grid-page) .ssg-rule-x {
+  margin-left: auto; border: 0; background: transparent; color: var(--text-faint);
+  font-size: 1rem; cursor: pointer;
+}
+:is(#cx-shell, .grid-page) .ssg-rule-x:hover { color: var(--danger, #d44); }
+
+/* ---- the chart ----------------------------------------------------------- */
+:is(#cx-shell, .grid-page) .ssg-chart {
+  position: relative;
+  padding: 8px 10px 10px;
+  border-top: 1px solid var(--border-faint, var(--border));
+}
+:is(#cx-shell, .grid-page) .ssg-chart[hidden] { display: none; }
+:is(#cx-shell, .grid-page) .ssg-chart-svg { display: block; width: 100%; height: auto; }
+:is(#cx-shell, .grid-page) .ssg-chart-x {
+  position: absolute; top: 8px; right: 10px;
+  padding: 2px 8px;
+  border: 1px solid var(--border); border-radius: 5px;
+  background: var(--bg-elevated, var(--bg-app)); color: var(--text-faint);
+  font: inherit; font-size: 0.72rem; cursor: pointer;
+}
+:is(#cx-shell, .grid-page) .ssg-chart-x:hover { color: var(--danger, #d44); border-color: var(--danger, #d44); }
+
+/* The whole grid chosen as one block — ready for Delete. */
+:is(#cx-shell, .grid-page) .ssg.is-block-selected {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+:is(#cx-shell, .grid-page) .ssg-remove { margin-left: auto; }
+:is(#cx-shell, .grid-page) .ssg-remove:hover {
+  color: var(--danger, #d44);
+  border-color: var(--danger, #d44);
+}
+
+/* The grip: a strip along the top of a grid to choose the whole thing. */
+:is(#cx-shell, .grid-page) .ssg-grip {
+  height: 7px;
+  cursor: pointer;
+  background: repeating-linear-gradient(90deg,
+    var(--border) 0 2px, transparent 2px 5px);
+  opacity: .5;
+}
+:is(#cx-shell, .grid-page) .ssg-grip:hover { opacity: 1; background-color: var(--bg-hover); }
+:is(#cx-shell, .grid-page) .ssg.is-block-selected .ssg-grip { background: var(--accent); opacity: 1; }

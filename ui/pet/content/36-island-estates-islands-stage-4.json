@@ -1,0 +1,28 @@
+{
+  "//": [
+    "Content for ui/pet/core/36-island-estates-islands-stage-4.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "ESTATE_PARTS": ["house", "workshop", "storeroom", "quarters", "garden", "special"],
+  "ESTATE_PART_NAMES": {"house": "House", "workshop": "Workshop", "storeroom": "Storeroom", "quarters": "Pet quarters", "garden": "Garden", "special": ""},
+  "ESTATE_ISLE": {
+    "desert": {"price": 25000, "mat": "sandstone", "rare": "lapis", "special": "Courtyard cistern", "produce": [["dates", 3], ["aloe", 1]]},
+    "frostpeak": {"price": 20000, "mat": "pine", "rare": "frostcrystal", "special": "Hot spring", "produce": [["snowberries", 3], ["frostlichen", 1]]}
+  },
+  "ESTATE_BUILD": [
+    null,
+    {"con": 5, "coins": 1500, "plank": ["plank", 10], "mat": 10, "rare": 1, "rope": 2, "xp": 100},
+    {"con": 10, "coins": 4000, "plank": ["plank", 25], "mat": 20, "rare": 2, "rope": 4, "xp": 250},
+    {"con": 25, "coins": 12000, "plank": ["hardplank", 25], "mat": 30, "rare": 4, "rope": 8, "xp": 900},
+    {"con": 40, "coins": 35000, "plank": ["fineplank", 25], "mat": 40, "rare": 6, "rope": 12, "xp": 2500}
+  ],
+  "ESTATE_BENCHES": [
+    [],
+    ["kitchen", "crafting"],
+    ["furnace", "anvil", "spinning", "sawbench"],
+    ["fletching", "tanner", "herblore", "apothecary", "gemology"],
+    ["enchanting", "altar"]
+  ],
+  "SPECIAL_HEAL": [0, 0.1, 0.2, 0.3, 0.5],
+  "QUARTERS_BOOST": [0, 0.01, 0.02, 0.03, 0.05]
+}

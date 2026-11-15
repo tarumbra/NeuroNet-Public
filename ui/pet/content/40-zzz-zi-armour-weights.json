@@ -1,0 +1,53 @@
+{
+  "ARMOUR": {
+    "//": "V17 (2026-10-20, Cam: armour 'should give class specific bonuses and anti bonus ... How Old School RuneScape handles armour'). Every player armour piece has a weight. tier = 1 + its Defence (or Attack) requirement / 10, at most 6 (bronze 1 .. rune 6); 'big' pieces are the torso and legs.",
+    "weights": {
+      "heavy": { "name": "Heavy", "about": "metal and plate", "vs": { "crush": 1, "slash": 1, "pierce": 1, "magic": 0.5 },
+                 "//": "magic accuracy -tier a piece (big pieces x2); big pieces also -ceil(tier/2) ranged accuracy",
+                 "magPerTier": -1, "bigX": 2, "rngBigPerTier": -0.5 },
+      "light": { "name": "Light", "about": "leather and hide", "vs": { "crush": 0.75, "slash": 0.75, "pierce": 1, "magic": 1 },
+                 "//": "big pieces +1 ranged accuracy; the body -ceil(tier/2) magic accuracy, at most -3 (not on pieces made for the Arcane: bat leather)",
+                 "rngBig": 1, "magBodyPerTier": -0.5, "magBodyMax": -3 },
+      "cloth": { "name": "Cloth", "about": "robes, hats and cloaks", "vs": { "crush": 0.5, "slash": 0.5, "pierce": 0.5, "magic": 1.5 } }
+    },
+    "fit": { "berserker": "heavy", "paladin": "heavy", "hunter": "light", "thief": "light", "beastmaster": "light", "arcane": "cloth" },
+    "fitDef": 0.1,
+    "fitAcc": 1,
+    "items": {
+      "heavy": ["bronzehelm", "bronzeplate", "bronzegloves", "bronzelegs", "bronzeboots",
+                "ironhelm", "ironplate", "irongloves", "ironlegs", "ironboots",
+                "steelhelm", "steelplate", "steelgloves", "steellegs", "steelboots",
+                "mithrilhelm", "mithrilplate", "mithrilgloves", "mithrillegs", "mithrilboots",
+                "adamanthelm", "adamantplate", "adamantgloves", "adamantlegs", "adamantboots",
+                "runehelm", "runeplate", "runegloves", "runelegs", "runeboots",
+                "bonehelm", "boneplate", "bonegauntlets", "bonegreaves", "boneboots",
+                "bronzespikedgauntlets", "steelspikedgauntlets", "mithrilspikedgauntlets", "adamantspikedgauntlets",
+                "armadillocap", "armadillobody", "armadillovambraces", "armadillochaps", "armadilloboots",
+                "brawlerhelm", "brawlerplate", "brawlergauntlets", "brawlergreaves", "brawlerboots",
+                "grizzlyhelm", "grizzlyplate", "grizzlygauntlets", "grizzlygreaves", "grizzlyboots",
+                "snapshellhelm", "snapshellplate", "snapshellgauntlets", "snapshellgreaves", "snapshellboots",
+                "gorgonhelm", "gorgonplate", "gorgongauntlets", "gorgongreaves", "gorgonboots",
+                "bronzekiteshield", "ironkiteshield", "steelkiteshield", "mithrilkiteshield", "adamantkiteshield", "runekiteshield"],
+      "light": ["leathercap", "leathertunic", "leathergloves", "leathertrousers", "leatherboots",
+                "hardcap", "hardbody", "hardvambraces", "hardchaps", "hardboots",
+                "bonecowl", "bonevest", "bonebracers", "bonechaps", "bonetreads",
+                "snakecap", "snakebody", "snakevambraces", "snakechaps", "snakeboots",
+                "batcap", "batbody", "batvambraces", "batchaps", "batboots",
+                "nimblehood", "nimblejerkin", "nimblegloves", "nimblebreeches", "nimbleboots",
+                "fleetcap", "fleettunic", "fleetgloves", "fleettrousers", "fleetboots",
+                "sylvancrown", "sylvanmail", "sylvangrips", "sylvanlegs", "sylvanboots",
+                "tigercap", "tigerbody", "tigervambraces", "tigerchaps", "tigerboots",
+                "frostcap", "frostbody", "frostvambraces", "frostchaps", "frostboots",
+                "furhood", "furcoat", "woodenbuckler"],
+      "cloth": ["clothhood", "cottonshirt", "linenrobe",
+                "wizardhat", "apprenticehat", "adepthood", "magehat", "sorcerercrown", "archmagecirclet",
+                "apprenticecloak", "adeptcloak", "magecloak", "sorcerercloak", "archmagecloak",
+                "apprenticerobetop", "apprenticerobebottoms", "apprenticegloves", "apprenticeboots",
+                "adeptrobetop", "adeptrobebottoms", "adeptgloves", "adeptboots",
+                "magerobetop", "magerobebottoms", "magegloves", "mageboots",
+                "sorcererrobetop", "sorcererrobebottoms", "sorcerergloves", "sorcererboots",
+                "archmagerobetop", "archmagerobebottoms", "archmagegloves", "archmageboots",
+                "nemes", "pharaohcrown", "pharaohrobe", "pharaohsandals"]
+    }
+  }
+}

@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+"""neuronet-dev-data -- the developer's working notes, kept in step between the computers NeuroNet is developed on
+(2026-11-08, Cam: "push for me all collaboration notes upto date and scribe notes ... clone my developer stuff and push
+it with the neuronet-dev pull ... so i can take off where i left off on this pc"). Run by `neuronet-dev pull` and
+`neuronet-dev data`.
+
+What's kept in step (AREAS): the Collaboration docs (<data>/collab), the Scribe notes and vaults (<data>/notes), the
+Scribe ebooks (<data>/ebooks) and Claude's memory of the project (~/.claude/projects/<~/Work>/memory). They aren't in
+git (they're data), so a `devdata` branch on GitHub (the private NeuroNet repository: only Cam's computers have the key)
+holds the newest of each, files/<area>/...
+
+Each computer remembers what it and the branch last agreed on (devdata-base.json in the state folder), so for every file:
+
+  changed here only            sent
+  changed on the other only    copied here (and a deletion is a deletion, both ways)
+  changed on both              the newer one wins on both; the other is saved aside (devdata-conflicts/<when>/), said
+  first time on this computer  the branch wins (the other computer's notes are newer than a fresh install's); any of
+                               yours that differ are saved aside first
+
+Anything here that's replaced or deleted is copied to devdata-replaced/<when>/ first (the last 10 runs are kept).
+Files over 90 MB are left out (GitHub won't take them).
+
+    neuronet-dev-data <the NeuroNet checkout>
+
+NEURONET_DEVDATA_AREAS ("name=folder:name=folder") and NEURONET_CLAUDE_MEMORY are for the tests (and another layout).
+"""
+import hashlib
+import json
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import time
+
+BRANCH = "devdata"
+BIG = 90 * 1024 * 1024
+SKIP = (".directory", ".DS_Store", "Thumbs.db", "desktop.ini")
+KEEP_RUNS = 10
+
+
+def sha(p):
+    h = hashlib.sha1()
+    with open(p, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def areas(app):
+    if os.environ.get("NEURONET_DEVDATA_AREAS"):
+        return dict(x.split("=", 1) for x in os.environ["NEURONET_DEVDATA_AREAS"].split(":") if "=" in x)
+    data = subprocess.run(["neuronet-path", "data"], capture_output=True, text=True).stdout.strip() or os.path.join(app, "neuronet_data")
+    mem = os.environ.get("NEURONET_CLAUDE_MEMORY")
+    if not mem:
+        key = "".join(c if c.isalnum() else "-" for c in os.path.realpath(os.path.expanduser("~/Work")))
+        mem = os.path.expanduser(f"~/.claude/projects/{key}/memory")
+    return {"collab": os.path.join(data, "collab"), "notes": os.path.join(data, "notes"), "ebooks": os.path.join(data, "ebooks"), "claude-memory": mem}
+
+
+def walk(top):
+    """{relative path: full path} of the files under top worth keeping in step."""
+    out = {}
+    for root, dirs, files in os.walk(top):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for n in files:
+            if n.startswith(".") or n in SKIP or n.endswith("~"):
+                continue
+            p = os.path.join(root, n)
+            if os.path.isfile(p) and not os.path.islink(p):
+                out[os.path.relpath(p, top)] = p
+    return out
+
+
+def main():
+    app = os.path.abspath(sys.argv[1])
+    state = os.path.join(os.environ.get("XDG_STATE_HOME") or os.path.expanduser("~/.local/state"), "neuronet")
+    sync = os.path.join(state, "devdata-sync")
+    basef = os.path.join(state, "devdata-base.json")
+    stamp = time.strftime("%Y-%m-%d_%H%M%S")
+    env = dict(os.environ)
+
+    def git(*args, cwd=None):
+        return subprocess.run(["git", *args], cwd=cwd or sync, env=env, capture_output=True, text=True)
+
+    remote = git("remote", "get-url", "origin", cwd=app).stdout.strip()
+    ssh = git("config", "core.sshCommand", cwd=app).stdout.strip()
+    if ssh:
+        env["GIT_SSH_COMMAND"] = ssh
+    who = [git("config", k, cwd=app).stdout.strip() for k in ("user.name", "user.email")]
+    ident = ["-c", f"user.name={who[0] or 'NeuroNet'}", "-c", f"user.email={who[1] or 'neuronet@localhost'}"]
+    if not remote:
+        print("notes: no GitHub remote in the checkout -- not kept in step")
+        return 1
+
+    # ---- the devdata branch here: a shallow copy, brought up to date (or started, empty)
+    os.makedirs(state, exist_ok=True)
+    started = False
+    if not os.path.isdir(os.path.join(sync, ".git")):
+        has = git("ls-remote", "--heads", remote, BRANCH, cwd=state)
+        if has.returncode != 0:
+            print(f"notes: couldn't reach GitHub ({has.stderr.strip()[:120]}) -- try again later")
+            return 1
+        if has.stdout.strip():
+            r = git("clone", "-q", "--depth", "1", "--single-branch", "--branch", BRANCH, remote, sync, cwd=state)
+            if r.returncode != 0:
+                print(f"notes: couldn't download the {BRANCH} branch ({r.stderr.strip()[:120]})")
+                return 1
+        else:
+            git("init", "-q", "-b", BRANCH, sync, cwd=state)
+            git("remote", "add", "origin", remote)
+            with open(os.path.join(sync, "README.txt"), "w", encoding="utf-8") as f:
+                f.write("Cam's working notes (Collaboration, Scribe notes and ebooks, Claude's memory), kept in step between his\n"
+                        "computers by `neuronet-dev pull` (system/bin/neuronet-dev-data). files/<area>/... mirrors each folder.\n")
+            git("add", "-A")
+            git(*ident, "commit", "-qm", "notes: started")
+            started = True
+    else:
+        r = git("fetch", "-q", "--depth", "1", "origin", BRANCH)
+        if r.returncode != 0:
+            print(f"notes: couldn't reach GitHub ({r.stderr.strip()[:120]}) -- not kept in step this time")
+            return 1
+        git("reset", "-q", "--hard", "FETCH_HEAD")
+
+    first = not os.path.exists(basef)
+    try:
+        base = {} if first else json.load(open(basef, encoding="utf-8"))
+    except (OSError, ValueError):
+        base, first = {}, True
+    shared = os.path.join(sync, "files")
+    stamps = {}
+    try:
+        stamps = json.load(open(os.path.join(sync, "MTIMES.json"), encoding="utf-8"))
+    except (OSError, ValueError):
+        pass
+
+    def aside(kind, key, src):
+        dst = os.path.join(state, kind, stamp, key)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copy2(src, dst)
+
+    newbase, got, sent, gone_here, gone_there, clashes, big = {}, 0, 0, 0, 0, [], []
+    for name, folder in areas(app).items():
+        local = walk(folder)
+        branch = walk(os.path.join(shared, name))
+        for rel in sorted(set(local) | set(branch)):
+            key = f"{name}/{rel}"
+            lp, rp = local.get(rel), branch.get(rel)
+            if lp and os.path.getsize(lp) > BIG:
+                big.append(key)
+                continue
+            l = sha(lp) if lp else None
+            r = sha(rp) if rp else None
+            b = base.get(key)
+            if l == r:
+                take = None
+            elif first:
+                take = "down" if r else "up"
+                if lp and rp:
+                    clashes.append(key)
+                    aside("devdata-conflicts", key, lp)
+            elif l == b:
+                take = "down"
+            elif r == b:
+                take = "up"
+            else:                                                 # changed on both: the newer wins, the other is kept aside
+                mine = os.path.getmtime(lp) if lp else -1
+                theirs = stamps.get(key, 0) if rp else -1
+                take = "down" if theirs > mine else "up"
+                clashes.append(key)
+                if take == "down" and lp:
+                    aside("devdata-conflicts", key, lp)
+                if take == "up" and rp:
+                    aside("devdata-conflicts", key + ".from-the-other-computer", rp)
+            dst = os.path.join(folder, rel)
+            if take == "down":
+                if lp:
+                    aside("devdata-replaced", key, lp)
+                if rp:
+                    os.makedirs(os.path.dirname(dst), exist_ok=True)
+                    shutil.copy2(rp, dst)
+                    got += 1
+                else:
+                    os.remove(lp)
+                    gone_here += 1
+                newbase[key] = r
+            elif take == "up":
+                to = os.path.join(shared, name, rel)
+                if lp:
+                    os.makedirs(os.path.dirname(to), exist_ok=True)
+                    shutil.copy2(lp, to)
+                    stamps[key] = os.path.getmtime(lp)
+                    sent += 1
+                else:
+                    os.remove(to)
+                    stamps.pop(key, None)
+                    gone_there += 1
+                newbase[key] = ("up", l, b)
+            else:
+                newbase[key] = l
+    changed = sent + gone_there
+    pushed = True
+    if changed or started:
+        with open(os.path.join(sync, "MTIMES.json"), "w", encoding="utf-8") as f:
+            json.dump({k: v for k, v in stamps.items() if os.path.exists(os.path.join(shared, k))}, f, indent=0, sort_keys=True)
+        git("add", "-A")
+        git(*ident, "commit", "-qm", f"notes: {sent} sent, {gone_there} deleted, from {socket.gethostname()}")
+        r = git("push", "-q", "origin", f"HEAD:{BRANCH}")
+        if r.returncode != 0:
+            pushed = False
+            print(f"notes: couldn't send this computer's changes to GitHub ({r.stderr.strip()[:120]}) -- they'll go next time")
+    # (what was sent is agreed only once GitHub has it; otherwise the old agreement stands, so it's sent next time)
+    final = {}
+    for k, v in newbase.items():
+        if isinstance(v, tuple):
+            v = v[1] if pushed else v[2]
+        if v:
+            final[k] = v
+    for k in big:
+        if k in base:
+            final[k] = base[k]
+    with open(basef + ".tmp", "w", encoding="utf-8") as f:
+        json.dump(final, f, indent=0, sort_keys=True)
+    os.replace(basef + ".tmp", basef)
+
+    # (only the last few runs' copies are kept)
+    for kind in ("devdata-replaced", "devdata-conflicts"):
+        d = os.path.join(state, kind)
+        if os.path.isdir(d):
+            for old in sorted(os.listdir(d))[:-KEEP_RUNS]:
+                shutil.rmtree(os.path.join(d, old), ignore_errors=True)
+
+    print(f"notes: {got} from the other computer" + (f", {gone_here} deleted here" if gone_here else "")
+          + f", {sent if pushed else 0} sent from here" + (f", {gone_there} deleted there" if gone_there and pushed else "")
+          + (" (first time on this computer: the other computer's copies won)" if first and got else ""))
+    if clashes:
+        print(f"notes: {len(clashes)} changed on both computers, the newer kept on both (e.g. {clashes[0]}); "
+              f"the other copies are in {os.path.join(state, 'devdata-conflicts', stamp)}")
+    if big:
+        print(f"notes: left out {len(big)} over 90 MB (e.g. {big[0]})")
+    return 0 if pushed else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

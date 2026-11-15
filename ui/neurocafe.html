@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' http://127.0.0.1:*; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeuroCafe</title>
+<!-- NeuroCafe, the cafe game, in its own window (neurocafe.py, 2026-10-20, V19). -->
+<link rel="stylesheet" href="cafe/cafe.css">
+</head>
+<body class="nc">
+<div class="nc-app">
+  <div class="nc-body">
+    <header class="nc-hud">
+      <div class="nc-name"><img alt="" src="cafe/art/dish-pancakes.webp"><b id="nc-name">NeuroCafe</b></div>
+      <div class="nc-stats" id="nc-stats"></div>
+    </header>
+    <main class="nc-main" id="nc-main"><div class="nc-world" id="nc-world"></div>
+      <!-- round buttons instead of a sidebar (N43, PT52): the cookbook, Build and Buy at the bottom left, Settings (with the
+           sandbox) at the bottom right -->
+      <!-- the real time (2026-10-21): the café's day and its rushes run on it -->
+      <div class="nc-clock" id="nc-clock" aria-live="off"></div>
+      <div class="nc-fab" id="nc-fab"></div><div class="nc-fab right" id="nc-fab-r"></div></main>
+  </div>
+</div>
+<div class="nc-drawer" id="nc-drawer" hidden></div>
+<aside class="nc-dev" id="nc-dev" hidden></aside>
+<div class="nc-tut" id="nc-tut" hidden></div>
+<div class="nc-modal" id="nc-modal" hidden></div>
+<div class="nc-toasts" id="nc-toasts" aria-live="polite"></div>
+<script src="cafe/cafecore.js"></script>
+<script src="cafe/art/manifest.js"></script>
+<script src="cafe/cafe.js"></script>
+</body>
+</html>

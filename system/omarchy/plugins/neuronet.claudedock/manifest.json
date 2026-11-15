@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "neuronet.claudedock",
+  "name": "Claude dock",
+  "version": "1.1.0",
+  "author": "NeuroNet",
+  "description": "Claude Code chats tucked into the top bar (Super+Alt+U), flashing when one replies.",
+  "kinds": ["bar-widget"],
+  "entryPoints": { "barWidget": "BarWidget.qml" },
+  "barWidget": {
+    "displayName": "Claude dock",
+    "description": "Tucked Claude chats",
+    "category": "Productivity",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

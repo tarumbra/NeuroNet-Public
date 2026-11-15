@@ -1,0 +1,37 @@
+# NeuroNet -- built on the NeuroNet logo green (#5FA665, ui/shared.css
+# --brand-base) on black, with the desktop clock card's signal colours
+# (cyan #00E5FF, magenta #FF2BD6, amber #FFB300) as the synapse accents.
+mode = "dark"
+
+accent = "#5FA665"
+selection = "#1b3322"
+muted = "#2c3d31"
+
+background = "#050806"
+dark_background = "#020302"
+darker_background = "#000000"
+lighter_background = "#0d1510"
+
+foreground = "#cfe6d4"
+dark_foreground = "#5b7462"
+light_foreground = "#a6c5ae"
+bright_foreground = "#effbf1"
+
+hyprland_active_border = "rgba(5fa665ff) rgba(00e5ffff) 45deg"
+hyprland_inactive_border = "rgba(1b332299)"
+
+red = "#ff4f6d"
+yellow = "#FFB300"
+orange = "#D9A441"
+green = "#5FA665"
+cyan = "#00E5FF"
+blue = "#4f9dff"
+magenta = "#FF2BD6"
+brown = "#7a6333"
+
+bright_red = "#ff8597"
+bright_yellow = "#ffd060"
+bright_green = "#8fd69a"
+bright_cyan = "#80f2ff"
+bright_blue = "#93c3ff"
+bright_magenta = "#ff80e6"

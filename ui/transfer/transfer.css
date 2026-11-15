@@ -1,0 +1,40 @@
+/* Settings → Export & import. See transfer.js. Every class is tx-*, so it
+   needs no scope, and the same rules serve the import dialog. */
+.tx { display: flex; flex-direction: column; gap: 18px; max-width: 900px; }
+.tx-card { border: 1px solid var(--line); border-radius: var(--radius);
+           background: var(--panel); padding: 16px 18px; }
+.tx-h { margin: 0 0 4px; font-size: 1.05rem; color: var(--ink); }
+.tx-row { display: flex; gap: 8px; margin-top: 14px; }
+
+.tx-table { width: 100%; border-collapse: collapse; margin: 12px 0 4px; font-size: 0.84rem; }
+.tx-table th { text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: .05em;
+               text-transform: uppercase; color: var(--muted); padding: 0 8px 6px 0;
+               border-bottom: 1px solid var(--line); }
+.tx-table td { padding: 7px 8px 7px 0; border-bottom: 1px solid var(--line); color: var(--ink);
+               vertical-align: top; }
+.tx-table .n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tx-table tfoot td { font-weight: 700; border-bottom: 0; }
+.tx-path { color: var(--muted) !important; font-size: 0.76rem; max-width: 360px;
+           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tx-small { font-size: 0.8rem; }
+.tx-small .tx-path { max-width: 320px; white-space: normal; overflow-wrap: anywhere; }
+
+.tx-left { margin-top: 12px; padding: 10px 12px; border-radius: 8px;
+           background: var(--hover); font-size: 0.84rem; }
+.tx-left-h { font-size: 0.72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+             color: var(--muted); margin-bottom: 4px; }
+.tx-left ul { margin: 0 0 6px; padding-left: 18px; }
+.tx-left li { margin: 2px 0; }
+
+.tx-status { margin-top: 12px; }
+.tx-bar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.tx-bar span { display: block; height: 100%; background: var(--accent); transition: width .3s ease; }
+.tx-good { color: var(--ink); margin: 0; overflow-wrap: anywhere; }
+.tx-good::before { content: "✓ "; color: var(--good, #4CAF50); font-weight: 700; }
+.tx-bad { color: var(--danger, #E0616B); margin: 0; }
+
+/* A password on the export (Stage 3, 2026-09-29) */
+.tx-lock { margin-top: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--panel); }
+.tx-lock .tx-row { margin-top: 8px; }
+.tx-lock .input { flex: 1; min-width: 0; }

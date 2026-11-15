@@ -1,0 +1,32 @@
+-- >>> NeuroNet desktop integration (install.sh)
+-- Added by the NeuroNet migration; see QUICK-ACCESS.md in the NeuroNet folder.
+o.bind("SUPER + ALT + N", "NeuroNet Scribe", "neuronet-quick notes")
+o.bind("SUPER + ALT + B", "NeuroNet Creative", "neuronet-quick creative")
+-- Super+Alt+T opens NeuroTrain, the training planner in its own window (10 Nov 2026); NeuroNet Training where it isn't installed
+o.bind("SUPER + ALT + T", "NeuroTrain (training planner; again to tuck it away)", "neurotrain toggle")
+o.bind("SUPER + ALT + P", "NeuroNet Photos", "neuronet-quick photos")
+o.bind("SUPER + ALT + M", "NeuroNet M&T: music", "neuronet-quick music")
+o.bind("SUPER + ALT + C", "NeuroNet Cashbox (Money)", "neuronet-quick money")
+o.bind("SUPER + ALT + H", "NeuroNet Home", "neuronet-quick home")
+o.bind("SUPER + ALT + Z", "NeuroNet Mindfulness", "neuronet-quick mind")
+o.bind("SUPER + ALT + Q", "NeuroNet Puzzles", "neuronet-quick games")
+o.bind("SUPER + ALT + D", "NeuroNet Divination", "neuronet-quick divination")
+o.bind("SUPER + ALT + I", "NeuroNet M&T: media", "neuronet-quick stuff")
+o.bind("SUPER + ALT + R", "NeuroNet Kitchen", "neuronet-quick cookery")
+o.bind("SUPER + ALT + E", "NeuroNet Code (IDE)", "neuronet-quick code")
+o.bind("SUPER + ALT + O", "NeuroNet (whole app; again to hide)", "neuronet-quick full")
+o.bind("SUPER + ALT + A", "NeuroNet in the Omarchy menu (search notes, albums, recipes)", "omarchy menu summon neuronet")
+o.bind("SUPER + ALT + X", "NeuroNet snip: into Photos and NeuroNet Snips", "neuronet-capture")
+o.bind("SUPER + ALT + backslash", "NeuroNet music: play / pause", "neuronet-music play-pause")
+o.bind("SUPER + ALT + bracketright", "NeuroNet music: next track", "neuronet-music next")
+o.bind("SUPER + ALT + bracketleft", "NeuroNet music: previous track", "neuronet-music previous")
+-- Omarchy's default puts "move window out of group" on SUPER+ALT+G; NeuroPets has
+-- had it since 1.0.9 (Cam's choice), so the default is unbound first.
+hl.unbind("SUPER + ALT + G")
+o.bind("SUPER + ALT + G", "NeuroPets (the game; again to tuck it away)", "neuropets toggle")
+-- Super+Alt+Y was NeuroFarm's; NeuroArcana's from 1 Nov 2026 (NeuroFarm is moving into NeuroCafe)
+o.bind("SUPER + ALT + Y", "NeuroArcana (the tarot card game)", "neuroarcana")
+o.bind("SUPER + ALT + J", "NeuroCafe (the cafe game; again to tuck it away)", "neurocafe toggle")
+-- the Claude dock (1 Nov 2026 on the PC; in NeuroNet from 10 Nov): the chat you're in tucks into the top bar
+o.bind("SUPER + ALT + U", "NeuroNet Claude dock: tuck the chat you're in, or bring one back", "claude-dock toggle")
+-- <<< NeuroNet desktop integration (install.sh)

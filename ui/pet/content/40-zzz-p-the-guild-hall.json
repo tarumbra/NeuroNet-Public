@@ -1,0 +1,637 @@
+{
+ "GUILD": {
+  "//": "Battle Re-work Part 9 (2026-10-16): the Guild hall in the Village (in the estate's old spot, Cam's Q2). The Guildmaster leads the tour (Q2: Amunet hands you over); each class has a stand-in here for its real tutor (who lives out in the world), who explains the class, swears it's the best (Cam: 'some smug talk as to why it is the best class. A natural banter between them'), teaches its trick with a quest, and takes the price of switching to it. switch: coins and items to become this class; back: the share you pay to go back to a class you've played (Q7: 50%).",
+  "guildmaster": {
+   "name": "Guildmaster Orla",
+   "look": {
+    "skin": 2,
+    "hair": 3,
+    "outfit": 2,
+    "pic": "orla"
+   },
+   "says": "Welcome to the Guild. Every one of them will tell you their way is the only way. Every one of them is half right.",
+   "tour": {
+    "id": "guildtour",
+    "name": "Meet the Guild",
+    "text": "\"Amunet sent word you'd be along. Before you pick a road, walk the hall -- talk to each of them. Then choose; choosing again later costs, and they all know it.\"",
+    "reward": {
+     "coins": 500,
+     "items": {
+      "tonic": 3
+     }
+    }
+   }
+  },
+  "back": 0.5,
+  "tutors": {
+   "hunter": {
+    "standIn": "Wren",
+    "title": "for Ranger Ash",
+    "real": "Ranger Ash, in the Forest",
+    "look": {
+     "skin": 1,
+     "hair": 0,
+     "outfit": 1,
+     "pic": "wren"
+    },
+    "intro": "Ash sends his regards, and says not to touch his snares. The Hunter's road is patience: a bow, a knife for when the arrows run out, and a trap for anything that thinks it's quicker than you.",
+    "smug": "Everyone else fights what's in front of them. We decide what's in front of us.",
+    "banter": [
+     "Thorvald's lot charge in and call it courage. We call it lunch arriving early.",
+     "Nell says she's quieter than me. She isn't. I can hear her coins.",
+     "The Arcane need a rune for every spell. I need a stick and some twine."
+    ],
+    "switch": {
+     "coins": 5000,
+     "items": {
+      "cowhide": 40,
+      "rope": 20,
+      "spikedsnare": 2
+     }
+    },
+    "quest": {
+     "id": "wrenhunt",
+     "name": "Ash's lesson",
+     "text": "\"Ash's own lesson is out in the Forest -- go and see him. Me, I just want to see you catch 15 things in a trap or a net.\"",
+     "needs": [
+      {
+       "caught": 15
+      }
+     ],
+     "reward": {
+      "coins": 600,
+      "items": {
+       "weightednet": 2,
+       "beartrap": 1
+      },
+      "xp": {
+       "ranged": 600
+      }
+     }
+    }
+   },
+   "berserker": {
+    "standIn": "Brakka",
+    "title": "for Old Thorvald",
+    "real": "Old Thorvald, in Frosthaven on Frostpeak",
+    "look": {
+     "skin": 0,
+     "hair": 2,
+     "outfit": 3,
+     "pic": "brakka"
+    },
+    "intro": "Thorvald's in the north with the cold and the yaks. I'm here with you. The Berserker's road is simple: hit it, get hit, get angrier -- and spend the fury on one blow it never forgets.",
+    "smug": "The others count their arrows and their runes. I count the bodies.",
+    "banter": [
+     "Wren likes traps. A trap is a coward's handshake.",
+     "Sister Maren's lot block. Blocking is just waiting to hit something.",
+     "I asked the Arcane apprentice to set my maul on fire. She said no. Twice."
+    ],
+    "switch": {
+     "coins": 8000,
+     "items": {
+      "steel": 25,
+      "yakhide": 2
+     }
+    },
+    "quest": {
+     "id": "brakkafury",
+     "name": "Red mist",
+     "text": "\"Thorvald's first lesson: let it fill. Fill your fury to the top, once, in a single hunt -- then we'll talk.\"",
+     "needs": [
+      {
+       "feat": [
+        "furyFull",
+        1
+       ]
+      }
+     ],
+     "reward": {
+      "coins": 800,
+      "items": {
+       "steellongsword": 1
+      },
+      "xp": {
+       "attack": 800
+      }
+     }
+    },
+    "realPic": "thorvald"
+   },
+   "arcane": {
+    "standIn": "Ilse",
+    "title": "the Archmage's apprentice",
+    "real": "the Archmage's tower",
+    "look": {
+     "skin": 2,
+     "hair": 1,
+     "outfit": 2,
+     "pic": "ilse"
+    },
+    "intro": "The Archmage is busy, which is why you have me. The Arcane road: four elements, a wand or a staff, and the patience to read before you swing. Fire burns, water slows, earth breaks, air topples. Learn which one the creature fears.",
+    "smug": "They all need to be standing next to the thing. I don't.",
+    "banter": [
+     "Brakka asked me to enchant his maul. I enchanted his breakfast. He didn't notice.",
+     "Wren's arrows are just very small spells with feathers.",
+     "Nell's poisons are clever. Mine are faster."
+    ],
+    "switch": {
+     "coins": 6000,
+     "items": {
+      "chaosrune": 200,
+      "airrune": 300
+     }
+    },
+    "quest": {
+     "id": "ilseelements",
+     "name": "The four elements",
+     "text": "\"Show me you can read a creature: land ten of your spells' element effects -- a burn, a slow, a broken guard, a stagger.\"",
+     "needs": [
+      {
+       "feat": [
+        "elements",
+        10
+       ]
+      }
+     ],
+     "reward": {
+      "coins": 700,
+      "items": {
+       "oakbattlestaff": 1
+      },
+      "xp": {
+       "magic": 700
+      }
+     }
+    }
+   },
+   "thief": {
+    "standIn": "Pip",
+    "title": "for Nell the Fence",
+    "real": "Nell the Fence, in the smugglers' cove on the Coast",
+    "look": {
+     "skin": 1,
+     "hair": 2,
+     "outfit": 0,
+     "pic": "pip"
+    },
+    "intro": "Nell doesn't come to town. Too many people who'd recognise her. The Thief's road: two daggers or a bow, a little something on the blade, and never being where the blow lands.",
+    "smug": "The best fight is the one that's over before they know it started.",
+    "banter": [
+     "Brakka says counting is for cowards. Brakka can't count.",
+     "Sister Maren prays for my soul. I've taken her purse twice. She hasn't noticed either time.",
+     "Ilse's spells are lovely. They cost runes. My poison costs mushrooms."
+    ],
+    "switch": {
+     "coins": 8000,
+     "items": {
+      "venomsac": 10,
+      "throwingknife": 40
+     }
+    },
+    "quest": {
+     "id": "pipledger",
+     "name": "Steal back the ledger",
+     "text": "\"Nell's ledger went missing with some very angry people. Prove you can go where they swing and not be there: dodge ten blows.\"",
+     "needs": [
+      {
+       "feat": [
+        "dodged",
+        10
+       ]
+      }
+     ],
+     "reward": {
+      "coins": 800,
+      "items": {
+       "strongpoison": 4
+      },
+      "xp": {
+       "attack": 800
+      }
+     }
+    },
+    "realPic": "nell"
+   },
+   "paladin": {
+    "standIn": "Brother Aldo",
+    "title": "for Sister Maren",
+    "real": "Sister Maren, at the Village chapel",
+    "look": {
+     "skin": 2,
+     "hair": 0,
+     "outfit": 2,
+     "pic": "aldo"
+    },
+    "intro": "Sister Maren keeps the chapel; I keep the door. The Paladin's road: a sword, a shield, and devotion -- it grows each time you stand your ground, and it heals.",
+    "smug": "Anyone can win a fight. We're the ones still standing at the end of the week.",
+    "banter": [
+     "Pip took my purse again. I let him. He needs it more, and he's terrible at it.",
+     "Brakka calls blocking 'waiting'. Brakka also calls bandages 'losing'.",
+     "Wren's traps are honest work. Smelly, but honest."
+    ],
+    "switch": {
+     "coins": 8000,
+     "items": {
+      "silverbar": 25,
+      "holywater": 10
+     }
+    },
+    "quest": {
+     "id": "aldobridge",
+     "name": "Hold the bridge",
+     "text": "\"Maren's first lesson: hold. Block five blows with your shield.\"",
+     "needs": [
+      {
+       "feat": [
+        "blocked",
+        5
+       ]
+      }
+     ],
+     "reward": {
+      "coins": 800,
+      "items": {
+       "holywater": 5
+      },
+      "xp": {
+       "defence": 800
+      }
+     }
+    },
+    "realPic": "maren"
+   },
+   "beastmaster": {
+    "standIn": "Tamsin",
+    "title": "for Warden Briar",
+    "real": "Warden Briar (at your Beast Pen)",
+    "look": {
+     "skin": 1,
+     "hair": 2,
+     "outfit": 1,
+     "pic": "tamsin"
+    },
+    "intro": "Briar won't come indoors -- says the hall smells of people. So you get me. The Beast Master's road: you don't swing a sword, your pets do. You choose their moves, feed them, swap them out, and you never take a blow yourself.",
+    "smug": "Every other road in this hall ends with you bleeding. Ours ends with you holding the lead.",
+    "banter": [
+     "Wren calls my pets 'walking traps'. Wren's traps don't come when they're called.",
+     "Brakka tried to arm-wrestle my bear. Once.",
+     "Ilse wants to know what a spirit owl is made of. So do I. I'm not asking it."
+    ],
+    "switch": {
+     "coins": 12000,
+     "items": {
+      "treat": 60,
+      "grainfeed": 20
+     }
+    },
+    "quest": {
+     "id": "tamsinpack",
+     "name": "Run with the pack",
+     "text": "\"Briar's first lesson: trust them. Win ten fights with your pack.\"",
+     "needs": [
+      {
+       "feat": [
+        "packwins",
+        10
+       ]
+      }
+     ],
+     "reward": {
+      "coins": 1200,
+      "items": {
+       "treat": 10
+      },
+      "xp": {
+       "attack": 800
+      }
+     }
+    },
+    "realPic": "briar"
+   }
+  },
+  "books": {
+   "//": "A book per class (Cam's proposal, V1 carried 10-1): bought at the Guild hall, read from the bag anywhere -- everything about the class, made from the game's own data (it can't drift).",
+   "price": 400
+  },
+  "builds": {
+   "//": "Two builds per class for its book (the Combat Designer: 'build guides ... have nowhere to live today').",
+   "hunter": [
+    [
+     "The trapper",
+     "Trapper first (Snarecraft, Barbed jaws, Ambush), then Wilds' Light step and Hardy: traps that open every fight and hurt, and a body that lasts. For bosses and hard ground."
+    ],
+    [
+     "The marksman",
+     "Marksman to Killing shot, then Wilds' Quiver craft: the most damage from a bow, fewer arrows used. For fast hunting."
+    ]
+   ],
+   "berserker": [
+    [
+     "The slaughterer",
+     "Slaughter to Opening blow, then Bloodrage's Seething and Bloodthirst: damage, and fury that turns into more of it."
+    ],
+    [
+     "The juggernaut",
+     "Juggernaut to its keystone, then Bloodrage's Second wind: hard to kill, Bloodlust to heal. For long hunts with little food."
+    ]
+   ],
+   "arcane": [
+    [
+     "The elementalist",
+     "Elements to Avatar, then Arcana's Fourth sigil: four spells, and every element effect landing harder."
+    ],
+    [
+     "The battlemage",
+     "Battlemage first, a battle staff in hand: armour while casting, a real blow when the runes run out."
+    ]
+   ],
+   "thief": [
+    [
+     "The poisoner",
+     "Venom to Black blood (Virulence for three poisons), then Shadows' Nimble: poison doing the work while you stay out of reach."
+    ],
+    [
+     "The duellist",
+     "Blades to Thousand cuts with two daggers, then Shadows' Ambusher: the most blows a round."
+    ]
+   ],
+   "paladin": [
+    [
+     "The crusader",
+     "Crusade to Avenger, two swords or a sword and shield: the Paladin's damage."
+    ],
+    [
+     "The bulwark",
+     "Bulwark to Bastion, then Grace's Devout: blocks, bashes and devotion -- the safest hunter in the game."
+    ]
+   ],
+   "beastmaster": [
+    [
+     "The pack",
+     "Bond to Pack leader: three pets in every fight, each hitting harder. Train them up in the Pen."
+    ],
+    [
+     "The keeper",
+     "Keeper to Beast whisperer, then Wild's Quick learner: pets that train themselves to level 40 and rest quickly -- the patient way."
+    ]
+   ]
+  }
+ },
+ "TECHNIQUES": {
+  "//": "Techniques (Cam: 'once a thief unlocks the ability to make poison he shouldn't lose it when changing class'): two per class, learned for good by putting a point in its node; slots (more at New Game Plus 1 and 3); off your own class they work at offClass strength. fx: what it adds (the same keys as talents).",
+  "slots": 2,
+  "ngSlots": [
+   1,
+   3
+  ],
+  "offClass": 0.6,
+  "list": {
+   "trapmaking": {
+    "cls": "hunter",
+    "name": "Trap-making",
+    "node": "snarecraft",
+    "about": "Lay a Hunter's snares and throw its nets, whatever your class.",
+    "fx": {
+     "trapUse": 1
+    }
+   },
+   "fielddressing": {
+    "cls": "hunter",
+    "name": "Field dressing",
+    "node": "tracker",
+    "about": "Now and then an extra hide or piece of meat from a kill.",
+    "fx": {
+     "dressChance": 0.1
+    }
+   },
+   "weaponmastery": {
+    "cls": "berserker",
+    "name": "Weapon mastery",
+    "node": "brutal",
+    "about": "+5% damage with a melee weapon.",
+    "fx": {
+     "meleeDmg": 0.05
+    }
+   },
+   "secondwind": {
+    "cls": "berserker",
+    "name": "Second wind",
+    "node": "secondwind",
+    "about": "Once a fight, at a fifth of your health, a tenth of it back.",
+    "fx": {
+     "secondWind": 0.1
+    }
+   },
+   "runesaving": {
+    "cls": "arcane",
+    "name": "Rune-saving",
+    "node": "runethrift",
+    "about": "Now and then a spell costs no runes.",
+    "fx": {
+     "runeSave": 0.1
+    }
+   },
+   "poisoncraft": {
+    "cls": "thief",
+    "name": "Poison-crafting and coating",
+    "node": "toxic",
+    "about": "Coat any weapon with a poison or venom.",
+    "fx": {
+     "coatUse": 1
+    }
+   },
+   "pickpocket": {
+    "cls": "thief",
+    "name": "Pickpocketing",
+    "node": "lightfingers",
+    "about": "+10% coins from kills -- and you can steal and pick pockets in the Marketplace, whatever your class.",
+    "fx": {
+     "coinPct": 0.1,
+     "larcenyUse": 1
+    }
+   },
+   "shieldtraining": {
+    "cls": "paladin",
+    "name": "Shield training",
+    "node": "shieldwall",
+    "about": "Carry a wooden buckler in your off hand, whatever your class.",
+    "fx": {
+     "bucklerUse": 1
+    }
+   },
+   "firstaid": {
+    "cls": "paladin",
+    "name": "First aid",
+    "node": "firstaid",
+    "about": "Food heals you 10% more.",
+    "fx": {
+     "foodHeal": 0.1
+    }
+   },
+   "spellfocus": {
+    "cls": "arcane",
+    "name": "Spell focus",
+    "node": "focus",
+    "about": "+1 max hit with spells.",
+    "fx": {
+     "magDmg": 1
+    }
+   },
+   "animalhandling": {
+    "cls": "beastmaster",
+    "name": "Animal handling",
+    "node": "handling",
+    "about": "Your companion's help in a fight: +1 max hit.",
+    "fx": {
+     "compHit": 1
+    }
+   },
+   "tending": {
+    "cls": "beastmaster",
+    "name": "Tending",
+    "node": "tending",
+    "about": "Food and potions heal your pets 10% more.",
+    "fx": {
+     "petFood": 0.1
+    }
+   }
+  }
+ },
+ "CLASS_BOOKS": {
+  "hunterbook": {
+   "name": "The Hunter's Book",
+   "gem": 3,
+   "price": 400,
+   "book": "hunter"
+  },
+  "berserkerbook": {
+   "name": "The Berserker's Book",
+   "gem": 3,
+   "price": 400,
+   "book": "berserker"
+  },
+  "arcanebook": {
+   "name": "The Arcane's Book",
+   "gem": 3,
+   "price": 400,
+   "book": "arcane"
+  },
+  "thiefbook": {
+   "name": "The Thief's Book",
+   "gem": 3,
+   "price": 400,
+   "book": "thief"
+  },
+  "paladinbook": {
+   "name": "The Paladin's Book",
+   "gem": 3,
+   "price": 400,
+   "book": "paladin"
+  },
+  "beastmasterbook": {
+   "name": "The Beast Master's Book",
+   "gem": 3,
+   "price": 400,
+   "book": "beastmaster"
+  }
+ },
+ "TALENT_LABELS": {
+  "//": "What each talent effect is called in a class book (V1: the book's numbers are the game's own).",
+  "acc": "accuracy",
+  "aegisRounds": "Aegis rounds",
+  "ambush": "opening trap is free",
+  "ammoSave": "chance an arrow isn't used",
+  "att": "attack",
+  "avenge": "damage after you're hit",
+  "bashCd": "bash ready sooner (rounds)",
+  "bashDmg": "bash damage",
+  "bashStun": "bash stun rounds",
+  "bleedChance": "chance a hit bleeds",
+  "block": "block chance",
+  "blockHeal": "health per block",
+  "bossDmg": "damage to bosses",
+  "brace": "less from every blow",
+  "bucklerUse": "carry a buckler",
+  "burnPow": "burn damage a round",
+  "coatLast": "coating lasts longer",
+  "coatUse": "coat any weapon",
+  "coinPct": "coins from kills",
+  "counter": "strike back on a dodge",
+  "def": "defence",
+  "devDmg": "damage at 50+ devotion",
+  "devGain": "devotion",
+  "devRegen": "health a round at 50+ devotion",
+  "dodge": "dodge",
+  "double": "chance of an extra blow",
+  "dressChance": "chance of an extra hide or meat",
+  "dualDmg": "dual-dagger stab damage",
+  "elemChance": "element effect chance",
+  "elemDmg": "damage to a creature under your element",
+  "elemWeakDmg": "damage when it's weak to the element",
+  "foodHeal": "healing from food",
+  "furyDmg": "damage at 50+ fury",
+  "furyGain": "fury",
+  "furyHit": "max hit at 50+ fury",
+  "furyTake": "fury from blows taken",
+  "heldAcc": "accuracy on a caught creature",
+  "heldDmg": "damage to a caught creature",
+  "layFree": "Lay on hands keeps your turn",
+  "layHeal": "Lay on hands healing",
+  "lowHpDmg": "damage below half health",
+  "lustHeal": "Bloodlust healing",
+  "magDmg": "spell max hit",
+  "magPct": "spell damage",
+  "maxHit": "max hit",
+  "meleeDmg": "melee damage",
+  "netKeep": "nets picked up again",
+  "netRound": "chance a net holds longer",
+  "openerDmg": "first-round damage",
+  "poisonChance": "poison chance",
+  "poisonMult": "poison damage",
+  "poisonPow": "poison damage a round",
+  "poisonRounds": "poison rounds",
+  "poisonStack": "poisons at once",
+  "poisonStun": "stun chance on a poisoned creature",
+  "poisonedDmg": "damage to a poisoned creature",
+  "rageCut": "less extra damage from Rage",
+  "runeSave": "chance a spell is free",
+  "saveOnce": "one deadly blow blocked a fight",
+  "secondWind": "health back at a fifth",
+  "slot": "spell slot",
+  "slowRounds": "slow rounds",
+  "smiteDmg": "Smite damage",
+  "smokeRounds": "smoke rounds",
+  "soak": "less from each blow",
+  "specCost": "cheaper specials",
+  "specGain": "special energy a fight",
+  "stun": "stun chance",
+  "throwDmg": "thrown knife damage",
+  "trapDmg": "trap damage",
+  "trapRound": "chance a trap holds longer",
+  "trapUse": "use a Hunter's traps and nets",
+  "traps": "traps a fight",
+  "trueStrike": "true strike",
+  "twinDmg": "two-sword blow damage",
+  "xpCls": "class xp",
+  "petDmg": "pet damage",
+  "petHp": "pet health",
+  "petAcc": "pet accuracy",
+  "packSize": "pets in a fight",
+  "petDr": "less damage to pets",
+  "typeDmg": "damage on a strong matchup",
+  "petXp": "pet battle xp",
+  "moveFx": "move effect chance",
+  "moveUses": "extra uses of limited moves",
+  "petBoss": "pet damage to bosses",
+  "petHeal": "pet heals",
+  "petDodge": "pet dodge",
+  "trainPct": "idle training speed",
+  "restCut": "shorter rest",
+  "petFood": "food on pets",
+  "compHit": "companion max hit",
+  "stalls": "Pen stalls",
+  "petRegen": "pet healing between fights",
+  "trainCap": "idle training cap (levels)"
+ }
+}

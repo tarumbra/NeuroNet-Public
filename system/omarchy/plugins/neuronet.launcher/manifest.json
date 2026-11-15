@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "neuronet.launcher",
+  "name": "NeuroNet Quick Access",
+  "version": "1.0.0",
+  "author": "Cam",
+  "description": "Open a NeuroNet tool as a popup over whatever you're doing (Notes, Training, Photos, Music), or the whole app.",
+  "kinds": ["bar-widget"],
+  "entryPoints": { "barWidget": "BarWidget.qml" },
+  "barWidget": {
+    "displayName": "NeuroNet Quick Access",
+    "description": "NeuroNet tools as a popup",
+    "category": "Productivity",
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}

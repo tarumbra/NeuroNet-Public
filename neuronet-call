@@ -1,0 +1,44 @@
+#!/bin/bash
+# neuronet-call -- ask NeuroNet to do something, and print its answer.
+#
+#     neuronet-call media.add '{"type":"dvd","title":"Aliens"}'
+#     -> {"ok": true, "title": "Aliens", "type": "DVD"}
+#     -> {"duplicate": true, "title": "Aliens", "type": "DVD"}
+#
+# The bar widgets (the music widget's ♥ and playlists; once the desktop board too) use this for everything
+# that SAVES -- adding media, recipes and notes, clearing a note, playing an
+# album -- so NeuroNet is the only thing that ever writes its own data, with
+# the same code its dashboard uses (SS.boardDo in ui/app.js; org.neuronet.App.Do
+# in mpris.py). If NeuroNet isn't running it's started, hidden, first.
+#
+# The answer is always one line of JSON: {"ok": ...}, {"duplicate": ...} or
+# {"error": "..."}.
+set -u
+action="${1:-}"
+payload="${2:-{\}}"
+[ -n "$action" ] || { echo '{"error": "Usage: neuronet-call <action> [json]"}'; exit 2; }
+HERE="$(dirname "$(readlink -f "$0")")"
+
+owned() {
+  busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
+    NameHasOwner s org.neuronet.App 2>/dev/null | grep -q true
+}
+
+if ! owned; then
+  "$HERE/neuronet-quick" start >/dev/null 2>&1
+  for _ in $(seq 1 60); do owned && break; sleep 0.5; done
+  owned || { echo '{"error": "NeuroNet didn'"'"'t start."}'; exit 1; }
+fi
+
+out=$(busctl --user --timeout=50 --json=short call org.neuronet.App /org/neuronet/App \
+        org.neuronet.App Do ss "$action" "$payload" 2>&1) || {
+  # A NeuroNet started before the board existed doesn't know Do yet: say so
+  # plainly rather than "Call failed".
+  case "$out" in
+    *"No such method"*|*"Unknown method"*|*UnknownMethod*)
+      echo '{"error": "NeuroNet is running older code. Close it and open it again, then try once more."}' ;;
+    *) printf '{"error": %s}\n' "$(printf '%s' "$out" | jq -Rs .)" ;;
+  esac
+  exit 1
+}
+printf '%s' "$out" | jq -r '.data[0]'

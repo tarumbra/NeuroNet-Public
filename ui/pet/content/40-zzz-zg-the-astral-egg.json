@@ -1,0 +1,39 @@
+{
+ "ASTRAL": {
+  "//": "V10 (the team 10-0, Cam's go-ahead with his paintings, 2026-10-18; from PT19 b5): the Astral egg, a rare drop from a WON REMATCH at the mage tower -- `drop` is 1 in N by the rank (Apprentice .. Archmage). Eight planet pets, ordinary pets in every way except they can't be sold or bred; as battle pets a seventh type, Astral, neutral against every other, each knowing four moves of its planet's element (`moves`: fire burns, water slows, earth breaks a guard, air knocks off balance -- the Arcane's effects). Their stats are a rare pet's (`base`), their edge the effects.",
+  "drop": [0, 200, 150, 100, 70, 40],
+  "type": {"name": "Astral", "strong": [], "about": "Touched by the sky: neutral against every other type."},
+  "base": {"health": 10, "attack": 6, "defence": 5, "speed": 6},
+  "egg": {"name": "Astral egg", "hatch": 10800000, "found": "a rematch at the mage tower, now and then (better the higher the rank)",
+          "pool": [["quickhare/mercury", 20], ["dawnmoth/venus", 20], ["globetortoise/terra", 20], ["dusthound/mars", 20], ["stormray/jupiter", 7], ["ringowl/saturn", 7], ["tiltseal/uranus", 3], ["deepserpent/neptune", 3]]},
+  "item": {"name": "Astral egg", "gem": 9, "egg": "astral", "bound": true, "about": "Night-blue, flecked with stars, a faint ring round its middle. The sky keeps what it loses -- and now and then gives a little back."},
+  "pets": {
+   "quickhare/mercury": {"species": "quickhare", "speciesName": "Quicksilver hare", "name": "Quicksilver Hare", "rarity": "Rare", "element": "air", "fight": {"agi": 4}, "boost": "foraging", "attack": "pierce", "size": "small"},
+   "dawnmoth/venus": {"species": "dawnmoth", "speciesName": "Dawn moth", "name": "Dawn Moth", "rarity": "Rare", "element": "fire", "fight": {"agi": 2, "att": 1}, "boost": "cooking", "attack": "pierce", "size": "small"},
+   "globetortoise/terra": {"species": "globetortoise", "speciesName": "Globe tortoise", "name": "Globe Tortoise", "rarity": "Rare", "element": "earth", "fight": {"hp": 1.4}, "boost": "digging", "attack": "crush", "size": "medium"},
+   "dusthound/mars": {"species": "dusthound", "speciesName": "Red-dust hound", "name": "Red-dust Hound", "rarity": "Rare", "element": "fire", "fight": {"att": 3}, "boost": "attack", "attack": "slash", "size": "medium"},
+   "stormray/jupiter": {"species": "stormray", "speciesName": "Storm ray", "name": "Storm Ray", "rarity": "Epic", "element": "air", "fight": {"agi": 2, "hp": 1.2}, "boost": "fishing", "attack": "pierce", "size": "large"},
+   "ringowl/saturn": {"species": "ringowl", "speciesName": "Ringed owl", "name": "Ringed Owl", "rarity": "Epic", "element": "earth", "fight": {"agi": 3, "att": 1}, "boost": "magic", "attack": "pierce", "size": "small"},
+   "tiltseal/uranus": {"species": "tiltseal", "speciesName": "Tilted seal", "name": "Tilted Seal", "rarity": "Legendary", "element": "water", "fight": {"hp": 1.4}, "boost": "defence", "attack": "crush", "size": "medium"},
+   "deepserpent/neptune": {"species": "deepserpent", "speciesName": "Deep-blue serpent", "name": "Deep-blue Serpent", "rarity": "Legendary", "element": "water", "fight": {"att": 2, "agi": 2}, "boost": "fishing", "attack": "slash", "size": "medium"}
+  },
+  "moves": {
+   "fire": {"emberspark": {"name": "Ember spark", "level": 1, "about": "A spark from the sky.", "power": 1.0},
+            "solarflare": {"name": "Solar flare", "level": 10, "about": "It burns for 3 rounds.", "power": 0.8, "fx": {"kind": "burning", "rounds": 3, "power": 2}},
+            "cinderveil": {"name": "Cinder veil", "level": 25, "about": "Takes 40% less for 2 rounds.", "power": 0, "guard": {"cut": 0.4, "rounds": 2}},
+            "novaburst": {"name": "Nova burst", "level": 40, "about": "Twice as hard. Twice a fight.", "power": 2.0, "acc": 0.85, "uses": 2}},
+   "water": {"tidepull": {"name": "Tide pull", "level": 1, "about": "The pull of the far tide.", "power": 1.0},
+             "frostcurrent": {"name": "Frost current", "level": 10, "about": "Slowed for 3 rounds.", "power": 0.8, "fx": {"kind": "slowed", "rounds": 3}},
+             "mistveil": {"name": "Mist veil", "level": 25, "about": "Half its blows miss for 2 rounds.", "power": 0, "dodge": {"chance": 0.5, "rounds": 2}},
+             "deepsurge": {"name": "Deep surge", "level": 40, "about": "Twice as hard. Twice a fight.", "power": 2.0, "acc": 0.85, "uses": 2}},
+   "earth": {"pebbleshot": {"name": "Pebble shot", "level": 1, "about": "A little stone from the sky.", "power": 1.0},
+             "gravitywell": {"name": "Gravity well", "level": 10, "about": "Heavy: slowed for 2 rounds.", "power": 0.6, "fx": {"kind": "slowed", "rounds": 2}},
+             "stoneskin": {"name": "Stone skin", "level": 25, "about": "Takes 45% less for 2 rounds.", "power": 0, "guard": {"cut": 0.45, "rounds": 2}},
+             "tectonic": {"name": "Tectonic", "level": 40, "about": "Hard, and its guard breaks for 2 rounds. Twice a fight.", "power": 1.8, "fx": {"kind": "brokenguard", "rounds": 2}, "uses": 2}},
+   "air": {"windcut": {"name": "Wind cut", "level": 1, "about": "A quick cut of wind.", "power": 1.0},
+           "cyclone": {"name": "Cyclone", "level": 10, "about": "Off balance for 2 rounds.", "power": 0.6, "fx": {"kind": "offbalance", "rounds": 2}},
+           "galestep": {"name": "Gale step", "level": 25, "about": "Half its blows miss for 2 rounds.", "power": 0, "dodge": {"chance": 0.5, "rounds": 2}},
+           "stormcall": {"name": "Storm call", "level": 40, "about": "Twice as hard. Twice a fight.", "power": 2.0, "acc": 0.85, "uses": 2}}
+  }
+ }
+}

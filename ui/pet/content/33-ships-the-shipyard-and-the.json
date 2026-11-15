@@ -1,0 +1,186 @@
+{
+  "//": [
+    "Content for ui/pet/core/33-ships-the-shipyard-and-the.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "SHIPS": [{"name": "No boat"}, {"name": "Rowboat"}, {"name": "Sailboat", "con": 25}, {"name": "Caravel", "con": 40}, {"name": "Galleon", "con": 50}],
+  "SHIP_PARTS": ["hull", "mast", "sails", "rigging"],
+  "SHIP_PART_NAMES": {"hull": "Hull", "mast": "Mast", "sails": "Sails", "rigging": "Rigging"},
+  "SHIP_BUILD": [
+    null,
+    null,
+    {
+      "hull": {"items": {"hardplank": 20, "ironbar": 10}, "coins": 2000, "hours": 3, "xp": 400},
+      "mast": {"items": {"hardplank": 10, "maple": 10}, "coins": 500, "hours": 2, "xp": 250},
+      "sails": {"items": {"sailcloth": 12, "rope": 6}, "coins": 500, "hours": 2, "xp": 250},
+      "rigging": {"items": {"rope": 20, "ironbar": 5}, "coins": 500, "hours": 2, "xp": 250}
+    },
+    {
+      "hull": {"items": {"fineplank": 25, "mithrilbar": 10, "pitch": 10}, "coins": 8000, "hours": 6, "xp": 1200},
+      "mast": {"items": {"fineplank": 12, "yew": 10}, "coins": 2000, "hours": 4, "xp": 700},
+      "sails": {"items": {"sailcloth": 25, "rope": 10}, "coins": 2000, "hours": 4, "xp": 700},
+      "rigging": {"items": {"rope": 30, "mithrilbar": 6, "pitch": 6}, "coins": 2000, "hours": 4, "xp": 700}
+    },
+    {
+      "hull": {"items": {"fineplank": 50, "adamantbar": 15, "pitch": 20}, "coins": 25000, "hours": 10, "xp": 3000},
+      "mast": {"items": {"fineplank": 25, "magiclog": 10}, "coins": 6000, "hours": 8, "xp": 1800},
+      "sails": {"items": {"sailcloth": 50, "rope": 20}, "coins": 6000, "hours": 8, "xp": 1800},
+      "rigging": {"items": {"rope": 50, "goldbar": 10, "pitch": 15}, "coins": 6000, "hours": 8, "xp": 1800}
+    }
+  ],
+  "ISLANDS": {
+    "desert": {"name": "Desert Island", "the": "the Desert Island", "ship": 3, "town": "sandport"},
+    "frostpeak": {"name": "Frostpeak Island", "the": "Frostpeak Island", "ship": 3, "town": "frosthaven"}
+  },
+  "VOYAGE_MINS": [0, 0, 0, 15, 10],
+  "PROVISIONS": {"id": "smokedfish", "n": 3, "quick": 0.5},
+  "more ITEMS": {
+    "rope": {"name": "Rope", "gem": 3, "from": "spun at the spinning wheel"},
+    "sailcloth": {"name": "Sailcloth", "gem": 4},
+    "pitch": {"name": "Pitch", "gem": 4}
+  },
+  "HOME_ACTS": [
+    "craft",
+    "build",
+    "store",
+    "withdraw",
+    "chestname",
+    "chestmove",
+    "deposit",
+    "banktab",
+    "tabname",
+    "petwork",
+    "buy",
+    "sell",
+    "reskin",
+    "order",
+    "identify",
+    "repair",
+    "enchant",
+    "farm",
+    "camp",
+    "rank",
+    "pot",
+    "potcollect",
+    "dine",
+    "read",
+    "research",
+    "stargaze",
+    "decipher",
+    "archive",
+    "shipbuild",
+    "recycle",
+    "recyclecancel",
+    "recycletake",
+    "recyclebuild",
+    "recyclebuy",
+    "cartbuild",
+    "cartload",
+    "cartunload",
+    "cartsend",
+    "ranchbuy",
+    "ranchsell",
+    "ranchfeed",
+    "ranchcollect",
+    "ranchclean",
+    "ranchbrush",
+    "ranchmill",
+    "ranchchurn",
+    "ranchculture",
+    "ranchpair",
+    "ranchbuild",
+    "ranchmarket"
+  ],
+  "REGIONS.sandport": {
+    "name": "Sandport",
+    "x": 86,
+    "y": 60,
+    "level": 1,
+    "isle": "desert",
+    "town": true,
+    "blurb": "A sandstone harbour town: palms, awnings and a market that never sleeps."
+  },
+  "REGIONS.frosthaven": {
+    "name": "Frosthaven",
+    "x": 10,
+    "y": 6,
+    "level": 1,
+    "isle": "frostpeak",
+    "town": true,
+    "blurb": "Timber and stone in the snow: smoking chimneys, frozen nets and warm inns."
+  },
+  "REGIONS.shipyard": {"name": "Shipyard", "level": 1, "yard": true, "blurb": "Slipways and sawdust by the harbour."},
+  "PEOPLE.shipyard": {
+    "id": "hal",
+    "name": "Shipwright Hal",
+    "look": {"skin": 1, "hair": 2, "outfit": 1},
+    "says": "Every ship starts as a tree and a stubborn idea.",
+    "quests": [
+      {
+        "id": "ropeandsail",
+        "name": "Rope and sail",
+        "text": "\"A yard eats rope. Bring me rope and sailcloth and I'll make it worth your while.\"",
+        "needs": [{"bring": {"rope": 20, "sailcloth": 10}}],
+        "reward": {"coins": 1500, "xp": {"construction": 1000}}
+      },
+      {
+        "id": "deserttimber",
+        "name": "Timber from afar",
+        "text": "\"Acacia and palm -- they don't rot in salt water. The Desert Island's full of them.\"",
+        "needs": [{"bring": {"acacia": 15, "palmlog": 15}}],
+        "reward": {"coins": 4000, "xp": {"construction": 2500}}
+      }
+    ]
+  },
+  "PEOPLE.sandport": {
+    "id": "nefer",
+    "name": "Harbourmaster Nefer",
+    "look": {"skin": 3, "hair": 0, "outfit": 2},
+    "says": "Welcome to Sandport. Mind the camels.",
+    "quests": [
+      {
+        "id": "settlingin",
+        "name": "Settling in",
+        "text": "\"Prove you can live off this island: dates from the palms, papyrus from the river.\"",
+        "needs": [{"bring": {"dates": 15, "papyrus": 10}}],
+        "reward": {"coins": 2000, "xp": {"foraging": 1000}}
+      },
+      {
+        "id": "sandandstone",
+        "name": "Sand and stone",
+        "text": "\"The harbour wall needs mending. Sandstone, and a little lapis for the shrine.\"",
+        "needs": [{"bring": {"sandstone": 40, "lapis": 3}}],
+        "reward": {"coins": 3500, "xp": {"construction": 1500}}
+      }
+    ]
+  },
+  "PEOPLE.frosthaven": {
+    "id": "ingrid",
+    "name": "Harbourmaster Ingrid",
+    "look": {"skin": 0, "hair": 1, "outfit": 3},
+    "says": "Shut the door, you're letting the warm out.",
+    "quests": [
+      {
+        "id": "coldcomfort",
+        "name": "Cold comfort",
+        "text": "\"The inn's fires need feeding: pine, and iron for new grates.\"",
+        "needs": [{"bring": {"pine": 20, "ironbar": 10}}],
+        "reward": {"coins": 2500, "xp": {"lumbering": 1200}}
+      },
+      {
+        "id": "mountainways",
+        "name": "Mountain ways",
+        "text": "\"Learn the mountain before it learns you. Find what it hides.\"",
+        "needs": [{"secrets": ["frostpeak", 2]}],
+        "reward": {"coins": 3000, "items": {"ironcrate": 1}}
+      },
+      {
+        "id": "netsandlines",
+        "name": "Nets and lines",
+        "text": "\"Every line in the harbour froze and snapped last night. Rope, and plenty of it.\"",
+        "needs": [{"bring": {"rope": 25, "pine": 10}}],
+        "reward": {"coins": 3500, "xp": {"crafting": 1500}}
+      }
+    ]
+  }
+}

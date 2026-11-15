@@ -1,0 +1,40 @@
+{
+  "//": [
+    "Content for ui/pet/core/40-zzz-b-the-cart.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "CART": {
+    "//": ["bonus: the merchant's wagon gets 10% on top", "trust: Marlow's word: after this many loads he trusts you with his wagon (2026-10-12)"],
+    "names": ["", "Hand cart", "Pony cart", "Wagon", "Merchant's wagon"],
+    "pulled": ["", "a lad from the village", "a pony", "a draft horse", "two draft horses"],
+    "hours": [0, 4, 3, 2, 2],
+    "kinds": [0, 10, 15, 25, 40],
+    "bonus": [0, 1, 1, 1, 1.1],
+    "build": [
+      null,
+      {"con": 12, "coins": 4000, "needs": {"plank": 40, "ironbar": 10}, "xp": 400},
+      {"con": 22, "coins": 12000, "needs": {"hardplank": 30, "steel": 10, "harness": 1}, "xp": 1000, "animal": "a pony", "kind": "pony", "count": 1},
+      {
+        "con": 32,
+        "coins": 30000,
+        "needs": {"fineplank": 30, "mithrilbar": 10, "horsecollar": 1},
+        "xp": 2200,
+        "animal": "a draft horse",
+        "kind": "drafthorse",
+        "count": 1
+      },
+      {
+        "con": 45,
+        "coins": 80000,
+        "needs": {"fineplank": 60, "adamantbar": 10, "horsecollar": 2},
+        "xp": 4000,
+        "animal": "two draft horses",
+        "kind": "drafthorse",
+        "count": 2,
+        "quest": true
+      }
+    ],
+    "trust": 25
+  },
+  "CART_FROM": ["bag", "chests", "recycled"]
+}

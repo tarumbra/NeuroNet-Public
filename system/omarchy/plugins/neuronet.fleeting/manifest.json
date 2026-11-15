@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "neuronet.fleeting",
+  "name": "NeuroNet Fleeting Note",
+  "version": "1.0.0",
+  "author": "Cam",
+  "description": "Type a quick thought from the top bar; it lands in NeuroNet's Notes → Fleeting as the next numbered note.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "NeuroNet Fleeting Note",
+    "description": "Quick note into NeuroNet's Fleeting queue",
+    "category": "Productivity",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

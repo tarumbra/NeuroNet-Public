@@ -1,0 +1,40 @@
+{
+  "//": [
+    "Content for ui/pet/core/39-z-the-story.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "STORY_ARCS": {"1": "The Island Remembers", "2": "The Star Chart"},
+  "STORY_GATES": {
+    "smithy": {"name": "the smithy", "workshops": ["furnace", "anvil"]},
+    "board": {"name": "the notice board", "workshops": ["board"], "actions": ["order"]},
+    "shed": {"name": "the spinning wheel, tanner and fletching table", "workshops": ["spinning", "tanner", "fletching"]},
+    "build": {"name": "building your house up", "actions": ["build"]},
+    "herbs": {"name": "the herb table and apothecary", "workshops": ["herblore", "apothecary"], "actions": ["identify"]},
+    "breeding": {"name": "breeding", "actions": ["breed"]},
+    "study": {"name": "research, reading and the archive", "actions": ["research", "read", "archive", "decipher"]},
+    "expeditions": {"name": "pet expeditions", "actions": ["expedition"]},
+    "stars": {"name": "the observatory", "actions": ["stargaze"]},
+    "tower": {"name": "the Mage tower's ranks", "actions": ["rank"]},
+    "gems": {"name": "the gem bench and enchanting", "workshops": ["gemology", "enchanting", "altar"], "actions": ["enchant"]},
+    "pyramid": {"name": "the Pyramid", "actions": ["pyramid"]}
+  },
+  "GATE_UNLOCKS": {
+    "smithy": [["bronzebar", "Smelting at the furnace — bars, starting with bronze"], ["bronzepick", "Smithing at the anvil — tools, armour and weapons"]],
+    "board": [["woodcrate", "The notice board's orders, in the village"]],
+    "shed": [
+      ["thread", "Spinning thread and cloth at the spinning wheel"],
+      ["leather", "Tanning hides at the tanner"],
+      ["arrowshaft", "Fletching shafts, bows and arrows"]
+    ],
+    "build": [["plank", "Building your house's rooms up"]],
+    "herbs": [["unidherb", "Identifying herbs at the herb table"], ["minorhealing", "Brewing potions and salves at the apothecary"]],
+    "breeding": [["commonegg", "Breeding two pets in the nursery"]],
+    "study": [["tome", "Research, reading and the archive in your library"]],
+    "expeditions": [["woodcrate", "Sending your pets on expeditions"]],
+    "stars": [["obj_sun", "Stargazing at the observatory"]],
+    "tower": [["wizardhat", "Duelling for ranks at the Mage tower"]],
+    "gems": [["roughgem", "Cutting gems at the gem bench"], ["enchantedopal", "Enchanting, and the altar"]],
+    "pyramid": [["glyphsun", "The Pyramid's chambers"]]
+  },
+  "STORY_SWITCH": {"gates": true}
+}

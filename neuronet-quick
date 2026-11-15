@@ -1,0 +1,365 @@
+#!/bin/bash
+# neuronet-quick -- NeuroNet as a popup.
+#
+# Cam: "a plugin that can load my tools in Neuronet and make them appear as a
+# popup that i can do some quick work or viewing, rather then having to open
+# the whole app all the time ... my computer usage is all centred around
+# Neuronet".
+#
+# NeuroNet itself is the popup. There is only ever ONE NeuroNet (neuronet.py
+# refuses to start a second), so nothing is loaded twice and no two copies can
+# overwrite each other's saves.
+#
+#   neuronet-quick <section>   photos mind money games divination stuff cookery
+#                              music training home notes creative code
+#       Float NeuroNet over whatever is on screen, on that section (the page
+#       last used in it), in its compact look -- no left menu. Opens NeuroNet
+#       first if it isn't running. The same key again puts it away.
+#   neuronet-quick full     the whole app, in a normal window on this workspace;
+#                           run again while it's there, it hides again
+#   neuronet-quick show     the whole app, here -- never hides (the app icon)
+#   neuronet-quick start    start NeuroNet hidden, if it isn't running (login)
+#   neuronet-quick hide     put the popup away
+#   neuronet-quick toggle   show / hide the popup where it was
+#   neuronet-quick open <section>
+#       As <section>, but never puts it away: for something opened INTO the
+#       tool (neuronet-open: a note, a recipe, a book) -- a second one opened
+#       while the first is up must not hide NeuroNet.
+#   neuronet-quick dock <address>
+#       Another app opened over the popup (run by NeuroNet itself, quick_watch.py):
+#       the tool becomes a window, tiled beside that app on this workspace.
+#
+# Every NeuroNet window STARTS hidden in the scratchpad (a window rule in
+# ~/.config/hypr/hyprland.lua); this script decides where it shows. So
+# NeuroNet can start at login without flashing up, and the app icon runs
+# `neuronet-quick show`.
+#
+# The popup lives in a Hyprland scratchpad ("special:neuronet"): shown over
+# the current workspace, hidden without closing anything. Keys are in
+# ~/.config/hypr/bindings.lua (Super+Alt+ a key per tool, Super+Alt+O); the bar
+# launcher (omarchy plugin neuronet.launcher) runs this too.
+#
+# NEURONET_QUICK_CLASS overrides the window class matched (tests only).
+
+set -u
+SPECIAL="neuronet"
+CLASS="${NEURONET_QUICK_CLASS:-NeuroNet}"
+STATE="${XDG_RUNTIME_DIR:-/tmp}/neuronet-quick.section"
+LOCK="${XDG_RUNTIME_DIR:-/tmp}/neuronet-quick.lock"
+APP_DIR="$(dirname "$(readlink -f "$0")")"
+START_LOG="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/start.log"
+action="${1:-toggle}"
+
+dsp() { hyprctl dispatch "$1" >/dev/null 2>&1; }
+
+win_json() {
+  command -v hyprctl >/dev/null 2>&1 || return 0
+  hyprctl clients -j | jq -c --arg c "$CLASS" '[.[] | select(.class == $c or .initialClass == $c
+      or ($c == "NeuroNet" and (.class == "neuronet.py" or .initialClass == "neuronet.py"))
+      or ($c == "NeuroNet" and .title == "NeuroNet" and (.class | test("^(python|neuronet)"))))][0] // empty'
+}
+# (2026-09-29) "neuronet.py" too: on Manthies' computer NeuroNet's window came
+# up with that name, not "NeuroNet" -- Qt took it from the script -- and every
+# shortcut then waited for a window it couldn't see and said "didn't open".
+
+bus() {
+  [ -n "${NEURONET_QUICK_CLASS:-}" ] && return 0
+  gdbus call --session --dest org.neuronet.App --object-path /org/neuronet/App \
+    --method "org.neuronet.App.$1" "${@:2}" >/dev/null 2>&1
+}
+
+special_shown() {
+  hyprctl monitors -j | jq -e --arg s "special:$SPECIAL" \
+    'any(.[]; .focused and .specialWorkspace.name == $s)' >/dev/null
+}
+
+show_special() { special_shown || dsp "hl.dsp.workspace.toggle_special(\"$SPECIAL\")"; }
+hide_special() { special_shown && dsp "hl.dsp.workspace.toggle_special(\"$SPECIAL\")"; return 0; }
+
+# Start neuronet.py itself -- NOT through NeuroNet.desktop, which runs this
+# script (`show`) and would call back here. The lock stops two quick key
+# presses from starting it twice while the first is still opening.
+launch() {
+  if [ -n "${NEURONET_QUICK_CLASS:-}" ]; then echo "no test window" >&2; exit 1; fi
+  exec 9>"$LOCK"
+  flock -w 40 9 || exit 1
+  w=$(win_json)
+  [ -n "$w" ] && return 0
+  on_hyprland || ! app_owned || return 0     # without Hyprland: started meanwhile
+  # What it says while starting is kept (2026-09-29): on a new computer it
+  # didn't open, and with this going to /dev/null nobody could say why.
+  mkdir -p "$(dirname "$START_LOG")"
+  # uwsm-app is Omarchy's (and uwsm sessions'); a plain Hyprland -- CachyOS,
+  # install-app.sh -- has none, so NeuroNet starts directly there
+  local run=(python3 "$APP_DIR/neuronet.py" --gui qt "$@")
+  command -v uwsm-app >/dev/null 2>&1 && run=(uwsm-app -- "${run[@]}")
+  (cd "$APP_DIR" && WEBKIT_DISABLE_DMABUF_RENDERER=1 setsid -f "${run[@]}" >"$START_LOG" 2>&1)
+}
+
+ensure_running() {
+  w=$(win_json)
+  [ -n "$w" ] && return 0
+  launch
+  [ -n "${w:-}" ] && return 0
+  for _ in $(seq 1 150); do
+    sleep 0.2
+    w=$(win_json)
+    if [ -n "$w" ]; then sleep 1; w=$(win_json); return 0; fi
+  done
+  # The one cause seen so far, said plainly (2026-09-29): Qt couldn't load,
+  # pywebview fell back to GTK, and the window came up under another name.
+  if grep -qi 'QT cannot be loaded' "$START_LOG" 2>/dev/null; then
+    notify-send -u critical "NeuroNet" "NeuroNet opened without Qt, so its shortcuts can't find it. Install python-qtpy: omarchy pkg add python-qtpy" 2>/dev/null
+  else
+    notify-send "NeuroNet" "NeuroNet didn't open. What it said: $START_LOG -- or run neuronet-doctor." 2>/dev/null
+  fi
+  exit 1
+}
+
+field() { jq -r "$1" <<<"$w"; }
+
+# The same question neuronet.py's welcome_wanted() answers.
+welcome_wanted() {
+  [ -e "${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/welcome.json" ] && return 1
+  local d
+  d=$(neuronet-path data 2>/dev/null) || return 1
+  [ ! -f "$d/neuronet.json" ]
+}
+
+# A section switched off in Settings -> Sections shown keeps its key quiet
+# (Cam, 2026-09-29: "hiding a main section in settings should also disable
+# its keyboard shortcut"). It says so, rather than seeming broken.
+section_off() {
+  local section="$1" name
+  [ -n "${NEURONET_QUICK_CLASS:-}" ] && return 1
+  command -v neuronet-path >/dev/null 2>&1 || return 1
+  neuronet-path hidden "$section" 2>/dev/null || return 1
+  case "$section" in
+    cookery) name=Kitchen ;; games) name=Puzzles ;; mind) name=Mindfulness ;;
+    *) name="${section^}" ;;
+  esac
+  notify-send -t 4000 "NeuroNet" "$name is hidden, so its shortcut is off. Show it again in Settings → Sections shown." 2>/dev/null
+  return 0
+}
+
+popup() {
+  local section="$1" nohide="${2:-}"
+  ensure_running
+  local addr ws floating
+  addr=$(field .address); ws=$(field .workspace.name); floating=$(field .floating)
+  local win="address:$addr"
+
+  # Docked beside another app (see dock): the same key tucks it away again;
+  # another tool's key switches it where it is.
+  if [ -s "$STATE" ] && ! special_shown && [ "$ws" = "$(hyprctl activeworkspace -j | jq -r .name)" ]; then
+    if [ -z "$nohide" ] && { [ -z "$section" ] || [ "$(cat "$STATE")" = "$section" ]; }; then
+      dsp "hl.dsp.window.move({ window = \"$win\", workspace = \"special:$SPECIAL\", follow = false })"
+      [ "$floating" = "true" ] || dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+      exit 0
+    fi
+    bus Quick "$section" true
+    echo "$section" >"$STATE"
+    dsp "hl.dsp.focus({ window = \"$win\" })"
+    exit 0
+  fi
+
+  # Already up, same tool: the key puts it away.
+  if [ "$ws" = "special:$SPECIAL" ] && special_shown; then
+    if [ -z "$nohide" ] && { [ -z "$section" ] || [ "$(cat "$STATE" 2>/dev/null)" = "$section" ]; }; then
+      hide_special; exit 0
+    fi
+    bus Quick "$section" true
+    echo "$section" >"$STATE"
+    dsp "hl.dsp.focus({ window = \"$win\" })"
+    exit 0
+  fi
+
+  if [ "$ws" != "special:$SPECIAL" ]; then
+    dsp "hl.dsp.window.move({ window = \"$win\", workspace = \"special:$SPECIAL\", follow = false })"
+  fi
+  [ "$floating" = "true" ] || dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+
+  # About three quarters of the screen, in logical pixels.
+  local size
+  size=$(hyprctl monitors -j | jq -r '.[] | select(.focused) |
+    [((.width / .scale) * 0.72 | floor), ((.height / .scale) * 0.82 | floor)] | "\(.[0]) \(.[1])"')
+  set -- $size
+  dsp "hl.dsp.window.resize({ window = \"$win\", x = ${1:-1400}, y = ${2:-900} })"
+  dsp "hl.dsp.window.center({ window = \"$win\" })"
+
+  bus Quick "$section" true
+  [ -n "$section" ] && echo "$section" >"$STATE"
+  show_special
+  dsp "hl.dsp.focus({ window = \"$win\" })"
+}
+
+# The whole app, on the workspace in front of Cam. `full` (Super+Alt+O) hides
+# it again if it's already there; `show` (the app icon) never hides.
+# Is this workspace in Omarchy's floating mode? (Omarchy 4.5's own answer;
+# false where the command doesn't exist: older Omarchy, other desktops.)
+floating_workspace() {
+  command -v omarchy-hyprland-workspace-layout-current >/dev/null 2>&1 || return 1
+  [[ "$1" =~ ^[0-9]+$ ]] || return 1
+  [ "$(omarchy-hyprland-workspace-layout-current "$1" 2>/dev/null)" = "floating" ]
+}
+
+full() {
+  local may_hide="$1"
+  ensure_running
+  local addr ws floating target
+  addr=$(field .address); ws=$(field .workspace.name); floating=$(field .floating)
+  local win="address:$addr"
+  target=$(hyprctl activeworkspace -j | jq -r .name)
+
+  if [ "$may_hide" = "yes" ] && [ "$ws" = "$target" ] && ! special_shown && [ ! -s "$STATE" ]; then
+    # Already here as the whole app: tuck it away again.
+    dsp "hl.dsp.window.move({ window = \"$win\", workspace = \"special:$SPECIAL\", follow = false })"
+    [ "$floating" = "true" ] || dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+    rm -f "$STATE"
+    return 0
+  fi
+
+  hide_special
+  if [ "$ws" != "$target" ]; then
+    dsp "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\" })"
+  fi
+  # Cam (14 Nov 2026): "when opening Neuronet with Super + Alt + O in floating
+  # mode it should open as a window that is consistent with that mode". On an
+  # Omarchy floating workspace (4.5) NeuroNet stays floating, at the size and
+  # place Omarchy opens any window there (workspace-modes.lua: min(1100, 64%)
+  # by min(760, 68%) of the screen, centred), so its title bar, shadow and
+  # snapping are the mode's own. Anywhere else it tiles, as it always has.
+  if floating_workspace "$target"; then
+    [ "$floating" = "true" ] || dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+    local size
+    size=$(hyprctl monitors -j | jq -r '.[] | select(.focused) |
+      [([1100, (.width / .scale) * 0.64] | min | floor), ([760, (.height / .scale) * 0.68] | min | floor)] | "\(.[0]) \(.[1])"')
+    set -- $size
+    dsp "hl.dsp.window.resize({ window = \"$win\", x = ${1:-1100}, y = ${2:-760} })"
+    dsp "hl.dsp.window.center({ window = \"$win\" })"
+  else
+    [ "$floating" = "true" ] && dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+  fi
+  bus Compact false
+  rm -f "$STATE"
+  dsp "hl.dsp.focus({ window = \"$win\" })"
+}
+
+# Cam (2026-10-02): "When i have a tool open ... If i click print the page
+# attatchs to the tool so when i close the tool it closes the document as
+# well. I need any app opened while the tool is up to remain seperate from the
+# tool." While the popup has focus Hyprland opens every new window ON the
+# scratchpad, so a print preview or a browser hid with the tool. NeuroNet
+# watches for that (quick_watch.py) and runs this: the tool turns into a
+# window, tiled beside the new app on the workspace in front of Cam, still in
+# its compact look -- its key tucks it away again (popup, above).
+# A floating window (a file picker, a dialog) belongs to the tool: left alone.
+dock() {
+  local other="$1" o target addr ws floating win
+  [ -n "$other" ] || exit 0
+  case "$other" in 0x*) ;; *) other="0x$other" ;; esac
+  # spliced into a Hyprland command below: a window address and nothing else
+  [[ "$other" =~ ^0x[0-9a-fA-F]+$ ]] || exit 0
+  w=$(win_json); [ -n "$w" ] || exit 0
+  addr=$(field .address); ws=$(field .workspace.name); floating=$(field .floating)
+  [ "$addr" = "$other" ] && exit 0
+  o=$(hyprctl clients -j | jq -c --arg a "$other" '[.[] | select(.address == $a)][0] // empty')
+  [ -n "$o" ] || exit 0
+  [ "$(jq -r .workspace.name <<<"$o")" = "special:$SPECIAL" ] || exit 0
+  [ "$(jq -r .floating <<<"$o")" = "true" ] && exit 0
+  target=$(hyprctl monitors -j | jq -r '[.[] | select(.focused)][0].activeWorkspace.name // empty')
+  [ -n "$target" ] || exit 0
+  win="address:$addr"
+  hide_special
+  if [ "$ws" = "special:$SPECIAL" ]; then
+    dsp "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\", follow = false })"
+    [ "$floating" = "true" ] && dsp "hl.dsp.window.float({ window = \"$win\", action = \"toggle\" })"
+  fi
+  dsp "hl.dsp.window.move({ window = \"address:$other\", workspace = \"$target\" })"
+  dsp "hl.dsp.focus({ window = \"address:$other\" })"
+}
+
+# ---- without Hyprland: KDE Plasma and other desktops (2026-10-14) ----------
+# Cam: "is it possible to have a KDE desktop environment and still have the
+# app run in the background and brought up with the shortcuts". There's no
+# scratchpad, so NeuroNet shows and hides its own window (org.neuronet.App
+# Show/Hide/State -- neuronet.ShownWindow) and neuronet-raise asks KWin to
+# bring it to the front. Same keys, same rules: a tool's key floats it over
+# what you're doing (about three quarters of the screen, centred), the same
+# key again puts it away; Super+Alt+O the whole app (maximised).
+on_hyprland() { [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ] && command -v hyprctl >/dev/null 2>&1; }
+
+app_owned() {
+  busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
+    NameHasOwner s org.neuronet.App 2>/dev/null | grep -q true
+}
+app_state() {
+  busctl --user call org.neuronet.App /org/neuronet/App org.neuronet.App State 2>/dev/null \
+    | sed -E 's/^s "(.*)"$/\1/'
+}
+app_call() { busctl --user call org.neuronet.App /org/neuronet/App org.neuronet.App "$@" >/dev/null 2>&1; }
+
+plain_running() {   # started hidden if it isn't running; then wait for it
+  app_owned && return 0
+  launch --hidden                       # its lock stops two quick presses starting two
+  for _ in $(seq 1 150); do app_owned && return 0; sleep 0.2; done
+  notify-send "NeuroNet" "NeuroNet didn't open. What it said: $START_LOG -- or run neuronet-doctor." 2>/dev/null
+  exit 1
+}
+
+plain_popup() {
+  local section="$1" nohide="${2:-}"
+  plain_running
+  if [ -z "$nohide" ] && [ "$(app_state)" = popup ] \
+     && { [ -z "$section" ] || [ "$(cat "$STATE" 2>/dev/null)" = "$section" ]; }; then
+    app_call Hide; exit 0
+  fi
+  app_call Quick sb "$section" true
+  [ -n "$section" ] && echo "$section" >"$STATE"
+  app_call Show s popup
+  "$APP_DIR/neuronet-raise" "$CLASS" --center
+}
+
+plain_full() {
+  local may_hide="$1"
+  plain_running
+  if [ "$may_hide" = yes ] && [ "$(app_state)" = full ]; then app_call Hide; exit 0; fi
+  app_call Compact b false
+  rm -f "$STATE"
+  app_call Show s full
+  "$APP_DIR/neuronet-raise" "$CLASS"
+}
+
+if ! on_hyprland && [ -z "${NEURONET_QUICK_CLASS:-}" ]; then
+  case "$action" in
+    dock) exit 0 ;;                      # only Hyprland opens other apps inside the popup
+    open) section_off "${2:-}" && exit 0
+          plain_popup "${2:-}" nohide ;;
+    full) plain_full yes ;;
+    show) plain_full no ;;
+    start) if welcome_wanted; then plain_full no; else app_owned || launch --hidden; fi ;;
+    hide) app_owned && app_call Hide ;;
+    toggle) if [ "$(app_state)" = hidden ] || ! app_owned; then plain_popup "$(cat "$STATE" 2>/dev/null)" nohide; else app_call Hide; fi ;;
+    -h|--help) sed -n '2,30p' "$0" ;;
+    *) section_off "$action" && exit 0
+       plain_popup "$action" ;;
+  esac
+  exit 0
+fi
+
+case "$action" in
+  dock) dock "${2:-}" ;;
+  open) section_off "${2:-}" && exit 0
+        popup "${2:-}" nohide ;;
+  full) full yes ;;
+  show) full no ;;
+  # At login. On a new computer -- no NeuroNet data yet, the welcome not
+  # answered -- NeuroNet opens in view, on its welcome (Stage 3, 2026-09-29).
+  start) if welcome_wanted; then full no; else [ -n "$(win_json)" ] || launch; fi ;;
+  hide) hide_special ;;
+  toggle)
+    if special_shown; then hide_special; else popup "$(cat "$STATE" 2>/dev/null)"; fi ;;
+  -h|--help) sed -n '2,30p' "$0" ;;
+  *) section_off "$action" && exit 0
+     popup "$action" ;;
+esac

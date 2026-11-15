@@ -1,0 +1,231 @@
+{
+  "//": [
+    "Content for ui/pet/core/24-people-of-the-world-and.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "PEOPLE": {
+    "farmyard": {
+      "id": "giles",
+      "name": "Farmer Giles",
+      "look": {"skin": 1, "hair": 3, "outfit": 0},
+      "says": "Can't keep up with it all on my own, I can't.",
+      "quests": [
+        {
+          "id": "breakfast",
+          "name": "Eggs for breakfast",
+          "text": "\"The hens won't lay for me and the spuds won't dig themselves.\"",
+          "needs": [{"bring": {"chickenegg": 5, "potato": 10}}],
+          "reward": {"coins": 150, "items": {"woodcrate": 1}, "xp": {"farming": 150}}
+        },
+        {
+          "id": "thatfox",
+          "name": "That fox!",
+          "text": "\"Gideon Fox has had three of my hens this week. Teach him a lesson.\"",
+          "needs": [{"boss": "farmyard"}],
+          "reward": {"coins": 300, "items": {"uncommonegg": 1}, "xp": {"attack": 250}}
+        }
+      ]
+    },
+    "pasture": {
+      "id": "bess",
+      "name": "Shepherd Bess",
+      "look": {"skin": 2, "hair": 1, "outfit": 3},
+      "says": "Mind the sheep -- they mind you.",
+      "quests": [
+        {
+          "id": "shearing",
+          "name": "Shearing season",
+          "text": "\"My shears broke. Bring me wool and I'll see you right.\"",
+          "needs": [{"bring": {"wool": 15}}],
+          "reward": {"coins": 250, "xp": {"crafting": 200}}
+        },
+        {
+          "id": "lostlambs",
+          "name": "Lost lambs",
+          "text": "\"Two of my lambs wandered off. Have a look round the Pasture for me?\"",
+          "needs": [{"secrets": ["pasture", 2]}],
+          "reward": {"coins": 400, "items": {"clovercharm": 1}}
+        }
+      ]
+    },
+    "meadow": {
+      "id": "nell",
+      "name": "Beekeeper Nell",
+      "look": {"skin": 0, "hair": 2, "outfit": 2},
+      "says": "Bzzz. Sorry -- you get used to it.",
+      "quests": [
+        {
+          "id": "hives",
+          "name": "Flowers for the hives",
+          "text": "\"The bees are hungry. Wildflowers, and a little comb to start them off.\"",
+          "needs": [{"bring": {"flower": 20, "honeycomb": 5}}],
+          "reward": {"coins": 300, "xp": {"foraging": 250}}
+        },
+        {
+          "id": "stung",
+          "name": "Stung",
+          "text": "\"I've been stung something rotten. Could you brew me something?\"",
+          "needs": [{"bring": {"minorhealing": 5}}],
+          "reward": {"coins": 500, "items": {"honeycomb": 10, "pagebandage": 1}, "xp": {"alchemy": 300}}
+        }
+      ]
+    },
+    "forest": {
+      "id": "ash",
+      "name": "Ranger Ash",
+      "look": {"skin": 1, "hair": 0, "outfit": 1},
+      "says": "Keep to the paths. Mostly. And if you hunt with a bow, come and see me -- there's more to it than arrows.",
+      "quests": [
+        {
+          "id": "trapperstrade",
+          "name": "The trapper's trade",
+          "cls": "hunter",
+          "text": "\"A bow's all very well, but a Hunter who can't set a snare goes hungry. Twigs and thread make a snare at your crafting bench; thread makes a net at the spinning wheel. Catch 5 creatures in them -- press Tools in a fight, or put them in your hunt plan.\"",
+          "needs": [{"caught": 5}],
+          "reward": {"coins": 300, "items": {"bronzeknife": 1, "ropesnare": 4, "twinenet": 3}, "xp": {"ranged": 300}}
+        },
+        {
+          "//": "V6 (2026-10-18): Ranger Ash hands you the Bestiary -- a need of 'beat' (core/40-zzz-zc).",
+          "id": "quarry",
+          "name": "Know your quarry",
+          "text": "\"Before you go swinging at everything in my woods -- learn how it fights. Beat ten chickens, then look in your Bestiary at home. Every creature's like that: ten and you know where to hit it, fifty and what shrugs you off, a hundred and fifty and its elements. And for the patient\" -- he holds up a golden feather -- \"a chicken gives you this, after near a thousand of them. Every creature has something.\"",
+          "needs": [{"beat": ["chicken", 10]}],
+          "reward": {"coins": 250, "xp": {"attack": 150, "defence": 100}}
+        },
+        {
+          "id": "spiders",
+          "name": "Too many legs",
+          "text": "\"The spiders and boars are taking over. Thin them out.\"",
+          "needs": [{"kills": ["forest", 40]}],
+          "reward": {"coins": 500, "items": {"pageimprovise": 1}, "xp": {"attack": 400, "defence": 200}}
+        },
+        {
+          "id": "hart",
+          "name": "The white hart",
+          "text": "\"There's an old story about a white deer in these woods. Find everything the Forest hides.\"",
+          "needs": [{"secrets": ["forest", 3]}],
+          "reward": {"coins": 1000, "items": {"huntercharm": 1}}
+        }
+      ]
+    },
+    "deepforest": {
+      "id": "mab",
+      "name": "Old Mab",
+      "look": {"skin": 0, "hair": 1, "outfit": 3},
+      "says": "Sit, sit. The woods talk, if you listen.",
+      "quests": [
+        {
+          "id": "soup",
+          "name": "Mushroom soup",
+          "text": "\"My old bones want soup. Mushrooms -- and the glowing ones, for flavour.\"",
+          "needs": [{"bring": {"mushroom": 30, "glowcap": 5}}],
+          "reward": {"coins": 800, "xp": {"cooking": 400}}
+        },
+        {
+          "id": "tellme",
+          "name": "Tell me what you saw",
+          "text": "\"Go deep, and tell me what you find.\"",
+          "needs": [{"secrets": ["deepforest", 2]}, {"boss": "deepforest"}],
+          "reward": {"coins": 1500, "items": {"relic": 1}}
+        }
+      ]
+    },
+    "coast": {
+      "id": "salt",
+      "name": "Old Salt",
+      "look": {"skin": 2, "hair": 3, "outfit": 1},
+      "says": "Arr. The fog's in again.",
+      "quests": [
+        {
+          "id": "favour",
+          "name": "A fisherman's favour",
+          "text": "\"My nets are torn and the market's waiting. Tuna and lobster, quick as you like.\"",
+          "needs": [{"bring": {"rawtuna": 20, "rawlobster": 10}}],
+          "reward": {"coins": 800, "xp": {"fishing": 400}}
+        },
+        {
+          "id": "boat",
+          "name": "Build me a boat",
+          "text": "\"Bring me the makings and I'll build you a boat -- the only way to the Misty Isle, and your first ship. Hal at the Shipyard can take it from there.\"",
+          "needs": [{"bring": {"teak": 15, "cloth": 10, "ironbar": 5}}, {"level": ["fishing", 35]}],
+          "reward": {"items": {"boat": 1}, "xp": {"crafting": 500}}
+        }
+      ]
+    },
+    "jungle": {
+      "id": "reyes",
+      "name": "Explorer Reyes",
+      "look": {"skin": 3, "hair": 2, "outfit": 2},
+      "says": "I've mapped every inch of this jungle. Nearly.",
+      "quests": [
+        {
+          "id": "samples",
+          "name": "Samples",
+          "text": "\"For my collection: orchids, and good mahogany.\"",
+          "needs": [{"bring": {"orchid": 5, "mahogany": 10}}],
+          "reward": {"coins": 1500, "xp": {"foraging": 600}}
+        },
+        {
+          "id": "intogreen",
+          "name": "Into the green",
+          "text": "\"The Deep Jungle's past the vines. Prove you can handle yourself and you can have my old machete.\"",
+          "needs": [{"level": ["attack", 40]}, {"boss": "jungle"}],
+          "reward": {"items": {"machete": 1}, "coins": 1000}
+        }
+      ]
+    },
+    "crystalcaves": {
+      "id": "brokk",
+      "name": "Brokk the miner",
+      "look": {"skin": 1, "hair": 3, "outfit": 3},
+      "says": "Mind your head. And your lantern.",
+      "quests": [
+        {
+          "id": "shiny",
+          "name": "Shiny things",
+          "text": "\"Quartz, and amethyst if you find it. I'm building something.\"",
+          "needs": [{"bring": {"quartz": 20, "amethyst": 3}}],
+          "reward": {"coins": 2000, "xp": {"mining": 800}}
+        },
+        {
+          "id": "shaftropes",
+          "name": "Rope for the shafts",
+          "text": "\"The old shaft ropes are rotten through. New rope, and iron for the pulleys.\"",
+          "needs": [{"bring": {"rope": 15, "ironbar": 5}}],
+          "reward": {"coins": 2500, "xp": {"crafting": 900}}
+        }
+      ]
+    },
+    "mistyisle": {
+      "id": "finn",
+      "name": "Castaway Finn",
+      "look": {"skin": 2, "hair": 0, "outfit": 0},
+      "says": "A ship! Well -- a boat. Close enough!",
+      "quests": [
+        {
+          "id": "rescue",
+          "name": "Starving",
+          "text": "\"Three years on fish I couldn't cook. Bring me a proper meal or ten.\"",
+          "needs": [{"bring": {"swordfish": 10}}],
+          "reward": {"coins": 2500, "items": {"relic": 1}, "xp": {"cooking": 600}}
+        }
+      ]
+    },
+    "frostpeak": {
+      "id": "sigrun",
+      "name": "Sigrun the guide",
+      "look": {"skin": 0, "hair": 2, "outfit": 1},
+      "says": "The summit isn't for everyone.",
+      "quests": [
+        {
+          "id": "summit",
+          "name": "The summit",
+          "text": "\"Show me you're tough enough, and find what the mountain hides.\"",
+          "needs": [{"level": ["defence", 45]}, {"secrets": ["frostpeak", 2]}],
+          "reward": {"coins": 3000, "items": {"relic": 2}}
+        }
+      ]
+    }
+  },
+  "SNIFFERS": ["fox", "dog", "wolf", "mole", "hare"]
+}

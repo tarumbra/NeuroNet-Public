@@ -1,0 +1,12 @@
+/* ==========================================================================
+   Code -> IDE: the shell in NeuroNet's page. Everything inside it is
+   Algorithm's own stylesheet, ide.css, loaded into the shadow root.
+   ========================================================================== */
+#code-shell {
+  display: flex; flex-direction: column;
+  flex: 1; min-width: 0; height: 100%; min-height: 0;
+  padding: 14px 16px;
+  box-sizing: border-box;
+}
+/* An id selector with a display beats the browser's own [hidden] rule. */
+#code-shell[hidden] { display: none; }

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroNet first-time set-up
+Comment=Sets NeuroNet up the first time someone logs in (NeuroNet ISO)
+Exec=/usr/bin/neuronet-firstboot
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

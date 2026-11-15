@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "neuronet.oracle",
+  "name": "NeuroNet Oracle",
+  "version": "1.0.0",
+  "author": "Cam",
+  "description": "Today's Oracle card from your own NeuroNet decks, from the top bar: the card face-down, turn it over, read it, and save it to NeuroNet's Journal. Tarot and Lenormand have their own tools, neuronet.tarot and neuronet.lenormand.",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "NeuroNet Oracle",
+    "description": "Today's Oracle card from your NeuroNet decks",
+    "category": "Lifestyle",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

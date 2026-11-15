@@ -1,0 +1,203 @@
+{
+  "//": [
+    "Content for ui/pet/core/01-a-the-skill-registry.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "SKILL_REG": [
+    {
+      "id": "foraging",
+      "name": "Foraging",
+      "verb": "foraging",
+      "group": "gathering",
+      "trips": true,
+      "coins": 0.6,
+      "icon": "berry",
+      "accent": "#4caf50",
+      "hint": "A card for each material — the dearest higher up; the top spots need a better basket"
+    },
+    {
+      "id": "fishing",
+      "name": "Fishing",
+      "verb": "fishing",
+      "group": "gathering",
+      "trips": true,
+      "coins": 0.7,
+      "icon": "trout",
+      "accent": "#3f8fd8",
+      "hint": "Ponds, rivers and lakes"
+    },
+    {
+      "id": "mining",
+      "name": "Mining",
+      "verb": "mining",
+      "group": "gathering",
+      "trips": true,
+      "coins": 0.6,
+      "icon": "bronzepick",
+      "accent": "#8c7bc4",
+      "hint": "Ore and gems — you need a pickaxe"
+    },
+    {
+      "id": "lumbering",
+      "name": "Lumbering",
+      "verb": "lumbering",
+      "group": "gathering",
+      "trips": true,
+      "coins": 0.6,
+      "icon": "birch",
+      "accent": "#3d8b4f",
+      "hint": "Logs need a hatchet; without one, twigs"
+    },
+    {
+      "id": "digging",
+      "name": "Digging",
+      "verb": "digging",
+      "group": "gathering",
+      "trips": true,
+      "coins": 1,
+      "icon": "soil",
+      "accent": "#a8783f",
+      "hint": "Soil, clay, fragments and buried things"
+    },
+    {
+      "id": "runecrafting",
+      "name": "Runecrafting",
+      "verb": "runecrafting",
+      "group": "gathering",
+      "trips": true,
+      "coins": 0.6,
+      "icon": "airrune",
+      "accent": "#8a7ad8",
+      "hint": "Essence stones into runes, at the shrines around the map"
+    },
+    {
+      "id": "cooking",
+      "name": "Cooking",
+      "verb": "cooking",
+      "group": "making",
+      "bench": "kitchen",
+      "icon": "berrytart",
+      "pageIcon": "berrytart",
+      "accent": "#e0803a",
+      "hint": ""
+    },
+    {
+      "id": "crafting",
+      "name": "Crafting",
+      "verb": "crafting",
+      "group": "making",
+      "bench": "crafting",
+      "icon": "obj_bench",
+      "accent": "#c9773d",
+      "hint": "Pottery, sewing, weaving, woodwork and stone tools"
+    },
+    {
+      "id": "smelting",
+      "name": "Smelting",
+      "verb": "smelting",
+      "group": "making",
+      "bench": "furnace",
+      "icon": "obj_furnace",
+      "accent": "#d0773d",
+      "hint": "Ore into bars — the fire costs coins"
+    },
+    {
+      "id": "smithing",
+      "name": "Smithing",
+      "verb": "smithing",
+      "group": "making",
+      "bench": "anvil",
+      "icon": "obj_anvil",
+      "accent": "#7f8f9f",
+      "hint": "Bars into tools, armour and weapons — and mending"
+    },
+    {
+      "id": "fletching",
+      "name": "Fletching",
+      "verb": "fletching",
+      "group": "making",
+      "bench": "fletching",
+      "icon": "obj_fletch",
+      "accent": "#a8743a",
+      "hint": "Bows, arrows and rods"
+    },
+    {
+      "id": "herblore",
+      "name": "Herblore",
+      "verb": "brewing",
+      "group": "making",
+      "bench": "herblore",
+      "icon": "obj_herbs",
+      "accent": "#4fa86a",
+      "hint": "Identify herbs for your Herbarium"
+    },
+    {
+      "id": "alchemy",
+      "name": "Alchemy",
+      "verb": "mixing",
+      "group": "making",
+      "bench": "apothecary",
+      "icon": "salve",
+      "accent": "#6fb08a",
+      "hint": "Potions, draughts and salves"
+    },
+    {
+      "id": "gemology",
+      "name": "Gemology",
+      "verb": "cutting gems",
+      "group": "making",
+      "bench": "gemology",
+      "icon": "obj_gems",
+      "accent": "#5fc2b9",
+      "hint": "Cut gems, rings and necklaces"
+    },
+    {
+      "id": "enchanting",
+      "name": "Enchanting",
+      "verb": "enchanting",
+      "group": "making",
+      "bench": "enchanting",
+      "icon": "tomeflaming",
+      "pageIcon": "obj_gems",
+      "accent": "#9a6ad8",
+      "hint": "Wands, staffs, hats and cloaks"
+    },
+    {
+      "id": "construction",
+      "name": "Construction",
+      "verb": "building",
+      "group": "making",
+      "bench": "sawbench",
+      "icon": "plank",
+      "accent": "#b08a5a",
+      "hint": "Planks for building your house"
+    },
+    {
+      "id": "farming",
+      "name": "Farming",
+      "verb": "farming",
+      "group": "gathering",
+      "page": "pet:farm",
+      "icon": "carrot",
+      "accent": "#8fb03a",
+      "hint": "Plots and the windowsill's herb pots"
+    },
+    {
+      "//": "the Farm (2026-10-12)",
+      "id": "husbandry",
+      "name": "Husbandry",
+      "verb": "tending the animals",
+      "group": "gathering",
+      "page": "pet:ranch",
+      "icon": "obj_husbandry",
+      "accent": "#c79a4a",
+      "hint": "The animals on your Farm -- Fern's quest opens it"
+    },
+    {"//": "the Marketplace (2026-10-17, V4 + Q4): stealing, pickpocketing and lockpicking -- yours for good, whatever your class", "id": "larceny", "name": "Larceny", "verb": "thieving", "group": "gathering", "page": "pet:market", "icon": "oldcoin", "accent": "#7a5aa8", "hint": "Pick pockets and lift goods in the Marketplace; pick the locks of crates found hunting"},
+    {"id": "attack", "name": "Attack", "verb": "hunting", "group": "combat", "page": "pet:hunt", "icon": "bronzesword"},
+    {"id": "ranged", "name": "Ranged", "verb": "hunting", "group": "combat", "page": "pet:hunt", "icon": "shortbow"},
+    {"id": "magic", "name": "Magic", "verb": "casting", "group": "combat", "page": "pet:spellbook", "icon": "willowwand"},
+    {"id": "defence", "name": "Defence", "verb": "hunting", "group": "combat", "page": "pet:hunt", "icon": "bronzehelm"},
+    {"id": "hitpoints", "name": "Hitpoints", "verb": "hunting", "group": "combat", "page": "pet:hunt", "icon": "heart"}
+  ]
+}

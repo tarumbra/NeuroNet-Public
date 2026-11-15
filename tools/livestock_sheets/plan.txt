@@ -1,0 +1,5 @@
+# Painted farm animals (2026-10-12), grown up, for the Farm: ~/Pictures/NeuroPets Art Assets/Pets/livestock- sheet N.jpeg, 4x4,
+# left to right. "N pose: kind/breed,..." -- pose a = standing three-quarter (cards), walk = walking (the Farm map, later).
+# Order matches the vault notes Art 6 and Art 8 (NeuroPets Farm vault). "-" skips a cell.
+1 a: hen/brown,hen/rooster,cow/friesian,goat/nanny,sheep/ewe,pig/sow,pony/bay,drafthorse/bay,duck/white,sheep/sheared,goose/grey,drafthorse/grey,cow/jersey,cow/highland,sheep/black,pony/shetland
+2 walk: hen/brown,hen/rooster,cow/friesian,goat/nanny,sheep/ewe,pig/sow,pony/bay,drafthorse/bay,duck/white,sheep/sheared,goose/grey,drafthorse/grey

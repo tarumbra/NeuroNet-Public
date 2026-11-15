@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "neuronet.gamemode",
+  "name": "NeuroNet Game Mode",
+  "version": "1.0.0",
+  "author": "Cam",
+  "description": "A controller in the top bar. On: NeuroNet, its desktop widgets, bar widgets, background services and shortcuts all stop, to free memory for games. Off: they all come back. Omarchy's own shortcuts are never touched.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "NeuroNet Game Mode",
+    "description": "Pause NeuroNet for gaming",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

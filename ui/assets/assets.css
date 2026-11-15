@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Assets — categories down the left, tiles on a see-through check so
+   clip art shows as it really is.
+   ========================================================================== */
+.as-head, .as-layout { --border: var(--line-strong, #4a3b2a); }
+.as-layout { display: flex; gap: 20px; align-items: flex-start; }
+.as-cats { flex: none; width: 210px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; }
+.as-cat {
+  display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-radius: 8px;
+  border: 1px solid transparent; background: none; color: var(--muted, var(--text-faint));
+  font: inherit; font-size: 0.875rem; text-align: left; cursor: pointer;
+}
+.as-cat span { opacity: .7; font-size: 0.75rem; }
+.as-cat:hover { background: var(--hover); color: var(--ink, var(--text)); }
+.as-cat.on { border-color: var(--accent); color: var(--ink, var(--text)); background: var(--hover); }
+.as-main { flex: 1; min-width: 0; }
+.as-q { width: 100%; max-width: 420px; margin-bottom: 8px; }
+.as-drop-hint {
+  font-size: 0.75rem; color: var(--muted, var(--text-faint)); padding: 6px 10px; margin-bottom: 8px;
+  border: 1px dashed var(--border); border-radius: 8px;
+}
+.as-drop-hint.on { border-color: var(--accent); color: var(--ink, var(--text)); background: var(--hover); }
+.as-sec { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted, var(--text-faint)); margin: 14px 0 8px; }
+.as-sec span { opacity: .7; }
+.as-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.as-tile { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.as-th {
+  aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--border); overflow: hidden;
+  display: grid; place-items: center; padding: 8px; box-sizing: border-box;
+  background: repeating-conic-gradient(#d9d9d9 0 25%, #f2f2f2 0 50%) 0 0 / 16px 16px;
+}
+.as-th svg, .as-th img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.as-img { width: 100%; height: 100%; background: center / contain no-repeat; display: block; }
+.as-name { font-size: 0.82rem; color: var(--ink, var(--text)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.as-meta { font-size: 0.7rem; color: var(--muted, var(--text-faint)); }
+.as-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.as-btns .btn { padding: 2px 7px; font-size: 0.72rem; }
+.as-tile .bd-del:hover { color: var(--danger, #d44); border-color: var(--danger, #d44); }
+.as-add-ways { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; margin: 10px 0; }
+.as-file { cursor: pointer; }
+.as-made-cat { font-size: 0.75rem; color: var(--muted, var(--text-faint)); }
+
+/* the assets in the materials panel (Scrapbook, Covers, Boards) */
+.sb-asset-filter { display: flex; flex-direction: column; gap: 4px; margin: 2px 0 6px; }
+.sb-asset-filter .input { width: 100%; }
+.sb-asset .sb-photo-th { background-size: contain;
+  background-color: transparent; background-image: none; }
+
+@media (max-width: 760px) {
+  .as-layout { flex-direction: column; }
+  .as-cats { width: 100%; flex-direction: row; flex-wrap: wrap; position: static; }
+}

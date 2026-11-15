@@ -1,0 +1,683 @@
+/* ==========================================================================
+   Algorithm — ink and indigo. NeuroNet: Code -> IDE.
+
+   Loaded INSIDE #code-shell's shadow root (ide.js), so nothing here can
+   reach NeuroNet's page, and NeuroNet's rules can't reach in. Changed from
+   Algorithm's style.css: :root and html/body became :host, and its own
+   palette became NeuroNet's theme colours (below), with darker syntax
+   colours for NeuroNet's light themes at the end.
+
+   Same structural conventions as Coach Cam and Clone: every colour is a
+   variable, the shell is a rail plus a work area, cards and sheets behave
+   the same way. Three apps by one person that work the same way are worth
+   more than three that each look clever.
+
+   The palette is cooler than Clone's and darker than Coach Cam's, because
+   this is the one you stare at for hours. Syntax colours are chosen for
+   separation at a glance rather than for brightness, and measured against
+   the editor background rather than guessed.
+   ========================================================================== */
+
+:host {
+  /* NeuroNet's theme, under Algorithm's names: the IDE follows whatever
+     theme NeuroNet is wearing (Hearth, Professional, Follow Omarchy ...).
+     --accent, --text, --good, --danger and --on-accent are the same names
+     in both, so they simply come through from the page. */
+  --black:      var(--bg);
+  --surface:    var(--panel);
+  --raised:     var(--elevated);
+  --raised-2:   var(--hover);
+  --hairline:   var(--line);
+  --editor-bg:  var(--bg);
+
+  --accent-dim: var(--accent-deep);
+  --glow:       var(--accent-hover);
+
+  --text-dim:   var(--muted);
+  --text-faint: var(--faint);
+
+  --warn:       var(--star);
+
+  --tap: 42px;
+  --rail-w: 240px;
+
+  --heading:      var(--ink);
+  --scrim:        rgba(4, 6, 10, .66);
+  --shadow:       rgba(0, 0, 0, .5);
+  --tint-accent:  var(--accent-tint);
+  --hairline-soft: var(--line-strong);
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A2A9B8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+
+  --font: inherit;
+  --mono: "JetBrains Mono", "Fira Code", ui-monospace, "SF Mono",
+          "Roboto Mono", Menlo, Consolas, monospace;
+  --code-size: 13.5px;
+  --code-line: 1.55;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:host {
+  display: flex; flex-direction: column;
+  flex: 1; min-width: 0; min-height: 0; height: 100%;
+  overflow: hidden;
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+:host([hidden]) { display: none; }
+
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+input, select, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+.ic { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor;
+      stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- shell ------------------------------------------------------------- */
+
+.app { display: flex; flex: 1; min-height: 0; height: 100%;
+        border: 1px solid var(--hairline); border-radius: 12px; overflow: hidden; }
+
+.rail {
+  width: var(--rail-w); flex: none;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--hairline);
+}
+
+.brand { display: flex; align-items: center; gap: 9px; padding: 15px 14px 11px; }
+.brand-mark { width: 21px; height: 21px; color: var(--accent); }
+.brand-name { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+
+.rail-body { flex: 1; overflow-y: auto; padding: 4px 8px 10px; }
+.rail-foot {
+  padding: 9px 14px;
+  border-top: 1px solid var(--hairline);
+  font-size: 11px; color: var(--text-faint);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.work { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.topbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.topbar-title { flex: 1; min-width: 0; }
+.crumb { display: block; font-size: 11px; color: var(--text-faint);
+         white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.page-title { display: block; font-size: 16px; font-weight: 650;
+              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar-actions { display: flex; gap: 4px; }
+
+.icon-btn {
+  display: grid; place-items: center;
+  width: 34px; height: 34px; border-radius: 8px;
+  color: var(--text-dim);
+}
+.icon-btn:hover { background: var(--raised); color: var(--text); }
+.icon-btn.on { background: var(--tint-accent); color: var(--accent); }
+
+/* ---- panes ------------------------------------------------------------- */
+
+.panes { flex: 1; display: flex; min-height: 0; }
+.pane { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+.pane-split {
+  width: 5px; flex: none; cursor: col-resize;
+  background: var(--hairline);
+}
+.pane-split:hover, .pane-split.is-dragging { background: var(--accent); }
+
+.pane-body { flex: 1; min-height: 0; overflow: auto; display: flex; }
+.pane-body > * { flex: 1; min-width: 0; }
+
+/* ---- the editor -------------------------------------------------------- */
+
+.ed { display: flex; height: 100%; background: var(--editor-bg); }
+
+.ed-gutter {
+  flex: none; width: 52px;
+  padding: 12px 8px 12px 0;
+  overflow: hidden;
+  text-align: right;
+  font-family: var(--mono); font-size: var(--code-size);
+  line-height: var(--code-line);
+  color: var(--text-faint);
+  background: var(--editor-bg);
+  border-right: 1px solid var(--hairline);
+  user-select: none;
+}
+
+.ed-scroll { position: relative; flex: 1; min-width: 0; }
+
+/* Both layers must agree on every metric that decides where a glyph lands.
+   Set together, never separately — one mismatch and the colours drift off
+   the characters further down the file. */
+.ed-paint, .ed-input {
+  margin: 0;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: var(--code-size);
+  line-height: var(--code-line);
+  letter-spacing: 0;
+  tab-size: 4;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+  border: 0;
+}
+
+.ed-paint {
+  position: absolute; inset: 0;
+  overflow: auto;
+  pointer-events: none;
+  color: var(--text);
+}
+.ed-paint code { font: inherit; }
+
+.ed-input {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  resize: none; outline: none;
+  background: transparent;
+  /* Transparent text over the painted layer; the caret stays visible. */
+  color: transparent;
+  caret-color: var(--glow);
+}
+.ed-input::selection { background: rgba(124, 156, 245, .3); color: transparent; }
+
+/* ---- syntax ------------------------------------------------------------
+   Chosen for separation rather than brightness: comments recede, strings
+   and numbers are warm, keywords and types are cool, and no two adjacent
+   token types share a hue. All measured at 4.5:1 or better against the
+   editor background except comments, which are deliberately quieter at
+   3.6:1 — they are meant to be skimmed past, and they are never the only
+   way anything is conveyed. */
+.t-comment  { color: #6B7488; font-style: italic; }
+.t-string   { color: #E5A66A; }
+.t-number   { color: #D9915F; }
+.t-keyword  { color: #8FA9F7; font-weight: 600; }
+.t-builtin  { color: #63C2B4; }
+.t-def      { color: #E4D08A; }
+.t-name     { color: var(--text); }
+.t-punct    { color: #8B93A6; }
+.t-decorator, .t-attr { color: #C79BE8; }
+.t-macro    { color: #C79BE8; }
+.t-lifetime { color: #E08B7A; }
+.t-tag      { color: #8FA9F7; }
+.t-selector { color: #E4D08A; }
+.t-prop     { color: #63C2B4; }
+.t-atrule   { color: #C79BE8; }
+.t-colour   { color: #E5A66A; }
+.t-doctype  { color: #6B7488; }
+.t-text     { color: var(--text); }
+
+/* ---- tree -------------------------------------------------------------- */
+
+.tree-row {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%; padding: 5px 8px;
+  border-radius: 7px;
+  font-size: 13px; color: var(--text-dim);
+  text-align: left;
+}
+.tree-row:hover { background: var(--raised); color: var(--text); }
+.tree-row.on { background: var(--tint-accent); color: var(--text); }
+.tree-row .ic { width: 15px; height: 15px; color: var(--text-faint); }
+.tree-row.on .ic { color: var(--accent); }
+.tree-name { flex: 1; min-width: 0; overflow: hidden;
+             text-overflow: ellipsis; white-space: nowrap; }
+.tree-children { margin-left: 11px; border-left: 1px solid var(--hairline);
+                 padding-left: 5px; }
+
+.rail-section {
+  display: flex; align-items: center; gap: 6px;
+  margin: 12px 4px 5px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+.rail-section button { margin-left: auto; color: var(--text-faint); }
+.rail-section button:hover { color: var(--accent); }
+
+/* ---- pieces ------------------------------------------------------------ */
+
+.card {
+  display: block; width: 100%; text-align: left;
+  padding: 11px 12px; margin-bottom: 7px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+}
+button.card:hover { border-color: var(--accent-dim); }
+.card-title { font-size: 14px; font-weight: 600; }
+.card-sub { margin-top: 3px; font-size: 12px; color: var(--text-faint); }
+
+.primary-btn, .secondary-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: var(--tap); padding: 0 15px;
+  border-radius: 10px; font-size: 14px; font-weight: 600;
+}
+.primary-btn { background: var(--accent); color: var(--on-accent); }
+.primary-btn:hover { background: var(--glow); }
+.secondary-btn { background: var(--raised); color: var(--text); }
+.secondary-btn:hover { background: var(--raised-2); }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+
+.empty {
+  padding: 40px 24px; text-align: center;
+  color: var(--text-faint); font-size: 13.5px; line-height: 1.65;
+}
+.empty .ic { width: 26px; height: 26px; margin-bottom: 10px; opacity: .6; }
+
+.field { margin-bottom: 11px; }
+.field label { display: block; margin-bottom: 5px; font-size: 12px; color: var(--text-dim); }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 0 11px;
+  background: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 9px; font-size: 14.5px; color: var(--text);
+}
+.field input, .field select { height: 42px; }
+.field textarea { min-height: 90px; padding: 10px 11px; font-family: var(--mono); }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+
+select {
+  appearance: none; -webkit-appearance: none;
+  background-image: var(--select-arrow);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
+  padding-right: 32px;
+}
+select option { background-color: var(--raised); color: var(--text); }
+
+.note {
+  margin: 8px 0; padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px 10px 10px 4px;
+  font-size: 13px; line-height: 1.6; color: var(--text-dim);
+}
+.note.is-bad { border-left-color: var(--danger); }
+
+/* ---- guide pane -------------------------------------------------------- */
+
+.guide-md {
+  padding: 20px 26px;
+  max-width: 760px;
+  font-size: 14.5px; line-height: 1.7; color: var(--text-dim);
+}
+.guide-md h1, .guide-md h2, .guide-md h3 { color: var(--heading); line-height: 1.3; }
+.guide-md h1 { font-size: 22px; margin: 0 0 12px; }
+.guide-md h2 { font-size: 18px; margin: 22px 0 8px; }
+.guide-md h3 { font-size: 15px; margin: 18px 0 6px; }
+.guide-md code {
+  font-family: var(--mono); font-size: 12.5px;
+  background: var(--raised); padding: .1em .35em; border-radius: 4px;
+  color: var(--glow);
+}
+.guide-md pre {
+  background: var(--editor-bg); border: 1px solid var(--hairline);
+  border-radius: 9px; padding: 12px 14px; overflow-x: auto;
+}
+.guide-md pre code { background: none; padding: 0; color: var(--text); }
+.guide-md a { color: var(--accent); }
+.guide-md blockquote {
+  margin: 12px 0; padding-left: 12px;
+  border-left: 3px solid var(--hairline); color: var(--text-faint);
+}
+
+.pdf-page { display: block; margin: 0 auto 12px; max-width: 100%;
+            background: #fff; border-radius: 4px; }
+.pdf-wrap { padding: 14px; }
+
+/* ---- sheets and toast --------------------------------------------------- */
+
+.sheet-host {
+  position: fixed; inset: 0; z-index: 80;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet-scrim { position: absolute; inset: 0; background: var(--scrim); }
+.sheet {
+  position: relative; width: 100%; max-width: 540px;
+  max-height: 86vh; overflow-y: auto;
+  padding: 8px 18px 22px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 15px 15px 0 0;
+  box-shadow: 0 -8px 28px var(--shadow);
+}
+.sheet-grip { width: 36px; height: 4px; margin: 4px auto 10px;
+              border-radius: 999px; background: var(--raised-2); }
+.sheet-title { margin: 0 0 11px; font-size: 15px; font-weight: 650; }
+.sheet-item {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; min-height: var(--tap); padding: 9px 4px;
+  border-bottom: 1px solid var(--hairline);
+  text-align: left; font-size: 14px;
+}
+.sheet-item:last-of-type { border-bottom: 0; }
+.sheet-item .ic { color: var(--text-faint); }
+.sheet-item.is-danger { color: var(--danger); }
+.sheet-item.is-danger .ic { color: var(--danger); }
+.sheet-item-sub { display: block; font-size: 11.5px; color: var(--text-faint); }
+.sheet-row { display: flex; gap: 8px; margin-top: 13px; }
+.sheet-row .primary-btn, .sheet-row .secondary-btn { flex: 1; }
+.sheet-note { margin: 0 0 11px; font-size: 13px; line-height: 1.6; color: var(--text-dim); }
+
+.mono-block {
+  max-height: 260px; overflow: auto;
+  margin: 0 0 10px; padding: 11px 12px;
+  background: var(--editor-bg);
+  border: 1px solid var(--hairline);
+  border-radius: 9px;
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.55;
+  color: var(--text-dim);
+  white-space: pre-wrap; word-break: break-word;
+}
+
+.toast {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  z-index: 90; max-width: 80vw;
+  padding: 10px 15px;
+  background: var(--raised-2); color: var(--text);
+  border: 1px solid var(--hairline);
+  border-radius: 10px; font-size: 13px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+/* ---- terminal -----------------------------------------------------------
+   Lives under the editor, collapsed to a bar by default. The bar never goes
+   away: it is both the status line and the way back to the panel, so the
+   terminal can never be lost. */
+
+.stack { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.panes { flex: 1; min-height: 0; }
+
+.term-split {
+  height: 5px; flex: none; cursor: row-resize;
+  background: var(--hairline);
+}
+.term-split:hover, .term-split.is-dragging { background: var(--accent); }
+
+.term {
+  flex: none;
+  height: 260px;
+  min-height: 90px;
+  display: flex; flex-direction: column;
+  background: var(--editor-bg);
+  border-top: 1px solid var(--hairline);
+}
+
+.term-out {
+  flex: 1; min-height: 0; overflow-y: auto;
+  padding: 10px 14px;
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.5;
+  color: var(--text-dim);
+  white-space: pre-wrap; word-break: break-word;
+}
+.term-out .exit-ok { color: var(--good); }
+.term-out .exit-bad { color: var(--danger); }
+.term-out .term-cmd { color: var(--accent); }
+
+/* The sixteen ANSI colours, mapped to this palette rather than to raw
+   terminal colours, so a test runner's output sits in the app instead of
+   looking pasted in from elsewhere. */
+.a-30, .a-90 { color: #6E7687; }
+.a-31, .a-91 { color: #E2705A; }
+.a-32, .a-92 { color: #5FB98B; }
+.a-33, .a-93 { color: #D9A441; }
+.a-34, .a-94 { color: #7C9CF5; }
+.a-35, .a-95 { color: #C79BE8; }
+.a-36, .a-96 { color: #63C2B4; }
+.a-37, .a-97 { color: var(--text); }
+.a-b { font-weight: 700; }
+.a-i { font-style: italic; }
+.a-u { text-decoration: underline; }
+
+.term-input-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 14px;
+  border-top: 1px solid var(--hairline);
+}
+.term-prompt { color: var(--accent); font-family: var(--mono); }
+.term-input {
+  flex: 1; min-width: 0;
+  background: none; border: 0; outline: none;
+  font-family: var(--mono); font-size: 12.5px; color: var(--text);
+}
+.term-input::placeholder { color: var(--text-faint); }
+
+.term-bar {
+  flex: none;
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 10px 0 6px;
+  height: 32px;
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
+}
+.term-toggle {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 8px; border-radius: 7px;
+  font-size: 12px; color: var(--text-dim);
+}
+.term-toggle:hover { background: var(--raised); color: var(--text); }
+.term-toggle .ic {
+  width: 14px; height: 14px;
+  transform: rotate(-90deg);
+  transition: transform .15s ease;
+}
+.term-toggle[aria-expanded="true"] .ic { transform: rotate(90deg); }
+
+.term-status {
+  flex: 1; min-width: 0;
+  font-family: var(--mono); font-size: 11.5px; color: var(--text-faint);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.term-status.is-running { color: var(--accent); }
+.term-status.is-bad { color: var(--danger); }
+
+.term-bar-actions { display: flex; gap: 4px; }
+.term-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: 7px;
+  font-size: 12px; color: var(--text-dim);
+}
+.term-btn:hover { background: var(--raised); color: var(--text); }
+.term-btn .ic { width: 13px; height: 13px; }
+
+/* ---- find and replace ---------------------------------------------------
+   Sits above the editor rather than floating over it: a bar overlapping the
+   first lines of the file hides exactly the code you are searching in. */
+
+.find {
+  flex: none;
+  padding: 7px 10px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+}
+.find-row { display: flex; align-items: center; gap: 6px; }
+.find-row + .find-row { margin-top: 6px; }
+
+.find-what, .find-with {
+  flex: 1; min-width: 0; height: 30px; padding: 0 9px;
+  background: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 7px;
+  font-family: var(--mono); font-size: 12.5px; color: var(--text);
+}
+.find-what:focus, .find-with:focus { outline: none; border-color: var(--accent); }
+
+.find-count {
+  flex: none; min-width: 64px; text-align: right;
+  font-family: var(--mono); font-size: 11.5px; color: var(--text-faint);
+}
+.find-count.is-none { color: var(--danger); }
+
+.find-btn {
+  flex: none;
+  min-width: 30px; height: 30px; padding: 0 8px;
+  border-radius: 7px;
+  background: var(--raised); color: var(--text-dim);
+  font-size: 12.5px;
+}
+.find-btn:hover { background: var(--raised-2); color: var(--text); }
+.find-btn.on { background: var(--tint-accent); color: var(--accent); }
+
+/* Every match gets a quiet wash; the current one gets a solid block, so the
+   eye lands on where you are rather than on all of them equally. */
+.ed-paint .m {
+  background: rgba(124, 156, 245, .2);
+  border-radius: 2px;
+}
+.ed-paint .m-now {
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.ed-paint .m-now * { color: var(--on-accent) !important; }
+
+/* ---- project search ------------------------------------------------------ */
+
+.rail-search {
+  display: flex; align-items: center; gap: 6px;
+  margin: 0 2px 8px; padding: 0 8px;
+  height: 32px;
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+}
+.rail-search .ic { width: 14px; height: 14px; color: var(--text-faint); }
+.rail-search input {
+  flex: 1; min-width: 0;
+  background: none; border: 0; outline: none;
+  font-size: 12.5px; color: var(--text);
+}
+.rail-search input::placeholder { color: var(--text-faint); }
+.rail-search .find-btn { height: 22px; min-width: 24px; padding: 0 5px; font-size: 11px; }
+
+.search-summary {
+  margin: 2px 6px 8px;
+  font-size: 11px; color: var(--text-faint);
+}
+.search-file { margin-bottom: 10px; }
+.search-path {
+  display: flex; align-items: center; gap: 6px;
+  padding: 3px 6px;
+  font-family: var(--mono); font-size: 11.5px; color: var(--text-dim);
+}
+.search-path .ic { width: 13px; height: 13px; color: var(--text-faint); }
+.search-path span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.search-hit {
+  display: flex; gap: 8px; width: 100%;
+  padding: 3px 6px 3px 20px;
+  border-radius: 6px;
+  text-align: left;
+  font-family: var(--mono); font-size: 11.5px;
+  color: var(--text-faint);
+}
+.search-hit:hover { background: var(--raised); color: var(--text); }
+.search-line { flex: none; min-width: 22px; text-align: right; opacity: .7; }
+.search-text { flex: 1; min-width: 0; overflow: hidden;
+               text-overflow: ellipsis; white-space: nowrap; }
+.search-hit mark {
+  background: var(--tint-accent); color: var(--glow);
+  border-radius: 2px; padding: 0 1px;
+}
+
+/* ---- tabs ---------------------------------------------------------------
+   One strip per pane. Items keep their DOM while open — hidden, not
+   destroyed — so switching tabs preserves undo history and scroll position. */
+
+.pane-stack { flex: 1; min-height: 0; position: relative; display: flex; }
+.pane-stack > .pane-body { flex: 1; min-width: 0; }
+
+.tabs {
+  flex: none;
+  display: flex; align-items: stretch;
+  min-height: 34px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  display: flex; align-items: center; gap: 6px;
+  flex: none; max-width: 200px;
+  padding: 0 8px 0 10px;
+  border-right: 1px solid var(--hairline);
+  font-size: 12.5px; color: var(--text-faint);
+}
+.tab:hover { background: var(--raised); color: var(--text-dim); }
+.tab.on {
+  background: var(--editor-bg);
+  color: var(--text);
+  /* A line along the top rather than a different fill: it marks the active
+     tab without making the strip look like two different surfaces. */
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+.tab .ic { width: 13px; height: 13px; flex: none; }
+.tab-name {
+  flex: 1; min-width: 0; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+  font-family: var(--mono); font-size: 12px;
+}
+.tab-dot { color: var(--warn); font-size: 9px; }
+.tab-close {
+  flex: none; width: 16px; height: 16px;
+  display: grid; place-items: center;
+  border-radius: 4px; font-size: 14px; line-height: 1;
+  color: var(--text-faint);
+}
+.tab-close:hover { background: var(--raised-2); color: var(--text); }
+
+.tab-spacer { flex: 1; min-width: 8px; }
+.tab-tool {
+  flex: none; width: 32px;
+  display: grid; place-items: center;
+  color: var(--text-faint);
+}
+.tab-tool:hover { color: var(--text); }
+.tab-tool .ic { width: 15px; height: 15px; }
+
+/* ---- current line -------------------------------------------------------
+   A band behind the caret's line, and its number lit in the gutter. Quiet
+   on purpose: it is for finding your place when you look back at the
+   screen, not for drawing the eye while you read. */
+
+.ed-line {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  background: rgba(124, 156, 245, .06);
+  border-left: 2px solid rgba(124, 156, 245, .35);
+  pointer-events: none;
+}
+.ed-gutter div.on { color: var(--accent); }
+
+/* ---- NeuroNet's light themes ----------------------------------------------
+   Algorithm's syntax colours were measured against a near-black editor; on
+   Professional's cream they wash out. --scheme is NeuroNet's own "light" or
+   "dark" (theme.js), read here with a style query. */
+@container style(--scheme: light) {
+  .t-comment  { color: #6B6F78; }
+  .t-string   { color: #A0541C; }
+  .t-number   { color: #9A4B12; }
+  .t-keyword  { color: #3550B8; }
+  .t-builtin  { color: #1F7A6C; }
+  .t-def      { color: #7A5A00; }
+  .t-punct    { color: #5E6472; }
+  .t-decorator, .t-attr, .t-macro, .t-atrule { color: #7B3FA8; }
+  .t-lifetime { color: #A63E2C; }
+  .t-tag      { color: #3550B8; }
+  .t-selector { color: #7A5A00; }
+  .t-prop     { color: #1F7A6C; }
+  .t-colour   { color: #A0541C; }
+  .t-doctype  { color: #6B6F78; }
+}

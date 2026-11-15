@@ -1,0 +1,3 @@
+lofi.ogg -- Cam's "NeuroCafe.mp3" (2026-10-21, V22 q5), loudness-normalised to -23 LUFS and made Opus for the game.
+Source to confirm with Cam: it sits beside atlasaudio-ambient-lofi-576613.mp3 in Downloads (a Pixabay-style name; Pixabay's licence allows use in apps).
+jazz.ogg -- Cam's "cafe Jazz.mp3" (~/Music/NeuroCafe Sound Assets/Music, 3 Nov 2026): the silence at both ends trimmed so it loops, levelled to match the lofi (-23 LUFS), Opus. tools/cut_cafe_sounds.py makes it.

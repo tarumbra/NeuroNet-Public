@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Training: a circuit, after (audit mock-up)</title>
+<!-- The UX designer's mock-up for the 19 October audit: the sample circuit ("Ten-minute finisher") laid out for reading at a
+     glance. Not wired to anything: a picture to agree on before it's built. Colours are NeuroNet's own dark theme, with the
+     muted text raised from ~3.5:1 to 6.6:1. -->
+<style>
+:root { --bg: #0c100d; --panel: #131814; --card: #1a211b; --line: #2a332b; --text: #e6ece6; --muted: #93a094; --accent: #5fa665;
+  --a: #4fa38a; --b: #c9a24a; --c: #c8566a; --w: #c9773d; }
+* { box-sizing: border-box; }
+body { margin: 0; width: 1400px; height: 880px; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, sans-serif; display: grid; grid-template-columns: 58px 1fr; overflow: hidden; }
+.rail { background: #0a0d0b; border-right: 1px solid var(--line); }
+.app { display: grid; grid-template-rows: 42px 52px 1fr; }
+.top { border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; }
+/* navigation: four groups instead of fourteen tabs */
+.nav { display: flex; gap: 6px; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--line); }
+.nav .grp { display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 10px; background: var(--panel); }
+.nav .grp b { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 8px 0 6px; }
+.nav a { white-space: nowrap; padding: 6px 9px; border-radius: 7px; font-size: 14px; color: var(--text); text-decoration: none; }
+.nav a.on { background: var(--accent); color: #0b130c; font-weight: 700; }
+.nav .more { margin-left: auto; color: var(--muted); font-size: 14px; }
+.body { display: grid; grid-template-columns: 330px 1fr; min-height: 0; }
+/* the list */
+.list { border-right: 1px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.list h2 { margin: 0; font-size: 18px; display: flex; justify-content: space-between; align-items: center; }
+.list h2 span { font-size: 14px; color: var(--muted); font-weight: 400; }
+.search { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; color: var(--muted); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; } .chip { padding: 4px 11px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); font-size: 14px; }
+.chip.on { background: var(--accent); color: #0b130c; border-color: var(--accent); font-weight: 700; }
+.group { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.row { padding: 11px 13px; border-radius: 10px; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid transparent; }
+.row.on { border-left-color: var(--accent); background: #18221a; }
+.row b { display: block; font-size: 16px; } .row span { color: var(--muted); font-size: 14px; }
+/* the session */
+.view { padding: 22px 28px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-content: start; overflow: hidden; }
+.head { grid-column: 1 / -1; display: flex; align-items: flex-end; gap: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.head h1 { margin: 0; font-size: 30px; line-height: 1.1; }
+.meta { display: flex; gap: 8px; margin-top: 8px; } .meta span { padding: 3px 10px; border-radius: 999px; background: var(--card); color: var(--text); font-size: 14px; }
+.meta span.tag { background: rgba(95,166,101,.18); color: #9ed4a2; }
+.acts { margin-left: auto; display: flex; gap: 8px; }
+.btn { padding: 9px 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: 600 14px system-ui; }
+.btn.go { background: var(--accent); color: #0b130c; border-color: var(--accent); }
+.block { margin-bottom: 16px; }
+.bh { display: flex; align-items: baseline; gap: 10px; margin: 0 0 6px; }
+.bh .badge { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-weight: 800; font-size: 15px; color: #0b130c; }
+.bh h3 { margin: 0; font-size: 17px; } .bh small { color: var(--muted); font-size: 14px; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+th { text-align: left; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 7px 12px; border-bottom: 1px solid var(--line); }
+td { padding: 9px 12px; font-size: 15px; border-bottom: 1px solid var(--line); } tr:last-child td { border-bottom: 0; }
+td.n { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 17px; white-space: nowrap; } td.ex b { font-size: 16px; } td.ex span { display: block; color: var(--muted); font-size: 14px; }
+td.r { color: var(--muted); white-space: nowrap; }
+.side { display: flex; flex-direction: column; gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.card h4 { margin: 0 0 8px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.card ul { margin: 0; padding-left: 18px; } .card li { margin-bottom: 4px; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; } .kv b { text-align: right; font-variant-numeric: tabular-nums; }
+.note { color: var(--muted); font-size: 14px; }
+</style><style>
+.steps { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin: 8px 0 4px; }
+.steps div { border-radius: 8px; padding: 8px 4px; text-align: center; font-size: 13px; background: var(--panel); border: 1px solid var(--line); }
+.steps div b { display: block; font-size: 15px; }
+.steps .s1 { border-top: 4px solid var(--a); } .steps .s2 { border-top: 4px solid var(--b); }
+.explain { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 12px 14px; font-size: 15px; }
+</style></head><body>
+<div class="rail"></div>
+<div class="app">
+  <div class="top">Mon, 19 Oct · 10:09 AM</div>
+  <nav class="nav">
+    <div class="grp"><b>Plan</b><a>Sessions</a><a class="on">Circuits</a><a>Programs</a><a>Calendar</a></div>
+    <div class="grp"><b>Library</b><a>Exercises</a><a>Guides</a><a>Documents</a><a>Books</a></div>
+    <div class="grp"><b>People</b><a>Athletes</a><a>Groups</a></div>
+    <div class="grp"><b>Tools</b><a>Calculators</a><a>Gym view</a></div>
+    <span class="more">Settings</span>
+  </nav>
+  <div class="body">
+    <aside class="list">
+      <h2>Circuits <span>1</span></h2>
+      <div class="search">Search circuits</div>
+      <div class="row on"><b>Ten-minute finisher</b><span>2 stations · EMOM · 10 min</span></div>
+    </aside>
+    <main class="view">
+      <div class="head">
+        <div><h1>Ten-minute finisher</h1>
+          <div class="meta"><span>10 min</span><span>2 stations</span><span>10 rounds</span><span class="tag">EMOM</span></div></div>
+        <div class="acts"><button class="btn go">▶ Start the timer</button><button class="btn">Print</button><button class="btn">Edit</button></div>
+      </div>
+      <div>
+        <div class="explain"><b>Every minute on the minute (EMOM).</b> When each minute starts, do that minute's station; rest for what's left of the minute. Odd minutes are station 1, even minutes station 2. Ten minutes in all.</div>
+        <div class="bh" style="margin-top:16px"><h3>The ten minutes</h3></div>
+        <div class="steps">
+          <div class="s1"><b>1</b>Swing</div><div class="s2"><b>2</b>Pushup</div><div class="s1"><b>3</b>Swing</div><div class="s2"><b>4</b>Pushup</div><div class="s1"><b>5</b>Swing</div>
+          <div class="s2"><b>6</b>Pushup</div><div class="s1"><b>7</b>Swing</div><div class="s2"><b>8</b>Pushup</div><div class="s1"><b>9</b>Swing</div><div class="s2"><b>10</b>Pushup</div>
+        </div>
+        <div class="bh" style="margin-top:16px"><h3>Stations</h3></div>
+        <table><tr><th>Station</th><th>Each minute</th><th>Load</th></tr>
+          <tr><td class="ex"><b>1 · Kettlebell Swing</b><span>Hinge · hips drive the bell</span></td><td class="n">12 reps</td><td class="n">20 kg</td></tr>
+          <tr><td class="ex"><b>2 · Pushup</b><span>Push · body in one line</span></td><td class="n">8 reps</td><td class="r">body</td></tr></table>
+      </div>
+      <aside class="side">
+        <div class="card"><h4>At a glance</h4><div class="kv"><span>Time</span><b>10 min</b><span>Total reps</span><b>60 swings, 40 pushups</b><span>Work : rest</span><b>about 30 s : 30 s</b></div></div>
+        <div class="card"><h4>You'll need</h4><ul><li>Kettlebell 20 kg</li><li>A clock or the timer</li></ul></div>
+        <div class="card"><h4>Notes after the session</h4><p class="note">Nothing yet.</p><button class="btn">Add a note</button></div>
+      </aside>
+    </main>
+  </div>
+</div>
+</body></html>

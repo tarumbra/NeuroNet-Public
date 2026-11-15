@@ -1,0 +1,2345 @@
+/* ==========================================================================
+   Hearth — warm near-black, red ember.
+   ==========================================================================
+   Same treatment as the rest of the family: surfaces are a near-black
+   shifted TOWARD the accent, so the whole app reads as one piece rather
+   than a highlight colour dropped onto neutral grey.
+
+   The palette is Cheffo's, adopted when the two apps merged. Hearth's
+   original purple lives on as the "Plum" theme, and every other theme
+   in themes.js works the same way — by replacing the variables in the
+   :root block below. See themes.js for how, and for why Windows 98 is
+   the one theme that needs more than colour.
+   ========================================================================== */
+:root {
+  /* v7 — Cam: "I want the UI colours however to match the Cheffo app.
+     So change the base Hearth to be that colour scheme."
+
+     Cheffo's palette, carried over wholesale when the two apps merged:
+     surfaces are a near-black shifted TOWARD the accent (warm, not
+     neutral grey), so the whole UI reads as one family rather than a
+     red accent sitting on a cold background. Hearth's old purple is
+     still available as the "Plum" theme.
+
+     EVERY COLOUR HERE IS A VARIABLE ON PURPOSE. themes.js works by
+     writing replacement values onto the document element, so this block
+     is both the default theme and the fallback for anything a theme
+     chooses not to override. A hardcoded colour anywhere else in this
+     file is a colour no theme can change — if you add one, add it here
+     instead. */
+  color-scheme: dark;
+
+  --bg:        #0A0605;
+  --panel:     #130C0A;
+  /* spacing scale and easing, carried over from the source apps.
+     These were referenced by 16 sites but never defined here, and an
+     undefined custom property resolves to nothing while still
+     overriding — inline padding:var(--sp-3) collapsed to zero. */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 14px; --sp-4: 22px;
+
+  /* The training pane's two column widths.
+
+     These live on :root, NOT on #cf-shell, and that placement is the
+     whole reason the divider can be dragged. Coach Cam's resizer sets
+     them with document.documentElement.style.setProperty -- an inline
+     value on <html>. An inline value on an element cannot beat a
+     declaration made on one of its descendants, so while these sat on
+     #cf-shell the drag ran, saved a width, and nothing moved.
+
+     --sidebar-w is 0 because Coach Cam's own sidebar is hidden here;
+     KinCrux's sidebar is outside this pane and has its own width. The
+     detail column is positioned at sidebar-w + list-w INSIDE the pane,
+     so this must stay 0 or the detail column shifts right by that much.
+
+     --list-w is clamped 260-720 by the resizer and remembered in the
+     training module's prefs. */
+  --sidebar-w: 0px;
+  --list-w: 320px;
+
+  /* Training block colours, from Coach Cam. RGB triples rather than
+     colours, because they are used as rgb(var(--block-rgb)) and as
+     rgb(var(--block-rgb) / .15) for the matching tint -- one value
+     serving both. blocks.js builds the name at runtime from a letter,
+     so a missing one resolves to nothing and the label loses its
+     colour silently. All eleven are here for that reason. */
+  --block-a:  45, 108, 78;    --block-b:  138, 99, 20;
+  --block-c:  159, 58, 76;    --block-d:  55, 92, 133;
+  --block-e:  102, 72, 140;   --block-f:  158, 82, 54;
+  --block-g:  35, 106, 112;   --block-h:  116, 98, 56;
+  --block-warmup:   150, 94, 26;
+  --block-cooldown: 70, 92, 155;
+  --block-neutral:  100, 106, 100;
+  --block-rgb: var(--block-neutral);
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --elevated:  #1B1210;
+  --hover:     #251F18;
+  --active:    #2E251B;
+
+  --line:      #33291E;
+  --line-strong: #4A3B2A;
+
+  --ink:       #F0E7D8;
+  --text:      #DDD0BF;
+  --muted:     #A9998A;
+  --faint:     #6E6152;
+
+  --accent:       #C7392C;
+  --accent-hover: #E04A3B;
+  --accent-deep:  #8E2418;
+  --accent-tint:  rgba(199, 57, 44, 0.16);
+  --on-accent:    #FFF6F3;
+
+  --good:      #6FBF8B;
+  --danger:    #E0616B;
+  --danger-tint: rgba(224, 97, 107, 0.15);
+  --star:      #D9A441;
+
+  /* Cashbox used a serif for money headings and a mono for figures.
+     Defined here rather than remapped away: they are a real part of how
+     that module reads, and an undefined custom property resolves to
+     nothing while still overriding, which is how you get an unstyled
+     heading with no error anywhere. */
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-mono: "SF Mono", Consolas, "Liberation Mono", monospace;
+
+  --radius: 10px;
+  --radius-lg: 16px;
+  --border-weight: 1px;
+  --gloss: none;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font); overflow: hidden;
+}
+/* 100%, not 100vh. With UI scale zooming the page, a window-height unit is
+   itself enlarged by the zoom, so the app came out taller than the window
+   and its bottom -- Notes' Import buttons among it -- was cut off and
+   unreachable at 150% and above. 100% of html and body, which are 100% of
+   the window, resolves the same way in every engine, zoomed or not. */
+#ss-app { display: flex; height: 100%; }
+
+/* ------------------------------------------------------------ sidebar */
+#ss-sidebar {
+  width: 216px; flex: none;
+  display: flex; flex-direction: column;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 15px 10px 10px;
+}
+#ss-brand {
+  display: flex; align-items: center; gap: 9px;
+  padding: 2px 8px 16px;
+  font-size: 1.125rem; font-weight: 800; color: var(--ink);
+  letter-spacing: -.3px;
+}
+#ss-brand .ic { width: 22px; height: 22px; color: var(--accent); }
+
+/* CAM'S MARK, top left.
+
+   Cam: "Please incorporate this as the icon in the top left of the App."
+
+   It is his own artwork, traced to paths from the image he sent, so it is
+   sharp at any size and on any display rather than a green bitmap on a
+   black square that would have to be cut out and would blur.
+
+   It stays HIS GREEN rather than following the theme accent, the way a
+   logo does: accent-coloured it would be red in Hearth and purple in
+   Plum, which is a different logo every time.
+
+   But not the same green everywhere, because measured on his raw
+   #5FA665 it does not hold up on the light themes:
+
+     hearth 6.57   greenblack 6.45   contrast 6.60   plum 6.55
+     professional 2.78   aero 2.83   icecream 2.80   lightgreen 2.95
+     win98 1.92
+
+   3:1 is the floor for a graphic and five themes are under it, win98
+   badly. (I had written 2.2 for win98 here from memory before measuring;
+   it is 1.92. Numbers in comments are worth checking.)
+
+   So the light themes get a deeper green and the dark ones keep HIS
+   EXACTLY, which is what light-dark() is for -- it reads the
+   color-scheme the theme engine already sets on :root for every theme.
+   Checked in WebKitGTK 2.52 rather than assumed: supported, and it
+   returns rgb(95,166,101) under a dark scheme, his own value untouched.
+   Measured again with it in place: the dark themes carry his own green at
+   6.45 to 6.60, the light ones the deeper green at 6.05 to 6.41, and
+   win98's grey -- the hardest background in the app -- at 4.17.
+
+   Three declarations, cheapest first, each overriding the last where the
+   engine understands it: a plain value, then a mix toward --ink (which
+   darkens on light and lightens on dark, so it is a reasonable answer
+   anywhere), then light-dark(). An engine missing the later two lands on
+   his green, which is right on the dark themes he actually uses.
+
+   These are FILLED outlines, so they deliberately do not use .ic, whose
+   whole job is fill:none + stroke:currentColor. Given .ic they would
+   vanish and leave hairline ghosts. */
+:root {
+  --brand-base: #5FA665;
+  --brand-deep: #2E6B38;
+  --brand: var(--brand-base);
+  --brand: color-mix(in srgb, var(--brand-base) 72%, var(--ink) 28%);
+  --brand: light-dark(var(--brand-deep), var(--brand-base));
+}
+#ss-brand .ss-brand-mark,
+#ss-brand .ss-brand-node {
+  color: var(--brand);
+  fill: currentColor; stroke: none;
+  display: block; flex: none;
+}
+/* The wordmark takes the room it has. 384:100, so 152px wide is 40 tall,
+   which sits comfortably beside the collapse chevron in a 216px sidebar. */
+#ss-brand .ss-brand-mark { width: 152px; height: 39.6px; }
+#ss-brand .ss-brand-node { display: none; width: 27px; height: 32px; }
+
+/* Collapsed, only the neuron is left -- it is the part of his mark that
+   still reads at this size. 27px rather than the 22px the other icons
+   use: the spokes are fine lines and below about 26px they close up into
+   a blob. */
+#ss-app.nav-collapsed #ss-brand .ss-brand-mark { display: none; }
+#ss-app.nav-collapsed #ss-brand .ss-brand-node { display: block; }
+
+/* Cam: "when i hover over an icon in the left sidebar a weird horizontal
+   scrollbar appears, disappears when i move off it."
+
+   overflow-x: hidden is the fix, and the reason is worth writing down
+   because it is easy to reintroduce. A menu card is width: 100% of this
+   box, and hovering one nudges it with transform: translateX(1px) -- the
+   "resting, hovered, chosen" states Cam asked for. A transform does not
+   affect LAYOUT, so nothing here gets wider, but it does count towards
+   SCROLLABLE OVERFLOW: the card's right edge lands one pixel past the
+   box. Measured exactly that, expanded and collapsed alike: scrollWidth
+   196 against a clientWidth of 195.
+
+   One pixel is enough for a scrollbar. And because a box with one axis
+   set to auto treats a `visible` other axis as auto too, overflow-x was
+   never really visible here to begin with -- it was auto, waiting for
+   something to overflow it. A vertical menu has no business scrolling
+   sideways at any width, so it is told not to. */
+#ss-nav { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+.ss-nav-h {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.6875rem; font-weight: 800; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--faint);
+  padding: 0 6px 0 10px; margin: 14px 0 6px;
+}
+
+/* v2 — Cam: "No album creation tool". It existed, as a bare "+"
+   floated into the heading with no styling at all — nothing about it
+   said it could be pressed. A real button with a hover state does. */
+.ss-nav-add {
+  width: 22px; height: 22px; flex: none;
+  display: grid; place-items: center;
+  border: none; border-radius: 6px;
+  background: none; color: var(--faint);
+  cursor: pointer; padding: 0;
+}
+.ss-nav-add:hover { background: var(--hover); color: var(--accent-hover); }
+.ss-nav-add .ic { width: 14px; height: 14px; stroke-width: 2.4; }
+
+/* the empty state IS the button — "None yet" read as a dead end, which
+   is exactly why the feature looked missing */
+.ss-nav-empty {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 7px 10px; margin-bottom: 2px;
+  border: 1px dashed var(--line-strong); border-radius: var(--radius);
+  background: none; color: var(--muted);
+  font-size: 0.8125rem; font-weight: 600; font-family: inherit;
+  text-align: left; cursor: pointer;
+}
+.ss-nav-empty:hover { border-color: var(--accent); color: var(--accent-hover); }
+.ss-nav-empty .ic { width: 14px; height: 14px; flex: none; }
+.ss-nav-h:first-child { margin-top: 0; }
+.ss-nav-btn {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 8px 10px; margin-bottom: 2px;
+  border: none; background: none; border-radius: var(--radius);
+  color: var(--text); font-size: 0.875rem; font-weight: 600;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.ss-nav-btn:hover { background: var(--hover); color: var(--ink); }
+.ss-nav-btn.on { background: var(--accent-tint); color: var(--accent-hover); }
+.ss-nav-btn .ic { width: 16px; height: 16px; flex: none; }
+.ss-nav-count {
+  margin-left: auto; font-size: 0.71875rem; color: var(--faint); font-weight: 600;
+}
+.ss-nav-btn.on .ss-nav-count { color: var(--accent-hover); }
+/* I20: what's new in Collaboration, on Scribe and on Collaboration (and its page tab) */
+.ss-nav-new {
+  margin-left: auto; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; flex: none;
+  background: var(--accent); color: var(--on-accent, #fff); font-size: 0.6875rem; font-weight: 700; line-height: 18px; text-align: center;
+}
+.ss-tab .ss-nav-new { margin-left: 6px; }
+
+#ss-sidebar-foot {
+  flex: none; padding-top: 10px; border-top: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ss-foot-btn {
+  display: flex; align-items: center; gap: 9px;
+  width: 100%; padding: 8px 10px;
+  border: none; background: none; border-radius: var(--radius);
+  color: var(--muted); font-size: 0.84375rem; font-weight: 600;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.ss-foot-btn:hover { background: var(--hover); color: var(--text); }
+.ss-foot-btn .ic { width: 16px; height: 16px; }
+
+/* --------------------------------------------------------------- main */
+#ss-main { flex: 1; min-width: 0; overflow-y: auto; padding: 22px 26px 40px; }
+.ic {
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+.page-h { font-size: 1.375rem; font-weight: 800; color: var(--ink); margin: 0 0 3px; }
+.page-sub { color: var(--muted); font-size: 0.875rem; margin: 0 0 18px; }
+.stamp { color: var(--muted); font-size: 0.8125rem; }
+.empty { text-align: center; color: var(--faint); padding: 48px 20px;
+         font-size: 0.90625rem; line-height: 1.6; }
+.row { display: flex; align-items: center; gap: 10px; }
+.wrap { flex-wrap: wrap; }
+.spacer { flex: 1; }
+
+/* ------------------------------------------------------------ buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 38px; padding: 0 15px;
+  border: 1px solid transparent; border-radius: var(--radius);
+  background: var(--elevated); color: var(--text);
+  font-size: 0.875rem; font-weight: 700; font-family: inherit; cursor: pointer;
+}
+.btn:hover { background: var(--hover); }
+/* A disabled button must LOOK disabled. Cashbox had this rule and I
+   removed it during the Money merge as a duplicate of the host's --
+   except the host never had one, so since then every disabled button in
+   the app has looked exactly like an enabled one. The `disabled`
+   attribute still blocked the click, so nothing broke; it just looked
+   like the app was ignoring you. */
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-danger { background: none; border-color: var(--danger); color: var(--danger); }
+/* Three kinds of button (2026-10-05, the audit: "bare text doesn't look
+   clickable"): primary -- filled in the action colour, one per screen at most;
+   secondary (.btn) -- a filled panel; quiet -- a thin outline, so a less
+   important action still reads as a button rather than a label. */
+.btn-quiet { background: none; color: var(--text); border-color: var(--line); font-weight: 600; }
+.btn-quiet:hover { background: var(--hover); color: var(--text); border-color: var(--line-strong); }
+.btn-sm { min-height: 31px; padding: 0 11px; font-size: 0.8125rem; }
+
+.input {
+  padding: 9px 12px; background: var(--bg);
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  color: var(--text); font-size: 0.875rem; font-family: inherit;
+}
+.input:focus { outline: none; border-color: var(--accent); }
+textarea.input { width: 100%; resize: vertical; line-height: 1.5; }
+.label { display: block; font-size: 0.78125rem; font-weight: 700;
+         color: var(--muted); margin: 14px 0 6px; }
+.label:first-child { margin-top: 0; }
+
+.panel {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 18px;
+}
+
+/* ------------------------------------------------------------- search */
+.ss-searchbar {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 9px 13px; margin-bottom: 14px;
+}
+.ss-searchbar .ic { width: 17px; height: 17px; color: var(--muted); flex: none; }
+.ss-searchbar input {
+  flex: 1; min-width: 0; background: none; border: none;
+  color: var(--text); font-size: 0.90625rem; font-family: inherit;
+}
+.ss-searchbar input:focus { outline: none; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.chip {
+  padding: 5px 11px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--panel);
+  color: var(--text); font-size: 0.78125rem; font-weight: 600; cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); }
+.chip.on { background: var(--accent); border-color: var(--accent);
+           color: var(--on-accent); }
+
+/* ------------------------------------------------------------ gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--tile, 172px), 1fr));
+  gap: 12px;
+}
+.tile {
+  position: relative; aspect-ratio: 1;
+  border-radius: var(--radius); overflow: hidden;
+  background: var(--elevated); cursor: pointer;
+  border: 2px solid transparent;
+}
+.tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tile:hover { border-color: var(--accent-deep); }
+.tile.picked { border-color: var(--accent); }
+.tile-check {
+  position: absolute; top: 7px; left: 7px;
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.75);
+  background: rgba(0,0,0,.42);
+  display: grid; place-items: center; color: #fff;
+}
+.tile.picked .tile-check { background: var(--accent); border-color: var(--accent); }
+.tile-check .ic { width: 13px; height: 13px; stroke-width: 3; }
+.tile-meta {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 16px 9px 7px;
+  background: linear-gradient(to top, rgba(0,0,0,.78), transparent);
+  font-size: 0.71875rem; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tile-stars {
+  position: absolute; top: 7px; right: 7px;
+  font-size: 0.6875rem; color: var(--star);
+  text-shadow: 0 1px 3px rgba(0,0,0,.8);
+}
+
+/* --------------------------------------------------------- selection */
+.selbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 11px 14px; margin-bottom: 14px;
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-deep);
+  border-radius: var(--radius);
+}
+
+/* --------------------------------------------------------- lightbox */
+#viewer-veil, #editor-veil {
+  position: fixed; inset: 0; z-index: 700;
+  background: rgba(4, 2, 8, .94);
+  display: none; align-items: center; justify-content: center;
+}
+#viewer-veil.open, #editor-veil.open { display: flex; }
+
+#modal-veil {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(8, 4, 14, .6);
+  display: none; align-items: center; justify-content: center;
+}
+#confirm-veil {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(8, 4, 14, .6);
+  display: none; align-items: center; justify-content: center;
+}
+#modal-veil.open, #confirm-veil.open { display: flex; }
+.modal {
+  width: min(92vw, 470px); max-height: 86vh;
+  background: var(--panel); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg); padding: 20px;
+  display: flex; flex-direction: column;
+}
+.modal h3 { margin: 0 0 12px; font-size: 1.0625rem; color: var(--ink); }
+.dlg-body { overflow-y: auto; flex: 1; }
+.dlg-row { display: flex; gap: 9px; margin-top: 16px; justify-content: flex-end; }
+
+#toasts {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 950; display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--elevated); border: 1px solid var(--line-strong);
+  border-radius: var(--radius); padding: 11px 18px; font-size: 0.875rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,.55);
+}
+.toast-error { border-color: var(--danger); color: var(--danger); }
+.toast-good { border-color: var(--good); color: var(--good); }
+
+/* ---------------------------------------------------- drag and drop */
+#drop-overlay {
+  position: fixed; inset: 0; z-index: 850;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(10, 6, 15, .88); pointer-events: none;
+}
+#drop-overlay.open { display: flex; }
+.drop-inner {
+  text-align: center; color: #fff;
+  border: 3px dashed rgba(255,255,255,.45);
+  border-radius: var(--radius-lg); padding: 44px 64px;
+}
+.drop-icon { font-size: 2.875rem; line-height: 1; margin-bottom: 10px; }
+.drop-title { font-size: 1.3125rem; font-weight: 700; }
+
+/* ------------------------------------------------------------ viewer */
+.viewer {
+  width: min(94vw, 1100px); max-height: 94vh;
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--panel); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.vw-stage {
+  flex: 1 1 auto; width: 100%; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.vw-stage img {
+  max-width: 100%; max-height: 72vh; width: auto; height: auto;
+  object-fit: contain; border-radius: var(--radius); display: block;
+}
+.vw-bar { width: 100%; display: flex; align-items: center; gap: 18px;
+          flex-wrap: wrap; }
+.vw-meta { flex: 1; min-width: 180px; }
+.vw-title { font-size: 1.03125rem; font-weight: 700; color: var(--ink); }
+.vw-sub { font-size: 0.78125rem; color: var(--muted); margin-top: 2px; }
+.vw-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.vw-chips .chip { cursor: default; }
+.vw-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.vw-stars { display: flex; gap: 1px; margin-right: 4px; }
+.vw-stars button {
+  border: none; background: none; cursor: pointer;
+  font-size: 1.0625rem; color: var(--faint); padding: 2px;
+}
+.vw-stars button.on { color: var(--star); }
+.vw-stars button:hover { color: var(--star); }
+
+.vw-close, .vw-nav {
+  position: fixed; z-index: 2;
+  width: 42px; height: 42px; border-radius: 50%;
+  border: none; background: rgba(255,255,255,.1); color: #fff;
+  display: grid; place-items: center; cursor: pointer;
+}
+.vw-close:hover, .vw-nav:hover { background: rgba(255,255,255,.2); }
+.vw-close { top: 20px; right: 24px; }
+.vw-nav { top: 50%; transform: translateY(-50%); }
+.vw-prev { left: 22px; }
+.vw-next { right: 22px; }
+.vw-next .ic { transform: rotate(180deg); }
+
+.vw-details {
+  width: 100%; margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.vw-details[hidden] { display: none; }
+.vw-detail-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+.vw-detail-grid div { display: flex; flex-direction: column; gap: 2px; }
+.vw-detail-grid span {
+  font-size: 0.65625rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4px; color: var(--faint);
+}
+.vw-detail-grid b {
+  font-size: 0.84375rem; color: var(--text); font-weight: 600;
+  word-break: break-word;
+}
+
+/* placeholder while a thumbnail loads */
+.ex-loading { width: 100%; height: 100%; background: var(--elevated); }
+/* A photo still on its way (2026-10-06, the audit's "loading placeholders"):
+   a soft, still frame rather than a blank -- not animated, as hundreds of
+   tiles pulsing would cost the very work the audit took out. */
+.tile .ex-loading {
+  background:
+    radial-gradient(circle at 32% 34%, color-mix(in srgb, var(--muted) 22%, transparent) 0 7%, transparent 8%),
+    linear-gradient(160deg, transparent 52%, color-mix(in srgb, var(--muted) 14%, transparent) 52% 100%),
+    linear-gradient(200deg, transparent 62%, color-mix(in srgb, var(--muted) 10%, transparent) 62% 100%),
+    var(--elevated);
+}
+
+/* settings manage rows */
+.manage-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+.manage-row:last-child { border-bottom: none; }
+.manage-row span { flex: 1; min-width: 0; }
+.manage-row .ic { width: 15px; height: 15px; }
+
+select.input { min-height: 38px; }
+input[type="range"] { accent-color: var(--accent); }
+
+/* ------------------------------------------------------------ editor */
+.editor {
+  width: min(94vw, 1080px); max-height: 94vh;
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--panel); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.ed-stage {
+  flex: 1 1 auto; width: 100%; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.ed-wrap {
+  position: relative; max-width: 100%; max-height: 66vh;
+  line-height: 0; cursor: crosshair; touch-action: none;
+}
+.ed-wrap canvas {
+  display: block; max-width: 100%; max-height: 66vh;
+  object-fit: contain; border-radius: var(--radius);
+}
+.ed-crop-box {
+  position: absolute; border: 2px dashed #fff;
+  box-shadow: 0 0 0 2000px rgba(0, 0, 0, .5);
+  pointer-events: none;
+}
+
+.ed-bar { width: 100%; display: flex; align-items: center; gap: 8px;
+          flex-wrap: wrap; }
+.ed-filters { display: flex; gap: 5px; flex-wrap: wrap; margin-left: 6px; }
+
+.ed-adjust {
+  width: 100%; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px; margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.ed-adjust[hidden] { display: none; }
+.ed-slider { display: flex; flex-direction: column; gap: 5px; }
+.ed-slider label {
+  font-size: 0.8125rem; color: var(--text);
+  display: flex; justify-content: space-between;
+}
+.ed-slider input { width: 100%; }
+
+.ed-hint {
+  width: 100%; margin: 12px 0 0;
+  font-size: 0.78125rem; color: var(--muted); line-height: 1.55;
+}
+
+/* ==========================================================================
+   Ported from Camily, remapped to Hearth's palette
+   ==========================================================================
+   The calendar, contacts and dashboard markup came across from Camily,
+   so its styling has to come with it. Camily's colour variables are
+   rewritten to Hearth's purple set rather than carried over, which is
+   what keeps the merged screens looking like one app instead of two
+   stitched together.
+   ========================================================================== */
+
+/* Camily's class names for things Capture calls something else */
+.cm-page-h { font-size: 1.375rem; font-weight: 800; color: var(--ink); margin: 0 0 3px; }
+.cm-page-sub { color: var(--muted); font-size: 0.875rem; margin: 0 0 18px; }
+.cm-row { display: flex; align-items: center; gap: 10px; }
+.cm-row-center { justify-content: center; }
+.cm-empty { text-align: center; color: var(--faint); padding: 40px 20px;
+            font-size: 0.90625rem; line-height: 1.6; }
+.btn-save { background: var(--accent); color: var(--on-accent); }
+.btn-save:hover { background: var(--accent-hover); }
+.dlg-label { display: block; font-size: 0.78125rem; font-weight: 700;
+             color: var(--muted); margin: 14px 0 6px; }
+.sidebar-layout { display: flex; gap: 22px; align-items: flex-start; }
+.sidebar-nav { width: 200px; flex: none; }
+.sidebar-content { flex: 1; min-width: 0; }
+.sidebar-nav-btn {
+  display: block; width: 100%; text-align: left;
+  padding: 8px 10px; margin-bottom: 2px;
+  border: none; background: none; border-radius: var(--radius);
+  color: var(--text); font-size: 0.875rem; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+}
+.sidebar-nav-btn:hover { background: var(--hover); }
+.sidebar-nav-btn.on { background: var(--accent-tint); color: var(--accent-hover); }
+.section-h {
+  font-size: 0.71875rem; font-weight: 800; letter-spacing: .5px;
+  text-transform: uppercase; color: var(--faint); margin: 18px 0 8px;
+}
+/* Photo tiles for the modules that pick from the library — recipes
+   today, anything else that grows a picture later.
+
+   Cam: "when a photo is uploaded to a recipe, the photo is full size
+   and doesn't fit the UI, this destroys immersion of the app."
+
+   These two classes were used by cookery.js from the day it was merged
+   and never actually DEFINED anywhere. An undefined class is not an
+   error, it is just no rule, so `.ex-photo-tile` was a plain block: as
+   wide as the pane and one per row. Measured, a phone photo in a 900px
+   recipe pane came out 900x900, and two of them made an 1800px column
+   before the ingredients began.
+
+   So the size is set HERE rather than by whatever is inside the tile.
+   The tile is a fixed shape and the image fills it (object-fit: cover
+   in the module), which means a portrait photo, a panorama and a square
+   all land the same size and the row stays a row. Only the Dashboard
+   strip overrides it, further down, to 72px. */
+/* A cap as well as a minimum. With `minmax(168px, 1fr)` a recipe that
+   has ONE photo would stretch that single tile across the whole pane
+   and put us straight back where we started, so the column is allowed
+   to breathe between 168 and 216 and no further.
+
+   Cam asked for slightly bigger than the first pass (132/172) and for
+   the PRINT size to be left exactly as it is. It is: printing builds
+   its own document with its own stylesheet inside kincrux.py, where the
+   photo is `.print-photo`. These two classes are on-screen only and the
+   print sheet does not load shared.css, so the two sizes cannot drift
+   into each other. Going wider again is what turns four tiles across a
+   recipe pane into three and then a second row — 200/260 already did
+   at 980px, which is why this stopped here. */
+.ex-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 216px));
+  gap: 10px;
+}
+.ex-photo-tile {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  padding: 0;
+}
+.ex-photo-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ex-photo-add {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8125rem; font-weight: 600; color: var(--muted);
+  cursor: pointer; border-style: dashed; font-family: inherit;
+}
+.ex-photo-add:hover { color: var(--accent-hover); border-color: var(--accent); }
+.ex-photo-del {
+  position: absolute; top: 5px; right: 5px; z-index: 2;
+  width: 22px; height: 22px; line-height: 20px; padding: 0;
+  border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(0, 0, 0, .55); color: #fff; font-size: 0.6875rem;
+}
+.ex-photo-del:hover { background: rgba(200, 40, 40, .9); }
+
+.ex-photo-loading {
+  width: 100%; height: 100%; background: var(--elevated);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; color: var(--faint);
+}
+
+/* --------------------------------------------------------------- notes */
+/* Cam: "similar to cortex I want to be able to take notes here as
+   well." Cortex Collab's own note-taking experience (raw markdown,
+   folders, [[links]], #tags, photo attachments) ported as UX, not
+   its real-filesystem-vault storage — notes live in this app's own
+   ordinary data file, folders are a parentId reference resolved into
+   a tree in JS, the same pattern Coach Cam's nested Program/
+   Mesocycle structure already uses. */
+.note-tree-item {
+  display: flex; align-items: center; gap: 6px; width: 100%;
+  padding: 7px 10px; border: none; background: none; color: var(--text);
+  border-radius: var(--radius); font-size: 0.96875rem; text-align: left;
+}
+.note-tree-item:hover { background: var(--elevated); }
+.note-tree-item.on { background: var(--accent-tint); color: var(--accent-deep); font-weight: 700; }
+.note-tree-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.75; }
+.note-tree-folder { font-weight: 600; color: var(--muted); }
+
+.note-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.note-editor-area { width: 100%; min-height: 380px; font-family: var(--font-mono);
+  font-size: 0.9375rem; line-height: 1.6; resize: vertical; }
+.note-preview {
+  min-height: 380px; padding: 14px 16px; border: 1px solid var(--line-strong);
+  border-radius: var(--radius); background: var(--panel); line-height: 1.65;
+}
+.note-preview h1, .note-preview h2, .note-preview h3 { color: var(--ink); margin: 0.6em 0 0.3em; }
+.note-preview p { margin: 0 0 0.7em; }
+.note-preview ul { margin: 0 0 0.7em; padding-left: 22px; }
+.note-preview a.note-link {
+  color: var(--accent); font-weight: 600; text-decoration: none;
+  border-bottom: 1px dashed var(--accent);
+}
+.note-preview a.note-link.broken { color: var(--muted); border-bottom-color: var(--line-strong); }
+.note-preview .note-tag {
+  color: var(--accent-deep); background: var(--accent-tint); border-radius: 5px;
+  padding: 1px 5px; font-size: 0.88em; font-weight: 600;
+}
+
+/* -------------------------------------------------------------- photos gallery */
+.photo-gallery { display: flex; flex-wrap: wrap; gap: 14px; }
+
+/* Cam: "i want the full photo to show in the side bar" — .ex-photo-tile
+   (used for gallery/thumbnail grids) deliberately crops to fill a
+   square via object-fit:cover, which is right for a tidy grid but was
+   wrong reused here for the detail view, where the whole photo should
+   show uncropped. */
+.photo-detail-preview {
+  width: 100%; max-height: 420px; border-radius: var(--radius-lg);
+  overflow: hidden; background: var(--elevated); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; min-height: 120px;
+}
+.photo-detail-preview img {
+  max-width: 100%; max-height: 420px; width: auto; height: auto;
+  object-fit: contain; display: block;
+}
+
+/* --------------------------------------------------------- photo viewer */
+/* Cam: "lets enhance the view photo more to be more modern... presented
+   in full, front and centre by a pop up that loads in the middle of
+   the screen." A full-screen lightbox, not the old docked split-pane
+   treatment — same shape as #photo-editor-veil (this app's own proven
+   full-screen-overlay pattern) rather than a new mechanism. */
+#photo-viewer-veil {
+  position: fixed; inset: 0; background: rgba(4, 6, 11, 0.92); z-index: 700;
+  display: none; align-items: center; justify-content: center; padding: 26px;
+}
+#photo-viewer-veil.open { display: flex; }
+
+.pv-close, .pv-nav {
+  position: fixed; border: none; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08); color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 120ms var(--ease);
+}
+.pv-close:hover, .pv-nav:hover { background: rgba(255, 255, 255, 0.18); }
+.pv-close { top: 22px; right: 26px; width: 42px; height: 42px; font-size: 1.125rem; }
+.pv-nav { top: 50%; transform: translateY(-50%); width: 50px; height: 50px; font-size: 1.375rem; }
+.pv-nav-prev { left: 22px; }
+.pv-nav-next { right: 22px; }
+.pv-nav:disabled { opacity: 0.2; pointer-events: none; }
+
+/* v2 — Cam: "align Camily's photo album with the Capture app."
+   The photo is what someone opened the viewer to look at, so it gets
+   the room. Previously the image was capped at 58vh with a 30vh
+   metadata panel permanently below it, which meant the picture
+   occupied barely half the screen. Now it runs to 72vh with a single
+   compact action bar underneath, and the metadata only appears when
+   Details is pressed. */
+.photo-viewer {
+  width: min(94vw, 1040px); max-height: 94vh;
+  display: flex; flex-direction: column; align-items: center; min-height: 0;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 18px;
+  box-shadow: var(--radius);
+}
+.pv-image-area {
+  flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
+  min-height: 0; width: 100%; margin-bottom: 16px;
+}
+.pv-image-area img {
+  max-width: 100%; max-height: 72vh; width: auto; height: auto;
+  object-fit: contain; border-radius: var(--radius); display: block;
+}
+
+/* the action bar: name and chips on the left, buttons on the right —
+   the arrangement Capture uses */
+.pv-bar {
+  width: 100%; display: flex; align-items: center; gap: 20px;
+  flex-wrap: wrap;
+}
+.pv-meta { flex: 1; min-width: 180px; }
+.pv-title { font-size: 1.0625rem; font-weight: 700; color: var(--text); }
+.pv-file { font-size: 0.8125rem; color: var(--muted); margin-top: 2px; }
+.pv-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.pv-actions { display: flex; gap: 9px; flex-wrap: wrap; }
+.pv-actions .btn.on { background: var(--accent); color: var(--accent-text, #fff); }
+
+/* details, hidden until asked for */
+.pv-details {
+  width: 100%; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--line);
+  max-height: 26vh; overflow-y: auto;
+}
+.pv-details[hidden] { display: none; }
+.pv-details-col { min-width: 0; }
+.photo-tile {
+  position: relative; width: 190px; height: 190px; border-radius: var(--radius-lg);
+  overflow: hidden; background: var(--elevated); border: 1px solid var(--line);
+  cursor: pointer;
+}
+.photo-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-tile-add {
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  gap: 6px; color: var(--muted); font-weight: 700; font-size: 0.9375rem;
+}
+.photo-tile-add svg { width: 30px; height: 30px; }
+
+/* -------------------------------------------------------------- photo editor */
+#photo-editor-veil {
+  position: fixed; inset: 0; background: rgba(15, 18, 28, 0.7); z-index: 700;
+  display: none; align-items: center; justify-content: center;
+}
+#photo-editor-veil.open { display: flex; }
+/* v2 — the editor, laid out like Capture's: photo on top, ONE row of
+   controls under it. The old version was a 280px sidebar beside the
+   canvas, which both squeezed the photo and buried rotate/crop several
+   headings down. The extra tools Camily has over Capture (brightness,
+   contrast, saturation, flip) live behind the Adjust toggle rather
+   than being dropped. */
+.photo-editor {
+  background: var(--panel); border-radius: var(--radius-lg);
+  width: min(94vw, 1040px); max-height: 94vh;
+  display: flex; flex-direction: column; padding: 18px;
+  box-shadow: var(--radius); position: relative;
+}
+.pe-canvas-area {
+  flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
+  min-width: 0; min-height: 0; margin-bottom: 16px;
+}
+.pe-canvas-wrap { position: relative; max-width: 100%; max-height: 70vh;
+  min-height: 0; }
+.pe-canvas-wrap canvas {
+  display: block; max-width: 100%; max-height: 70vh;
+  object-fit: contain; border-radius: var(--radius);
+}
+.pe-crop-box {
+  position: absolute; border: 2px dashed #fff; box-shadow: 0 0 0 2000px rgba(0,0,0,0.45);
+  cursor: move;
+}
+
+.pe-bar {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  width: 100%;
+}
+.pe-spacer { flex: 1; }
+.pe-icon-btn { min-width: 42px; font-size: 1.0625rem; padding: 0 12px; }
+.pe-bar .btn.on { background: var(--accent); color: var(--on-accent); }
+
+.pe-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-left: 6px; }
+.pe-filter-btn {
+  padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line-strong);
+  background: var(--panel); color: var(--text); font-size: 0.84375rem;
+  font-weight: 600; cursor: pointer;
+}
+.pe-filter-btn:hover { border-color: var(--accent); }
+.pe-filter-btn.on { background: var(--accent); border-color: var(--accent);
+                    color: var(--on-accent); }
+
+/* the tucked-away extras */
+.pe-adjust {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px; width: 100%;
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.pe-adjust[hidden] { display: none; }
+.pe-slider-row { display: flex; flex-direction: column; gap: 5px; }
+.pe-slider-row label {
+  font-size: 0.84375rem; color: var(--text);
+  display: flex; justify-content: space-between;
+}
+.pe-slider-row input[type="range"] { width: 100%; }
+.pe-flip-row { justify-content: flex-start; }
+
+.pe-hint {
+  width: 100%; margin: 12px 0 0;
+  font-size: 0.8125rem; color: var(--muted); line-height: 1.5;
+}
+
+/* ---------------------------------------------------------------- dashboard */
+/* Cam: "I want an app that looks like this" — the reference picture's
+   own Dashboard combines a calendar with Lists/Meals panels on one
+   screen. Same spirit here, scoped to what was actually asked for:
+   today's + upcoming events, Lists, Notes, and Photos previews, each
+   clicking through to its own full page. */
+.dash-grid {
+  display: flex; gap: 18px;
+}
+
+/* ==========================================================================
+   Dashboard blocks and the photo frame
+   ========================================================================== */
+.dash-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
+  align-items: start;
+  margin-top: 16px;
+}
+/* a frame is the thing you actually look at, so it gets two columns
+   where there's room */
+.dash-block-wide { grid-column: span 2; }
+@media (max-width: 900px) { }
+
+.dash-block { position: relative; }
+
+/* the block picker */
+.dash-add-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+/* ------------------------------------------------------------ the frame */
+.dash-frame-card { display: flex; flex-direction: column; }
+
+/* recent-photo strip */
+.dash-photo-row {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px; margin-top: 4px;
+}
+
+/* v3 — the frame's source picker.
+   Cam: "the UI is all cluttered and i cannot make out the photos."
+   The old picker was a scrolling grid of tiny thumbnails to tick,
+   which is unusable past a few dozen photos. Two clear choices
+   instead, with an album dropdown behind the second. */
+.fr-source {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+@media (max-width: 520px) { .fr-source { grid-template-columns: 1fr; } }
+.fr-source-opt {
+  display: flex; flex-direction: column; gap: 3px; text-align: left;
+  padding: 13px 15px;
+  border: 2px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--panel); color: var(--text); cursor: pointer;
+}
+.fr-source-opt:hover { border-color: var(--accent); }
+.fr-source-opt.on { border-color: var(--accent); background: var(--accent-tint, var(--panel)); }
+.fr-source-opt .stamp { margin: 0; }
+
+/* the frame manager, opened from the photo library */
+.mf-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 0; border-bottom: 1px solid var(--line);
+}
+.mf-row:last-child { border-bottom: none; }
+
+/* a section heading in the photos sidebar */
+.sidebar-section {
+  margin-top: 18px; padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.sidebar-section-h {
+  font-size: 0.71875rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--muted); margin-bottom: 9px;
+}
+
+/* ---------------------------------------------------- fullscreen frame */
+/* Cam: "a full screen digital photo frame feature, which will take up
+   the whole screen, great for a second monitor." Pure black behind the
+   photo — anything lighter shows as a glowing rectangle in a dark room,
+   which is exactly where a photo frame tends to live. */
+#fs-frame-veil {
+  position: fixed; inset: 0; z-index: 600;
+  background: #000; display: none;
+}
+#fs-frame-veil.open { display: block; }
+.fs-stage {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.fs-stage img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain; display: block;
+}
+.fs-bar {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 22px;
+  background: linear-gradient(to top, rgba(0,0,0,.72), transparent);
+  transition: opacity 400ms ease;
+}
+.fs-bar.faded { opacity: 0; }
+.fs-bar:hover { opacity: 1; }
+.fs-cap {
+  color: rgba(255,255,255,.86); font-size: 0.9375rem;
+  max-width: 50vw; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fs-btn {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: none; border-radius: 50%;
+  background: rgba(255,255,255,.12); color: #fff;
+  font-size: 1.0625rem; cursor: pointer;
+}
+.fs-btn:hover { background: rgba(255,255,255,.24); }
+
+/* ------------------------------------------------------- album rows */
+/* v4 — each album gets its own menu for rename/delete, rather than
+   adding two more buttons to every row in the sidebar. */
+.album-row { display: flex; align-items: stretch; gap: 4px; }
+.album-row .sidebar-nav-btn {
+  flex: 1; min-width: 0; display: flex; align-items: center;
+  justify-content: space-between; gap: 8px;
+}
+.album-count {
+  font-size: 0.75rem; color: var(--muted); font-weight: 600;
+  flex: none;
+}
+.album-menu {
+  width: 30px; flex: none;
+  border: none; background: none; border-radius: var(--radius);
+  color: var(--muted); font-size: 1rem; cursor: pointer;
+}
+.album-menu:hover { background: var(--panel); color: var(--text); }
+
+/* ==========================================================================
+   v4 — stamps, contacts, drag-and-drop
+   ========================================================================== */
+
+/* --------------------------------------------------------- event stamps */
+.stamp-picker {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 8px;
+}
+.stamp-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 6px;
+  border: 2px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--panel); color: var(--text);
+  font-size: 0.71875rem; font-weight: 600; cursor: pointer;
+}
+.stamp-opt:hover { border-color: var(--accent); }
+.stamp-opt.on { border-color: var(--accent); color: var(--text); }
+.stamp-glyph { font-size: 1.375rem; line-height: 1; }
+/* the month grid shows a stamp in place of the plain dot, so a birthday
+   is spottable without opening the day */
+.cal-cell-stamp {
+  font-size: 0.875rem; line-height: 1; margin-top: 2px;
+}
+
+/* -------------------------------------------------------------- contacts */
+.contact-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+/* -------------------------------------------------------- drag and drop */
+/* Sits above everything except dialogs — it only appears mid-drag, and
+   it must be visible over the photo viewer or a fullscreen frame. */
+#drop-overlay {
+  position: fixed; inset: 0; z-index: 850;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(8, 11, 20, 0.82);
+  /* the pointer must reach the window's own drop handler, not this */
+  pointer-events: none;
+}
+#drop-overlay.open { display: flex; }
+.drop-inner {
+  text-align: center; color: #fff;
+  border: 3px dashed rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-lg);
+  padding: 44px 64px;
+}
+.drop-icon { font-size: 2.875rem; line-height: 1; margin-bottom: 12px; }
+.drop-title { font-size: 1.3125rem; font-weight: 700; }
+.drop-sub { font-size: 0.875rem; opacity: .72; margin-top: 5px; }
+
+/* ==========================================================================
+   Calendar — side-by-side
+   ==========================================================================
+   Cam: "the calander lags when scrolling down to see the list of stuff
+   on that day, lets split the screen."
+
+   The month grid and the selected day sit side by side, and each
+   column scrolls on its own. That's the part that actually fixes the
+   complaint: with one page-level scrollbar, a day with a lot on it
+   would still push the calendar out of view.
+   ========================================================================== */
+.cal-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+/* Under about 1050px there isn't room for two readable columns, so it
+   falls back to stacking — which is the old behaviour, but only where
+   side-by-side genuinely wouldn't fit. */
+@media (max-width: 1050px) {
+  .cal-split { grid-template-columns: 1fr; }
+  .cal-right { margin-top: 4px; }
+}
+@media (max-width: 1050px) {
+}
+
+/* the month grid gets a little more room now it isn't sharing the
+   width with anything */
+.cal-split .cal-cell { min-height: 74px; }
+
+/* ------------------------------------------------------- phone book */
+/* Cam: "A phone book would be cool where i can search and it will come
+   up with the contact, further it will display 3 contacts that i save
+   as favourites." */
+.pb-search { width: 100%; margin-bottom: 10px; }
+.pb-results { display: none; }
+.pb-results.open { display: block; margin-bottom: 4px; }
+.pb-favs { display: flex; flex-direction: column; gap: 2px; }
+.pb-favs[hidden] { display: none; }
+
+.pb-fav, .pb-hit {
+  display: flex; align-items: center; gap: 11px;
+  padding: 8px 6px; border-radius: var(--radius); cursor: pointer;
+}
+.pb-fav:hover, .pb-hit:hover { background: var(--elevated); }
+.pb-avatar {
+  width: 34px; height: 34px; flex: none;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--accent); color: var(--on-accent);
+  font-size: 0.78125rem; font-weight: 700;
+}
+.pb-fav-meta { min-width: 0; flex: 1; }
+.pb-fav-name {
+  font-size: 0.875rem; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pb-fav-line {
+  font-size: 0.78125rem; color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ---------------------------------------------------- on this day */
+.otd-row {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 8px;
+}
+.otd-photo {
+  position: relative; aspect-ratio: 1;
+  border-radius: var(--radius); overflow: hidden;
+  background: var(--elevated); cursor: pointer;
+}
+.otd-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* how long ago, so a row of thumbnails reads as a timeline rather than
+   an undifferentiated grid */
+.otd-badge {
+  position: absolute; right: 4px; bottom: 4px;
+  padding: 1px 6px; border-radius: 999px;
+  background: rgba(0, 0, 0, .66); color: #fff;
+  font-size: 0.65625rem; font-weight: 700;
+}
+
+/* ------------------------------------------------------- countdown */
+.countdown-card { text-align: center; }
+.cd-days {
+  font-size: 3.25rem; font-weight: 800; line-height: 1;
+  color: var(--accent); margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.cd-today { font-size: 2.125rem; }
+.cd-unit { font-size: 0.8125rem; color: var(--muted); margin-top: 2px; }
+.cd-what {
+  font-size: 0.96875rem; font-weight: 700; color: var(--text); margin-top: 10px;
+}
+.cd-when { font-size: 0.8125rem; color: var(--muted); margin-top: 2px; }
+
+/* --------------------------------------------------- notice board */
+.notice-text {
+  white-space: pre-wrap;
+  font-size: 0.9375rem; line-height: 1.6; color: var(--text);
+  padding: 4px 0;
+}
+.notice-when {
+  font-size: 0.75rem; color: var(--muted);
+  margin-top: 10px; padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+/* -------------------------------------------------------- this week */
+/* Cam: the next seven days at a glance — which days are busy and which
+   are clear, without opening the calendar. */
+.wk-strip {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+}
+.wk-day {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 9px 2px;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--panel); cursor: pointer;
+}
+.wk-day:hover { border-color: var(--accent); }
+.wk-today { border-color: var(--accent); }
+.wk-picked { background: var(--elevated); border-color: var(--accent); }
+.wk-dow {
+  font-size: 0.65625rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .3px; color: var(--muted);
+}
+.wk-today .wk-dow { color: var(--accent); }
+.wk-num { font-size: 1.0625rem; font-weight: 700; color: var(--text); }
+.wk-count {
+  font-size: 0.6875rem; font-weight: 700; min-height: 16px;
+  color: var(--accent);
+}
+/* a clear day genuinely shows nothing rather than a zero — zeroes read
+   as clutter across seven columns */
+.wk-clear { color: transparent; }
+.wk-stamp { font-size: 0.875rem; line-height: 1; min-height: 16px; }
+
+.wk-detail { margin-top: 12px; }
+.wk-detail-h {
+  font-size: 0.8125rem; font-weight: 700; color: var(--text);
+  padding-bottom: 6px; margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.wk-evt {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0; font-size: 0.84375rem;
+}
+.wk-evt-name { flex: 1; min-width: 0; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* --------------------------------------------------- album shortcut */
+.album-card { cursor: pointer; padding: 0; overflow: hidden; }
+.album-card:hover { border-color: var(--accent); }
+.album-cover {
+  width: 100%; aspect-ratio: 16 / 10;
+  background: var(--elevated);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.album-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.album-cover-empty { font-size: 0.8125rem; color: var(--muted); }
+.album-card-meta {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 13px 16px;
+}
+.album-card-meta b { color: var(--text); font-size: 0.9375rem; }
+.album-card-meta .stamp { margin: 0; }
+
+/* ------------------------------------------------------- quick add */
+.qa-name { margin-bottom: 0; }
+
+/* v6 — the add tile's hint. Multi-select and drag-and-drop both worked
+   already; nothing on screen said so, so neither got used. */
+.photo-add-hint {
+  display: block;
+  font-size: 0.71875rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* the notice board's card — Camily styled its contents but not the
+   card itself, which inherited from a rule that didn't come across */
+.notice-card { display: flex; flex-direction: column; }
+
+
+/* ==========================================================================
+   THEME SUPPORT
+   ==========================================================================
+   Almost every theme is pure colour and needs nothing here — themes.js
+   writes new values for the :root variables and the whole app follows.
+   What lives here is the handful of things a colour variable cannot
+   express on its own.
+   ========================================================================== */
+
+/* High contrast asks for heavier borders. Rather than that theme
+   listing every bordered rule, the weight is a variable the borders
+   that matter read from. */
+.panel, .input, .btn, .ss-nav-empty, .dlg, .th-card {
+  border-width: var(--border-weight);
+}
+
+/* Aero's one genuinely glassy touch. --gloss is `none` in every other
+   theme, so this rule costs nothing when it isn't wanted. */
+.panel, .btn-primary, .th-card {
+  background-image: var(--gloss);
+}
+
+/* --------------------------------------------------------------------------
+   Windows 98 — the one theme that changes SHAPE.
+
+   Square corners come free from --radius: 0. Bevels do not: a raised
+   bevel is a light top-left edge and a dark bottom-right one, which is
+   two different border colours on one element and cannot be expressed
+   as a single variable. So this theme also sets data-shape="win98" and
+   these rules key off it.
+
+   This is deliberately the ONLY special case. If a future theme wants
+   its own shape, give it its own data-shape value rather than widening
+   this one.
+   -------------------------------------------------------------------------- */
+:root[data-shape="win98"] .btn,
+:root[data-shape="win98"] .panel,
+:root[data-shape="win98"] .th-card {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #FFFFFF #808080 #808080 #FFFFFF;
+  box-shadow: 1px 1px 0 #000000;
+}
+:root[data-shape="win98"] .btn:active {
+  border-color: #808080 #FFFFFF #FFFFFF #808080;
+  box-shadow: none;
+}
+:root[data-shape="win98"] .input {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #808080 #FFFFFF #FFFFFF #808080;
+  background: #FFFFFF;
+}
+:root[data-shape="win98"] .ss-nav-btn.on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+:root[data-shape="win98"] .dlg {
+  border: 2px solid;
+  border-color: #FFFFFF #808080 #808080 #FFFFFF;
+  border-radius: 0;
+}
+/* the title bar gradient is the single most recognisable thing about
+   this look, and it is worth the four lines */
+:root[data-shape="win98"] .dlg-head {
+  background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+  color: #FFFFFF;
+  padding: 4px 8px;
+}
+
+/* ==========================================================================
+   SETTINGS — themes, text size, sections
+   ========================================================================== */
+.th-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.th-card {
+  display: block;
+  text-align: left;
+  padding: 14px 16px 13px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.th-card:hover { border-color: var(--line-strong); }
+.th-card.on {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.th-name {
+  display: block;
+  font-size: 0.9375rem; font-weight: 800; color: var(--ink);
+  margin-bottom: 4px;
+}
+.th-blurb {
+  display: block;
+  font-size: 0.8125rem; line-height: 1.45; color: var(--muted);
+  margin-bottom: 12px;
+}
+.th-swatches { display: flex; gap: 7px; }
+.th-swatch {
+  width: 21px; height: 21px;
+  border-radius: 6px;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+}
+:root[data-shape="win98"] .th-swatch { border-radius: 0; }
+
+/* the segmented text-size control */
+.seg { display: inline-flex; gap: 6px; }
+.seg-btn {
+  min-height: 36px; padding: 0 18px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--panel); color: var(--text);
+  font-size: 0.875rem; font-weight: 700; font-family: inherit; cursor: pointer;
+}
+.seg-btn:hover { background: var(--hover); }
+.seg-btn.on {
+  background: var(--accent); border-color: var(--accent);
+  color: var(--on-accent);
+}
+:root[data-shape="win98"] .seg-btn { border-radius: 0; }
+
+/* section toggles */
+.sec-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; margin-bottom: 8px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+.sec-row.sub { margin-left: 26px; padding: 9px 14px; }
+.sec-name { flex: 1; font-size: 0.9375rem; font-weight: 700; color: var(--ink); }
+.sec-row.sub .sec-name { font-size: 0.875rem; font-weight: 600; }
+.sec-row.is-off .sec-name { color: var(--faint); }
+
+.toggle {
+  position: relative;
+  width: 44px; height: 25px; flex: none;
+  border: none; border-radius: 999px; padding: 0;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+.toggle::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 19px; height: 19px; border-radius: 50%;
+  background: var(--panel);
+  transition: transform 140ms ease;
+}
+.toggle.on { background: var(--accent); }
+.toggle.on::after { transform: translateX(19px); background: var(--on-accent); }
+.toggle:disabled { opacity: .45; cursor: not-allowed; }
+:root[data-shape="win98"] .toggle,
+:root[data-shape="win98"] .toggle::after { border-radius: 0; }
+
+/* ==========================================================================
+   MONEY — styles merged in from Cashbox.
+   ==========================================================================
+   Cashbox's own shell rules are deliberately NOT here: KinCrux provides
+   the window, sidebar, topbar, toasts, dialogs and veils, and importing
+   a second set of those would fight the host's.
+
+   Every colour is remapped onto KinCrux's own variable names, so the
+   money pages follow whatever theme is set rather than staying in
+   Cashbox's palette. That remap is the whole reason this was worth
+   doing by hand instead of just concatenating the file.
+   ========================================================================== */
+button, input, select, textarea { font-family: inherit; font-size: inherit; }
+button { cursor: pointer; }
+.btn-danger:hover { background: var(--danger-tint); border-color: var(--danger); }
+/* ------------------------------------------------------------- metrics */
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.metric-card {
+  background: var(--elevated);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.metric-label {
+  font-size: 0.71875rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+.money-up { color: var(--good); }
+.money-down { color: var(--danger); }
+.money-muted { color: var(--muted); }
+/* --------------------------------------------------------------- table */
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.detail-table th {
+  text-align: left;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.detail-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.84375rem;
+}
+.count-row { cursor: pointer; }
+.count-row:hover td { background: var(--hover); }
+.count-row.row-on td { background: var(--accent-tint); }
+.count-row.row-paid td { color: var(--muted); }
+.count-row.row-overdue td:nth-child(2) { color: var(--danger); font-weight: 600; }
+.count-row.row-income td:last-child { color: var(--good); }
+.period-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--accent);
+  min-width: 190px;
+  text-align: center;
+}
+.goal-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg);
+  overflow: hidden;
+  margin: 10px 0;
+}
+.goal-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 200ms ease;
+}
+.goal-fill.goal-done { background: var(--good); }
+.piggy-wrap { width: 84px; height: 70px; flex-shrink: 0; color: var(--line-strong); }
+.piggy-svg { width: 100%; height: 100%; }
+.piggy-fill { fill: var(--accent); opacity: 0.9; }
+.piggy-fill-done { fill: var(--good); opacity: 0.9; }
+.goal-ledger {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.goal-txn-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 2px;
+  font-size: 0.8125rem;
+}
+.goal-txn-row > * { margin-right: 10px; }
+.goal-txn-row > *:last-child { margin-right: 0; }
+.goal-txn-type { font-weight: 700; min-width: 74px; }
+from { opacity: 0; transform: translateY(6px); }
+to { opacity: 1; transform: translateY(0); }
+/* --------------------------------------------------------- onboarding */
+.cb-onboard {
+  max-width: 480px;
+  margin: 60px auto;
+  text-align: center;
+  padding: 32px;
+}
+/* --------------------------------------------------------- calculation */
+.calc-hint {
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+.btn-quiet.on {
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+
+/* ==========================================================================
+   TRAINING styles live in training/training.css.
+
+   This file used to hold a partial copy -- 79 of training's 507 rules, left
+   behind when NeuroNet was forked from KinCrux's shell. With the module
+   now here in full, those went to their own file rather than being topped
+   up in place: in KinCrux they were interleaved with other modules' styles,
+   and pulling them apart meant splitting sections rule by rule.
+
+   The photo picker below is NOT training's. It had ended up in the middle of
+   the training block, and it is the one piece of that range NeuroNet's own
+   photo library depends on -- so it stays here.
+   ========================================================================== */
+
+/* ------------------------------------------------- the photo picker */
+/* KinCrux's own, used by every module instead of the OS file dialog.
+   Deliberately empty until something is typed -- see pickFromLibrary. */
+.pick-search { margin-bottom: 12px; }
+.pick-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  max-height: 46vh; overflow-y: auto;
+}
+.pick-grid:empty { display: none; }
+.pick-tile {
+  display: flex; flex-direction: column; gap: 5px;
+  padding: 0; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--elevated); color: var(--text);
+  cursor: pointer; overflow: hidden; text-align: left;
+}
+.pick-tile:hover { border-color: var(--line-strong); }
+.pick-tile.on {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.pick-thumb {
+  display: block; aspect-ratio: 1; width: 100%;
+  background: var(--hover) center / cover no-repeat;
+}
+.pick-name {
+  padding: 0 7px 7px; font-size: 0.71875rem; color: var(--muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* ==========================================================================
+   NOTES styles live in notes/notes.css -- the complete set, copied from
+   KinCrux. This file used to hold a partial copy (42 of 287 rules) left
+   over from the fork, which would have left Notes mostly unstyled.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   ONE APP: the bar across the top, every tool beneath it.
+   Cam: "make that top bar the default for the entire app ... Think of
+   NeuroNet as one complete app with multiple tools."
+   ========================================================================== */
+:root { --ss-bar-h: 42px; }
+#ss-column {
+  flex: 1; min-width: 0; min-height: 0;
+  display: flex; flex-direction: column;
+}
+#ss-topbar { flex: none; position: relative; z-index: 60; }
+/* The tools are laid out here exactly as they were directly inside #ss-app:
+   a row, one tool shown at a time, each filling the height it is given --
+   which is now the height UNDER the bar rather than the whole window. */
+#ss-stage {
+  flex: 1; min-height: 0; min-width: 0;
+  display: flex; position: relative;
+}
+
+/* The playlist-panel button only does anything in the music section -- it
+   opens music's own side panel -- so it shows only there. */
+#ss-app:not([data-section="music"]) #ch-panel-toggle { display: none; }
+
+/* The bar's three parts, laid out so they can never overlap.
+
+   Chords floated its player with position: absolute, at a fixed offset from
+   the left and a width worked out as a share of the window (42vw). That
+   ignored the clock completely. At 100% there happened to be room; with UI
+   scale at 150% or more the share grew with the zoom and the player's title
+   and elapsed time ran straight over the date and time.
+
+   Three columns instead: player, clock, playlist button. The clock stays
+   centred when there is room, and when space runs short the song title
+   gives way with an ellipsis -- the controls and the clock keep theirs.
+   Written here, not in topbar.css: that file is regenerated from the music
+   styles, and this is NeuroNet's decision about NeuroNet's bar.
+
+   #ss-app at the front of every selector is deliberate. topbar.css loads
+   after this file, and its "#ss-topbar #ch-top-bar { display: flex }"
+   carries the same weight as a two-id selector here -- so the later file
+   won, the bar stayed a centred row, and the grid never applied. The
+   browser still reported the grid's columns, which made it look as though
+   it had. A third id outranks it regardless of load order. */
+#ss-app #ss-topbar #ch-top-bar {
+  display: grid;
+  /* The player's column never goes below what its controls need
+     (min-content), so it cannot spill into the clock's column. At 200% the
+     bar is only about 450px wide in its own terms: two equal side columns
+     left the player ~110px against the ~210px its buttons need, and it drew
+     over the date and time. With room, the columns are equal and the clock
+     sits centred; without it, the clock moves right instead of underneath. */
+  grid-template-columns: minmax(min-content, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 12px;
+}
+#ss-app #ss-topbar #ch-top-bar .cc-mini {
+  position: static; transform: none;
+  grid-column: 1; justify-self: stretch;
+  min-width: 0; max-width: 100%;
+}
+/* The song title and its progress bar are the one part that gives way.
+   They share a wrapper, .cc-mini-track, and it is the WRAPPER that must
+   flex -- an earlier version flexed the title inside it, the wrapper stayed
+   content-sized, and the title came out zero pixels wide even with room to
+   spare. width: 0 plus flex-grow means the track adds nothing to the
+   player's minimum (so that minimum is the controls alone) and then takes
+   whatever room the column has, the title cut off with an ellipsis. */
+#ss-app #ss-topbar #ch-top-bar .cc-mini-track { flex: 1 1 0; width: 0; min-width: 0; }
+#ss-app #ss-topbar #ch-top-bar .cc-mini-title { display: block; min-width: 0; }
+#ss-app #ss-topbar #ch-top-bar #ch-top-bar-clock { grid-column: 2; white-space: nowrap; }
+#ss-app #ss-topbar #ch-top-bar #ch-panel-toggle {
+  grid-column: 3; justify-self: end;
+  position: static; transform: none;
+}
+/* All three on ONE row, explicitly. The player comes after the clock in the
+   page, so the grid placed the clock first and then -- its placement cursor
+   already past column 1 on that row -- put the player on a second row. That
+   pulled the clock off-centre and hung the player below the bar. */
+#ss-app #ss-topbar #ch-top-bar .cc-mini,
+#ss-app #ss-topbar #ch-top-bar #ch-top-bar-clock,
+#ss-app #ss-topbar #ch-top-bar #ch-panel-toggle { grid-row: 1; }
+
+
+/* ==========================================================================
+   The collapsible menu. Cam: "A minimize button for the navbar side menu as
+   well, which collapses it to just show the icons, when hovered over they
+   should show alt text with the tool name." The names come from labelNav()
+   in app.js; this is only the shape.
+   ========================================================================== */
+#ss-collapse {
+  margin-left: auto;
+  width: 26px; height: 26px; flex: none;
+  display: grid; place-items: center;
+  border: 0; border-radius: 7px; background: transparent;
+  color: var(--muted, var(--text)); cursor: pointer;
+}
+#ss-collapse:hover { background: var(--hover); color: var(--ink); }
+#ss-collapse .ic { width: 16px; height: 16px; transition: transform .15s ease; }
+
+#ss-app.nav-collapsed #ss-sidebar { width: 58px; padding-left: 7px; padding-right: 7px; }
+#ss-app.nav-collapsed #ss-brand {
+  flex-direction: column; gap: 10px; padding-left: 0; padding-right: 0;
+}
+#ss-app.nav-collapsed #ss-collapse { margin-left: 0; }
+#ss-app.nav-collapsed #ss-collapse .ic { transform: rotate(180deg); }
+
+/* Words go; icons stay. Section headings, counts and the empty-state rows
+   ("+ New folder") would only be a column of unlabelled plus signs. */
+#ss-app.nav-collapsed .ss-brand-name,
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-h,
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-count,
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-empty,
+#ss-app.nav-collapsed #ss-sidebar .ss-label,
+/* ...but NOT the icon tile. A card keeps its icon in a span, and this rule
+   hid that too, leaving the collapsed menus as bare coloured slivers.
+
+   Scoped to #ss-sidebar. Without that, collapsing the LEFT menu also stripped
+   the names from the RIGHT one while leaving it full width -- Cam: "when I
+   collapse the left side bar ... the right bars names disappear but the icons
+   remain and the right bar stays uncollapsed". */
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-btn > span:not(.ss-card-ic) { display: none; }
+/* (I20) the count of what's new in Collaboration stays, small, on Scribe's icon */
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-btn { position: relative; }
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-btn > span.ss-nav-new:not(.ss-card-ic) { display: block; position: absolute; top: 1px; right: 3px;
+  min-width: 14px; height: 14px; line-height: 14px; padding: 0 3px; font-size: 0.5625rem; margin: 0; }
+
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-btn,
+#ss-app.nav-collapsed #ss-sidebar .ss-foot-btn { justify-content: center; padding-left: 0; padding-right: 0; }
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-btn .ic,
+#ss-app.nav-collapsed #ss-sidebar .ss-foot-btn .ic { width: 19px; height: 19px; }
+#ss-app.nav-collapsed #ss-add { padding-left: 0; padding-right: 0; justify-content: center; }
+/* A small gap between the groups, standing in for the headings. */
+#ss-app.nav-collapsed #ss-sidebar .ss-nav-btn + .ss-nav-h + .ss-nav-btn { margin-top: 10px; }
+
+/* ==========================================================================
+   TWO MENUS, A LOCATION BAR, AND A WAY TO HIDE THEM ALL
+
+   Cam: "The side bar designs will use the modern card design that you can
+   see from my attatched image of Cams Collective." Compact cards by Cam's
+   choice -- a coloured stripe, an icon tile, a name -- because Training's
+   ten subsections would otherwise scroll on every visit.
+   ========================================================================== */
+
+#ss-stage { align-items: stretch; }
+
+#ss-subnav {
+  flex: none; width: 210px;
+  display: flex; flex-direction: column; min-height: 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg-elevated, var(--bg-app));
+}
+#ss-subnav-head {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 10px 8px 14px;
+}
+#ss-subnav-title {
+  flex: 1; min-width: 0;
+  font-size: 0.6875rem; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted, var(--text-faint));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#ss-subnav-collapse {
+  flex: none; width: 24px; height: 24px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 6px; background: transparent;
+  color: var(--muted, var(--text-faint)); cursor: pointer;
+}
+#ss-subnav-collapse:hover { background: var(--hover); color: var(--ink); }
+#ss-subnav-collapse .ic { width: 15px; height: 15px; transition: transform .15s ease; }
+/* The same one-pixel hover nudge lives on the same cards in here, so the
+   same rule applies -- see #ss-nav above. */
+#ss-subnav-body {
+  flex: 1; min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 0 8px 10px;
+}
+#ss-subnav-foot:empty { display: none; }
+.ss-subnav-empty { padding: 10px 6px; font-size: 0.75rem; color: var(--text-faint); }
+
+/* The card, in Cam's Collective's style: a coloured stripe down the left,
+   an icon in its own tile, the name beside it. */
+#ss-app .ss-card {
+  position: relative;
+  display: flex; align-items: center; gap: 9px;
+  width: 100%;
+  margin: 3px 0;
+  padding: 7px 9px 7px 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--bg-elevated, var(--bg-app));
+  color: var(--text);
+  font: inherit; font-size: 0.8125rem;
+  text-align: left; cursor: pointer;
+  overflow: hidden;
+}
+#ss-app .ss-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--card-accent, var(--accent));
+  opacity: .75;
+}
+#ss-app .ss-card .ss-card-ic {
+  flex: none;
+  display: grid; place-items: center;
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--card-accent, var(--accent)) 18%, transparent);
+  color: var(--card-accent, var(--accent));
+}
+#ss-app .ss-card .ic { width: 15px; height: 15px; }
+#ss-app .ss-card > span:not(.ss-card-ic) {
+  flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Three states, as Cam asked: resting, hovered, chosen. */
+#ss-app .ss-card:hover {
+  background: var(--hover);
+  border-color: color-mix(in srgb, var(--card-accent, var(--accent)) 35%, transparent);
+  transform: translateX(1px);
+}
+#ss-app .ss-card.on {
+  background: color-mix(in srgb, var(--card-accent, var(--accent)) 14%, var(--bg-elevated, var(--bg-app)));
+  border-color: color-mix(in srgb, var(--card-accent, var(--accent)) 55%, transparent);
+  color: var(--ink, var(--text));
+  font-weight: 650;
+}
+#ss-app .ss-card.on::before { opacity: 1; width: 4px; }
+
+/* Collapsed: the icon tile only, the name on hover (labelNav sets it). */
+#ss-app.nav-collapsed #ss-sidebar .ss-card,
+#ss-app.subnav-collapsed #ss-subnav .ss-card {
+  justify-content: center;
+  padding-left: 6px; padding-right: 6px;
+}
+#ss-app.nav-collapsed #ss-sidebar .ss-card > span:not(.ss-card-ic),
+#ss-app.subnav-collapsed #ss-subnav .ss-card > span:not(.ss-card-ic),
+#ss-app.subnav-collapsed #ss-subnav .ss-nav-count { display: none; }
+#ss-app.subnav-collapsed #ss-subnav { width: 54px; }
+#ss-app.subnav-collapsed #ss-subnav-title { display: none; }
+#ss-app.subnav-collapsed #ss-subnav-collapse { margin: 0 auto; }
+#ss-app.subnav-collapsed #ss-subnav-collapse .ic { transform: rotate(180deg); }
+#ss-app.subnav-collapsed #ss-subnav .ss-nav-h {
+  justify-content: center; font-size: 0; padding: 6px 0 0; margin: 10px 4px 4px;
+  border-top: 1px solid var(--border);          /* Folders / Albums / Tags: a rule, + on it */
+}
+/* Photos' menu folded (15 Nov 2026): every entry the same centred tile, the
+   head's two buttons stacked so neither is cut off, no scrollbar over them */
+#ss-app.subnav-collapsed #ss-subnav-head { flex-direction: column; padding: 10px 0 6px; gap: 4px; }
+#ss-app.subnav-collapsed #ss-subnav-body { padding: 0 5px 10px; scrollbar-width: none; }
+#ss-app.subnav-collapsed #ss-subnav-body::-webkit-scrollbar { display: none; }
+#ss-app.subnav-collapsed #ss-subnav .ss-card { padding: 6px; margin-left: 0; width: 100%; }
+#ss-app.subnav-collapsed #ss-subnav .ss-nav-h .ss-nav-add { font-size: 1rem; }
+
+/* Where you are: "Training — Sessions". */
+#ss-bottombar {
+  /* Taller and a touch larger than it was: at 26px with 0.6875rem text the
+     path sat cramped against the edge and was easy to miss. */
+  flex: none;
+  display: flex; align-items: center;
+  padding: 0 16px; height: 34px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-elevated, var(--bg-app));
+  color: var(--muted, var(--text-faint));
+  font-size: 0.8125rem; letter-spacing: .02em;
+}
+
+/* F9: everything but the workspace. The music keeps playing -- the audio is
+   on the page, not in the bar. */
+#ss-app.bars-hidden #ss-topbar,
+#ss-app.bars-hidden #ss-bottombar,
+#ss-app.bars-hidden #ss-sidebar,
+#ss-app.bars-hidden #ss-subnav { display: none; }
+
+/* ==========================================================================
+   SCROLLBARS, IN THE THEME
+   ==========================================================================
+   Cam: "album view scroll bar is grey and doesnt fit theme."
+
+   It was the operating system's default, because nothing had ever styled
+   one here. Two modules had noticed and styled their own -- Notes, with a
+   hardcoded grey that only suited the dark themes, and Training -- and
+   every other scrolling box in the app got whatever GTK felt like drawing.
+   The album page made it obvious rather than new: its track list scrolls
+   in the middle of the page now, so the bar sits against the album art
+   instead of hard against the window edge.
+
+   So this is set once, for the whole app, in the theme's own colours --
+   which means it follows all nine themes instead of being right in one of
+   them. Modules that style their own still win on specificity; this is
+   the floor, not an override.
+
+   background-clip: padding-box with a transparent border is what makes
+   the thumb look inset rather than filling the gutter edge to edge --
+   the border reserves the gap, and the background stops short of it.
+   ========================================================================== */
+/* Both spellings, because the two renderers NeuroNet can run under read
+   different ones. WebKitGTK honours the standard scrollbar-color and
+   ignores the ::-webkit- pseudo-elements; Chromium (which is what
+   --gui qt gets you) honours the pseudo-elements. Measured under
+   WebKitGTK 2.52: the thumb comes out rgb(74, 59, 42), which is
+   --line-strong, rather than the desktop's own grey.
+
+   `auto` rather than `thin`: under WebKitGTK the bar is an overlay that
+   widens when you reach for it either way, so `thin` buys nothing there,
+   while under Chromium it would fight the explicit 11px below.
+
+   2026-10-05, the audit ("a thick scrollbar with arrow buttons ... in every
+   theme"): since Chromium 121 the standard spelling WINS over the
+   pseudo-elements wherever it is set, so under --gui qt (Chromium 140) this
+   rule drew the platform's thick bar with arrows. app.js marks the engine
+   (data-engine="chromium"), and the standard spelling now applies only off
+   Chromium. The Windows 98 theme keeps its classic bar, on purpose. */
+:root:not([data-engine="chromium"]) * {
+  scrollbar-width: auto;
+  scrollbar-color: var(--line-strong) transparent;
+}
+:root[data-shape="win98"] * {
+  scrollbar-width: auto;
+  scrollbar-color: var(--line-strong) var(--line);
+}
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* A screen whose content IS the workspace -- Cells' spreadsheet -- takes the
+   pane and scrolls inside itself, rather than being a tall page the pane
+   scrolls. Requested by the module (see app.js) and cleared on every render,
+   so it can never leak onto the next screen. */
+:is(#ss-main, .mt-host).ss-main-fills {
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  /* The pane's usual 40px of bottom padding exists so the last card in a
+     scrolling list is not jammed against the edge. Nothing scrolls off the
+     bottom here, so it is 40px of workspace given away. */
+  padding-bottom: 14px;
+}
+
+/* ==========================================================================
+   CAM'S OWN ORDER, AND CAM'S FAVOURITES
+   Cam: "drag the main section and sub section icons to another place in the
+   list" and "a favorite feature where i can favorite any sub section".
+   ========================================================================== */
+
+/* A card being dragged, and where it would land. */
+#ss-app .ss-card[draggable="true"] { cursor: grab; }
+#ss-app .ss-card.is-dragging { opacity: .45; cursor: grabbing; }
+#ss-app .ss-card.drop-before { box-shadow: 0 -3px 0 0 var(--accent); }
+#ss-app .ss-card.drop-after { box-shadow: 0 3px 0 0 var(--accent); }
+/* the page tabs, dragged sideways (15 Nov 2026) */
+#ss-tabs .ss-tab.is-dragging { opacity: .45; }
+#ss-tabs .ss-tab.drop-before { box-shadow: -3px 0 0 0 var(--accent); }
+#ss-tabs .ss-tab.drop-after { box-shadow: 3px 0 0 0 var(--accent); }
+body.ss-nav-dragging #ss-tabs .ss-tab { cursor: grabbing; }
+/* the tab under the pointer while it moves (it's outside the row, so it
+   carries its own look) */
+#ss-app .ss-nav-ghost.ss-tab {
+  display: inline-flex; align-items: center; gap: 7px; width: auto !important;
+  padding: 8px 12px; border: 1px solid var(--card-accent, var(--accent)); border-radius: 9px;
+  background: var(--panel, var(--bg)); color: var(--ink, var(--text));
+  font: inherit; font-size: .875rem; font-weight: 600;
+}
+#ss-app .ss-nav-ghost.ss-tab .ic { width: 15px; height: 15px; }
+#ss-app .ss-nav-ghost.ss-tab .ss-fav { display: none; }
+
+/* DROPPING PHOTOS ON AN ALBUM.
+
+   Cam: "I want to be able to drag and drop photos into an album icon on
+   the right side panel to add to an album."
+
+   The album has to look like it will take the drop before the mouse is
+   let go, and it has to be obvious which album, since they are a stack of
+   near-identical rows a few pixels apart. A ring on the whole row rather
+   than an edge line: the edge lines above mean "the card will land here",
+   and this means "the photos go IN here", which is a different promise.
+
+   The tile fades while it is being carried, matching the menu card above.
+   The picture is left visible rather than hidden -- what is being dragged
+   is a photo, and a grey rectangle does not say which one. */
+#ss-app .ss-card.ss-drop-album {
+  box-shadow: inset 0 0 0 2px var(--accent);
+  background: var(--accent-tint, var(--hover));
+}
+#ss-app .ss-card.ss-drop-album .ss-card-ic { color: var(--accent); }
+#ss-app .gallery .tile { cursor: grab; }
+#ss-app .gallery .tile.is-dragging { opacity: .45; }
+
+/* THE GHOST that follows the cursor.
+
+   The drag is built from mousedown/mousemove/mouseup rather than HTML5
+   drag-and-drop (see app.js), which means there is no browser-drawn drag
+   image and this is it. Positioned in script, offset up and left of the
+   pointer so it never sits under the cursor's own hot spot.
+
+   pointer-events: none is load-bearing, not decoration: the drop target
+   is found with elementFromPoint, and a ghost that could be hit would be
+   the only thing ever found -- it is directly under the cursor for the
+   whole drag. */
+#ss-app .ss-drag-ghost {
+  position: fixed; z-index: 9999;
+  margin: -28px 0 0 -28px;
+  width: 78px; height: 78px;
+  border-radius: var(--radius); overflow: visible;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .45);
+  border: 2px solid var(--accent);
+  background: var(--elevated);
+  pointer-events: none;
+  opacity: .92;
+  transform: rotate(-3deg);
+}
+#ss-app .ss-drag-ghost img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: calc(var(--radius) - 2px);
+  display: block;
+}
+#ss-app .ss-drag-count {
+  position: absolute; top: -9px; right: -9px;
+  min-width: 22px; height: 22px; padding: 0 5px;
+  border-radius: 11px;
+  background: var(--accent); color: var(--on-accent, #fff);
+  font-size: 0.75rem; font-weight: 700;
+  display: grid; place-items: center;
+}
+/* While carrying photos, nothing else on the page should be selecting
+   text or offering its own native image drag under the cursor. */
+#ss-app.ss-dragging-photo, body.ss-dragging-photo #ss-app {
+  user-select: none; -webkit-user-select: none; cursor: grabbing;
+}
+body.ss-dragging-photo #ss-app * { cursor: grabbing !important; }
+/* An <img> is draggable in its own right in every engine, and that native
+   drag would start alongside this one and fight it. */
+#ss-app .gallery .tile img, #ss-app .ss-drag-ghost img {
+  -webkit-user-drag: none; user-drag: none; -webkit-touch-callout: none;
+}
+
+/* The star that puts a subsection on Home. Dim until hovered or starred, so
+   a menu of twenty puzzles is not a wall of stars. */
+/* The star sits in the card's right padding rather than in the row: as a
+   flex item it took width from the name, and "Dashboard" became "Dashb...". */
+#ss-subnav .ss-card { position: relative; padding-right: 22px; }
+/* a card's count keeps its own width: the label rule above (span, flex 1)
+   took it too, and the two split the card, so "All photos" read "All ph…" */
+#ss-app .ss-card > span.ss-nav-count:not(.ss-card-ic) { flex: none; min-width: 0; margin-left: auto; }
+#ss-subnav .ss-card:has(.ss-nav-count) { padding-right: 10px; }
+#ss-app .ss-card.on > .ss-nav-count { color: var(--card-accent, var(--accent)); }
+/* a folder inside another is set in, one step per level */
+#ss-subnav .ss-folder-card { margin-left: calc(var(--depth, 0) * 12px); width: calc(100% - var(--depth, 0) * 12px); }
+#ss-subnav .ss-fav {
+  position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+  font-size: 0.9rem; line-height: 1;
+  color: var(--faint, var(--muted));
+  opacity: 0; cursor: pointer;
+}
+#ss-subnav .ss-fav:hover { transform: translateY(-50%) scale(1.15); }
+#ss-subnav .ss-card:hover .ss-fav,
+#ss-subnav .ss-card:focus-within .ss-fav { opacity: .8; }
+#ss-subnav .ss-fav.on { opacity: 1; color: var(--star, #e2b13c); }
+#ss-subnav .ss-fav:hover { opacity: 1; }
+#ss-app.subnav-collapsed #ss-subnav .ss-fav { display: none; }
+
+/* The quick links on Home. */
+.ss-home .fav-strip { margin: 0 0 18px; }
+.ss-home .fav-strip-h {
+  display: block; margin-bottom: 8px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted);
+}
+.ss-home .fav-grid {
+  display: grid; gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+}
+.ss-home .fav-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 12px 12px 11px;
+  border: 1px solid var(--line); border-left: 3px solid var(--card-accent, var(--accent));
+  border-radius: var(--radius, 10px);
+  background: var(--elevated, var(--panel));
+  color: var(--ink, var(--text));
+  font: inherit; text-align: left; cursor: pointer;
+}
+.ss-home .fav-card:hover {
+  background: var(--hover);
+  border-color: color-mix(in srgb, var(--card-accent, var(--accent)) 45%, var(--line));
+  transform: translateY(-1px);
+}
+.ss-home .fav-card-ic {
+  display: grid; place-items: center;
+  width: 28px; height: 28px; margin-bottom: 6px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card-accent, var(--accent)) 18%, transparent);
+  color: var(--card-accent, var(--accent));
+}
+.ss-home .fav-card-ic .ic { width: 16px; height: 16px; }
+.ss-home .fav-card-name { font-weight: 650; font-size: 0.875rem; }
+.ss-home .fav-card-sec { font-size: 0.7rem; color: var(--muted); }
+/* the app cards (15 Nov 2026): a page list that won't fit ends in "…" */
+.ss-home .app-card { min-width: 0; }
+.ss-home .app-card .fav-card-name,
+.ss-home .app-card .fav-card-sec { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ss-home .fav-strip-empty { padding: 12px 14px; border: 1px dashed var(--line); border-radius: var(--radius, 10px); }
+
+/* Press-and-sweep selection (sweepSelect in app.js): no text gets selected
+   while the pointer sweeps across a list or a grid of photos. */
+body.ss-sweeping, body.ss-sweeping * { user-select: none; -webkit-user-select: none; }
+
+/* Moving a menu card with the right button held (wireDragOrder in app.js).
+   The ghost follows the pointer; pointer-events: none so the drop target
+   under it can be found with elementFromPoint. */
+#ss-app .ss-nav-ghost {
+  position: fixed; z-index: 9999; margin: 0; pointer-events: none;
+  transform: translate(10px, 8px) rotate(-2deg); opacity: .92;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .45);
+}
+body.ss-nav-dragging, body.ss-nav-dragging * { cursor: grabbing !important; user-select: none; }
+
+/* Money -> Books (2026-10-02; money.js renderBooks) */
+.mb-books { display: flex; flex-direction: column; gap: 8px; max-width: 820px; margin-top: 14px; }
+.mb-book { display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+           border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.mb-book-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+
+/* ---- a section's pages as tabs (2026-10-05) -------------------------------
+   The right-hand menu gives its 210px back to the page; the same pages sit in
+   a row above it, in the section's colour. */
+#ss-app.page-tabs #ss-subnav { display: none; }
+#ss-tabs {
+  flex: none; display: flex; align-items: flex-end; gap: 6px;
+  padding: 8px 14px 0 18px; border-bottom: 1px solid var(--border);
+  background: var(--bg-app);
+}
+#ss-tabs[hidden] { display: none; }
+/* Cam (14 Nov 2026): "fix the UI that way when in floating window mode i can
+   see all the puzzle options. At the moment for example colouring by numbers
+   is not in sight." The row scrolled sideways with its scrollbar hidden, so
+   what didn't fit was simply gone; now it wraps onto another line. */
+.ss-tabs-row {
+  flex: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: 2px;
+}
+#ss-tabs .ss-tab {
+  flex: none; display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 12px 9px; border: 0; border-bottom: 2px solid transparent;
+  border-radius: 6px 6px 0 0; background: transparent;
+  color: var(--muted, var(--text-faint)); font: inherit; font-size: 0.8125rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transform: none;
+}
+#ss-tabs .ss-tab .ic { width: 15px; height: 15px; color: var(--card-accent); opacity: .8; }
+#ss-tabs .ss-tab:hover { color: var(--ink); background: var(--hover); }
+#ss-tabs .ss-tab.on { color: var(--ink); border-bottom-color: var(--card-accent); }
+#ss-tabs .ss-tab.on .ic { opacity: 1; }
+#ss-tabs .ss-tab:focus-visible { outline: 2px solid var(--card-accent); outline-offset: -2px; }
+.ss-tabs-mode {
+  flex: none; width: 28px; height: 28px; display: grid; place-items: center;
+  border: 0; border-radius: 6px; background: transparent; cursor: pointer;
+  color: var(--muted, var(--text-faint)); margin-bottom: 4px;
+}
+.ss-tabs-mode:hover { background: var(--hover); color: var(--ink); }
+.ss-tabs-mode .ic { width: 15px; height: 15px; }
+#ss-subnav-tabs {
+  flex: none; width: 24px; height: 24px; display: grid; place-items: center;
+  border: 0; border-radius: 6px; background: transparent; cursor: pointer;
+  color: var(--muted, var(--text-faint));
+}
+#ss-subnav-tabs:hover { background: var(--hover); color: var(--ink); }
+#ss-subnav-tabs .ic { width: 15px; height: 15px; }
+#ss-add[hidden] { display: none; }
+
+/* the ☆ that puts a page on Home: on the open tab (and on pages already starred) */
+#ss-tabs .ss-tab .ss-fav { font-size: 0.8125rem; margin-left: 2px; display: none; color: var(--muted, var(--text-faint)); }
+#ss-tabs .ss-tab.on .ss-fav, #ss-tabs .ss-tab .ss-fav.on { display: inline; }
+#ss-tabs .ss-tab .ss-fav.on { color: var(--card-accent); }
+/* nothing playing: the player is a pill, not the bar's whole left column (2026-10-05) */
+#ss-app #ss-topbar #ch-top-bar .cc-mini:not(.has-track) { justify-self: start; }
+#ss-app #ss-topbar #ch-top-bar .cc-mini:not(.has-track) .cc-mini-track { flex: none; width: auto; }
+
+/* ---- the sidebar's "More" group (2026-10-06) -------------------------------
+   The sections used least, tucked into a group at the foot of the left menu
+   that opens in place. Settings -> Sections shown chooses which. */
+#ss-nav .ss-more { color: var(--muted); }
+#ss-app #ss-nav .ss-more > span.ss-more-n {
+  flex: 0 0 auto; margin-left: auto; min-width: 20px; padding: 0 6px; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 700; text-align: center;
+  background: var(--line); color: var(--muted);
+}
+#ss-nav .ss-more .ss-card-ic svg { transition: transform .15s ease; }
+#ss-nav .ss-more.open .ss-card-ic svg { transform: rotate(90deg); }
+#ss-nav .ss-more-list { display: flex; flex-direction: column; gap: inherit; padding-left: 10px;
+  border-left: 1px solid var(--line); margin-left: 14px; }
+#ss-nav .ss-more-list[hidden] { display: none; }
+.sec-row .chip-sm { padding: 2px 10px; font-size: 0.75rem; }
+/* a section dragged over More: it'll go in */
+#ss-nav .ss-more.is-drop { outline: 2px dashed var(--accent); outline-offset: 2px; color: var(--ink); }
+
+/* ---- Find (find.js, 2026-10-06) --------------------------------------------
+   A button on the bar, like Multitask's, and a box over the page. */
+#ss-find {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 28px; padding: 0 8px 0 10px; min-width: 180px;
+  border: 1px solid var(--line); border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 70%, transparent); color: var(--muted);
+  font: inherit; font-size: 0.82rem; cursor: pointer;
+}
+#ss-find:hover { border-color: color-mix(in srgb, var(--accent) 55%, transparent); color: var(--ink); }
+#ss-find svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+#ss-find span { flex: 1; text-align: left; }
+#ss-find kbd { font: 600 0.68rem/1 var(--mono, monospace); padding: 3px 5px; border-radius: 4px;
+  border: 1px solid var(--line); color: var(--muted); }
+.nf-veil {
+  position: fixed; inset: 0; z-index: 9000; display: flex; justify-content: center; align-items: flex-start;
+  padding: 12vh 16px 16px; background: rgba(0, 0, 0, .38);
+}
+.nf-box {
+  width: min(640px, 100%); display: flex; flex-direction: column; max-height: 70vh;
+  background: var(--panel); color: var(--ink); border: 1px solid var(--line);
+  border-radius: var(--radius-lg, 14px); box-shadow: 0 24px 60px rgba(0, 0, 0, .45); overflow: hidden;
+}
+.nf-q { margin: 12px; font-size: 1rem; }
+.nf-list { list-style: none; margin: 0; padding: 0 6px 6px; overflow-y: auto; }
+.nf-row {
+  display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 12px; align-items: center;
+  padding: 8px 10px; border-radius: 8px; cursor: pointer;
+}
+.nf-row.on, .nf-row:hover { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+.nf-kind { font-size: 0.68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.nf-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nf-where { font-size: 0.78rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.nf-empty { padding: 14px 10px; color: var(--muted); }
+.nf-hint { margin: 0; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 0.75rem; color: var(--muted); }
+
+/* ---- Compact: this computer's layout (display.js, 2026-10-06) ---------------
+   Cam: "my laptop screen is smaller then my ultra wide monitor and can
+   sometimes get cramped when working through the training sessions". The menu
+   goes to icons (app.js), and everything takes less room around it. Auto turns
+   this on whenever the window is narrow. */
+html[data-density="compact"] #ss-main { padding: 12px 14px 24px; }
+html[data-density="compact"] #ss-tabs .ss-tab { padding: 6px 9px 7px; gap: 5px; }
+html[data-density="compact"] .page-h { margin-bottom: 4px; }
+html[data-density="compact"] .panel { padding: 12px; }
+html[data-density="compact"] .bd-actions { margin-top: 8px; }
+html[data-density="compact"] .disp-box,
+html[data-density="compact"] .sec-row { padding-block: 8px; }
+/* Training: tags on one row ("Show all tags" opens the rest), tighter cards and panes */
+html[data-density="compact"] :is(#cf-shell, #cf-lens) .chips.is-filter { max-height: 34px; }
+html[data-density="compact"] :is(#cf-shell, #cf-lens) .card { padding: 8px 10px; }
+html[data-density="compact"] :is(#cf-shell, #cf-lens) .card .tag-row { margin-top: 4px; }
+html[data-density="compact"] :is(#cf-shell, #cf-lens) .page { padding-left: 12px; padding-right: 12px; }
+html[data-density="compact"] :is(#cf-shell, #cf-lens) .detail-body { padding: 12px 16px 28px; }
+html[data-density="compact"] :is(#cf-shell, #cf-lens) .list { gap: 4px; }
+
+/* the display settings */
+.disp-box { margin-bottom: 8px; }
+.disp-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.disp-name { min-width: 90px; font-weight: 700; color: var(--ink); }
+
+/* Money: cash books (2026-10-11) -- the bar above every Money page, and Compare */
+.cb-bookbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 0 12px; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+.cb-bookbar-label { font-size: 0.71875rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+.cb-book-pick { width: auto; min-width: 160px; }
+.cb-book-note { margin-left: 4px; }
+.cmp-picks select { width: auto; min-width: 150px; }
+.cmp-h { margin: 18px 0 6px; font-size: 0.95rem; }
+.cmp-table td.num, .cmp-table th.num { text-align: right; font-family: var(--font-mono); white-space: nowrap; }
+.cmp-table tr.cmp-same td { color: var(--muted); }
+.cmp-table tr.cmp-strong td { font-weight: 700; }
+.cmp-only { font-size: 0.6875rem; padding: 1px 6px; border-radius: 8px; background: var(--accent-tint); color: var(--muted); margin-left: 6px; }
+.cmp-diff { color: var(--accent, var(--ink)); }
+.cmp-table td.cmp-together { color: var(--muted); }
+.metric-value.cmp-pair { font-size: 1rem; line-height: 1.5; }
+.cmp-diff { font-variant-numeric: tabular-nums; }
+.cmp-table td.cmp-together { color: var(--muted); }
+.metric-value.cmp-pair { display: flex; flex-direction: column; font-size: 1rem; line-height: 1.4; }

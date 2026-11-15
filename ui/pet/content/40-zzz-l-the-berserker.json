@@ -1,0 +1,729 @@
+{
+ "BERSERKER_ITEMS": {
+  "//": "Battle Re-work Part 5 (2026-10-15): the Berserker's arms. longsword: balanced, a little stronger than a sword. maul: two-handed (no off-hand weapon), slow (a blow every other round) but heavy (each blow heavy x the damage), and a big blow (stunBig of its best) may stun (bigStun: the chance). mace: a crush blade for anyone (good on shells and bones). Spiked gauntlets: worn on your hands (gloves), and when you've no weapon to hand they're what you hit with -- fist: their attack, and a chance (bleedChance) to make it bleed [damage a round, rounds]. wearBy: a blow wears it this much (a maul's heavy blows: 2).",
+  "bronzelongsword": {
+   "name": "Bronze longsword",
+   "price": 45,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 5,
+    "style": "melee",
+    "cls": "berserker",
+    "req": {
+     "attack": 1
+    }
+   }
+  },
+  "bronzemaul": {
+   "name": "Bronze maul",
+   "price": 55,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 5,
+    "style": "melee",
+    "cls": "berserker",
+    "twoHanded": true,
+    "slow": true,
+    "heavy": 1.55,
+    "stunBig": 0.7,
+    "req": {
+     "attack": 1
+    },
+    "bigStun": 0.4,
+    "wearBy": 2
+   }
+  },
+  "bronzemace": {
+   "name": "Bronze mace",
+   "price": 35,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 4,
+    "style": "melee",
+    "req": {
+     "attack": 1
+    }
+   }
+  },
+  "ironlongsword": {
+   "name": "Iron longsword",
+   "price": 145,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 10,
+    "style": "melee",
+    "cls": "berserker",
+    "req": {
+     "attack": 10
+    }
+   }
+  },
+  "ironmaul": {
+   "name": "Iron maul",
+   "price": 166,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 10,
+    "style": "melee",
+    "cls": "berserker",
+    "twoHanded": true,
+    "slow": true,
+    "heavy": 1.55,
+    "stunBig": 0.7,
+    "req": {
+     "attack": 10
+    },
+    "bigStun": 0.4,
+    "wearBy": 2
+   }
+  },
+  "ironmace": {
+   "name": "Iron mace",
+   "price": 124,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 8,
+    "style": "melee",
+    "req": {
+     "attack": 10
+    }
+   }
+  },
+  "steellongsword": {
+   "name": "Steel longsword",
+   "price": 236,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 15,
+    "style": "melee",
+    "cls": "berserker",
+    "req": {
+     "attack": 20
+    }
+   }
+  },
+  "steelmaul": {
+   "name": "Steel maul",
+   "price": 294,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 15,
+    "style": "melee",
+    "cls": "berserker",
+    "twoHanded": true,
+    "slow": true,
+    "heavy": 1.55,
+    "stunBig": 0.7,
+    "req": {
+     "attack": 20
+    },
+    "bigStun": 0.4,
+    "wearBy": 2
+   }
+  },
+  "steelmace": {
+   "name": "Steel mace",
+   "price": 178,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 12,
+    "style": "melee",
+    "req": {
+     "attack": 20
+    }
+   }
+  },
+  "mithrillongsword": {
+   "name": "Mithril longsword",
+   "price": 513,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 20,
+    "style": "melee",
+    "cls": "berserker",
+    "req": {
+     "attack": 30
+    }
+   }
+  },
+  "mithrilmaul": {
+   "name": "Mithril maul",
+   "price": 639,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 20,
+    "style": "melee",
+    "cls": "berserker",
+    "twoHanded": true,
+    "slow": true,
+    "heavy": 1.55,
+    "stunBig": 0.7,
+    "req": {
+     "attack": 30
+    },
+    "bigStun": 0.4,
+    "wearBy": 2
+   }
+  },
+  "mithrilmace": {
+   "name": "Mithril mace",
+   "price": 387,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 16,
+    "style": "melee",
+    "req": {
+     "attack": 30
+    }
+   }
+  },
+  "adamantlongsword": {
+   "name": "Adamant longsword",
+   "price": 744,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 25,
+    "style": "melee",
+    "cls": "berserker",
+    "req": {
+     "attack": 40
+    }
+   }
+  },
+  "adamantmaul": {
+   "name": "Adamant maul",
+   "price": 925,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 25,
+    "style": "melee",
+    "cls": "berserker",
+    "twoHanded": true,
+    "slow": true,
+    "heavy": 1.55,
+    "stunBig": 0.7,
+    "req": {
+     "attack": 40
+    },
+    "bigStun": 0.4,
+    "wearBy": 2
+   }
+  },
+  "adamantmace": {
+   "name": "Adamant mace",
+   "price": 562,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 20,
+    "style": "melee",
+    "req": {
+     "attack": 40
+    }
+   }
+  },
+  "runelongsword": {
+   "name": "Rune longsword",
+   "price": 1005,
+   "gem": 9,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 30,
+    "style": "melee",
+    "cls": "berserker",
+    "req": {
+     "attack": 50
+    }
+   }
+  },
+  "runemaul": {
+   "name": "Rune maul",
+   "price": 1249,
+   "gem": 9,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 30,
+    "style": "melee",
+    "cls": "berserker",
+    "twoHanded": true,
+    "slow": true,
+    "heavy": 1.55,
+    "stunBig": 0.7,
+    "req": {
+     "attack": 50
+    },
+    "bigStun": 0.4,
+    "wearBy": 2
+   }
+  },
+  "runemace": {
+   "name": "Rune mace",
+   "price": 758,
+   "gem": 9,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 24,
+    "style": "melee",
+    "req": {
+     "attack": 50
+    }
+   }
+  },
+  "bronzespikedgauntlets": {
+   "name": "Bronze spiked gauntlets",
+   "price": 41,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "arms",
+    "def": 1,
+    "cls": "berserker",
+    "fist": {
+     "att": 3,
+     "bleed": [
+      1,
+      3
+     ],
+     "bleedChance": 0.25
+    },
+    "req": {
+     "attack": 1
+    }
+   }
+  },
+  "steelspikedgauntlets": {
+   "name": "Steel spiked gauntlets",
+   "price": 143,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "arms",
+    "def": 3,
+    "cls": "berserker",
+    "fist": {
+     "att": 9,
+     "bleed": [
+      2,
+      3
+     ],
+     "bleedChance": 0.25
+    },
+    "req": {
+     "attack": 20
+    }
+   }
+  },
+  "mithrilspikedgauntlets": {
+   "name": "Mithril spiked gauntlets",
+   "price": 285,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "arms",
+    "def": 5,
+    "cls": "berserker",
+    "fist": {
+     "att": 12,
+     "bleed": [
+      2,
+      3
+     ],
+     "bleedChance": 0.25
+    },
+    "req": {
+     "attack": 30
+    }
+   }
+  },
+  "adamantspikedgauntlets": {
+   "name": "Adamant spiked gauntlets",
+   "price": 402,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "arms",
+    "def": 7,
+    "cls": "berserker",
+    "fist": {
+     "att": 15,
+     "bleed": [
+      3,
+      3
+     ],
+     "bleedChance": 0.25
+    },
+    "req": {
+     "attack": 40
+    }
+   }
+  }
+ },
+ "BERSERKER_RECIPES": {
+  "//": "All at the anvil (Smithing).",
+  "anvil": [
+   {
+    "make": "bronzelongsword",
+    "needs": {
+     "bronzebar": 5,
+     "oak": 5
+    },
+    "level": 6,
+    "xp": 22.2,
+    "fee": 6
+   },
+   {
+    "make": "bronzemaul",
+    "needs": {
+     "bronzebar": 6,
+     "oak": 6
+    },
+    "level": 7,
+    "xp": 25.8,
+    "fee": 8
+   },
+   {
+    "make": "bronzemace",
+    "needs": {
+     "bronzebar": 4,
+     "oak": 3
+    },
+    "level": 5,
+    "xp": 16.9,
+    "fee": 4
+   },
+   {
+    "make": "ironlongsword",
+    "needs": {
+     "ironbar": 7,
+     "oak": 5
+    },
+    "level": 16,
+    "xp": 43.0,
+    "fee": 14
+   },
+   {
+    "make": "ironmaul",
+    "needs": {
+     "ironbar": 8,
+     "oak": 6
+    },
+    "level": 17,
+    "xp": 49.9,
+    "fee": 16
+   },
+   {
+    "make": "ironmace",
+    "needs": {
+     "ironbar": 6,
+     "oak": 3
+    },
+    "level": 15,
+    "xp": 32.7,
+    "fee": 12
+   },
+   {
+    "make": "steellongsword",
+    "needs": {
+     "steel": 4,
+     "oak": 5
+    },
+    "level": 24,
+    "xp": 72.4,
+    "fee": 11
+   },
+   {
+    "make": "steelmaul",
+    "needs": {
+     "steel": 5,
+     "oak": 6
+    },
+    "level": 25,
+    "xp": 84.0,
+    "fee": 13
+   },
+   {
+    "make": "steelmace",
+    "needs": {
+     "steel": 3,
+     "oak": 3
+    },
+    "level": 23,
+    "xp": 55.0,
+    "fee": 9
+   },
+   {
+    "make": "mithrillongsword",
+    "needs": {
+     "mithrilbar": 4,
+     "willow": 5
+    },
+    "level": 34,
+    "xp": 140.6,
+    "fee": 17
+   },
+   {
+    "make": "mithrilmaul",
+    "needs": {
+     "mithrilbar": 5,
+     "willow": 6
+    },
+    "level": 35,
+    "xp": 163.1,
+    "fee": 19
+   },
+   {
+    "make": "mithrilmace",
+    "needs": {
+     "mithrilbar": 3,
+     "willow": 3
+    },
+    "level": 33,
+    "xp": 106.9,
+    "fee": 15
+   },
+   {
+    "make": "adamantlongsword",
+    "needs": {
+     "adamantbar": 4,
+     "teak": 5
+    },
+    "level": 44,
+    "xp": 233.1,
+    "fee": 23
+   },
+   {
+    "make": "adamantmaul",
+    "needs": {
+     "adamantbar": 5,
+     "teak": 6
+    },
+    "level": 45,
+    "xp": 270.4,
+    "fee": 25
+   },
+   {
+    "make": "adamantmace",
+    "needs": {
+     "adamantbar": 3,
+     "teak": 3
+    },
+    "level": 43,
+    "xp": 177.2,
+    "fee": 21
+   },
+   {
+    "make": "runelongsword",
+    "needs": {
+     "runebar": 4,
+     "mahogany": 5
+    },
+    "level": 50,
+    "xp": 314.6,
+    "fee": 29
+   },
+   {
+    "make": "runemaul",
+    "needs": {
+     "runebar": 5,
+     "mahogany": 6
+    },
+    "level": 50,
+    "xp": 365.0,
+    "fee": 31
+   },
+   {
+    "make": "runemace",
+    "needs": {
+     "runebar": 3,
+     "mahogany": 3
+    },
+    "level": 50,
+    "xp": 239.1,
+    "fee": 27
+   },
+   {
+    "make": "bronzespikedgauntlets",
+    "needs": {
+     "bronzebar": 2,
+     "leather": 2
+    },
+    "level": 5,
+    "xp": 10.7,
+    "fee": 4
+   },
+   {
+    "make": "steelspikedgauntlets",
+    "needs": {
+     "steel": 2,
+     "leather": 2
+    },
+    "level": 22,
+    "xp": 34.7,
+    "fee": 9
+   },
+   {
+    "make": "mithrilspikedgauntlets",
+    "needs": {
+     "mithrilbar": 2,
+     "leather": 2
+    },
+    "level": 32,
+    "xp": 67.5,
+    "fee": 15
+   },
+   {
+    "make": "adamantspikedgauntlets",
+    "needs": {
+     "adamantbar": 2,
+     "leather": 2
+    },
+    "level": 42,
+    "xp": 111.9,
+    "fee": 21
+   }
+  ]
+ },
+ "BERSERKER_TYPES": {
+  "bronzelongsword": [
+   "slash",
+   "bronze"
+  ],
+  "bronzemaul": [
+   "crush",
+   "bronze"
+  ],
+  "bronzemace": [
+   "crush",
+   "bronze"
+  ],
+  "ironlongsword": [
+   "slash",
+   "iron"
+  ],
+  "ironmaul": [
+   "crush",
+   "iron"
+  ],
+  "ironmace": [
+   "crush",
+   "iron"
+  ],
+  "steellongsword": [
+   "slash",
+   "steel"
+  ],
+  "steelmaul": [
+   "crush",
+   "steel"
+  ],
+  "steelmace": [
+   "crush",
+   "steel"
+  ],
+  "mithrillongsword": [
+   "slash",
+   "mithril"
+  ],
+  "mithrilmaul": [
+   "crush",
+   "mithril"
+  ],
+  "mithrilmace": [
+   "crush",
+   "mithril"
+  ],
+  "adamantlongsword": [
+   "slash",
+   "adamant"
+  ],
+  "adamantmaul": [
+   "crush",
+   "adamant"
+  ],
+  "adamantmace": [
+   "crush",
+   "adamant"
+  ],
+  "runelongsword": [
+   "slash",
+   "rune"
+  ],
+  "runemaul": [
+   "crush",
+   "rune"
+  ],
+  "runemace": [
+   "crush",
+   "rune"
+  ],
+  "bronzespikedgauntlets": [
+   "pierce",
+   "bronze"
+  ],
+  "steelspikedgauntlets": [
+   "pierce",
+   "steel"
+  ],
+  "mithrilspikedgauntlets": [
+   "pierce",
+   "mithril"
+  ],
+  "adamantspikedgauntlets": [
+   "pierce",
+   "adamant"
+  ],
+  "//": "What each does to a creature: longswords slash, mauls and maces crush, spiked gauntlets pierce -- of their metal."
+ },
+ "FURY": {
+  "//": "The Berserker's meter (Battle Re-work Part 5; Cam's brief: fury builds as you deal and take damage, and empties after a fight). Each round you fight: perRound, plus deal x (your damage / the creature's health), plus take x (the damage you took / your max health) -- all x (1 + Seething), take x (1 + Pain feeds). The Berserker's specials are paid in fury, not the special bar.",
+  "classes": [
+   "berserker"
+  ],
+  "perRound": 2,
+  "deal": 40,
+  "take": 60,
+  "max": 100
+ },
+ "BLOODLUST": {
+  "//": "The Berserker's only heal, earned in the fight: a blow, and for rounds rounds after, heal heal x the damage you deal (Bloodletter: more). From class level minLevel.",
+  "name": "Bloodlust",
+  "cost": 80,
+  "dmg": 1,
+  "rounds": 3,
+  "heal": 0.2,
+  "minLevel": 25,
+  "about": "Your next blow, and the 3 rounds after it: you heal for 20% of the damage you deal. 80 fury."
+ }
+}

@@ -1,0 +1,238 @@
+{
+ "bronze": {
+  "helmet": "bronzehelm",
+  "torso": "bronzeplate",
+  "arms": "bronzegloves",
+  "legs": "bronzelegs",
+  "feet": "bronzeboots"
+ },
+ "iron": {
+  "helmet": "ironhelm",
+  "torso": "ironplate",
+  "arms": "irongloves",
+  "legs": "ironlegs",
+  "feet": "ironboots"
+ },
+ "steel": {
+  "helmet": "steelhelm",
+  "torso": "steelplate",
+  "arms": "steelgloves",
+  "legs": "steellegs",
+  "feet": "steelboots"
+ },
+ "mithril": {
+  "helmet": "mithrilhelm",
+  "torso": "mithrilplate",
+  "arms": "mithrilgloves",
+  "legs": "mithrillegs",
+  "feet": "mithrilboots"
+ },
+ "adamant": {
+  "helmet": "adamanthelm",
+  "torso": "adamantplate",
+  "arms": "adamantgloves",
+  "legs": "adamantlegs",
+  "feet": "adamantboots"
+ },
+ "rune": {
+  "helmet": "runehelm",
+  "torso": "runeplate",
+  "arms": "runegloves",
+  "legs": "runelegs",
+  "feet": "runeboots"
+ },
+ "bone-berserker": {
+  "helmet": "bonehelm",
+  "torso": "boneplate",
+  "arms": "bonegauntlets",
+  "legs": "bonegreaves",
+  "feet": "boneboots"
+ },
+ "bone-hunter": {
+  "helmet": "bonecowl",
+  "torso": "bonevest",
+  "arms": "bonebracers",
+  "legs": "bonechaps",
+  "feet": "bonetreads"
+ },
+ "soft-leather": {
+  "helmet": "leathercap",
+  "torso": "leathertunic",
+  "arms": "leathergloves",
+  "legs": "leathertrousers",
+  "feet": "leatherboots"
+ },
+ "hard-leather": {
+  "helmet": "hardcap",
+  "torso": "hardbody",
+  "arms": "hardvambraces",
+  "legs": "hardchaps",
+  "feet": "hardboots"
+ },
+ "snakeskin": {
+  "helmet": "snakecap",
+  "torso": "snakebody",
+  "arms": "snakevambraces",
+  "legs": "snakechaps",
+  "feet": "snakeboots"
+ },
+ "bat-leather": {
+  "helmet": "batcap",
+  "torso": "batbody",
+  "arms": "batvambraces",
+  "legs": "batchaps",
+  "feet": "batboots"
+ },
+ "armadillo": {
+  "helmet": "armadillocap",
+  "torso": "armadillobody",
+  "arms": "armadillovambraces",
+  "legs": "armadillochaps",
+  "feet": "armadilloboots"
+ },
+ "nimble-fox": {
+  "helmet": "nimblehood",
+  "torso": "nimblejerkin",
+  "arms": "nimblegloves",
+  "legs": "nimblebreeches",
+  "feet": "nimbleboots"
+ },
+ "ram-horn-brawler": {
+  "helmet": "brawlerhelm",
+  "torso": "brawlerplate",
+  "arms": "brawlergauntlets",
+  "legs": "brawlergreaves",
+  "feet": "brawlerboots"
+ },
+ "fleet": {
+  "helmet": "fleetcap",
+  "torso": "fleettunic",
+  "arms": "fleetgloves",
+  "legs": "fleettrousers",
+  "feet": "fleetboots"
+ },
+ "sylvan": {
+  "helmet": "sylvancrown",
+  "torso": "sylvanmail",
+  "arms": "sylvangrips",
+  "legs": "sylvanlegs",
+  "feet": "sylvanboots"
+ },
+ "grizzly": {
+  "helmet": "grizzlyhelm",
+  "torso": "grizzlyplate",
+  "arms": "grizzlygauntlets",
+  "legs": "grizzlygreaves",
+  "feet": "grizzlyboots"
+ },
+ "gorgon-scale": {
+  "helmet": "gorgonhelm",
+  "torso": "gorgonplate",
+  "arms": "gorgongauntlets",
+  "legs": "gorgongreaves",
+  "feet": "gorgonboots"
+ },
+ "snapshell": {
+  "helmet": "snapshellhelm",
+  "torso": "snapshellplate",
+  "arms": "snapshellgauntlets",
+  "legs": "snapshellgreaves",
+  "feet": "snapshellboots"
+ },
+ "cloth": {
+  "helmet": "clothhood",
+  "torso": "cottonshirt"
+ },
+ "yeti-fur": {
+  "helmet": "furhood",
+  "torso": "furcoat"
+ },
+ "linen": {
+  "helmet": "nemes",
+  "torso": "linenrobe"
+ },
+ "pharaoh": {
+  "helmet": "pharaohcrown",
+  "torso": "pharaohrobe",
+  "feet": "pharaohsandals"
+ },
+ "wizard": {
+  "helmet": "wizardhat"
+ },
+ "apprentice": {
+  "helmet": "apprenticehat",
+  "cloak": "apprenticecloak"
+ },
+ "adept": {
+  "helmet": "adepthood",
+  "cloak": "adeptcloak"
+ },
+ "mage": {
+  "helmet": "magehat",
+  "cloak": "magecloak"
+ },
+ "sorcerer": {
+  "helmet": "sorcerercrown",
+  "cloak": "sorcerercloak"
+ },
+ "archmage": {
+  "helmet": "archmagecirclet",
+  "cloak": "archmagecloak"
+ },
+ "spiked bronze": {
+  "arms": "bronzespikedgauntlets"
+ },
+ "spiked steel": {
+  "arms": "steelspikedgauntlets"
+ },
+ "spiked mithril": {
+  "arms": "mithrilspikedgauntlets"
+ },
+ "spiked adamant": {
+  "arms": "adamantspikedgauntlets"
+ },
+ "tiger-hide": {
+  "helmet": "tigercap",
+  "torso": "tigerbody",
+  "arms": "tigervambraces",
+  "legs": "tigerchaps",
+  "feet": "tigerboots"
+ },
+ "frost-hide": {
+  "helmet": "frostcap",
+  "torso": "frostbody",
+  "arms": "frostvambraces",
+  "legs": "frostchaps",
+  "feet": "frostboots"
+ },
+ "apprentice-robes": {
+  "torso": "apprenticerobetop",
+  "legs": "apprenticerobebottoms",
+  "arms": "apprenticegloves",
+  "feet": "apprenticeboots"
+ },
+ "adept-robes": {
+  "torso": "adeptrobetop",
+  "legs": "adeptrobebottoms",
+  "arms": "adeptgloves",
+  "feet": "adeptboots"
+ },
+ "mage-robes": {
+  "torso": "magerobetop",
+  "legs": "magerobebottoms",
+  "arms": "magegloves",
+  "feet": "mageboots"
+ },
+ "sorcerer-robes": {
+  "torso": "sorcererrobetop",
+  "legs": "sorcererrobebottoms",
+  "arms": "sorcerergloves",
+  "feet": "sorcererboots"
+ },
+ "archmage-robes": {
+  "torso": "archmagerobetop",
+  "legs": "archmagerobebottoms",
+  "arms": "archmagegloves",
+  "feet": "archmageboots"
+ }
+}

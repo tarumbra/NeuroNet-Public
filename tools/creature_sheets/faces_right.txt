@@ -1,0 +1,23 @@
+# Painted facing right on Cam's sheets -- mirrored so every creature faces left (towards you in a fight).
+chicken
+duck
+cow
+goat
+cattledog
+bunny
+straydog
+hedgehog
+frog
+boar
+armadillo
+tiger
+camelspider
+arcticfox
+mountaingoat
+yak
+icewolf
+kingnile
+apprenticemage
+adeptmage
+magusmage
+archmagemage

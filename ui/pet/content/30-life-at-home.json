@@ -1,0 +1,49 @@
+{
+  "//": [
+    "Content for ui/pet/core/30-life-at-home.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "ITEMS.thinstew": {"name": "Thin stew", "gem": 2, "heal": 4, "food": {"full": 25, "happy": 6, "clean": 0}},
+  "ITEMS.heartystew": {"name": "Hearty stew", "gem": 4, "heal": 9, "food": {"full": 40, "happy": 10, "clean": 0}},
+  "ITEMS.richstew": {"name": "Rich stew", "gem": 6, "heal": 16, "food": {"full": 55, "happy": 14, "clean": 0}},
+  "ITEMS.archivekey": {"name": "Archive key", "gem": 7, "from": "Grizz, the Deep Forest's boss, carries it"},
+  "ITEMS.stardust": {"name": "Stardust", "gem": 7},
+  "STEWS": [["thinstew", 0], ["heartystew", 3], ["richstew", 7]],
+  "LORE": {
+    "farmyard": "The first farmers came by boat, with one hen and a sack of seed. The hen is still remembered.",
+    "pasture": "Before the fences, the herds walked where they liked. The old mound is where the first shepherd sleeps.",
+    "meadow": "Bees were kept here before the village had a name. The wild hives are older than the oldest tree.",
+    "forest": "The rangers' oath: keep to the paths, leave the hidden glade to whoever made it.",
+    "deepforest": "A barrow, a black pool, and a bear that will not die. Old Mab knows more than she says.",
+    "coast": "The wreck on the sand carried no cargo but maps. Smugglers took them; the cove keeps them.",
+    "jungle": "The ruins were a library once. The vines took the roof, the basilisk took the rest.",
+    "deepjungle": "Past the vines, a temple with no door. It opens for those who come back.",
+    "crystalcaves": "The crystals hum when it's quiet. The miners called it singing; the mages call it a map.",
+    "mistyisle": "The island comes with the fog because it is the fog's. Pirates buried what they couldn't spend.",
+    "frostpeak": "At the top, footprints too large for anything that lives. The guide won't go past the last cairn."
+  },
+  "LORE_REWARDS": [[3, {"coins": 750}], [6, {"items": {"ancientchest": 1}}], [9, {"items": {"exoticegg": 1}}], [11, {"items": {"tomewarding": 1, "ancientchest": 1}}]],
+  "RESEARCH": {
+    "baskets": {"name": "Better baskets", "skill": "foraging", "says": "+3% foraging speed a level"},
+    "nets": {"name": "Finer nets", "skill": "fishing", "says": "+3% fishing speed a level"},
+    "picks": {"name": "Tempered picks", "skill": "mining", "says": "+3% mining speed a level"},
+    "axes": {"name": "Keener axes", "skill": "lumbering", "says": "+3% lumbering speed a level"},
+    "spades": {"name": "Lighter spades", "skill": "digging", "says": "+3% digging speed a level"},
+    "satchel": {"name": "Roomier bag", "bag": 3, "says": "+3 bag slots a level"},
+    "maps": {"name": "Old maps", "explore": 0.05, "says": "+5% chance to find something hidden, a level"}
+  },
+  "RESEARCH_ORDER": ["baskets", "nets", "picks", "axes", "spades", "satchel", "maps"],
+  "RESEARCH_COST": [
+    {"coins": 1000, "items": {"plank": 20}, "hours": 3, "library": 2},
+    {"coins": 5000, "items": {"hardplank": 20}, "hours": 8, "library": 3},
+    {"coins": 15000, "items": {"fineplank": 20}, "hours": 16, "library": 4}
+  ],
+  "STARS": [
+    ["The Angler", "fishing"],
+    ["The Lantern", "mining"],
+    ["The Woodsman", "lumbering"],
+    ["The Gatherer", "foraging"],
+    ["The Mole", "digging"],
+    ["The Cauldron", "cooking"]
+  ]
+}

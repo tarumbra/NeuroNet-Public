@@ -1,0 +1,36 @@
+{
+  "//": [
+    "Content for ui/pet/core/40-zzz-i-battle-foundations.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Battle Re-work, Part 1 (2026-10-15): the notebook \"Battle Re-Work\" in Notes has the plan."
+  ],
+  "EFFECTS": {
+    "//": "What can be on a fighter. group: what a creature's immune list names (\"poison\", \"control\" ...). control: it loses its turns (and diminishing returns apply). dot: damage each round (armourless: armour doesn't help; stack: how many at once at most). slow: acts every other round. hitMult / defMult: its blows / its guard.",
+    "trapped": {"group": "control", "name": "Trapped", "control": true, "icon": "🪤", "says": "is caught in the trap"},
+    "netted": {"group": "control", "name": "Netted", "control": true, "icon": "🕸", "says": "is tangled in the net"},
+    "stunned": {"group": "control", "name": "Stunned", "control": true, "icon": "💫", "says": "is stunned"},
+    "poisoned": {"group": "poison", "name": "Poisoned", "dot": true, "armourless": true, "stack": 3, "icon": "☠", "says": "is poisoned"},
+    "bleeding": {"group": "bleed", "name": "Bleeding", "dot": true, "icon": "🩸", "says": "is bleeding"},
+    "burning": {"group": "burn", "name": "Burning", "dot": true, "icon": "🔥", "says": "is burning"},
+    "slowed": {"group": "slow", "name": "Slowed", "slow": true, "icon": "🐌", "says": "is slowed"},
+    "weakened": {"group": "weaken", "name": "Weakened", "hitMult": 0.85, "icon": "🥀", "says": "is weakened"},
+    "brokenguard": {"group": "guard", "name": "Broken guard", "defMult": 0.8, "icon": "🛡", "says": "has its guard broken"}
+  },
+  "EFFECT_RULES": {
+    "//": "dr: how long the 1st, 2nd, 3rd and 4th 'lose a turn' on the same fighter in one fight lasts (WoW's diminishing returns). A boss: half, and never more than bossMaxControl rounds. levelStep: a round more (or less) for each this many levels between the two.",
+    "dr": [1, 0.5, 0.25, 0],
+    "bossControl": 0.5,
+    "bossMaxControl": 2,
+    "levelStep": 10
+  },
+  "WEAPON_WEAR": {
+    "//": "A weapon wears by the swing (or shot, or cast): base + perLevel x (its level - 1), at most max -- about 3 hours of hunting for a level 1 weapon, 6 for a level 40 one (tools/balance/classes.js measures it). warn: notes at these shares. Re-tempering (Cam, Q5): once, at retemperAt worn or more, for a third of what it's made of (or a third of its price in coins when nobody makes it).",
+    "base": 4200,
+    "perLevel": 105,
+    "max": 9000,
+    "warn": [0.75, 0.9],
+    "retemperAt": 0.75,
+    "retemperShare": 3
+  },
+  "WORKSHOPS.grindstone": {"//": "Cam (2026-10-15): \"a grind wheel ... placed in the furnace and anvil area, clicking it allows you to see the durability of a range of equipment and re-temper them there\"", "name": "Grindstone", "who": "", "skill": "smithing", "icon": "obj_wheel", "grind": true, "says": "Every weapon you hold or carry, how worn it is -- and its one re-tempering.", "recipes": []},
+  "AUTO_RUN": {"//": "Cam (PT1, 2026-10-15): \"the game still drops the fight when on low health ... keep it like that but only at the lower level areas, forest and above we should see that abolished so you die if you dont run or eat.\" A fight runs for you only on grounds below this level (Farmyard, Pasture, Meadow).", "below": 18}
+}

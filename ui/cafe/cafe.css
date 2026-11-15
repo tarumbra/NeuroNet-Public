@@ -1,0 +1,1056 @@
+/* ==========================================================================
+   NeuroCafe -- the look (2026-10-20, V19). NeuroPets' parchment-and-wood
+   palette (ui/pet/theme.css): dark wood behind, parchment cards, brown plates
+   for buttons -- so the two games feel like one family.
+   ========================================================================== */
+:root {
+  --bg: #45281a; --bg2: #3a2115; --panel: #e2c38f; --panel2: #d8b67f; --sunk: #c49a62;
+  --line: #a97a49; --frame: #814832; --ink: #3b2213; --muted: #6f4a2b;
+  --plate: #7a3c25; --plate-hover: #8c4a2f; --plate-ink: #f5e2bd;
+  --good: #4e8a2c; --bad: #a8322a; --gold: #f1c24a; --pink: #b8577e;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body.nc { background: radial-gradient(ellipse at 50% 45%, #5d3a24 0%, var(--bg) 55%, var(--bg2) 100%); color: var(--ink); /* the grid's in .nc-app */
+  font: 15px/1.35 "Nunito", "Segoe UI", "DejaVu Sans", sans-serif; display: flex; flex-direction: column; user-select: none; }
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+/* ---- the sidebar (2026-10-21): NeuroPets' -- dark wood, the name at the top, grouped rows, the sandbox at the foot ---- */
+.nc-app { display: grid; grid-template-columns: minmax(0, 1fr); height: 100vh; }
+.nc-body { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+
+/* ---- the top bar ---- */
+.nc-hud { display: flex; align-items: center; gap: 18px; padding: 8px 16px; background: linear-gradient(180deg, #8a4a2e, #6a351f);
+  border-bottom: 3px solid #4e2414; color: #fff4dc; position: relative; z-index: 50; box-shadow: 0 3px 12px rgba(0,0,0,.35); }
+.nc-name { display: flex; align-items: center; gap: 8px; font-size: 19px; min-width: 0; }
+.nc-name img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+.nc-name b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: Georgia, "DejaVu Serif", serif; letter-spacing: .3px; }
+.nc-stats { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+.nc-level { display: flex; align-items: center; gap: 8px; }
+.nc-level b { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #ffe08a, #e0a53a 60%, #a8681c);
+  color: #4e2414; font-size: 16px; box-shadow: inset 0 0 0 2px #7a4a14, 0 2px 4px rgba(0,0,0,.4); }
+.nc-xp { width: 130px; height: 12px; border-radius: 6px; background: rgba(30,14,6,.45); overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,236,200,.25); }
+.nc-xp i { display: block; height: 100%; background: linear-gradient(180deg, #a6dd6c, #5f9e30); transition: width .4s; }
+.nc-level small { font-size: 12px; color: #f0d9b0; min-width: 76px; }
+.nc-coins { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; white-space: nowrap; }
+.nc-coins.big { background: rgba(30,14,6,.35); padding: 4px 12px 4px 8px; border-radius: 999px; font-size: 16px; }
+.nc-coins.lack { color: var(--bad); }
+.nc-coin { width: 1.05em; height: 1.05em; flex: none; }
+.nc-tools { display: flex; gap: 8px; }
+.nc-row { display: flex; gap: 8px; justify-content: center; align-items: center; }
+
+.nc-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 14px; border-radius: 10px; cursor: pointer;
+  background: var(--plate); color: var(--plate-ink); border: 2px solid #4e2414; box-shadow: inset 0 1px 0 rgba(255,236,200,.25), 0 2px 0 #3a1a0c; font-weight: 700; }
+.nc-btn:hover:not(:disabled) { background: var(--plate-hover); }
+.nc-btn:active:not(:disabled) { transform: translateY(1px); box-shadow: inset 0 1px 0 rgba(255,236,200,.2); }
+.nc-btn:disabled { opacity: .5; cursor: default; }
+.nc-btn.on { background: var(--panel); color: var(--ink); }
+.nc-btn.ghost { background: transparent; color: var(--ink); border-color: var(--frame); box-shadow: none; }
+.nc-btn.sm { padding: 4px 10px; font-size: 13px; border-radius: 8px; }
+.nc-btn img { width: 24px; height: 24px; object-fit: contain; margin: -4px 0; }
+.nc-hammer { font-size: 18px; line-height: 1; }
+.nc-link { background: none; border: 0; padding: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; }
+
+/* ---- the cafe ---- */
+.nc-main { flex: 1; position: relative; overflow: hidden; }
+.nc-world { position: absolute; left: 50%; top: 50%; transform-origin: 50% 50%; }
+.nc-world > *, .nc-room > * { position: absolute; }
+.nc-stage, .nc-groundbox, .nc-room { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.nc-groundbox { z-index: 0; }
+/* outside the café: street things and passers-by, sorted among themselves, all behind the walls (4) and floor (3) */
+.nc-out { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 2; }
+/* PT56 (Cam: "make the 3d objects pop a little more"): a touch more contrast and colour, a crisp contact edge and a
+   deeper soft shadow -- on the floor things, the street things, and cast onto the wall behind what hangs there */
+:root { --nc-pop: contrast(1.06) saturate(1.1) drop-shadow(0 1px 0 rgba(30,14,6,.5)) drop-shadow(2px 6px 4px rgba(30,14,6,.4));
+        --nc-pop-wall: contrast(1.06) saturate(1.1) drop-shadow(0 1px 0 rgba(30,14,6,.45)) drop-shadow(3px 5px 4px rgba(30,14,6,.38)); }
+.nc-prop { position: absolute; pointer-events: none; filter: var(--nc-pop); }
+.nc-prop.flip { transform: scaleX(-1); }
+body.nc-street .nc-prop:not(.ghost) { pointer-events: auto; cursor: pointer; }
+body.nc-street .nc-prop:not(.ghost):hover { filter: drop-shadow(0 0 4px #fff7c8) drop-shadow(0 0 2px #ffd25a); }
+.nc-prop.picked { filter: drop-shadow(0 0 3px #7fd0ff) drop-shadow(0 0 6px #3a9ae0); }
+.nc-prop.ghost { opacity: .75; filter: drop-shadow(0 0 4px #7ee06a) drop-shadow(0 0 8px #4caf50); }
+.nc-prop.ghost.bad { filter: grayscale(.6) drop-shadow(0 0 4px #ff6a5a) drop-shadow(0 0 8px #d03a2a); }
+/* in the street mode the café's own things can't be picked */
+body.nc-street .nc-thing { pointer-events: none; }
+.nc-card.locked img { filter: grayscale(1) opacity(.55); }
+.nc-ground { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.nc-main { cursor: grab; }
+.nc-main:active { cursor: grabbing; }
+.nc-tile { position: absolute; pointer-events: none; image-rendering: auto; }
+.nc-wall, .nc-door { pointer-events: none; filter: drop-shadow(0 -1px 0 rgba(0,0,0,.1)); }
+.nc-wall { z-index: 4 !important; }
+.nc-thing { padding: 0; border: 0; background: none; cursor: pointer; display: block; }
+.nc-thing > .nc-body { width: 100%; height: 100%; object-fit: contain; object-position: bottom; display: block; pointer-events: none;
+  filter: var(--nc-pop); transition: filter .15s; }
+.nc-thing > .nc-body.flip { transform: scaleX(-1); }
+/* a recoloured fabric (2026-10-24): over the picture, exactly */
+.nc-thing > .nc-fab { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; object-position: bottom; pointer-events: none; }
+.nc-thing > .nc-fab.flip { transform: scaleX(-1); }
+/* (Cam, 24 October: a fridge counter's badge showed only in streaks through a painted counter -- the filtered colour
+   layer was stacked over it. Layers made explicit: the colour at 0, what sits on a thing at 1, a lamp's glow behind) */
+.nc-thing > .nc-fab { z-index: 0; }
+.nc-thing > .nc-fab ~ :not(.nc-lampglow):not(.nc-mglow) { z-index: 1; }
+.nc-thing.standin > .nc-fab { object-fit: fill; }
+/* white paint: a colour multiplied through the fabric's shape (mask), so its shading shows through */
+.nc-fab.paint { mix-blend-mode: multiply; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-position: center bottom; mask-position: center bottom;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.nc-dthumb .nc-fab.paint { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.nc-swatches { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 8px; padding: 6px 10px; border-radius: 12px; background: rgba(255, 246, 228, .5); }
+.nc-sw-row { display: flex; gap: 6px; }
+.nc-dthumb { position: relative; display: inline-block; flex: none; }
+.nc-dthumb img + img, .nc-dthumb .nc-fab { position: absolute; left: 0; top: 0; height: 40px; }
+.nc-sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(58, 29, 20, .6); cursor: pointer; padding: 0; box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
+.nc-sw:hover { transform: scale(1.1); }
+.nc-sw.on { outline: 3px solid #ffd27a; outline-offset: 1px; }
+.nc-sw.style { box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .55), inset 0 -3px 0 rgba(0,0,0,.15); }
+.nc-sw.locked { position: relative; filter: grayscale(.75) brightness(.8); cursor: help; }
+.nc-sw.locked i { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 12px; }
+.nc-paint { width: 54px; height: 54px; border-radius: 50%; border: 3px solid #3a1d14; box-shadow: inset 0 -6px 0 rgba(0,0,0,.18), inset 0 5px 0 rgba(255,255,255,.25); margin: 4px 0; }
+.nc-paint.mixer { background: conic-gradient(#b8443a, #c9a23a, #3caa5a, #2fb0a0, #4f8fb0, #8a5a9a, #d880a0, #b8443a); }
+.nc-prop.nc-shop { cursor: pointer; pointer-events: auto; }
+/* the right-click swatches (2026-10-24): the pop-ups' parchment, a little see-through, by the piece */
+.nc-swpop { position: fixed; z-index: 3000; max-width: 300px; padding: 10px 12px 9px; border-radius: 14px; display: flex; flex-direction: column; gap: 7px;
+  background: rgba(244, 228, 196, .84); border: 3px solid rgba(110, 62, 28, .85); box-shadow: 0 8px 22px rgba(40, 20, 8, .35), inset 0 0 0 2px rgba(255, 246, 228, .55);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); color: var(--ink); }
+.nc-swpop[hidden] { display: none; }
+.nc-swpop > b { font-size: 13px; }
+.nc-swpop > small { font-size: 11px; opacity: .75; }
+.nc-sw-row.wrap { flex-wrap: wrap; gap: 7px; }
+.nc-dtabs.center { justify-content: center; }
+.nc-swatches label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; }
+.nc-swatches input[type=range] { width: 110px; }
+.nc-swatches input[data-tk=h] { accent-color: #b0443a; }
+.nc-thing.standin > .nc-body { object-fit: fill; }                 /* the stand-in sofa: an armchair stretched wide */
+.nc-thing:hover > .nc-body, .nc-thing:focus-visible > .nc-body { filter: drop-shadow(0 0 4px #fff7c8) drop-shadow(0 0 2px #ffd25a); }
+.nc-thing:focus { outline: none; }
+.nc-thing.picked > .nc-body { filter: drop-shadow(0 0 3px #7fd0ff) drop-shadow(0 0 6px #3a9ae0); }
+.nc-thing.ghost { pointer-events: none; opacity: .7; }
+/* half walls (2026-11-08): on the lines between tiles, drawn like the dividers they were, never taking the pointer */
+.nc-hwall { pointer-events: none; display: block; }
+body.nc-hwhit .nc-hwall[data-hw] { pointer-events: auto !important; }   /* (only while a right-click looks for one) */
+.nc-hwall > .nc-body, .nc-hwall > .nc-fab { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; object-position: bottom; display: block; }
+.nc-hwall > .nc-fab ~ * { z-index: 1; }
+.nc-hwall.ghost { opacity: .75; }
+.nc-hwall.ghost > .nc-body { filter: drop-shadow(0 0 4px #7ee06a) drop-shadow(0 0 8px #4caf50); }
+.nc-hwall.ghost.bad > .nc-body, .nc-hwall.erase > .nc-body { filter: grayscale(.6) drop-shadow(0 0 4px #ff6a5a) drop-shadow(0 0 8px #d03a2a); }
+.nc-hwall.erase { opacity: .6; }
+body.nc-painting .nc-hwall:not(.ghost):not(.erase) { opacity: .85; }
+.nc-thing.ghost > .nc-body { filter: drop-shadow(0 0 4px #7ee06a) drop-shadow(0 0 8px #4caf50); }
+.nc-thing.ghost.bad > .nc-body { filter: grayscale(.6) drop-shadow(0 0 4px #ff6a5a) drop-shadow(0 0 8px #d03a2a); }
+.nc-pan { position: absolute; left: 50%; top: 2%; width: 52%; transform: translateX(-50%); pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
+/* N40 (optimisation): nothing here runs an endless CSS animation -- those redraw the window at the screen's full rate
+   (60-165 a second) for ever, about a quarter of a CPU core. The page's own clock flips two classes instead: nc-up
+   twice a second (bobbing, smoke, pulse, lamp flicker) and nc-sway four times (walking), so the window only redraws
+   when something changes. (2026-10-26: on the moving things themselves, not <body> -- a class on <body> made the
+   browser redraw the whole painted ground, its soft-edged SVG, every beat: three CPU cores on a 30x30 café.) */
+.nc-thing.burnt .nc-pan { filter: drop-shadow(0 -2px 3px rgba(60,60,60,.6)); will-change: transform; }   /* (its own layer: the smoke's pulse redraws the pan only, not the world round it) */
+.nc-thing.burnt.nc-up .nc-pan { filter: drop-shadow(0 -6px 6px rgba(60,60,60,.9)); }
+.nc-plate { position: absolute; left: 50%; top: 21%; width: 50%; transform: translate(-50%, -62%); pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+.nc-count.at { right: auto; transform: translate(-50%, -50%); }
+.nc-count.sm { font-size: 10px; padding: 0 4px; border-width: 1.5px; }          /* (a plain milkshake counter's three) */
+.nc-count { position: absolute; right: 6%; top: 4%; background: var(--panel); color: var(--ink); border: 2px solid var(--frame); border-radius: 999px;
+  font-size: 12px; font-weight: 800; padding: 0 6px; pointer-events: none; }
+.nc-bub { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); min-width: 26px; height: 26px; padding: 0 7px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 3px; font-weight: 800; font-size: 13px; pointer-events: none; white-space: nowrap;
+  background: var(--panel); border: 2px solid var(--frame); box-shadow: 0 2px 4px rgba(0,0,0,.35); }
+.nc-bub.go { background: #9fd86a; border-color: #3e7a1c; color: #1f4a08; }
+.nc-bub.bad { background: #ef7a6a; border-color: #8a1e14; color: #fff; }
+.nc-bub.clean { background: #bfe6ff; border-color: #2d6a94; color: #1d4a6a; }
+.nc-bub.money { background: #ffe9a6; border-color: #a8681c; color: #5a3408; }
+.nc-bub.time { font-variant-numeric: tabular-nums; }
+.nc-ring { position: absolute; right: 2%; top: 22%; width: 22px; height: 22px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(#5f9e30 calc(var(--p) * 1%), rgba(30,14,6,.35) 0); box-shadow: 0 0 0 2px var(--panel); }
+.nc-burnbar { position: absolute; left: 22%; right: 22%; top: 46%; height: 7px; border-radius: 4px; background: rgba(30,14,6,.5); overflow: hidden; pointer-events: none; }
+.nc-burnbar i { display: block; height: 100%; background: #f1c24a; }
+.nc-burnbar.hot i { background: #e0503a; }
+.nc-bub.go.nc-up, .nc-bub.clean.nc-up, .nc-bub.money.nc-up, .nc-bub.bad:not(.nc-up) { transform: translate(-50%, -4px); }
+
+/* the tutorial's pointer */
+.nc-point { opacity: 1; }
+.nc-thing.nc-point::after { content: ""; position: absolute; inset: -6px; border: 4px solid #e0302a; border-radius: 14px; pointer-events: none; }
+.nc-point.nc-up, .nc-thing.nc-point.nc-up::after { opacity: .55; }
+
+/* customers */
+.nc-people { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: auto; }
+.nc-person { position: absolute; pointer-events: none; }
+/* feet on the ground (2026-10-21): a soft shadow under them, and a sway from the feet instead of a hop */
+.nc-person::before { content: ""; position: absolute; left: 18%; right: 18%; bottom: -4px; height: 9px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,14,6,.42), rgba(30,14,6,0)); }
+.nc-person > img { position: relative; width: 100%; display: block; transform-origin: 50% 100%; }
+.nc-person.flip { transform: scaleX(-1); }
+.nc-person.walk > img { transform: rotate(-2.5deg); }
+.nc-carry img { position: absolute; z-index: 1; width: var(--carry-w, 60%); left: 50%; margin-left: calc(var(--carry-w, 60%) / -2); top: var(--carry-top, 38%); filter: drop-shadow(0 1px 1px rgba(0,0,0,.4)); }
+.nc-person.walk.nc-sway > img { transform: rotate(2.5deg); }
+
+/* floating +coins / +XP */
+.nc-float { position: fixed; z-index: 300; transform: translateX(-50%); pointer-events: none; font-weight: 800; font-size: 18px; display: inline-flex; gap: 4px; align-items: center;
+  color: #fff4dc; text-shadow: 0 2px 0 #4e2414, 0 0 6px rgba(0,0,0,.5); animation: nc-rise 1.4s ease-out forwards; }
+.nc-float.xp { color: #c8f59a; }
+.nc-float.candy { color: #ffb347; }
+/* Halloween (2026-10-24): the candy in the top bar, the haunted mansion's shop */
+.nc-candy { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; border: 2px solid #a8501c; background: #ffcf8a; color: #4a2208; font-weight: 800; cursor: pointer; }
+.nc-candy:hover { background: #ffdca6; }
+.nc-prop.nc-haunt { cursor: pointer; pointer-events: auto; }
+/* your photos in frames (2026-10-24) */
+.nc-art.photo { object-fit: cover; filter: none; }
+.nc-art.photo.round { border-radius: 50%; }
+.nc-photos { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 8px 0; }
+.nc-photo { position: relative; width: 84px; height: 84px; border-radius: 10px; border: 3px solid #b8925a; background: #fff8e6; padding: 0; cursor: pointer; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.nc-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.nc-photo.on { border-color: #4caf50; box-shadow: 0 0 0 3px rgba(76,175,80,.35); }
+.nc-photo.add b { font-size: 30px; line-height: 1; color: #7a5228; }
+.nc-photo.add small { font-size: 11px; color: #7a5228; }
+.nc-photo i { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(60,30,10,.75); display: none; }
+.nc-photo i svg { width: 14px; height: 14px; margin: 3px; }
+.nc-photo:hover i { display: block; }
+@keyframes nc-rise { from { opacity: 1; margin-top: 0; } to { opacity: 0; margin-top: -60px; } }
+
+/* ---- the build drawer ---- */
+/* it sits between the round buttons (bottom left) and the window's right edge */
+.nc-drawer { position: fixed; left: 50vw; bottom: 14px; transform: translateX(-50%); z-index: 60; background: var(--panel); border: 3px solid var(--frame); border-radius: 14px;
+  padding: 10px 14px; box-shadow: 0 6px 20px rgba(0,0,0,.45); max-width: calc(100vw - 200px); }
+.nc-cards { display: flex; gap: 10px; align-items: stretch; overflow-x: auto; }
+.nc-card { width: 132px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 3px; background: var(--panel2); border: 2px solid var(--line); border-radius: 10px; padding: 8px 6px; text-align: center; }
+.nc-card img { height: 64px; width: 100%; object-fit: contain; }
+.nc-card b { font-size: 13px; }
+.nc-card small { color: var(--muted); font-size: 12px; }
+.nc-card .nc-btn { margin-top: auto; width: 100%; }
+.nc-card .nc-row .nc-btn { width: auto; }
+.nc-card.ware { background: #e9d3a6; width: 170px; }
+.nc-sep { width: 2px; background: var(--line); flex: none; border-radius: 1px; }
+.nc-dhead { display: flex; align-items: center; gap: 10px; }
+.nc-dhead img { height: 40px; }
+.nc-dhead > span { color: var(--muted); font-size: 13px; }
+
+/* ---- the chef's tutorial ---- */
+.nc-tut { position: fixed; left: 18px; bottom: 16px; z-index: 70; display: flex; align-items: flex-end; gap: 4px; max-width: 460px; pointer-events: none; }
+.nc-tut > * { pointer-events: auto; }
+.nc-tut.hw { bottom: calc(var(--nc-dh, 0px) + 24px); }   /* Rosa's half-wall lesson, over the build drawer */
+.nc-chef { height: 170px; filter: drop-shadow(0 4px 4px rgba(0,0,0,.45)); }
+.nc-chef.big { height: 150px; display: block; margin: -80px auto 4px; }
+.nc-say { position: relative; background: var(--panel); border: 3px solid var(--frame); border-radius: 14px; padding: 10px 14px; margin-bottom: 70px; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.nc-say::before { content: ""; position: absolute; left: -12px; bottom: 18px; border: 9px solid transparent; border-right-color: var(--frame); border-left: 0; }
+.nc-say small { color: var(--muted); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+.nc-say p { margin: 3px 0 6px; font-size: 15px; }
+
+/* ---- pop-ups ---- */
+.nc-modal { position: fixed; inset: 0; z-index: 200; background: rgba(20,10,4,.55); display: grid; place-items: center; padding: 20px; }
+.nc-modal[hidden] { display: none; }
+/* pop-ups (2026-10-21): the NeuroPets leafy frame round parchment (art/ui, copied from ui/pet/art/ui) */
+.nc-card-pop { position: relative; border: 18px solid transparent; border-image: url("art/ui/popup-frame.png") 36 fill / 36px stretch; image-rendering: pixelated;
+  background: transparent; padding: 12px 18px; filter: drop-shadow(0 8px 18px rgba(10,4,0,.6));
+  max-width: min(92vw, 520px); text-align: center; animation: nc-pop .18s ease-out; }
+.nc-card-pop > * { image-rendering: auto; }
+.nc-card-pop.still { animation: none; }               /* (drawn again while open: no pop-in) */
+@keyframes nc-pop { from { transform: scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+.nc-card-pop h2 { margin: 4px 0; font-family: Georgia, "DejaVu Serif", serif; }
+.nc-card-pop.small { max-width: 380px; }
+.nc-q { font-size: 16px; margin: 4px 0 14px; }
+.nc-card-pop.start { padding-top: 10px; margin-top: 90px; }
+.nc-card-pop.start p { color: var(--muted); margin: 0 0 12px; }
+.nc-input { display: block; width: 100%; margin: 0 0 12px; padding: 9px 12px; border-radius: 10px; border: 2px solid var(--frame); background: #f3e2bf; font: inherit; color: var(--ink); text-align: center; font-size: 17px; }
+.nc-x { position: absolute; right: 10px; top: 6px; background: var(--plate); color: var(--plate-ink); border: 2px solid #4e2414; border-radius: 50%; width: 32px; height: 32px; font-size: 20px; line-height: 1; cursor: pointer; z-index: 2; }
+
+/* the cookbook (2026-10-21): Cafeland's recipe cards on our parchment -- a ribbon heading, a tab per kind of dish,
+   sorting down the side, two cards a row that scroll */
+.nc-card-pop.cook { width: min(96vw, 980px); max-width: none; padding: 6px 12px 12px; text-align: left; }
+.nc-card-pop .nc-x { right: -6px; top: -6px; }
+.nc-dev .nc-x { right: -4px; top: -6px; }
+.nc-hud .nc-btn.ghost { color: var(--plate-ink); border-color: rgba(255,236,200,.55); }
+.nc-cb-head { display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 0 0 6px; }
+.nc-ribbon { display: inline-block; border-style: solid; border-color: transparent; border-width: 9px 44px; border-image: url("art/ui/title-ribbon.png") 9 42 fill / 9px 44px stretch;
+  image-rendering: pixelated; padding: 2px 18px; font: 800 22px/1.2 Georgia, "DejaVu Serif", serif; color: var(--ink); letter-spacing: .5px; }
+.nc-cb-head small { color: var(--muted); font-size: 13px; }
+.nc-cb-tabs { display: flex; gap: 6px; padding-left: 64px; }
+.nc-cb-tab { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px 6px; border: 2px solid var(--line); border-bottom: 0; border-radius: 10px 10px 0 0; background: var(--panel2);
+  font-weight: 800; color: var(--muted); cursor: pointer; }
+.nc-cb-tab.on { background: #f1dcae; color: var(--ink); border-color: var(--frame); }
+.nc-cb-tab img { width: 28px; height: 22px; object-fit: contain; }
+.nc-cb-body { display: flex; gap: 10px; }
+.nc-cb-side { display: flex; flex-direction: column; gap: 8px; padding-top: 8px; }
+.nc-cb-sort { width: 54px; height: 46px; border-radius: 50%; border: 3px solid var(--frame); background: radial-gradient(circle at 40% 35%, #fff2d2, #e2c08a); color: var(--ink);
+  font-weight: 900; font-size: 15px; cursor: pointer; box-shadow: 0 2px 0 #4e2414; }
+.nc-cb-sort.on { background: radial-gradient(circle at 40% 35%, #ffe08a, #e0a53a); }
+.nc-cb-none { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 30px; }
+.nc-ic { width: 16px; height: 16px; flex: none; }
+/* recipe mastery (2026-10-22): five stars, gold when earned; hover them for what each takes and brings */
+.nc-rc-stars { display: flex; justify-content: center; gap: 3px; margin: -2px 0 -1px; font-size: 19px; line-height: 1; cursor: help; }
+.nc-rc-stars > i { font-style: normal; color: #cbbd9f; text-shadow: 0 1px 0 rgba(255,255,255,.6); }
+.nc-rc-stars > i.on { color: var(--gold); text-shadow: 0 0 1px #8a5a12, 0 1px 0 #8a5a12; }
+.nc-rc-mastery { display: none; position: absolute; left: 6px; right: 6px; top: 34px; z-index: 3; padding: 8px 10px; border-radius: 10px; text-align: left;
+  background: #fff8e6; border: 2px solid var(--line); box-shadow: 0 4px 12px rgba(59,34,19,.35); font-size: 12px; color: var(--ink); cursor: default; }
+.nc-rc-stars:hover .nc-rc-mastery { display: block; }
+.nc-rc-mastery > b { display: block; font: 800 14px/1.2 Georgia, "DejaVu Serif", serif; }
+.nc-rc-mastery > em { display: block; font-style: normal; font-weight: 700; color: var(--muted); margin: 1px 0 5px; }
+.nc-rc-mastery ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.nc-rc-mastery li { display: grid; grid-template-columns: 62px 1fr auto; gap: 6px; align-items: center; font-weight: 700; color: var(--muted); }
+.nc-rc-mastery li b { color: #cbbd9f; letter-spacing: -1px; font-size: 12px; }
+.nc-rc-mastery li.got { color: var(--good); }
+.nc-rc-mastery li.got b { color: #d9a52a; }
+.nc-rc-mastery li small { font-weight: 800; }
+
+/* the sandbox: a badge in the top bar, a dev tools panel down the right */
+.nc-sandbox { align-self: center; padding: 3px 10px; border-radius: 999px; background: #6a3fa0; color: #f3e6ff; font-weight: 900; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 0 0 2px #3c1f63; }
+body.nc-in-sandbox .nc-hud { background: linear-gradient(180deg, #6e4a7e, #4e3060); }
+.nc-dev { position: fixed; right: 12px; top: 64px; bottom: 12px; width: 316px; z-index: 70; overflow-y: auto; padding: 14px 16px 10px 18px;
+  border: 18px solid transparent; border-image: url("art/ui/popup-frame.png") 36 fill / 36px stretch; image-rendering: pixelated; filter: drop-shadow(0 6px 14px rgba(10,4,0,.55)); }
+.nc-dev > * { image-rendering: auto; }
+.nc-dev-head { position: relative; display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.nc-dev-head b { font: 800 18px Georgia, "DejaVu Serif", serif; }
+.nc-dev-head small { color: var(--muted); }
+.nc-dev-sec { padding: 6px 0 8px; border-top: 2px dashed rgba(129,72,50,.35); }
+.nc-dev-sec h4 { margin: 0 0 5px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); display: flex; justify-content: space-between; }
+.nc-dev-sec h4 span { color: var(--ink); text-transform: none; }
+.nc-dev-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
+.nc-dev-row.levels .nc-btn { min-width: 34px; padding: 3px 0; }
+.nc-btn.wide { width: 100%; }
+.nc-input.sm { width: 140px; margin: 0; padding: 4px 8px; font-size: 14px; display: inline-block; }
+
+/* level up */
+.nc-card-pop.level { width: min(720px, 92vw); max-width: none; max-height: 88vh; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 4px 6px; text-align: left; }
+/* PT56: the level-up -- badge, rewards, the unlocks by kind (scrolling), the button always showing */
+.nc-lv-head { display: flex; align-items: center; gap: 16px; padding: 4px 4px 10px; border-bottom: 2px solid rgba(107, 58, 26, .25); animation: nc-pop .35s ease-out; }
+.nc-lv-head h2 { margin: 0; font: 800 28px/1.1 Georgia, "DejaVu Serif", serif; color: #7a3c25; text-shadow: 0 2px 0 #f5e2bd; }
+.nc-lv-head p { margin: 4px 0 0; font-weight: 600; color: #6b4a2a; }
+.nc-lv-badge { flex: none; width: 76px; height: 76px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #ffe58a, #e6a92a 60%, #b07414); border: 3px solid #7a4a14; box-shadow: 0 3px 0 #5e3410, 0 0 0 4px rgba(255, 220, 120, .35), inset 0 -3px 0 rgba(120, 70, 10, .35); color: #5e3410; }
+.nc-lv-badge small { font: 800 10px/1 Georgia, "DejaVu Serif", serif; letter-spacing: .12em; }
+.nc-lv-badge b { font: 900 30px/1 Georgia, "DejaVu Serif", serif; }
+.nc-lv-reward { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 8px 12px; border-radius: 12px; background: rgba(241, 194, 74, .22); border: 2px solid #c8902a; }
+.nc-lv-reward > b { font-family: Georgia, "DejaVu Serif", serif; color: #7a3c25; margin-right: 4px; }
+.nc-lv-reward span { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; }
+.nc-lv-reward img { width: 24px; height: 24px; object-fit: contain; }
+.nc-lv-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 6px; display: flex; flex-direction: column; gap: 14px; }
+.nc-lv-body h3 { margin: 0 0 8px; font: 700 15px/1 Georgia, "DejaVu Serif", serif; color: #6b3a1a; display: flex; align-items: center; gap: 8px; }
+.nc-lv-body h3 em { font-style: normal; font-size: 11px; padding: 2px 7px; border-radius: 10px; background: #8a4e22; color: #fff3da; }
+.nc-lv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.nc-lv-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 8px 9px; border-radius: 12px; text-align: center;
+  background: linear-gradient(#fff8e8, #f3e2bf); border: 1px solid rgba(138, 78, 34, .35); box-shadow: 0 2px 0 rgba(107, 58, 26, .18); font-size: 12.5px; font-weight: 700; color: #3a1d0c; line-height: 1.25; }
+.nc-lv-card img { width: 72px; height: 62px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(60, 30, 10, .25)); }
+.nc-lv-card i { position: absolute; top: 6px; right: 6px; font-style: normal; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 8px; background: #e6a92a; color: #4a2a0c; }
+.nc-lv-foot { display: flex; justify-content: center; padding-top: 4px; border-top: 2px solid rgba(107, 58, 26, .2); }
+@media (max-width: 520px) { .nc-lv-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); } .nc-lv-head h2 { font-size: 22px; } }
+.nc-burst { font-family: Georgia, "DejaVu Serif", serif; font-size: 32px; font-weight: 800; color: #7a3c25; text-shadow: 0 2px 0 #f5e2bd; margin-bottom: 10px; animation: nc-pop .4s ease-out; }
+.nc-unlocks { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 14px; }
+.nc-unlock { width: 104px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; }
+.nc-unlock img { width: 64px; height: 56px; object-fit: contain; }
+
+/* toasts */
+.nc-toasts { position: fixed; top: 64px; left: 50%; transform: translateX(-50%); z-index: 400; display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; }
+.nc-toast { background: var(--panel); border: 2px solid var(--frame); border-radius: 10px; padding: 6px 14px; box-shadow: 0 4px 12px rgba(0,0,0,.35); transition: opacity .4s, transform .4s; font-weight: 600; }
+.nc-toast.bad { background: #f3c1b5; border-color: var(--bad); }
+.nc-toast.out { opacity: 0; transform: translateY(-8px); }
+.nc-dhead b, .nc-dhead > span, .nc-dhead .nc-coins { white-space: nowrap; }
+
+/* ---- day and night (PT45): the wash over the street (the café cut out of it), and lamps lit after dark ---- */
+.nc-sky { position: absolute; z-index: 940; pointer-events: none; mix-blend-mode: multiply; transition: background 2s; }
+.nc-roomdark { position: absolute; z-index: 939; pointer-events: none; mix-blend-mode: multiply; }
+.nc-lampglow { position: absolute; z-index: 941; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,226,150,.75), rgba(255,200,110,.25) 55%, rgba(255,190,90,0)); mix-blend-mode: screen; }
+.nc-lampglow.nc-up { opacity: .85; }
+/* an indoor lamp's glow, round its shade (the top fifth of its picture) */
+.nc-lampglow.in { z-index: -1; width: 170px; height: 170px; margin: -85px 0 0 -85px; left: 50%; top: 18%; mix-blend-mode: normal;
+  background: radial-gradient(closest-side, rgba(255,214,120,.8), rgba(255,196,96,.35) 45%, rgba(255,186,80,0)); }
+/* and the lamp itself lit from inside: brighter, with a warm halo round the shade */
+.nc-thing.lit > .nc-body { filter: brightness(1.12) saturate(1.1) drop-shadow(0 0 6px rgba(255,214,120,.95)) drop-shadow(0 4px 3px rgba(30,14,6,.35)); }
+/* 2026-10-24: lights on and off. A lamp on by day: a faint glow round the shade; a click tugs its pull cord */
+.nc-lampglow.in.day { width: 90px; height: 90px; margin: -45px 0 0 -45px; opacity: .45; }
+.nc-thing.on, .nc-thing.off { cursor: pointer; }
+.nc-thing.pull > .nc-body { animation: nc-pull .32s ease-out; }
+@keyframes nc-pull { 0%, 100% { transform: translateY(0); } 35% { transform: translateY(3px); } }
+/* wall lights: a click outside Build switches them; lit after dark, the bulb's own glow */
+.nc-art.light { pointer-events: auto; cursor: pointer; }
+.nc-art.light.lit { filter: brightness(1.1) drop-shadow(0 0 5px rgba(255,214,120,.9)) var(--nc-pop-wall); }
+/* (Cam, 25 Oct: "the wall lights should be able to be clicked and unclicked") -- you can see which way it is at any
+   time of day: on has a soft warm glow even by day, off is dimmed and grey (the bulb unlit) */
+.nc-art.light.on:not(.lit) { filter: drop-shadow(0 0 3px rgba(255,214,120,.75)) var(--nc-pop-wall); }
+.nc-art.light.off { filter: brightness(.62) saturate(.45) var(--nc-pop-wall); }
+.nc-art.light:hover { outline: none; filter: brightness(1.15) drop-shadow(0 0 4px #fff7c8) drop-shadow(0 0 2px #ffd25a); }
+.nc-wallglow { position: absolute; z-index: 941; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,222,140,.7), rgba(255,200,110,.22) 55%, rgba(255,190,90,0)); mix-blend-mode: screen; }
+/* the ceiling's lights: see-through, and clicks go through them to the café -- except while you work on them, when
+   they're solid and the café goes faint (like laying floors) */
+/* (Cam, 2026-10-24: "99 percent transparent at all times" -- the fixture barely there, even while you work on the
+   ceiling lights; its glow shows where it is, whenever it's on, day or night) */
+.nc-ceil { position: absolute; pointer-events: none; opacity: .01; filter: var(--nc-pop); transition: opacity .2s; }
+.nc-ceil.lit { filter: brightness(1.12) drop-shadow(0 0 7px rgba(255,220,140,.95)) var(--nc-pop); }
+body[data-sky="evening"] .nc-ceil.off { filter: brightness(.75) var(--nc-pop); }
+body[data-sky="night"] .nc-ceil.off { filter: brightness(.55) var(--nc-pop); }
+/* (placing or picking: the pool shows where -- green for where one would go, blue for the one picked) */
+.nc-ceilpool.ghost { filter: hue-rotate(70deg) saturate(2); mix-blend-mode: normal; opacity: .6; }
+.nc-ceilpool.picked { filter: hue-rotate(170deg) saturate(2); mix-blend-mode: normal; opacity: .6; }
+.nc-ceilpool { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; mix-blend-mode: soft-light;
+  background: radial-gradient(closest-side, rgba(255,236,170,.8), rgba(255,226,150,.4) 55%, rgba(255,220,140,0)); }
+.nc-cord { position: absolute; width: 2.5px; pointer-events: none; opacity: .01; background: linear-gradient(to top, #3a1d14 30%, rgba(58,29,20,0)); }
+.nc-cord.ghost { opacity: .01; }
+body.nc-ceiling .nc-ceil { pointer-events: auto; cursor: pointer; }
+body.nc-ceiling .nc-ceil:hover, .nc-ceil.picked { filter: drop-shadow(0 0 3px #7fd0ff) drop-shadow(0 0 6px #3a9ae0); }
+.nc-ceil.ghost { pointer-events: none !important; filter: drop-shadow(0 0 4px #7ee06a) drop-shadow(0 0 8px #4caf50); }
+.nc-ceil.ghost.bad { filter: grayscale(.6) drop-shadow(0 0 4px #ff6a5a); }
+body.nc-ceiling .nc-thing, body.nc-ceiling .nc-person, body.nc-ceiling .nc-meal { opacity: .28; pointer-events: none !important; }
+/* the switch by the door for the ceiling's lights */
+.nc-switch { position: absolute; z-index: 5; cursor: pointer; filter: drop-shadow(0 1px 0 rgba(30,14,6,.45)); }
+.nc-switch:hover { filter: drop-shadow(0 0 3px #ffe08a) drop-shadow(0 0 5px #ffb84a); }
+body.nc-building .nc-switch { pointer-events: none; }
+.nc-dev-none { color: var(--muted); }
+#nc-dev-dish { width: 150px; }
+
+/* ---- a smaller window (PT44: "the UI needs to be responsive, especially the top bar") ---- */
+.nc-hud { flex-wrap: nowrap; min-width: 0; }
+.nc-name { flex: 1 1 auto; min-width: 0; }
+.nc-stats { flex: 0 1 auto; min-width: 0; }
+@media (max-width: 1100px) {
+  .nc-level small { display: none; }
+  .nc-xp { width: 90px; }
+  .nc-dev { width: 280px; }
+}
+@media (max-width: 900px) {
+  .nc-hud { gap: 10px; padding: 6px 10px; }
+  .nc-name { font-size: 16px; }
+  .nc-xp { width: 60px; }
+  .nc-sandbox { display: none; }
+}
+@media (max-width: 760px) {
+  .nc-xp { display: none; }
+  .nc-coins.big { font-size: 14px; padding: 3px 8px; }
+  .nc-drawer { max-width: calc(100vw - 140px); bottom: 8px; }
+  .nc-dev { left: 8px; right: 8px; width: auto; top: auto; height: 55vh; }
+  .nc-card-pop.cook { width: 98vw; }
+  .nc-cb-side { display: none; }
+  .nc-cb-tabs { padding-left: 0; }
+}
+
+/* ---- furniture, floors, seats (2026-10-21) ---- */
+.nc-dtabs { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.nc-dtabs .nc-btn.on { background: var(--panel); color: var(--ink); }
+/* the Buy menu's categories (2026-10-24): a row of pictures under the section tabs, dashed between, like Cafeland's */
+.nc-dcats { display: flex; gap: 0; align-items: stretch; margin: -2px 0 8px; overflow-x: auto; background: rgba(255, 246, 228, .5); border-radius: 12px; padding: 4px; }
+.nc-cat { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 76px; padding: 4px 8px;
+  background: none; border: 0; border-right: 2px dashed rgba(90, 50, 20, .25); border-radius: 0; cursor: pointer; font: inherit; color: var(--ink); }
+.nc-cat:last-child { border-right: 0; }
+.nc-cat svg { width: 36px; height: 40px; filter: drop-shadow(0 2px 1px rgba(30,14,6,.3)); }
+.nc-cat img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 1px rgba(30,14,6,.3)); transition: transform .12s; }
+.nc-cat small { font-size: 11px; font-weight: 700; white-space: nowrap; opacity: .8; }
+.nc-cat:hover img { transform: translateY(-2px) scale(1.06); }
+.nc-cat.on { background: rgba(217, 164, 65, .35); border-radius: 10px; }
+.nc-cat.on small { opacity: 1; }
+.nc-dhint { color: var(--muted); font-size: 13px; margin: 0 6px; }
+.nc-card.on { border-color: var(--good); box-shadow: 0 0 0 2px var(--good); }
+.nc-tile.paint { filter: brightness(1.08) drop-shadow(0 0 3px #7ee06a); }
+.nc-tile.lift { opacity: 0.35; }                                   /* PT56: an outside tile about to be lifted */
+.nc-meal { position: absolute; width: 34px; pointer-events: none; filter: drop-shadow(0 1px 1px rgba(0,0,0,.4)); }
+
+/* ---- the Open / Closed sign (2026-10-21; painted sign to come) ---- */
+.nc-sign { flex: none; padding: 4px 12px; border-radius: 8px; font-weight: 900; font-size: 13px; letter-spacing: .8px; text-transform: uppercase; cursor: pointer;
+  border: 2px solid; box-shadow: 0 2px 0 rgba(0,0,0,.35); }
+.nc-sign.open { background: #3f7d2a; border-color: #b9f08a; color: #f2ffe6; }
+.nc-sign.closed { background: #8a2a22; border-color: #ffb3a6; color: #fff0ec; }
+.nc-sign:hover { filter: brightness(1.12); }
+
+/* laying floors (PT48): the room's things and people see-through and out of the way of the pointer */
+body.nc-painting .nc-thing, body.nc-painting .nc-person, body.nc-painting .nc-meal { opacity: .28; pointer-events: none !important; }
+
+/* popularity: customers a minute (V21) */
+.nc-pop { display: inline-flex; align-items: baseline; gap: 2px; padding: 3px 9px; border-radius: 999px; background: rgba(30,14,6,.35); font-weight: 800; white-space: nowrap; }
+.nc-pop small { font-size: 11px; opacity: .8; }
+@media (max-width: 900px) { .nc-pop small { display: none; } }
+
+/* ---- the round menu buttons, bottom left (N43) ---- */
+.nc-fab { position: absolute; left: 16px; bottom: 14px; z-index: 55; display: flex; flex-direction: column; gap: 10px; }
+.nc-round { position: relative; width: 74px; height: 74px; border-radius: 50%; border: 3px solid var(--frame); background: radial-gradient(circle at 35% 30%, #f3dcae, var(--panel) 60%, var(--panel2));
+  box-shadow: 0 4px 10px rgba(0,0,0,.45), inset 0 2px 0 rgba(255,246,220,.6); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 0; color: var(--ink); font: inherit; }
+.nc-round svg, .nc-round img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.nc-round-ic { font-size: 26px; line-height: 1; }
+.nc-fab.right { left: auto; right: 16px; }
+.nc-round span { font-size: 10.5px; white-space: nowrap; font-weight: 800; letter-spacing: .03em; }
+.nc-round:hover { filter: brightness(1.06); }
+.nc-round.on { background: radial-gradient(circle at 35% 30%, #fff1c8, #f1c24a 65%, #c8902a); border-color: #5a3408; box-shadow: 0 0 0 3px #fff4d0, 0 4px 10px rgba(0,0,0,.45); }
+.nc-badge { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #a8322a; color: #fff; font-size: 11px; font-style: normal; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; border: 2px solid #fff4dc; }
+/* papering a panel at a time: the walls take the pointer */
+body.nc-papering .nc-wall { pointer-events: auto; cursor: copy; }
+body.nc-papering .nc-wall:hover, .nc-wall.paint { filter: brightness(1.08) drop-shadow(0 0 3px #fff7c8); }
+.nc-name { display: flex; align-items: center; gap: 8px; }
+.nc-name img { width: 30px; height: 30px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
+/* Settings (PT52) */
+.nc-set { text-align: left; border-top: 2px solid var(--line); padding: 10px 0 4px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.nc-set p { margin: 0; color: var(--muted); font-size: 14px; }
+.nc-check, .nc-vol { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.nc-vol input { width: 180px; accent-color: #a8681c; }
+/* wall paintings (V22): over their panel, under anything standing in front of the wall */
+.nc-art { position: absolute; z-index: 4; pointer-events: none; object-fit: fill; filter: var(--nc-pop-wall); }
+.nc-art.flip { transform: scaleX(-1); }
+body.nc-building .nc-art { pointer-events: auto; cursor: pointer; }
+.nc-art.frame { pointer-events: auto; }
+.nc-art.fab { pointer-events: none; z-index: 5; }               /* (a painting's tinted frame, over it) */                 /* (PT56: right-click a photo frame for its paints, any time) */
+body.nc-building .nc-art:hover, .nc-art.picked { filter: drop-shadow(0 0 3px #7fd0ff) drop-shadow(0 0 6px #3a9ae0); }
+.nc-art.ghost { opacity: .75; pointer-events: none; filter: drop-shadow(0 0 4px #7ee06a) drop-shadow(0 0 8px #4caf50); }
+.nc-art.ghost.bad { filter: grayscale(.6) drop-shadow(0 0 4px #ff6a5a); }
+@media (max-width: 760px) {   /* (after the round buttons' own rules, so these win) */
+  .nc-fab { left: 8px; bottom: 8px; }
+  .nc-fab.right { left: auto; right: 8px; }
+  .nc-round { width: 60px; height: 60px; }
+  .nc-round span { font-size: 9px; }
+  .nc-round svg, .nc-round img { width: 26px; height: 26px; }
+}
+/* a dish not yet painted in the pan or burnt (N47): its served picture, smaller; burnt, scorched dark */
+.nc-pan.standin { width: 44%; top: 6%; }
+.nc-pan.standin.burnt { filter: brightness(.35) sepia(.6) saturate(1.4) drop-shadow(0 -3px 4px rgba(60,60,60,.8)); }
+/* V23: spoiled dishes (a stand-in where there's no Spoiled picture), the Bag, rewards, potions, the fire kit's flat stand-in */
+.nc-card-pop.bag { width: min(92vw, 760px); max-width: none; }
+.nc-cards.wrap { flex-wrap: wrap; overflow: visible; justify-content: center; }
+.nc-hint { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+.nc-reward { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; margin: 10px 0; padding: 8px 12px; border-radius: 12px; background: rgba(241,194,74,.25); border: 2px solid #c8902a; }
+.nc-reward span { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; }
+.nc-reward img { width: 26px; height: 26px; object-fit: contain; }
+body.nc-potion .nc-main, body.nc-potion .nc-thing { cursor: crosshair; }
+body.nc-potion .nc-thing.stove > .nc-body, body.nc-potion .nc-thing.counter > .nc-body, body.nc-potion .nc-thing.buffet > .nc-body { filter: drop-shadow(0 0 4px #b58be0) drop-shadow(0 0 2px #5a2f86); }
+.nc-art.flat-l { transform: skewY(-26.57deg); }
+.nc-art.flat-r { transform: skewY(26.57deg); }
+.nc-art.weapon { object-fit: contain; }                                    /* a wall weapon keeps its shape */
+.nc-level b.big { font-size: 12px; letter-spacing: -.03em; }
+
+/* upgrades (2026-10-21): the fridge under a counter, the Upgrades screen */
+.nc-cold { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); display: flex; align-items: center; gap: 2px; background: #e4f2fb; border: 2px solid #2c6d99;
+  border-radius: 999px; padding: 0 5px; font-size: 11px; font-weight: 800; color: #1f4f70; pointer-events: none; white-space: nowrap; }
+.nc-cold img { width: 18px; height: 18px; object-fit: contain; }
+.nc-snow { width: 13px; height: 13px; }
+.nc-sub { display: flex; align-items: center; gap: 6px; margin: 10px 0 6px; font-size: 15px; }
+.nc-sub .nc-snow { width: 16px; height: 16px; }
+.nc-upg { display: flex; flex-direction: column; gap: 3px; width: 100%; padding: 6px 0 0; border-top: 1px solid var(--line); text-align: left; }
+.nc-upg small { color: var(--muted); font-size: 12px; }
+.nc-upg .nc-btn { width: 100%; }
+.nc-fitted { color: #2e7d32; font-weight: 800; font-size: 13px; }
+
+/* N49 (2026-10-21): why a ghost can't go there, and the customers' walks while you hold something */
+.nc-why { position: absolute; left: 50%; top: -6px; transform: translate(-50%, -100%); background: #b3261e; color: #fff; border: 2px solid #5c120d;
+  border-radius: 8px; padding: 2px 8px; font-size: 12px; font-weight: 700; white-space: nowrap; pointer-events: none; z-index: 5; }
+.nc-out .nc-why, .nc-room > .nc-why { transform: translate(-50%, -100%); }
+.nc-walk { position: absolute; z-index: 4; pointer-events: none; background: rgba(90, 200, 130, .32); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.nc-walk.bad { background: rgba(220, 60, 50, .55); }
+.nc-dhead .nc-btn { white-space: nowrap; }
+
+/* the clock (2026-10-21): the real time, top centre, white and see-through; the rush under it */
+.nc-clock { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 30; pointer-events: none; display: flex; flex-direction: column;
+  align-items: center; gap: 1px; padding: 4px 16px 5px; border-radius: 14px; background: rgba(255, 255, 255, .42); border: 1px solid rgba(255, 255, 255, .6);
+  backdrop-filter: blur(3px); color: rgba(58, 34, 20, .88); box-shadow: 0 2px 8px rgba(0, 0, 0, .12); }
+.nc-clock:empty { display: none; }
+/* the sandbox's speed button (2026-10-24), beside the time */
+.nc-speed { pointer-events: auto; margin-left: 10px; vertical-align: middle; font: inherit; font-size: 13px; letter-spacing: -2px; line-height: 1;
+  padding: 5px 9px 5px 7px; border-radius: 999px; border: 2px solid rgba(90, 50, 20, .45); background: rgba(255, 246, 228, .85); color: #5a3214; cursor: pointer; }
+.nc-speed small { font-size: 11px; letter-spacing: 0; margin-left: 5px; font-weight: 700; }
+.nc-speed.on { background: #ffd27a; border-color: #b8741c; color: #6a3a0c; }
+.nc-speed:hover { filter: brightness(1.06); }
+.nc-clock b { font-size: 26px; line-height: 1.1; font-variant-numeric: tabular-nums; letter-spacing: .5px; }
+.nc-clock .nc-rush { font-size: 12px; font-weight: 600; opacity: .8; white-space: nowrap; }
+.nc-clock .nc-rush.on { opacity: 1; color: #a8322a; font-weight: 800; }
+.nc-clock.rush { background: rgba(255, 246, 228, .55); border-color: rgba(217, 164, 65, .8); }
+body[data-sky="night"] .nc-clock, body[data-sky="evening"] .nc-clock { background: rgba(255, 255, 255, .22); color: rgba(255, 255, 255, .92); border-color: rgba(255, 255, 255, .35); }
+body[data-sky="night"] .nc-clock .nc-rush.on, body[data-sky="evening"] .nc-clock .nc-rush.on { color: #ffd27a; }
+.nc-rushx { font-style: normal; margin-left: 4px; background: #a8322a; color: #fff; border-radius: 6px; padding: 0 4px; font-size: 11px; font-weight: 800; }
+@media (max-width: 760px) { .nc-clock b { font-size: 20px; } .nc-clock { padding: 3px 12px 4px; } }
+
+/* Aunty's daily delivery (2026-10-22): the box, her note, the gifts; her secret recipes in the cookbook */
+.nc-crate { display: block; width: 120px; height: 120px; margin: 4px auto 6px; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(0,0,0,.3)); }
+.nc-crate.shake { animation: nc-crate 1.6s ease-in-out 3; }   /* (three wobbles: no endless animations, N40) */
+@keyframes nc-crate { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(-5deg); } 85% { transform: rotate(5deg); } 92% { transform: rotate(-2deg); } }
+.nc-card-pop.aunty { text-align: center; }
+.nc-card-pop.aunty p { margin: 6px 0 10px; }
+.nc-letter { position: relative; max-width: 440px; margin: 6px auto 14px; padding: 16px 20px 14px; text-align: left; transform: rotate(-.6deg);
+  background: linear-gradient(180deg, #fffaf0, #f6ead0); border: 1px solid #d8bf91; border-radius: 4px; box-shadow: 0 3px 8px rgba(59,34,19,.25);
+  font: italic 600 16px/1.5 Georgia, "DejaVu Serif", serif; color: #4a2a17; }
+.nc-letter p { margin: 0 0 8px !important; }
+.nc-letter b { display: block; text-align: right; font-weight: 800; }
+.nc-unlock small { font-size: 11px; font-weight: 600; color: var(--muted); line-height: 1.2; }
+.nc-unlock.secret > span:not(.nc-recipe) { color: #7a3c25; }
+.nc-recipe { position: relative; width: 84px; height: 64px; }
+.nc-recipe img:first-child { position: absolute; left: 0; top: 0; width: 56px; height: 56px; object-fit: contain; }
+.nc-recipe img:last-child { position: absolute; right: 0; bottom: 0; width: 50px; height: 44px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+.nc-inline { width: 22px; height: 22px; vertical-align: -6px; object-fit: contain; }
+.nc-rc-secret { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 8px; font-size: 12px; font-weight: 700; color: var(--muted); text-align: center;
+  background: rgba(255,248,230,.65); border: 2px dashed rgba(169,122,73,.55); border-radius: 8px; }
+
+/* the request cart (2026-10-22): a tutor from NeuroVale out the front with the cart and horse, and their order */
+.nc-cart { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; filter: drop-shadow(0 4px 3px rgba(30,14,6,.35)); }
+.nc-cart img { width: 100%; height: 100%; display: block; }
+.nc-cart:hover { filter: drop-shadow(0 0 4px #ffd25a) drop-shadow(0 4px 3px rgba(30,14,6,.35)); }
+body.nc-street .nc-cart, body.nc-building .nc-cart { pointer-events: none; }
+.nc-cart-bub { position: absolute; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px 2px 4px; border-radius: 999px; cursor: pointer; pointer-events: auto;
+  background: #fff8e6; border: 2px solid var(--line); color: var(--ink); font-weight: 800; font-size: 13px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,.25); }
+.nc-cart-bub img { width: 20px; height: 20px; object-fit: contain; }
+.nc-visit { display: flex; gap: 14px; align-items: flex-start; text-align: left; margin: 4px 0 10px; }
+.nc-visit > img { width: 82px; height: 130px; object-fit: contain; flex: none; filter: drop-shadow(0 3px 3px rgba(0,0,0,.3)); }
+.nc-visit b { display: block; font: 800 18px/1.2 Georgia, "DejaVu Serif", serif; }
+.nc-visit small { display: block; color: var(--muted); font-weight: 700; }
+.nc-visit p { margin: 6px 0 0 !important; font: italic 600 15px/1.45 Georgia, "DejaVu Serif", serif; color: #4a2a17; }
+.nc-orders { display: grid; gap: 8px; margin-bottom: 8px; }
+.nc-order { display: flex; gap: 10px; align-items: center; padding: 6px 10px; border-radius: 10px; background: rgba(255,248,230,.7); border: 2px solid rgba(169,122,73,.55); text-align: left; }
+.nc-order > img { width: 54px; height: 46px; object-fit: contain; flex: none; }
+.nc-order > div { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.nc-order small { color: var(--muted); font-weight: 700; }
+.nc-order.full { border-color: var(--good); }
+.nc-order.full small { color: var(--good); }
+.nc-obar { position: relative; height: 16px; border-radius: 8px; background: #e6d6b6; overflow: hidden; }
+.nc-obar i { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(180deg, #8cc45a, #4e8a2c); }
+.nc-obar em { position: relative; display: block; text-align: center; font-style: normal; font-size: 11px; font-weight: 800; line-height: 16px; color: #2c1a0e; }
+
+/* the field across the street (2026-10-22): NeuroFarm's soil as a tile on the ground, its crops growing on it */
+.nc-plot { position: absolute; padding: 0; border: 0; cursor: pointer; pointer-events: auto; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  background: url("art/field-soil.webp") center / 70% auto, #5a3a22; filter: brightness(.95); }
+.nc-plot.empty { background-image: url("art/field-soil-wet.webp"); }
+.nc-plot:hover { filter: brightness(1.15); }
+.nc-plot.picked { filter: brightness(1.2) drop-shadow(0 0 0 #ffd25a); outline: 3px solid #ffd25a; }
+.nc-plot.ghost { pointer-events: none; opacity: .85; background: linear-gradient(rgba(140,230,100,.45), rgba(140,230,100,.45)), url("art/field-soil-wet.webp") center / 70% auto, #6a4a2a; }
+.nc-plot.ghost.bad { background: linear-gradient(rgba(220,60,40,.55), rgba(220,60,40,.55)), url("art/field-soil-wet.webp") center / 70% auto, #6a4a2a; }
+.nc-crop { position: absolute; width: 92px; height: 92px; object-fit: contain; pointer-events: none; filter: drop-shadow(0 3px 2px rgba(30,14,6,.35)); }
+.nc-crop.ripe { filter: drop-shadow(0 0 4px #ffe680) drop-shadow(0 3px 2px rgba(30,14,6,.35)); }
+.nc-crop-bub { position: absolute; transform: translateX(-50%); pointer-events: none; }
+/* 2026-10-23: a crop left too long goes over (withered); the tick goes red when it's close */
+.nc-crop.gone { filter: grayscale(.55) sepia(.7) brightness(.72) drop-shadow(0 3px 2px rgba(30,14,6,.35)); }
+.nc-crop-bub.hot { background: #e0742a; }
+/* the chicken coop: clickable to collect the eggs; its hens; the eggs waiting */
+.nc-prop.nc-coop { pointer-events: auto; cursor: pointer; }
+.nc-prop.nc-stall { pointer-events: auto; cursor: pointer; }      /* (V26) carts and the cinema: click to collect or restock */
+.nc-prop.nc-coop:hover, .nc-prop.nc-shop:hover, .nc-prop.nc-haunt:hover { filter: drop-shadow(0 0 4px #fff7c8) drop-shadow(0 0 2px #ffd25a); }
+.nc-hen { position: absolute; pointer-events: none; filter: drop-shadow(0 2px 1px rgba(30,14,6,.35)); transform-origin: 50% 90%; }
+.nc-hen.flip { transform: scaleX(-1); }
+.nc-hen.ghost { opacity: .6; }
+/* (2026-10-26, Cam: "happy if hens are idle and dont move") -- they no longer peck on the beat */
+.nc-bub.nc-eggs { position: absolute; transform: translateX(-50%); pointer-events: none; display: inline-flex; align-items: center; gap: 2px; padding: 1px 6px 1px 3px; background: #fff8e6; color: #5a3a1a; font-weight: 700; }
+.nc-bub.nc-eggs img { width: 16px; height: 16px; object-fit: contain; }
+.nc-bub.nc-eggs.full { background: #ffd25a; }
+body.nc-building .nc-plot { pointer-events: none; }
+/* a recipe's ingredients from the field, on its cookbook card */
+.nc-rc-needs { display: flex; flex-wrap: wrap; gap: 4px; }
+.nc-rc-needs > span { display: inline-flex; align-items: center; gap: 2px; padding: 1px 6px 1px 2px; border-radius: 999px; font-size: 11px; font-weight: 800; background: rgba(255,248,230,.85); border: 1px solid rgba(169,122,73,.55); }
+.nc-rc-needs > span.ok { border-color: var(--good); color: var(--good); }
+.nc-rc-needs > span.lack { color: var(--muted); }
+.nc-rc-needs img { width: 18px; height: 18px; object-fit: contain; }
+/* Farmer Giles's seeds (2026-10-22): the cookbook's recipe cards, Giles at the top */
+.nc-giles { display: flex; align-items: center; gap: 12px; margin: 2px 8px 8px; }
+.nc-giles img { width: 52px; height: 96px; object-fit: contain; filter: drop-shadow(0 3px 3px rgba(0,0,0,.3)); }
+.nc-giles p { position: relative; margin: 0; padding: 8px 14px; border-radius: 14px; background: #fff8e6; border: 2px solid var(--line); font: italic 600 15px/1.4 Georgia, "DejaVu Serif", serif; color: #4a2a17; }
+.nc-giles p::before { content: ""; position: absolute; left: -10px; top: 50%; margin-top: -8px; border: 8px solid transparent; border-right-color: var(--line); border-left: 0; }
+.nc-card.plow img { transform: rotate(-20deg); }
+/* the Menu (2026-10-22): one round button; open, the others sit in a tray beside it, wrapping upwards */
+.nc-fab { flex-direction: row; align-items: flex-end; }
+.nc-fab-items { display: none; position: absolute; left: 86px; bottom: 0; width: min(520px, calc(100vw - 130px)); flex-wrap: wrap-reverse; gap: 10px; }
+.nc-fab-items.open { display: flex; animation: nc-pop .18s ease-out; }
+@media (max-width: 760px) { .nc-fab-items { left: 70px; width: calc(100vw - 90px); gap: 6px; } }
+
+/* ---- the furniture catalogue (2026-10-24): a book -- leather cover, two parchment pages, a spine, a Contents tab ---- */
+.nc-card-pop.book { max-width: none; width: min(96vw, 960px); padding: 0; border: 0; border-image: none; background: none; text-align: left; }
+.nc-book { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding: 14px; border-radius: 16px;
+  background: linear-gradient(135deg, #7a3f1c, #5a2c12 55%, #6e3818); box-shadow: inset 0 0 0 3px #3a1a08, inset 0 0 0 6px #a8682e, 0 18px 40px rgba(20, 8, 2, .55); }
+.nc-page { position: relative; min-height: min(70vh, 560px); max-height: 78vh; overflow-y: auto; padding: 26px 30px 84px; color: #3a1d0c;
+  background: radial-gradient(ellipse at 50% 30%, #fbf0d6, #f1dfb6 70%, #e6cd99); }
+.nc-page.l { border-radius: 8px 2px 2px 8px; box-shadow: inset -26px 0 28px -20px rgba(90, 50, 14, .55), inset 0 0 0 1px rgba(120, 70, 20, .25); }
+.nc-page.r { border-radius: 2px 8px 8px 2px; box-shadow: inset 26px 0 28px -20px rgba(90, 50, 14, .55), inset 0 0 0 1px rgba(120, 70, 20, .25); }
+.nc-book::after { content: ""; position: absolute; left: 50%; top: 10px; bottom: 10px; width: 4px; margin-left: -2px; background: linear-gradient(#3a1a08, #5a2c12, #3a1a08); border-radius: 2px; }
+.nc-bk-title { display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center; gap: 10px; }
+.nc-bk-title small { letter-spacing: .3em; text-transform: uppercase; font-weight: 800; color: #9a5a22; }
+.nc-bk-title h2 { font-size: 34px; line-height: 1.1; margin: 0; font-family: Georgia, serif; }
+.nc-bk-title p { margin: 0 auto; max-width: 30ch; opacity: .85; }
+.nc-bk-owned { margin: 10px auto 0; padding: 4px 12px; border-radius: 999px; background: rgba(154, 90, 34, .15); font-weight: 700; font-size: 13px; }
+.nc-bk-h { margin: 0 0 10px; font-family: Georgia, serif; font-size: 20px; border-bottom: 2px solid rgba(154, 90, 34, .35); padding-bottom: 4px; }
+.nc-bk-h ~ .nc-bk-h { margin-top: 18px; }
+.nc-pills { display: flex; flex-direction: column; gap: 10px; }
+.nc-pill { display: flex; align-items: center; gap: 12px; padding: 6px 18px 6px 6px; border-radius: 999px; cursor: pointer; font: inherit; color: #3a1d0c; text-align: left;
+  background: linear-gradient(#fff6e0, #f0d6a0); border: 2px solid #8a4e22; box-shadow: 0 3px 0 #8a4e22, inset 0 2px 0 rgba(255, 255, 255, .7); transition: transform .1s; }
+.nc-pill:hover { transform: translateY(-2px); box-shadow: 0 5px 0 #8a4e22, inset 0 2px 0 rgba(255, 255, 255, .7); }
+.nc-pill:active { transform: translateY(2px); box-shadow: 0 1px 0 #8a4e22; }
+.nc-pill img, .nc-pill .nc-paint { width: 42px; height: 42px; object-fit: contain; flex: none; border-radius: 50%; margin: 0; }
+.nc-pill img { background: rgba(255, 255, 255, .6); }
+.nc-pill b { font-size: 16px; flex: 1; }
+.nc-pill small { min-width: 24px; padding: 1px 8px; border-radius: 999px; background: #8a4e22; color: #fff3d6; font-weight: 800; text-align: center; }
+.nc-bk-piece { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+.nc-bk-piece small { align-self: flex-start; letter-spacing: .2em; text-transform: uppercase; font-weight: 800; color: #9a5a22; }
+.nc-bk-piece img { max-width: 78%; max-height: 300px; object-fit: contain; filter: drop-shadow(0 8px 8px rgba(60, 30, 10, .3)); margin: 8px 0; }
+.nc-bk-piece h2 { margin: 0; font-family: Georgia, serif; font-size: 28px; }
+.nc-bk-piece p { margin: 0; opacity: .8; }
+.nc-paint.big { width: 180px; height: 180px; margin: 20px 0; border-width: 5px; }
+.nc-paint.sm { width: 42px; height: 42px; border-width: 2px; }
+.nc-bk-say { margin: 0 0 16px; }
+.nc-bk-buy { display: flex; justify-content: center; }
+.nc-bk-yours { padding: 6px 18px; border-radius: 999px; background: #4c8a3c; color: #fff; }
+.nc-swgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(94px, 1fr)); gap: 10px; }
+.nc-swi { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 4px; border-radius: 12px; background: rgba(255, 250, 236, .6); border: 1px solid rgba(154, 90, 34, .3); text-align: center; }
+.nc-swi.yours { background: rgba(120, 170, 90, .18); border-color: rgba(76, 138, 60, .5); }
+.nc-swi b { font-size: 13px; line-height: 1.15; }
+.nc-swi small { font-size: 11px; opacity: .75; }
+.nc-sw.big { width: 44px; height: 44px; cursor: default; }
+.nc-swimg { width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; }
+.nc-swimg img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.nc-bk-pg { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); font-family: Georgia, serif; font-style: italic; opacity: .6; }
+.nc-bk-arrow { position: absolute; bottom: 12px; width: 54px; height: 54px; border-radius: 50%; border: 0; cursor: pointer; padding: 7px;
+  background: radial-gradient(circle at 40% 35%, #fff2c8, #e8b850 60%, #b8741c); box-shadow: 0 4px 0 #7a3f12, 0 6px 10px rgba(60, 30, 10, .35); transition: transform .12s; }
+.nc-bk-arrow { bottom: 26px; z-index: 2; } .nc-bk-arrow.r { right: 30px; } .nc-bk-arrow.l { left: 30px; }
+.nc-bk-arrow:hover { transform: scale(1.08); }
+.nc-bk-arrow svg { width: 100%; height: 100%; }
+.nc-booktab { position: absolute; right: -40px; top: 46px; writing-mode: vertical-rl; padding: 16px 9px; border: 0; cursor: pointer; font: inherit; font-weight: 800; letter-spacing: .08em;
+  color: #fff3d6; background: linear-gradient(90deg, #8a2a22, #b8443a); border-radius: 0 12px 12px 0; box-shadow: 4px 4px 8px rgba(30, 10, 4, .35), inset -2px 0 0 rgba(255, 255, 255, .2); }
+.nc-booktab:hover { right: -44px; }
+.nc-bk-close { position: absolute; right: 6px; top: 6px; z-index: 2; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #3a1a08; background: #f6e3b8; cursor: pointer; padding: 4px; }
+.nc-bk-close svg { width: 100%; height: 100%; }
+@media (max-width: 760px) {
+  .nc-book { grid-template-columns: 1fr; } .nc-book::after { display: none; }
+  .nc-page { min-height: 0; max-height: none; } .nc-page.l, .nc-page.r { border-radius: 8px; }
+  .nc-booktab { right: 8px; top: auto; bottom: -38px; writing-mode: horizontal-tb; border-radius: 0 0 12px 12px; }
+}
+
+/* PT56: a two-tone thing's two swatch rows, each named; which part the sliders mix */
+.nc-sw-part { display: flex; flex-direction: column; gap: 4px; }
+.nc-sw-part > em { font: 700 12px/1 Georgia, "DejaVu Serif", serif; font-style: normal; color: #6b3a1a; letter-spacing: .02em; border-bottom: 1px solid rgba(107, 58, 26, .3); padding-bottom: 3px; }
+.nc-swatches > .nc-sw-part + .nc-sw-part { margin-top: 8px; }
+.nc-sw-rows { display: flex; flex-direction: column; gap: 6px; }
+.nc-swatches > .nc-sw-row + .nc-sw-row { margin-top: 6px; }
+.nc-sw-parts { display: flex; gap: 6px; align-items: center; font: 700 12px/1 Georgia, "DejaVu Serif", serif; color: #6b3a1a; }
+
+/* PT56 (Cam: "the scroll bar in the menus to match the UI ... parchment and brown"): every scrolling list -- a brown,
+   rounded handle on a parchment track */
+.nc ::-webkit-scrollbar { width: 12px; height: 12px; }
+.nc ::-webkit-scrollbar-track { background: #f1dfb8; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(107, 58, 26, .35), inset 1px 2px 3px rgba(107, 58, 26, .2); }
+.nc ::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #a0602c, #7a421c); border-radius: 8px; border: 2px solid #f1dfb8; box-shadow: inset 0 1px 0 rgba(255, 220, 170, .4); }
+.nc ::-webkit-scrollbar-thumb:hover { background: linear-gradient(90deg, #b06c34, #8a4e22); }
+.nc ::-webkit-scrollbar-thumb:active { background: #5e3216; }
+.nc ::-webkit-scrollbar-corner { background: transparent; }
+.nc ::-webkit-scrollbar-button { display: none; }
+/* PT56: the events book -- an emoji in the pill's circle, when it's on under the name, "Soon" for the ones still coming */
+.nc-ev-ic { width: 42px; height: 42px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255, 255, 255, .6); font-size: 24px; }
+.nc-pill b em { display: block; font-style: normal; font-size: 11.5px; font-weight: 600; color: #7a5a3a; margin-top: 2px; }
+.nc-pill.on { box-shadow: 0 3px 0 #8a4e22, inset 0 0 0 2px #e6a92a; }
+.nc-pill.on b em { color: #2f7a2a; font-weight: 800; }
+.nc-pill small.soon { background: #b8a58a; color: #fffaf0; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+.nc-ev-hero { font-size: 92px; line-height: 1.1; margin: 10px 0 4px; filter: drop-shadow(0 6px 6px rgba(60, 30, 10, .3)); }
+.nc-ev-when { font-weight: 800; color: #7a5a3a; }
+.nc-ev-when.on { color: #2f7a2a; }
+.nc-ev-candy { font-size: 16px; opacity: 1 !important; }
+.nc-bk-h small { font-size: 12px; font-weight: 700; opacity: .7; margin-left: 6px; }
+/* PT56 / Q8: the jukebox -- what's playing, the radio and the playlists as rows to pick, the one on ringed in gold */
+.nc-card-pop.jb { width: min(480px, 92vw); max-width: none; box-sizing: border-box; }
+.nc-jukebox { text-align: left; max-height: 76vh; overflow-y: auto; overflow-x: hidden; padding-right: 6px; display: flex; flex-direction: column; gap: 8px; }
+.nc-jukebox .nc-row { justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.nc-jukebox h2 { text-align: center; margin: 0 0 4px; }
+.nc-jukebox .nc-hint { margin: 0; font-size: 12.5px; }
+.nc-jb-now { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 12px; background: rgba(60, 30, 10, .08); border: 1px solid rgba(138, 78, 34, .3); }
+.nc-jb-now small { font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #9a5a22; font-size: 11px; }
+.nc-jb-now b { font: 700 17px/1.2 Georgia, "DejaVu Serif", serif; color: #3a1d0c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nc-jb-now span { display: flex; gap: 6px; }
+.nc-jb-src { display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 12px; background: rgba(255, 250, 236, .6); border: 1px solid rgba(154, 90, 34, .3); }
+.nc-jb-src.on { border-color: #c8902a; box-shadow: inset 0 0 0 2px #e6a92a; background: rgba(241, 194, 74, .18); }
+.nc-jb-pick { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 6px 8px; border: 0; background: none; cursor: pointer; font: inherit; color: #3a1d0c; text-align: left; }
+.nc-jb-pick small { opacity: .7; font-size: 12px; }
+.nc-jb-x { width: 30px; height: 30px; padding: 4px; border: 0; background: none; cursor: pointer; flex: none; }
+.nc-jb-x svg { width: 100%; height: 100%; }
+.nc-jukebox .nc-row:last-child { justify-content: center; }
+
+/* 2026-10-24: machines' glows -- the arcade's screen a faint blue, the jukebox's light turning slowly through the rainbow
+   (behind the machine, round it); the Halloween lantern's purple (over the street, like the lamps' glow) */
+.nc-mglow { position: absolute; z-index: -1; pointer-events: none; border-radius: 50%; }
+.nc-mglow.arcade { width: 80px; height: 80px; margin: -40px 0 0 -40px; opacity: .75;
+  background: radial-gradient(closest-side, rgba(110,200,255,.75), rgba(80,170,255,.25) 55%, rgba(80,170,255,0)); }
+.nc-mglow.arcade.back { opacity: .3; }
+.nc-mglow.tint { opacity: .6; background: radial-gradient(closest-side, rgba(var(--g),.75), rgba(var(--g),.25) 55%, rgba(var(--g),0)); }
+.nc-mglow.tint.back { opacity: .3; }
+.nc-mglow.jukebox { width: 120px; height: 140px; left: 50%; top: 45%; margin: -70px 0 0 -60px; opacity: .6;
+  background: radial-gradient(closest-side, rgba(255,90,90,.8), rgba(255,90,90,.3) 50%, rgba(255,90,90,0));
+  filter: hue-rotate(var(--nc-hue, 0deg)); }
+  /* (N40: stepped by the page's clock. 2026-10-25 performance pass: no transition -- a 1 s filter transition restarted
+     every second never stopped, so the GPU drew ~60 frames a second for ever; the page steps the hue on the glow itself) */
+body[data-sky="evening"] .nc-mglow, body[data-sky="night"] .nc-mglow { opacity: .85; }
+.nc-pglow { position: absolute; z-index: 941; width: 76px; height: 76px; margin: -38px 0 0 -38px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; opacity: .6;
+  background: radial-gradient(closest-side, rgba(var(--g, 200,110,255),.8), rgba(var(--g, 200,110,255),.3) 55%, rgba(var(--g, 200,110,255),0)); }
+body[data-sky="evening"] .nc-pglow, body[data-sky="night"] .nc-pglow { opacity: .95; }
+@media (prefers-reduced-motion: reduce) { .nc-mglow.jukebox { transition: none; } }
+
+/* ---- the cookbook as a book (2026-10-24, Cam: like NeuroPets' -- pictures on the left, the dish on the right, a tab
+   for each menu off the book's left edge) ---- */
+.nc-card-pop.book.cookbook { padding-left: 58px; width: min(96vw, 1020px); }
+.nc-cookbook { position: relative; }
+.nc-cb-tabs2 { position: absolute; left: -58px; top: 28px; display: flex; flex-direction: column; gap: 6px; z-index: 0; }
+.nc-cb-tab2 { width: 62px; height: 54px; padding: 6px 14px 6px 8px; border: 2px solid #3a1a08; border-right: 0; border-radius: 12px 0 0 12px; cursor: pointer;
+  background: linear-gradient(90deg, #c99a5a, #e9cf98); box-shadow: inset -8px 0 10px -6px rgba(60, 30, 10, .5); transition: transform .12s; }
+.nc-cb-tab2 img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(40, 20, 6, .4)); }
+.nc-cb-tab2:hover { transform: translateX(-4px); }
+.nc-cb-tab2.on { background: linear-gradient(90deg, #f3dfae, #fbf0d4); transform: translateX(-8px); box-shadow: none; }
+.nc-cb-tab2.shut img { filter: grayscale(.8) opacity(.6); }
+/* (2026-10-26) tabs down the book's right edge too -- the frame builder's frames, by event */
+.nc-card-pop.book.cookbook.rtabs { padding-right: 58px; width: min(96vw, 1078px); }
+.nc-cb-tabs2.r { left: auto; right: -58px; }
+.nc-cb-tabs2.r .nc-cb-tab2 { padding: 6px 8px 6px 14px; border: 2px solid #3a1a08; border-left: 0; border-radius: 0 12px 12px 0; background: linear-gradient(270deg, #c99a5a, #e9cf98); box-shadow: inset 8px 0 10px -6px rgba(60, 30, 10, .5); }
+.nc-cb-tabs2.r .nc-cb-tab2:hover { transform: translateX(4px); }
+.nc-cb-tabs2.r .nc-cb-tab2.on { background: linear-gradient(270deg, #f3dfae, #fbf0d4); transform: translateX(8px); box-shadow: none; }
+.nc-cb-sorts { display: flex; gap: 6px; margin: 0 0 10px; }
+.nc-cb-sorts .nc-cb-sort { width: auto; height: 30px; min-width: 40px; padding: 0 10px; border-radius: 999px; font-size: 13px; }
+.nc-cb-dishes { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; }
+.nc-cb-dish { position: relative; aspect-ratio: 1; padding: 8px; border: 2px solid rgba(120, 70, 20, .45); border-radius: 10px; background: rgba(255, 248, 228, .7); cursor: pointer; }
+.nc-cb-dish img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(60, 30, 10, .3)); }
+.nc-cb-dish:hover { border-color: #9a5a22; background: #fff8e6; }
+.nc-cb-dish.on { border-color: #3a1a08; background: #fff3d0; box-shadow: 0 0 0 2px #e0a93a; }
+.nc-cb-dish.can::after { content: ""; position: absolute; right: 5px; bottom: 5px; width: 9px; height: 9px; border-radius: 50%; background: #5aa84a; box-shadow: 0 0 0 2px #fff8e6; }
+.nc-cb-dish.done::after { content: "\2713"; position: absolute; right: 4px; top: 3px; font-size: 14px; font-weight: 900; color: #2e7d32; }
+.nc-cookbook .nc-upg { padding: 8px 0; }
+.nc-cookbook .nc-bk-h + .nc-upg { border-top: 0; }
+.nc-cookbook .nc-cb-dishes + .nc-bk-say { margin-top: 14px; }
+.nc-cb-dish.locked img { filter: grayscale(.85) opacity(.45); }
+.nc-cb-dish small { position: absolute; left: 0; right: 0; bottom: 3px; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6a4a2a; }
+.nc-cb-lv, .nc-cb-mini { position: absolute; left: 5px; top: 3px; font-style: normal; font-size: 12px; font-weight: 800; color: #5a3a1a; }
+.nc-cb-mini { color: #d9a020; font-size: 10px; letter-spacing: -1px; }
+.nc-cb-detail { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+.nc-cb-detail h2 { margin: 0; font-family: Georgia, serif; font-size: 28px; }
+.nc-cb-detail h4 { align-self: stretch; margin: 10px 0 2px; text-align: left; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: #9a5a22; }
+.nc-cb-detail h4 small { letter-spacing: 0; text-transform: none; font-weight: 600; opacity: .8; margin-left: 6px; }
+.nc-cb-big { width: 62%; max-height: 210px; object-fit: contain; filter: drop-shadow(0 8px 8px rgba(60, 30, 10, .3)); }
+.nc-cb-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.nc-cb-chips > span { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 248, 228, .85); border: 1px solid rgba(120, 70, 20, .3); font-weight: 700; font-size: 13px; }
+.nc-cb-chips > span.up { color: #2f7a2a; } .nc-cb-chips > span.lack { color: #b0352a; }
+.nc-cb-detail .nc-rc-needs { justify-content: center; }
+.nc-cb-detail .nc-rc-stars { font-size: 22px; }
+.nc-cb-foot { margin-top: 14px; }
+.nc-cb-cook { font-size: 17px; padding: 10px 26px; }
+.nc-cb-hint { font-style: italic; opacity: .75; }
+@media (max-width: 760px) { .nc-card-pop.book.cookbook { padding-left: 0; padding-top: 58px; }
+  .nc-cb-tabs2 { left: 8px; top: -58px; flex-direction: row; } .nc-cb-tab2 { border-right: 2px solid #3a1a08; border-bottom: 0; border-radius: 12px 12px 0 0; }
+  .nc-card-pop.book.cookbook.rtabs { padding-right: 0; } .nc-cb-tabs2.r { left: auto; right: 8px; top: -58px; } .nc-cb-tabs2.r .nc-cb-tab2 { border-left: 2px solid #3a1a08; border-bottom: 0; border-radius: 12px 12px 0 0; } }
+/* (Cam, 2026-10-24: "I would like the book to stay this size ... for every tab") -- the same height whatever the menu;
+   a long one scrolls inside its page */
+.nc-cookbook .nc-page { height: min(86vh, 900px); min-height: 0; max-height: none; }
+
+/* ---- the menu tabs along the bottom (2026-10-24, Cam: "tabs on the bottom of the screen that when hovered on will pop
+   up a little to reveal the icon") -- each shows its name; hovered it rises to show its picture; the open one stays up.
+   A drawer open, they sit on its top edge. ---- */
+/* the menu (2026-10-25): see-through round buttons down the top left, like the eye at the top right -- white icons; the
+   name slides out on hover; the open one lit */
+#nc-fab { position: fixed; left: 14px; top: 64px; bottom: auto; transform: none; z-index: 61; pointer-events: none; }
+.nc-tabs { display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.nc-tab { position: relative; pointer-events: auto; width: 42px; height: 42px; padding: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  font: inherit; color: rgba(255,255,255,.95); background: rgba(40,22,12,.22); border: 2px solid rgba(255,255,255,.5); opacity: .6;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); transition: opacity .15s, background .15s; }
+.nc-tab:hover, .nc-tab:focus-visible { opacity: 1; background: rgba(40,22,12,.38); }
+.nc-tab.on { opacity: 1; background: rgba(214,150,52,.55); border-color: rgba(255,240,200,.9); }
+.nc-tab-ic { display: grid; place-items: center; }
+.nc-tab-ic img, .nc-tab-ic svg { width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 0 1.5px rgba(255,245,225,.9)) drop-shadow(0 1px 1px rgba(0,0,0,.4)); }
+.nc-tab-ic .nc-round-ic { font-size: 20px; line-height: 1; }
+.nc-tab-l { position: absolute; left: 50px; top: 50%; transform: translateY(-50%); padding: 3px 10px; border-radius: 999px; background: rgba(40,22,12,.7); color: #fff;
+  font-size: 12px; font-weight: 800; letter-spacing: .03em; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.nc-tab:hover .nc-tab-l, .nc-tab:focus-visible .nc-tab-l { opacity: 1; }
+.nc-tab .nc-badge { top: -4px; right: -4px; }
+.nc-drawer { max-width: calc(100vw - 32px); }
+
+/* ---- 2026-10-24: free placement, Outside's categories, the terrain brush, homes' orders ---- */
+.nc-free { float: right; margin: 0 0 6px 10px; padding: 6px 12px; border-radius: 999px; border: 2px solid var(--frame); background: var(--panel); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+.nc-free.on { background: linear-gradient(#fff1c8, #f1c24a); border-color: #5a3408; }
+.nc-card img.nc-swatchimg { width: 64px; height: 64px; flex: none; object-fit: cover; border-radius: 50%; border: 2px solid var(--frame); }
+.nc-brushes { display: inline-flex; gap: 4px; }
+.nc-brushes .nc-btn.on { background: #f1c24a; color: #3a1d0c; }
+.nc-hord { position: absolute; transform: translate(-50%, -100%); display: inline-flex; align-items: center; gap: 2px; padding: 2px 8px 2px 3px; cursor: pointer; pointer-events: auto; font-weight: 800; }
+.nc-hord img { width: 26px; height: 26px; object-fit: contain; }
+.nc-hord.go { box-shadow: 0 0 0 2px #7ee06a, 0 2px 6px rgba(0,0,0,.35); }
+.nc-hord.nc-up { transform: translate(-50%, calc(-100% - 3px)); }
+.nc-prop.nc-home { cursor: pointer; pointer-events: auto; }
+.nc-card-pop.home .nc-hs-dish { width: 120px; height: 100px; object-fit: contain; display: block; margin: 0 auto 6px; }
+.nc-hs-pay { font-size: 20px; font-weight: 800; } .nc-hs-pay span { font-size: 14px; color: #6a3fb0; margin-left: 6px; }
+.nc-hs-have { font-style: italic; } .nc-hs-have.lack { color: #b0352a; }
+.nc-hs-count { display: block; margin-top: 8px; opacity: .7; }
+/* (2026-10-24) every book on the cookbook's layout: an emoji tab, a group heading on a page */
+.nc-cb-tab2 .nc-tab-emoji { display: block; font-size: 30px; line-height: 40px; text-align: center; }
+.nc-bk-sub { margin: 14px 0 6px; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: #9a5a22; }
+.nc-bk-sub small { letter-spacing: 0; margin-left: 6px; opacity: .8; }
+.nc-cookbook .nc-ev-when { font-family: inherit; font-size: 12px; font-weight: 700; margin-left: 8px; opacity: .75; }
+.nc-cookbook .nc-ev-when.on { color: #2f7a2a; opacity: 1; }
+.nc-cb-detail .nc-ev-hero { font-size: 90px; line-height: 1.1; }
+.nc-cb-detail .nc-paint.mixer.big { margin: 10px auto; }
+.nc-cookbook .nc-bk-owned { display: inline-block; margin-top: 14px; }
+.nc-cb-dish .nc-paint.mixer.big { width: 100%; height: 100%; margin: 0; }
+.nc-cb-tab2 .nc-paint.mixer { display: block; width: 36px; height: 36px; margin: 0 auto; }
+/* (2026-10-25) a counter joined to its row: its longer picture hangs from the same corner, the box stays a counter's */
+.nc-thing.joined > .nc-body, .nc-thing.joined > .nc-fab { position: absolute; left: var(--jl); top: 0; width: var(--jw); height: var(--jh); object-fit: fill; }
+/* (2026-10-25) just looking: the eye (and, while looking, the camera) at the top right, see-through; the game's bubbles,
+   counts and buttons hidden. Taking a photo also hides everything outside the café */
+.nc-lookbar { position: fixed; top: 64px; right: 14px; z-index: 60; display: flex; flex-direction: column; gap: 8px; }
+.nc-lookbtn { width: 42px; height: 42px; padding: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: rgba(255,255,255,.95);
+  background: rgba(40,22,12,.22); border: 2px solid rgba(255,255,255,.5); opacity: .6; transition: opacity .15s, background .15s;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
+.nc-lookbtn:hover { opacity: 1; background: rgba(40,22,12,.38); }
+.nc-lookbtn svg { width: 24px; height: 24px; }
+body.nc-look .nc-bub, body.nc-look .nc-count, body.nc-look .nc-cold, body.nc-look .nc-ring, body.nc-look .nc-burnbar, body.nc-look .nc-cart-bub,
+body.nc-look .nc-float, body.nc-look .nc-clock, body.nc-look #nc-fab, body.nc-look #nc-fab-r, body.nc-look .nc-tut, body.nc-look .nc-drawer,
+body.nc-look .nc-dev, body.nc-look .nc-swpop { visibility: hidden !important; }
+body.nc-look .nc-hud { display: none !important; }
+body.nc-snapping .nc-out, body.nc-snapping [data-decor], body.nc-snapping .nc-outdoor, body.nc-snapping .nc-cart, body.nc-snapping .nc-sky,
+body.nc-snapping .nc-groundbox, body.nc-snapping .nc-lookbar, body.nc-snapping .nc-toasts { visibility: hidden !important; }
+.nc-shutter { position: fixed; inset: 0; z-index: 200; background: #fff; pointer-events: none; animation: nc-shutter .6s ease-out forwards; }
+@keyframes nc-shutter { from { opacity: .85; } to { opacity: 0; } }
+/* (2026-10-25) Build > Select: the box on the ground (red where it can't go; green-gold for a copy); the ground takes the pointer */
+.nc-selbox { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; z-index: 9000; pointer-events: none; }
+.nc-selbox polygon { fill: rgba(120,190,255,.18); stroke: #eaf6ff; stroke-width: 3; stroke-dasharray: 10 6; filter: drop-shadow(0 0 2px rgba(20,60,120,.8)); }
+.nc-selbox.copy polygon { fill: rgba(150,230,120,.2); stroke: #f4ffe6; }
+.nc-selbox.bad polygon { fill: rgba(230,70,60,.22); stroke: #ffd9d4; }
+body.nc-selecting .nc-thing, body.nc-selecting [data-decor], body.nc-selecting [data-plot], body.nc-selecting .nc-art, body.nc-selecting .nc-ceil { pointer-events: none !important; }
+body.nc-selecting #nc-main { cursor: crosshair; }
+/* (2026-10-25, Cam: "the buy/build menus to always be the length of the screen rather than changing depending what is
+   in the menu") -- the build and buy menus always span the screen, a 16px gutter each side; what's in them scrolls */
+.nc-drawer { box-sizing: border-box; width: calc(100vw - 32px); min-width: 0; max-width: none; }
+/* (2026-10-25, Cam: "find the tallest and set the menu to always be that tall so it doesnt change sizes up and down")
+   -- one size for every tab: the tallest measured (Buy > Kitchen/Decor/Lighting/Fun with "All", 328px), smaller only on a
+   short screen; anything taller scrolls inside it */
+.nc-drawer { height: min(328px, 60vh); overflow-y: auto; }
+.nc-selcost { position: absolute; z-index: 9001; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px 3px 5px; border-radius: 999px; pointer-events: none;
+  background: #fff6e0; border: 3px solid #8a5a22; font-weight: 800; font-size: 24px; color: #3a1d0c; box-shadow: 0 2px 6px rgba(0,0,0,.35); white-space: nowrap; }
+.nc-selcost svg { width: 26px; height: 26px; }
+/* (V24) the patio: its railings take the pointer only while you're laying one; the side door's frame */
+/* the café's glass side wall onto the patio (and its door) */
+.nc-pwall, .nc-pframe { position: absolute; pointer-events: none; }
+.nc-pframe { left: 0; top: 0; width: 1px; height: 1px; overflow: visible; }
+/* the patio's brick wall: a piece and its paint layers (bricks, coping); right-click it for its swatches, out of Build */
+.nc-pwall > img, .nc-pwall > .nc-fab { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.nc-pwall > .nc-fab.paint { mask-size: 100% 100%; -webkit-mask-size: 100% 100%; }
+.nc-pwall.hit { pointer-events: auto; }
+
+/* ---- 2026-10-25 performance pass (Cam: GPU spikes when zooming and moving the view, ~45% GPU). Measured headless on a
+   copy of the real café (202 street things, 1,041 painted-ground dabs): the world wasn't a layer of its own, so every
+   pan step and zoom step repainted ALL of it (painted ground filter included) -- pan 291% of a core, zoom 130%. As a
+   layer, moving and zooming it is the GPU sliding a picture: pan 12%, zoom 16% (the world's own layer is gone since --
+   see below -- the ground keeps its). The small things that move or bob every tick get layers of
+   their own too, so they don't repaint the café's tiles under them (idle 13% -> 4%). */
+/* (Cam, 25 Oct: "when i zoom out it wrecks the map and flashes up with the day time map and distorts"): the world as a
+   layer of its own was the cause -- dropped and redrawn after each zoom, and drawn apart from the ground's layer, frames
+   came through with the night's wash missing (the day ground) or the ground missing. Measured with the GPU over 9 zooms:
+   flashes in 5 with the world's layer, none without; panning costs about 7% more on the main thread. The ground keeps
+   its own layer (below). */
+/* the ground (grass, roads, the painted ground's soft-edged filter -- half of a whole redraw) is a layer of its own, drawn
+   afresh only when the zoom has moved a long way from where it was last drawn (body.nc-rerast-g) */
+.nc-groundbox { will-change: transform; }
+body.nc-rerast-g .nc-groundbox { will-change: auto; }
+.nc-person, .nc-bub, .nc-lampglow, .nc-hen, .nc-hord, .nc-ring, .nc-burnbar, .nc-pglow, .nc-mglow.jukebox { will-change: transform; }
+/* (2026-10-26) the fog machine's puffs and a walker's swaying picture, each its own layer too: their beat changed
+   opacity/transform in the world's own layer and repainted a world-sized patch each time */
+.nc-fog, .nc-person > img { will-change: transform, opacity; }
+
+/* V25 q5: a tarot frame's card picker (right-click the frame) -- the 22 Major Arcana of your deck */
+.nc-cardpick { display: grid; grid-template-columns: repeat(6, 38px); gap: 4px; margin-top: 6px; max-width: 260px; }
+.nc-cardpick button { padding: 0; border: 2px solid transparent; border-radius: 4px; background: none; cursor: pointer; line-height: 0; }
+.nc-cardpick button.on { border-color: #f1c24a; }
+.nc-cardpick img { width: 34px; height: 58px; object-fit: cover; border-radius: 2px; }
+
+/* (Cam, 25 Oct) the fog machine's mist: soft purple puffs on the ground, swelling and drifting with the page's clock */
+.nc-fog { position: absolute; pointer-events: none; border-radius: 50%; background: radial-gradient(closest-side, rgba(214,196,245,.95), rgba(190,165,240,.6) 55%, rgba(180,150,230,0));
+  will-change: transform; }   /* (no transition: stepped by the clock only -- the performance pass) */
+.nc-fog.nc-up { transform: translateX(-6px) scale(1.12); }
+.nc-fog.f1.nc-sway, .nc-fog.f3.nc-sway { opacity: .8; }
+.nc-fog.f4, .nc-fog.f5 { opacity: .8; } .nc-fog.f6 { opacity: .6; }
+body.nc-snapping .nc-fog { visibility: hidden; }
+/* a recipe in hand (2026-10-25): the chip above the bottom tabs */
+.nc-holdchip { position: fixed; left: 50%; bottom: 78px; transform: translateX(-50%); z-index: 350; display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 32px); padding: 6px 8px 6px 10px; background: var(--panel); border: 2px solid var(--frame); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.35); }
+.nc-holdchip[hidden] { display: none; }
+.nc-holdchip img { width: 44px; height: 44px; object-fit: contain; flex: none; }
+.nc-holdchip span { display: flex; flex-direction: column; min-width: 0; }
+.nc-holdchip small { color: var(--muted); font-size: 12px; }
+.nc-holdx { flex: none; width: 28px; height: 28px; padding: 4px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.nc-holdx:hover { background: rgba(120, 70, 20, .15); }
+.nc-holdx svg { width: 100%; height: 100%; }
+/* V26: run dry (a refill arrow on red), and the espresso machine standing on its counter */
+.nc-bub.empty { background: #b8452f; border-color: #6e1e12; color: #fff; padding: 2px 5px; }
+.nc-bub.empty .nc-ic { width: 14px; height: 14px; }
+.nc-espresso { position: absolute; left: 4%; top: -22%; width: 44%; pointer-events: none; filter: drop-shadow(0 1px 1px rgba(40, 20, 6, .35)); }
+.nc-espresso.flip { left: 52%; transform: scaleX(-1); }
+/* the Terrain tools' pictures (2026-10-26: the water's second frame is gone -- still water, Cam: "happy if the water isnt animated") */
+.nc-toolic { display: block; width: 64px; height: 64px; margin: 4px auto 2px; }
+.nc-toolic svg { width: 100%; height: 100%; }
+/* a stall's note (2026-10-25): selling, or when it opens */
+.nc-bub.stallnote { position: absolute; background: #fff6e0; border-color: #9a6a32; color: #5a3416; font-size: 12px; font-weight: 800; height: 22px; white-space: nowrap; }
+/* the wall lights' glows, cut to the café's outline (a glow by the wall's end stays off the pavement) */
+.nc-glowclip { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; z-index: 941; pointer-events: none; }
+/* Aunty's box on the pavement by the door (2026-10-25: no more Aunty button) */
+.nc-crate-st { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; filter: drop-shadow(0 3px 2px rgba(30,14,6,.4)); }
+.nc-crate-st img { width: 100%; height: 100%; object-fit: contain; }
+.nc-crate-st.nc-up img { transform: translateY(-3px); }
+body.nc-street .nc-crate-st, body.nc-building .nc-crate-st { pointer-events: none; }
+/* a secret still to come (2026-10-25): a question mark in its place */
+.nc-qmark { display: grid; place-items: center; width: 100%; height: 100%; font: 900 40px/1 Georgia, "DejaVu Serif", serif; color: #9a7a52; text-shadow: 0 2px 0 #fff6e0; }
+.nc-qmark.big { width: auto; height: 180px; font-size: 140px; }
+/* (2026-10-25) just unlocked: it turns over, from the question mark, and comes up in colour */
+@keyframes nc-flip { 0% { transform: perspective(600px) rotateY(90deg); filter: grayscale(1) brightness(1.5); } 55% { transform: perspective(600px) rotateY(-12deg); filter: grayscale(.3); } 100% { transform: none; filter: none; } }
+.nc-reveal { animation: nc-flip .8s ease-out; }
+
+/* Halloween's farewell (2026-11-01): the tarot reader over the letter, each dish's lot under its picture */
+.nc-card-pop.farewell { overflow-y: auto; gap: 8px; padding-bottom: 14px; }
+.nc-card-pop.farewell .nc-letter { flex: none; }
+.nc-card-pop.farewell .nc-letter p { margin: 4px 0; }
+.nc-card-pop.farewell .nc-unlocks { flex: none; }
+.nc-card-pop.farewell > .nc-btn { flex: none; align-self: center; }
+.nc-card-pop.farewell .nc-fw-pic { flex: none; display: block; width: 120px; height: 104px; object-fit: contain; margin: 4px auto 0; filter: drop-shadow(0 6px 8px rgba(40, 10, 40, .35)); }
+.nc-card-pop.farewell .nc-unlock span { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.nc-card-pop.farewell .nc-unlock b { font-size: 16px; color: #a8501c; }
+
+/* ---- a narrow, tall window (Cam, 2026-11-01: "responsive so i can play in a narrow vertical window as well") ----
+   The top bar drops what the clock or a hover already says; the clock moves clear of the round buttons; a book shows
+   both its pages at once, one above the other, each scrolling on its own, its tabs in a row along the top that scrolls
+   sideways. (Last in the file, so these win.) */
+@media (max-width: 760px) {
+  .nc-clock { left: 62px; right: 62px; transform: none; align-items: center; text-align: center; }
+  .nc-clock .nc-rush { white-space: normal; }
+  .nc-modal { padding: 8px; }
+  .nc-card-pop.book.cookbook, .nc-card-pop.book.cookbook.rtabs { width: 100%; padding: 58px 0 0; }
+  .nc-cookbook { height: calc(100vh - 16px - 58px); max-height: 980px; grid-template-rows: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; padding: 10px; }
+  .nc-cookbook .nc-page { height: auto; min-height: 0; max-height: none; overflow-y: auto; padding: 16px 16px 20px; }
+  .nc-cookbook .nc-page.r:has(.nc-bk-arrow) { padding-bottom: 76px; }
+  .nc-cb-tabs2, .nc-cb-tabs2.r { left: 8px; right: 8px; top: -58px; flex-direction: row; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .nc-cb-tabs2::-webkit-scrollbar { display: none; }
+  .rtabs .nc-cb-tabs2 { right: 50%; } .rtabs .nc-cb-tabs2.r { left: 50%; right: 8px; justify-content: flex-end; }
+  .nc-cb-tab2 { flex: none; }
+  .nc-cb-tab2.on, .nc-cb-tab2:hover, .nc-cb-tabs2.r .nc-cb-tab2.on, .nc-cb-tabs2.r .nc-cb-tab2:hover { transform: none; }
+  .nc-cb-big { max-height: 140px; }
+  .nc-cb-detail h2 { font-size: 22px; }
+  .nc-tut { left: 8px; right: 8px; bottom: 8px; max-width: none; }
+}
+@media (max-width: 560px) {
+  .nc-hud { gap: 6px; padding: 6px 8px; }
+  .nc-name b { display: none; }
+  .nc-stats { gap: 6px; }
+  .nc-sign { padding: 3px 7px; font-size: 11px; letter-spacing: .4px; }
+  .nc-pop { padding: 3px 7px; font-size: 13px; }
+  .nc-pop .nc-rushx { display: none; }                         /* (the clock says the rush) */
+  .nc-level b { width: 30px; height: 30px; }
+  .nc-candy { padding: 2px 7px; font-size: 13px; white-space: nowrap; }
+  .nc-coins.big { padding: 3px 8px 3px 6px; font-size: 13px; }
+  .nc-clock b { font-size: 18px; }
+  .nc-clock .nc-rush { font-size: 11px; }
+  .nc-cb-dishes { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 6px; }
+}
+@media (max-width: 400px) {
+  .nc-name { display: none; }
+}
+
+/* ---- graphics (the performance audit, 3 Nov 2026; cafe.js FX_CHOICES) ----
+   Light: the machines' glows off, the jukebox's colours still. Resting (Light, or Balanced while another window is in
+   use): the clock flips no classes (cafe.js beat), so nothing bobs or sways and nothing redraws for it. */
+body[data-fx="light"] .nc-mglow { display: none; }
+.nc-fx { gap: 6px; flex-wrap: wrap; }
+
+/* the café diary (2026-11-07): entries down the left page like a ledger, the one picked on the right */
+.nc-dy-list { display: flex; flex-direction: column; gap: 6px; }
+.nc-dy-row { position: relative; display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; padding: 5px 12px 5px 5px; border-radius: 10px; cursor: pointer;
+  font: inherit; color: #3a1d0c; text-align: left; background: rgba(255, 248, 228, .55); border: 2px solid rgba(138, 78, 34, .35); transition: background .12s, border-color .12s; }
+.nc-dy-row:hover { background: rgba(255, 248, 228, .95); border-color: #8a4e22; }
+.nc-dy-row.on { background: linear-gradient(#fff6e0, #f0d6a0); border-color: #8a4e22; box-shadow: 0 2px 0 #8a4e22; }
+.nc-dy-row.bad { border-left: 5px solid #a8322a; }
+.nc-dy-pic { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: rgba(154, 90, 34, .14); overflow: hidden; }
+.nc-dy-pic img { width: 40px; height: 40px; object-fit: contain; }
+.nc-dy-emoji { font-size: 24px; line-height: 1; }
+.nc-dy-emoji.big { font-size: 64px; }
+.nc-dy-txt { display: flex; flex-direction: column; min-width: 0; }
+.nc-dy-txt b { font-size: 14px; line-height: 1.2; }
+.nc-dy-txt small { font-size: 11px; font-weight: 700; color: #9a5a22; }
+.nc-dy-sum { font-size: 13px; white-space: nowrap; max-width: 14ch; overflow: hidden; text-overflow: ellipsis; }
+.nc-dy-sum .nc-ic, .nc-dy-sum svg { width: 14px; height: 14px; vertical-align: -2px; }
+.nc-dy-sum .good { color: #2e6a36; } .nc-dy-sum .bad { color: #a8322a; }
+.nc-dy-new { position: absolute; top: -4px; right: -4px; width: 12px; height: 12px; border-radius: 50%; background: #a8322a; border: 2px solid #fff6e0; }
+.nc-dy-hero { display: grid; place-items: center; width: 120px; height: 120px; margin: 0 auto 6px; border-radius: 50%; background: rgba(154, 90, 34, .14); overflow: hidden; }
+.nc-dy-hero img { width: 108px; height: 108px; object-fit: contain; }
+.nc-dy-when { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #9a5a22; }
+.nc-dy-says { font-family: Georgia, serif; font-style: italic; line-height: 1.45; margin: 0 auto 14px; max-width: 40ch; }
+.nc-dy-gains .nc-unlock.bad > span { color: #a8322a; }
+.nc-dy-note { margin: 0 auto 8px; max-width: 40ch; padding: 6px 12px; border-radius: 8px; background: rgba(154, 90, 34, .12); font-weight: 700; }
+@media (max-width: 560px) { .nc-dy-row { grid-template-columns: 36px 1fr; } .nc-dy-pic { width: 36px; height: 36px; } .nc-dy-sum { grid-column: 2; } }

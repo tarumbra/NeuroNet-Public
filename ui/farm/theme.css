@@ -1,0 +1,80 @@
+/* ==========================================================================
+   NeuroFarm -- the NeuroPets parchment look (2026-10-10, Cam: "reuse some of the assets from Neuropets in NeuroFarm
+   to also change its UI to be more styled similar to Neuropets"). Loaded LAST, after farm.css. The frames are
+   NeuroPets' own pictures (../pet/art/ui -- neurofarm.html sits beside pet/), so the two games share one set.
+   Dark wood behind, parchment cards with dark brown ink, brown plate buttons. The field and painted scenes are
+   left as they are. image-rendering is inherited, so it's only set on buttons, never on cards (painted pictures).
+   ========================================================================== */
+:root {
+  --bg: #45281a; --rail: #331d12;
+  --panel: #d8b67f; --panel2: #e2c38f; --raise: #cca46c;
+  --line: rgba(80, 40, 18, .22); --line2: rgba(80, 40, 18, .4); --chip: rgba(80, 40, 18, .1);
+  --ink: #3b2213; --muted: #6f4a2b; --faint: #8a6643;
+  --gold: #c27245; --gold-ink: #fff4dc; --go: #4e8a2c; --go-ink: #fff8e6; --warn: #b5671b; --bad: #a8322a;
+  --wood: #814832; --wood-hi: #a0603e; --wood-ink: #3b2213;
+  --shadow: 0 3px 8px rgba(20, 8, 2, .45);
+  --plate-ink: #f5e2bd;
+}
+html, body { background: var(--bg) url(../pet/art/ui/planks.png) 0 0 / 666px 348px repeat; color: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--wood); border-color: var(--bg); }
+
+/* ---- the rail: dark wood, light words ---- */
+.nf-rail { background: var(--rail); border-right: 2px solid #22130b; }
+.nf-navbtn { color: #d8b88c; }
+.nf-navbtn:hover { background: #4c2c1b; color: #fff4dc; }
+.nf-navbtn.on { color: #fff4dc; }
+.nf-navbtn.on .nf-navpic { background: var(--panel); box-shadow: inset 0 0 0 2px var(--wood); }
+.nf-badge { box-shadow: 0 0 0 2px var(--rail); }
+
+/* ---- the top: the carved title ribbon, as in NeuroPets ---- */
+.nf-hud { border-style: solid; border-color: transparent; border-width: 9px 44px; background: transparent; padding: 4px 6px;
+  border-image: url(../pet/art/ui/title-ribbon.png) 9 42 fill / 9px 44px stretch; }
+.nf-title b { color: var(--ink); } .nf-title small { color: var(--muted); }
+.nf-pill { background: rgba(83, 45, 25, .9); color: #fff4dc; border-color: #22130b; }
+.nf-pill small { color: #d8b88c; }
+.nf-ring b { color: var(--ink); }
+.nf-level small { color: var(--ink); } .nf-level > span:last-child { color: var(--muted); }
+
+/* ---- two grounds: light words on the wood, dark ink on parchment ---- */
+.nf-main { --ink: #f1dcb4; --muted: #d2b083; --faint: #ab8961; --line: rgba(255, 230, 190, .15); --line2: rgba(255, 230, 190, .3); --chip: rgba(255, 230, 190, .12);
+  --go: #8cc45a; --bad: #f08a6e; --warn: #f0b25a; color: var(--ink); }
+.nf-panel, .nf-recipe, .nf-inspect, .nf-float, .nf-hover, .nf-sheet-card, .nf-animal, .nf-ws, .nf-toast, .nf-housecard, .nf-hotbar,
+.nf-stockitem, .nf-upgrade, .nf-stoves, .nf-qitem, .nf-bubble, .nf-seg, .nf-stat, .nf-slot, .nf-ticket, .nf-titlescreen .nf-start {
+  --ink: #3b2213; --muted: #6f4a2b; --faint: #8a6643; --line: rgba(80, 40, 18, .22); --line2: rgba(80, 40, 18, .4); --chip: rgba(80, 40, 18, .1);
+  --go: #4e8a2c; --bad: #a8322a; --warn: #b5671b; color: var(--ink); }
+
+/* ---- cards: the carved wooden frame ---- */
+.nf-panel, .nf-recipe, .nf-inspect, .nf-hotbar, .nf-ws, .nf-housecard, .nf-float, .nf-titlescreen .nf-start {
+  border: 12px solid transparent; border-image: url(../pet/art/ui/card-frame.png) 24 fill / 24px stretch;
+  background: transparent; border-radius: 0; box-shadow: none; filter: drop-shadow(0 3px 5px rgba(20, 8, 2, .45)); }
+.nf-ws:hover, .nf-recipe:hover { background: transparent; filter: drop-shadow(0 3px 5px rgba(20, 8, 2, .45)) brightness(1.05); }
+.nf-animal, .nf-stockitem, .nf-qitem, .nf-upgrade, .nf-stoves, .nf-slot, .nf-stat, .nf-hover, .nf-bubble { background: var(--panel2); border-color: rgba(80, 40, 18, .3); }
+.nf-toast { background: var(--panel2); border: 2px solid var(--wood); }
+
+/* the workshop and animal windows: the leafy pop-up frame, a vine under the heading */
+.nf-sheet { background: rgba(20, 8, 2, .55); }
+.nf-sheet-card { border: 18px solid transparent; border-image: url(../pet/art/ui/popup-frame.png) 36 fill / 36px stretch;
+  background: transparent; border-radius: 0; box-shadow: none; filter: drop-shadow(0 8px 18px rgba(10, 4, 0, .6)); }
+.nf-sheet-head { padding-bottom: 46px; margin-bottom: 4px; background: url(../pet/art/ui/divider.png) center bottom / 285px 42px no-repeat; image-rendering: pixelated; }
+
+/* ---- buttons: the dark plate; the main thing to do, or the chosen one: the light plate ---- */
+.nf-btn { border-style: solid; border-color: transparent; border-width: 5px 10px; border-radius: 0; box-shadow: none; background: transparent;
+  border-image: url(../pet/art/ui/button.png) 5 12 fill / 7px 16px stretch; color: var(--plate-ink); image-rendering: pixelated; }
+.nf-btn:hover:not([disabled]) { background: transparent; filter: brightness(1.18); color: #fff4dc; }
+.nf-btn.go, .nf-btn.go:hover:not([disabled]), .nf-recipe-go, .nf-recipe-go.queue, .nf-seg button.on {
+  border-style: solid; border-color: transparent; border-width: 5px 10px; border-radius: 0; box-shadow: none; background: transparent;
+  border-image: url(../pet/art/ui/button-on.png) 5 12 fill / 7px 16px stretch; color: var(--ink); image-rendering: pixelated; }
+.nf-btn[disabled], .nf-recipe-go[disabled] { opacity: .5; filter: grayscale(.3); }
+.nf-seg { background: var(--panel2); border-color: rgba(80, 40, 18, .3); }
+.nf-input { background: #ecd3a4; color: #3b2213; border-color: rgba(80, 40, 18, .4); }
+.nf-input::placeholder { color: #8a6643; }
+
+/* ---- bars ---- */
+.nf-meter { background: rgba(60, 30, 12, .3); box-shadow: inset 0 1px 2px rgba(40, 18, 6, .35); }
+.nf-ring .track { stroke: rgba(80, 40, 18, .25); }
+/* quiet buttons stay plain words with a thin line, as in NeuroPets; danger in red */
+.nf-btn.quiet, .nf-btn.quiet:hover:not([disabled]) { border: 1px solid var(--line2); border-image: none; border-radius: 6px; background: transparent; color: var(--ink); filter: none; }
+.nf-btn.quiet:hover:not([disabled]) { background: var(--chip); }
+.nf-btn.danger, .nf-btn.quiet.danger { color: var(--bad); }
+/* a recipe's button grows to fit a long "needs ..." line instead of spilling over the plate */
+.nf-recipe-go { height: auto; min-height: 32px; line-height: 1.25; padding-top: 3px; padding-bottom: 3px; white-space: normal; }

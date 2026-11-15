@@ -1,0 +1,30 @@
+/* ==========================================================================
+   Fleeting — quick thoughts, in a queue.
+   ========================================================================== */
+.fl-page { max-width: 820px; }
+.fl-new { display: flex; gap: 8px; align-items: flex-start; margin: 14px 0 20px; }
+.fl-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.fl-head .page-h { margin: 0; }
+.fl-input { flex: 1; min-width: 0; resize: vertical; font: inherit; }
+.fl-list { display: flex; flex-direction: column; gap: 10px; }
+.fl-note {
+  border: 1px solid var(--line); border-radius: var(--radius, 10px);
+  background: var(--elevated, var(--panel));
+  overflow: hidden;
+}
+.fl-note-h {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px 8px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.fl-n {
+  display: grid; place-items: center;
+  min-width: 24px; height: 24px; padding: 0 6px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent); font-weight: 700; font-size: 0.8125rem;
+}
+.fl-when { flex: 1; min-width: 0; font-size: 0.72rem; color: var(--muted); }
+.fl-del:hover { color: var(--danger); border-color: var(--danger); }
+.fl-text { padding: 12px 14px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.fl-empty { color: var(--muted); }

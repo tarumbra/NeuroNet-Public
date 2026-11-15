@@ -1,0 +1,43 @@
+{
+  "//": [
+    "Content for ui/pet/core/22-your-house.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "HOUSE_TIERS": ["", "Basic", "Sturdy", "Fine", "Grand"],
+  "ROOMS": {
+    "kitchen": {"name": "Kitchen", "workshops": ["kitchen"], "says": "Where the cooking happens."},
+    "smithy": {"name": "Smithy", "workshops": ["furnace", "anvil"], "says": "Fire, hammer and bars."},
+    "shed": {"name": "Shed", "workshops": ["crafting", "spinning", "sawbench", "tanner", "fletching", "compost"], "says": "Benches, tools and sawdust."},
+    "library": {
+      "name": "Library",
+      "workshops": ["herblore", "apothecary", "gemology", "enchanting", "altar"],
+      "says": "Quiet work: herbs, potions, gems -- and magic."
+    },
+    "bedroom": {"name": "Bedroom", "says": "Your bed, and your pet's.", "beds": ["", "Straw pet bed", "Wooden pet bed", "Cushioned pet bed", "Royal pet bed"]},
+    "storeroom": {"name": "Store room", "says": "Chests for what you don't want to carry. What's stored is safe, even if you fall."}
+  },
+  "ROOM_ORDER": ["kitchen", "smithy", "shed", "library", "bedroom", "storeroom"],
+  "ROOM_CAP": [0, 15, 30, 45, 99],
+  "ROOM_XP": [0, 0, 0.05, 0.1, 0.15],
+  "NAP_CUT": [0, 0.05, 0.08, 0.1, 0.15],
+  "REST_HEAL": [0, 0, 0.1, 0.25, 0.5],
+  "BANK": {
+   "//": "Modernize/Reduce Nav (2026-10-18, Cam's N9: 'add a bank utilising the storeroom but allow better base storage size, and a way to tab and organise items same as runescapes bank'): the store room is a BANK. `kinds`: how many kinds of things it holds by the room's tier (0 = none; the chests held 26/52/91/156), in up to `tabs` named tabs; each storekeeper pet at work adds `keeper` kinds (was a 13-kind chest). An island estate's store room is its own bank, by its part's tier.",
+   "kinds": [0, 60, 100, 160, 240],
+   "tabs": 9,
+   "keeper": 20
+  },
+  "ROOM_BUILD": [
+    null,
+    null,
+    {
+      "//": "(balance, 2026-10-08: a sturdy room was an hour and a half in) -- now about a day's play, then a long goal",
+      "con": 10,
+      "coins": 2500,
+      "needs": {"plank": 30, "stone": 30},
+      "xp": 250
+    },
+    {"con": 25, "coins": 10000, "needs": {"hardplank": 30, "granite": 25, "ironbar": 10}, "xp": 900},
+    {"con": 40, "coins": 30000, "needs": {"fineplank": 30, "sandstone": 30, "goldbar": 10}, "xp": 2500}
+  ]
+}

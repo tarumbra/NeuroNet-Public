@@ -1,0 +1,231 @@
+{
+ "BEAST_TYPES": {
+  "//": "Battle Re-work Part 11a (2026-10-16), note 06: six types from the species already in the game, each strong against two and weak to two -- kept small so it can be learned. strong: this type's moves hit those harder (11b uses BEAST_RULES.strong / weak).",
+  "beast": {
+   "name": "Beast",
+   "strong": [
+    "bird",
+    "bug"
+   ],
+   "about": "Fur, claws and teeth: steady and strong."
+  },
+  "bird": {
+   "name": "Bird",
+   "strong": [
+    "bug",
+    "reptile"
+   ],
+   "about": "Quick and hard to pin down."
+  },
+  "water": {
+   "name": "Water",
+   "strong": [
+    "beast",
+    "reptile"
+   ],
+   "about": "Tough hides and shells; slow to tire."
+  },
+  "reptile": {
+   "name": "Reptile",
+   "strong": [
+    "beast",
+    "spirit"
+   ],
+   "about": "Cold patience and a hard bite."
+  },
+  "bug": {
+   "name": "Bug",
+   "strong": [
+    "spirit",
+    "water"
+   ],
+   "about": "Small, armoured and stubborn."
+  },
+  "spirit": {
+   "name": "Spirit",
+   "strong": [
+    "bird",
+    "water"
+   ],
+   "about": "Rare and touched by magic."
+  }
+ },
+ "BEAST_TYPE_OF": {
+  "//": "A species' type; a few rare, magic kinds (species/colour) are Spirit whatever their species.",
+  "species": {
+   "cat": "beast",
+   "bunny": "beast",
+   "pig": "beast",
+   "fox": "beast",
+   "cow": "beast",
+   "goat": "beast",
+   "sheep": "beast",
+   "horse": "beast",
+   "dog": "beast",
+   "ram": "beast",
+   "hare": "beast",
+   "hedgehog": "beast",
+   "deer": "beast",
+   "elk": "beast",
+   "boar": "beast",
+   "wolf": "beast",
+   "bear": "beast",
+   "tiger": "beast",
+   "leopard": "beast",
+   "mole": "beast",
+   "anteater": "beast",
+   "camel": "beast",
+   "jackal": "beast",
+   "hippo": "beast",
+   "yak": "beast",
+   "chicken": "bird",
+   "duck": "bird",
+   "gull": "bird",
+   "owl": "bird",
+   "flamingo": "bird",
+   "ibis": "bird",
+   "frog": "water",
+   "crab": "water",
+   "seal": "water",
+   "stingray": "water",
+   "orca": "water",
+   "whale": "water",
+   "snake": "reptile",
+   "viper": "reptile",
+   "alligator": "reptile",
+   "spider": "bug",
+   "tarantula": "bug",
+   "scorpion": "bug",
+   "camelspider": "bug",
+   "locust": "bug",
+   "mummy": "spirit",
+   "yeti": "spirit"
+  },
+  "kinds": {
+   "cat/golden": "spirit",
+   "bunny/moon": "spirit",
+   "frog/ember": "spirit",
+   "seal/selkie": "spirit",
+   "owl/storm": "spirit",
+   "spider/crystal": "spirit",
+   "whale/white": "spirit"
+  }
+ },
+ "BEAST_RULES": {
+  "//": "Numbers (the Mathematician sets them against the Hunter in 11b): base: a type's health, attack, defence and speed at battle level 1; grow: what each gains a level, as a share of its base. maxLevel: battle level 1-50. strong/weak: a move's damage on a type it's strong against / one strong against it (11b). Health is on the player's scale (a level-30 pet has about 40, a level-30 player 30).",
+  "maxLevel": 50,
+  "base": {
+   "beast": {
+    "health": 10,
+    "attack": 6,
+    "defence": 5,
+    "speed": 5
+   },
+   "bird": {
+    "health": 8,
+    "attack": 5,
+    "defence": 4,
+    "speed": 8
+   },
+   "water": {
+    "health": 12,
+    "attack": 5,
+    "defence": 6,
+    "speed": 4
+   },
+   "reptile": {
+    "health": 10,
+    "attack": 7,
+    "defence": 5,
+    "speed": 4
+   },
+   "bug": {
+    "health": 8,
+    "attack": 6,
+    "defence": 7,
+    "speed": 6
+   },
+   "spirit": {
+    "health": 9,
+    "attack": 7,
+    "defence": 4,
+    "speed": 7
+   }
+  },
+  "grow": {
+   "health": 0.1,
+   "attack": 0.1,
+   "defence": 0.1,
+   "speed": 0.05
+  },
+  "trainBonusEvery": 4,
+  "strong": 1.5,
+  "weak": 0.67,
+  "stats": {
+   "health": "Health",
+   "attack": "Attack",
+   "defence": "Defence",
+   "speed": "Speed"
+  }
+ },
+ "BEAST_PEN": {
+  "//": "The Beast Pen at the estate (note 06). stalls: battle pets it holds, by tier; up: what the next tier costs (Construction level and coins). train: battle and stat xp an hour on idle training, by tier -- about a tenth of a fight's at tier 0, a fifth, then three-tenths (note 06's 10/20/30%); idle training stops at battle level trainCap. feed: what a pet in training eats (one each feedHours, up to fullHours ahead). rest: minutes a fainted pet rests, restBase + restPerLevel a battle level, x restMult by tier; food used here cuts it by foodMinutes x its heal.",
+  "stalls": [
+   6,
+   12,
+   18
+  ],
+  "up": [
+   {
+    "construction": 20,
+    "coins": 5000
+   },
+   {
+    "construction": 40,
+    "coins": 20000
+   }
+  ],
+  "train": [
+   250,
+   500,
+   750
+  ],
+  "trainCap": 30,
+  "feed": [
+   "grainfeed",
+   "hay"
+  ],
+  "feedHours": 6,
+  "fullHours": 24,
+  "restBase": 30,
+  "restPerLevel": 2,
+  "restMult": [
+   1,
+   0.8,
+   0.6
+  ],
+  "foodMinutes": 2,
+  "move": {
+   "Common": 500,
+   "Uncommon": 1000,
+   "Rare": 2500,
+   "Special": 5000,
+   "Legendary": 10000
+  }
+ },
+ "WARDEN": {
+  "//": "Warden Briar (Q14's name), the Beast Master's tutor -- she lives by the Pen. Narrative Designer: weathered, few words, fond of animals and not of people.",
+  "name": "Warden Briar",
+  "title": "Keeper of the Beast Pen",
+  "look": {
+   "skin": 2,
+   "hair": 2,
+   "outfit": 3,
+   "pic": "briar"
+  },
+  "says": "\"Battle pets aren't pets. They're partners. Feed them, train them, let them rest -- and never send one out to make up for your own mistakes.\"",
+  "move": "\"Bring me a pet from your den and I'll take it into the Pen. Mind you: once it's run with the pack, it won't come back to a cushion by the fire.\"",
+  "fresh": "\"A new one? Good. The young ones settle in fastest -- no charge for those.\"",
+  "full": "\"The stalls are full. Build me more, or keep fewer.\""
+ }
+}

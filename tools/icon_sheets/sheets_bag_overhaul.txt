@@ -1,0 +1,7 @@
+# The Bag Overhaul (2026-10-20): Amunet's How to Play book (Cam's sheet 112, one book -- the knapper's page borrows pageimprovise's picture)
+112 [1x1] {@crops/sheet112-book.png}: howtoplay
+# V18 (2026-10-20): the specials' icons -- Cam saved them as "Icon- Sheet 110/111" (capital I), beside the armour's "icon- sheet 110/111"
+113 {Icon- Sheet 110.jpeg}: spec_aimed,spec_volley,spec_pinningshot,spec_rainofarrows,spec_cleave,spec_rage,spec_bloodlust,spec_skullsplitter,spec_surge,spec_burst,spec_arcanelance,spec_backstab,spec_envenom,spec_smokebomb,spec_fanofknives,spec_judgement
+114 {Icon- Sheet 111.jpeg}: spec_doubleslash,spec_deepstab,spec_skinnerscut,spec_puncture,spec_lunge,spec_sweepingcut,spec_shatter,spec_groundslam,spec_snapshot,spec_boltthrough,spec_staffsweep,spec_rend,spec_venomthrust,spec_ram,spec_petrify,spec_curseofra
+# the knapper's page (I11): planned, borrowing pageimprovise's picture until painted
+115 [1x1]: pageflint

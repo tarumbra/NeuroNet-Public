@@ -1,0 +1,50 @@
+/* ==========================================================================
+   App stats — Settings → App stats. See stats.js.
+   ========================================================================== */
+.ap-stats { display: flex; flex-direction: column; gap: 18px; max-width: 1200px; }
+
+.ap-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.ap-since { flex: 1; min-width: 240px; margin: 0; }
+.ap-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* The four numbers that open a presentation. */
+.ap-hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.ap-tile {
+  padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--radius, 10px);
+  background: color-mix(in srgb, var(--accent) 7%, var(--panel, var(--bg)));
+}
+.ap-tile-v { font-size: 1.6rem; font-weight: 700; color: var(--ink); line-height: 1.15; }
+.ap-tile-l { margin-top: 4px; font-size: 0.8rem; color: var(--muted); }
+
+.ap-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 12px; }
+.ap-chart { padding: 12px 14px 6px; }
+.ap-chart-h, .ap-group-h { font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.ap-chart-h span, .ap-group-h span { font-weight: 400; font-size: 0.75rem; color: var(--muted); margin-left: 6px; }
+/* The grid's chart draws in its own colours; these are the ones it asks for. */
+.ap-chart svg { width: 100%; height: auto; display: block;
+  --text: var(--ink); --text-faint: var(--muted); --border: var(--line); }
+
+.ap-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; align-items: start; }
+.ap-group { padding: 12px 14px; }
+.ap-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 5px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  font-size: 0.875rem;
+}
+.ap-row:last-child { border-bottom: 0; }
+.ap-row b { color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ap-row.is-zero { color: var(--muted); }
+.ap-row.is-zero b { color: var(--muted); font-weight: 500; }
+.ap-foot { margin: 0; }
+
+/* NeuroNet's health (app_health.py) */
+.ap-health { padding: 12px 14px; }
+.ap-health-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; }
+.ap-health-now b { display: block; font-size: 1.6rem; color: var(--ink); line-height: 1.15; }
+.ap-health-now span, .ap-health-up span { display: block; font-size: 0.8rem; color: var(--muted); }
+.ap-health-parts { display: flex; flex-wrap: wrap; gap: 4px 14px; flex: 1; font-size: 0.85rem; color: var(--muted); }
+.ap-health-parts b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.ap-health-up { color: var(--ink); font-size: 0.9rem; text-align: right; }
+.ap-spark { width: 100%; height: 70px; display: block; margin: 8px 0 2px; }
+.ap-health-v { margin: 4px 0 0; }
+.ap-health-v.is-warn { color: var(--danger, #d9534f); }

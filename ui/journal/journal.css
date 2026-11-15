@@ -1,0 +1,108 @@
+/* ==========================================================================
+   Journal — Mindfulness → Journal (journal.js).
+   ========================================================================== */
+.jn-page { max-width: 1180px; }
+.jn-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.jn-layout { display: grid; grid-template-columns: minmax(240px, 320px) 1fr; gap: 16px; align-items: start; }
+.jn-list {
+  display: flex; flex-direction: column; gap: 8px;
+  position: sticky; top: 0;
+  max-height: calc(100vh - 190px);
+}
+.jn-search { width: 100%; }
+.jn-items { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; padding-right: 2px; }
+.jn-row {
+  display: flex; flex-direction: column; gap: 2px; text-align: left;
+  padding: 9px 12px; border: 1px solid var(--line); border-radius: var(--radius, 10px);
+  background: var(--elevated, var(--panel)); color: var(--text); font: inherit; cursor: pointer;
+  transition: border-color .15s var(--ease), background .15s var(--ease);
+}
+.jn-row:hover { border-color: var(--line-strong); background: var(--hover); }
+.jn-row.on { border-color: var(--accent); background: var(--accent-tint); }
+.jn-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.jn-row-date { font-size: 0.72rem; color: var(--muted); }
+.jn-row-title { font-weight: 700; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jn-row-snip { font-size: 0.8125rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.jn-row-meta { display: flex; gap: 6px; align-items: center; margin-top: 3px; font-size: 0.72rem; color: var(--muted); }
+.jn-badge {
+  padding: 1px 7px; border-radius: 999px; font-weight: 700; font-size: 0.6875rem;
+  background: color-mix(in srgb, #c98ad6 22%, transparent); color: #d9a8e4;
+}
+.jn-empty { color: var(--muted); }
+
+.jn-detail {
+  min-width: 0; border: 1px solid var(--line); border-radius: var(--radius-lg, 16px);
+  background: var(--elevated, var(--panel)); padding: 18px 20px;
+}
+.jn-detail:empty { display: none; }
+.jn-entry-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.jn-entry-date { flex: 1; color: var(--muted); font-size: 0.8125rem; }
+.jn-back { display: none; }
+.jn-del:hover { color: var(--danger); border-color: var(--danger); }
+.jn-entry-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); margin: 2px 0 12px; }
+.jn-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; color: var(--text); margin: 0 0 14px; }
+
+/* a reading's cards */
+.jn-reading {
+  margin: 0 0 16px; padding: 12px 14px; border-radius: var(--radius, 10px);
+  background: color-mix(in srgb, #c98ad6 8%, transparent);
+  border: 1px solid color-mix(in srgb, #c98ad6 28%, var(--line));
+}
+.jn-reading-h { margin: 0 0 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.jn-cards { display: flex; flex-wrap: wrap; gap: 14px; }
+.jn-rc { margin: 0; width: 112px; display: flex; flex-direction: column; gap: 6px; }
+.jn-rc-art {
+  aspect-ratio: 5 / 7; border-radius: 7px; overflow: hidden;
+  background: var(--active); box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+.jn-rc-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.jn-rc-art.rev img { transform: rotate(180deg); }
+.jn-rc figcaption { display: flex; flex-direction: column; gap: 1px; font-size: 0.78rem; line-height: 1.3; }
+.jn-rc figcaption b { color: var(--ink); }
+.jn-rc-pos { color: var(--muted); font-size: 0.72rem; }
+.jn-rc-way { color: var(--muted); font-size: 0.72rem; }
+.jn-meanings { margin-top: 10px; font-size: 0.875rem; }
+.jn-meanings summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+.jn-meanings p { margin: 6px 0 0; line-height: 1.55; }
+
+/* photos */
+.jn-pics { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin: 4px 0 0; }
+.jn-pic {
+  position: relative; aspect-ratio: 1; padding: 0; border: 1px solid var(--line);
+  border-radius: 8px; overflow: hidden; background: var(--active); cursor: pointer;
+}
+.jn-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.jn-pic:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.jn-pics-edit .jn-pic { cursor: default; }
+.jn-pic-x {
+  position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%;
+  border: 0; background: rgba(0, 0, 0, .65); color: #fff; font-size: 16px; line-height: 1; cursor: pointer;
+}
+.jn-pic-x:hover { background: var(--danger); }
+.jn-missing { opacity: .4; }
+.jn-nopics { grid-column: 1 / -1; margin: 0; font-size: 0.8125rem; }
+.jn-photo-big img { display: block; max-width: 100%; max-height: 72vh; margin: 0 auto; border-radius: 8px; }
+
+/* the editor */
+.jn-fields { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; align-items: center; margin-bottom: 12px; }
+.jn-fields .label { margin: 0; }
+.jn-date { max-width: 190px; }
+.jn-textarea { width: 100%; resize: vertical; font: inherit; line-height: 1.6; min-height: 220px; }
+.jn-photos-h { display: flex; align-items: center; gap: 8px; margin: 14px 0 6px; }
+.jn-photos-h .label { margin: 0; flex: 1; }
+.jn-actions { align-items: center; margin-top: 14px; }
+.jn-actions .stamp { margin-right: auto; }
+
+/* narrow: the list, or the entry -- one at a time */
+@media (max-width: 860px) {
+  .jn-layout { grid-template-columns: 1fr; }
+  .jn-list { position: static; max-height: none; }
+  .jn-layout.has-detail .jn-list { display: none; }
+  .jn-back { display: inline-flex; }
+}
+@container mtpane (max-width: 760px) {
+  .jn-layout { grid-template-columns: 1fr; }
+  .jn-list { position: static; max-height: none; }
+  .jn-layout.has-detail .jn-list { display: none; }
+  .jn-back { display: inline-flex; }
+}

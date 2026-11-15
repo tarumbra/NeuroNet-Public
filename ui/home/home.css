@@ -1,0 +1,746 @@
+/* ==========================================================================
+   Home — the dashboard, the calendar and contacts.
+
+   KinCrux's own styles, brought across with the screens. Cam: "the calander
+   doesnt look like a calander and is impossible to use" -- the code moved in
+   the merge and the stylesheet did not, so the month grid drew as a bare
+   column of day names.
+
+   EVERY rule is scoped to .ss-home. Training has a calendar of its own using
+   the same class names (.cal-cell, .cal-split): unscoped, the two would
+   restyle each other, and that is also why a plain copy silently skipped
+   .cal-cell as "already present" and left the grid with no width.
+   ========================================================================== */
+
+.ss-home /* ==========================================================================
+   Ported from Camily, .ss-home remapped to Hearth's palette
+   ==========================================================================
+   The calendar, .ss-home contacts and dashboard markup came across from Camily, .ss-home so its styling has to come with it. Camily's colour variables are
+   rewritten to Hearth's purple set rather than carried over, .ss-home which is
+   what keeps the merged screens looking like one app instead of two
+   stitched together.
+   ========================================================================== */
+
+/* Camily's class names for things Capture calls something else */
+.cm-page-h { font-size: 1.375rem; font-weight: 800; color: var(--ink); margin: 0 0 3px; }
+
+.ss-home .cm-page-sub { color: var(--muted); font-size: 0.875rem; margin: 0 0 18px; }
+
+.ss-home .cm-row { display: flex; align-items: center; gap: 10px; }
+
+.ss-home .cm-row-center { justify-content: center; }
+
+.ss-home .cm-empty { text-align: center; color: var(--faint); padding: 40px 20px;
+            font-size: 0.90625rem; line-height: 1.6; }
+
+.ss-home .cal-grid { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+
+.ss-home .cal-grid-head { display: flex; background: var(--elevated); }
+
+.ss-home .cal-dow {
+  width: 14.2857%; box-sizing: border-box; padding: 9px 6px; text-align: center;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; color: var(--muted);
+  text-transform: uppercase;
+}
+
+.ss-home .cal-grid-body { display: flex; flex-wrap: wrap; }
+
+.ss-home .cal-cell {
+  width: 14.2857%; box-sizing: border-box; min-height: 112px; padding: 10px 8px;
+  border-top: 1px solid var(--line); border-left: 1px solid var(--line);
+  cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+
+.ss-home .cal-cell:nth-child(7n+1) { border-left: none; }
+
+.ss-home .cal-cell:hover { background: var(--elevated); }
+
+.ss-home .cal-cell-blank { cursor: default; background: var(--bg); }
+
+.ss-home .cal-cell-blank:hover { background: var(--bg); }
+
+.ss-home .cal-cell-num { font-size: 0.9375rem; color: var(--text); font-weight: 600; }
+
+.ss-home .cal-cell-today .cal-cell-num {
+  color: var(--on-accent); background: var(--accent); border-radius: 50%;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+}
+
+.ss-home .cal-cell-selected { background: var(--accent-tint); }
+
+.ss-home .cal-cell-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+.ss-home .cal-cell-dot.hidden { visibility: hidden; }
+
+.ss-home .cal-event-row {
+  display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+  border-radius: var(--radius); background: var(--elevated); margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.ss-home .cal-event-row:hover { background: var(--accent-tint); }
+
+.ss-home .cal-event-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+.ss-home .cal-event-title { font-weight: 700; color: var(--ink); font-size: 0.96875rem; }
+
+.ss-home .cal-event-time { color: var(--muted); font-size: 0.875rem; margin-top: 1px; }
+
+.ss-home /* ---------------------------------------------------------------- dashboard */
+/* Cam: "I want an app that looks like this" — the reference picture's
+   own Dashboard combines a calendar with Lists/Meals panels on one
+   screen. Same spirit here, .ss-home scoped to what was actually asked for:
+   today's + upcoming events, .ss-home Lists, .ss-home Notes, .ss-home and Photos previews, .ss-home each
+   clicking through to its own full page. */
+.dash-grid {
+  display: flex; gap: 18px;
+}
+
+.ss-home .dash-grid > div:first-child { flex: 1.3; min-width: 0; }
+
+.ss-home .dash-grid > div:last-child { flex: 1; min-width: 0; }
+
+.ss-home .dash-card { padding: var(--sp-3); }
+
+.ss-home .dash-card h3 {
+  margin: 0 0 12px; font-size: 1rem; color: var(--ink);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.ss-home .dash-card h3 a { font-size: 0.84375rem; font-weight: 600; color: var(--accent); cursor: pointer; }
+
+.ss-home .dash-list-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 4px; border-bottom: 1px solid var(--line); cursor: pointer;
+}
+
+.ss-home .dash-list-row:last-child { border-bottom: none; }
+
+.ss-home .dash-list-row:hover { color: var(--accent); }
+
+.ss-home .dash-photo-strip { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.ss-home .dash-photo-strip .ex-photo-tile { width: 72px; height: 72px; cursor: pointer; }
+
+/* ==========================================================================
+   Dashboard blocks and the photo frame
+   ========================================================================== */
+/* A placeable grid, not a flow. Cam: "the dashboard needs to have freedom
+   where i place each widget and not be so locked down." Twelve columns and a
+   fixed row height; each block says which square it occupies, so the page
+   stays lined up however it is arranged. */
+/* THREE COLUMNS, THREE WIDGETS EACH. Cam: "maybe if we broke the dashboard
+   into 3 collums with the ability to add 3 widgets into each collumn, i dont
+   need a massive photo frame for the dashboard."
+
+   Equal columns, and every widget the same height, so the page cannot come
+   out lopsided and nothing swallows the screen. */
+.ss-home .dash-blocks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  margin-top: 16px;
+}
+.ss-home .dash-col {
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 0; min-height: 80px;
+  border-radius: var(--radius, 10px);
+}
+.ss-home .dash-block { position: relative; min-width: 0; }
+/* One slot tall, whatever is inside: a photo frame is a dashboard widget,
+   not the dashboard. Anything longer scrolls within its own widget. */
+.ss-home .dash-block > .panel,
+.ss-home .dash-block > .dash-card {
+  height: 300px;
+  overflow: auto;
+}
+
+/* While editing: which column would take it, and where in it. */
+.ss-home .dash-blocks.editing .dash-col { outline: 1px dashed color-mix(in srgb, var(--line) 80%, transparent); outline-offset: 6px; }
+.ss-home .dash-col.is-target { outline-color: var(--accent); }
+.ss-home .dash-col.is-full { outline-color: var(--danger); }
+.ss-home .dash-block.is-dragging { opacity: .5; }
+.ss-home .dash-block.drop-above { box-shadow: 0 -3px 0 0 var(--accent); }
+.ss-home .dash-block.drop-below { box-shadow: 0 3px 0 0 var(--accent); }
+
+/* The space left in a column, so an empty one is still a target. */
+.ss-home .dash-slot {
+  display: grid; place-items: center;
+  min-height: 72px; padding: 10px;
+  border: 1px dashed var(--line); border-radius: var(--radius, 10px);
+  color: var(--faint, var(--muted)); font-size: 0.75rem;
+}
+
+
+
+/* Narrow windows: one column each, in order, rather than a squeezed grid. */
+/* A narrow window: the three columns become one, in order. */
+@media (max-width: 900px) {
+  .ss-home .dash-blocks { grid-template-columns: 1fr; }
+}
+
+/* A frame used to be given two of the flow's columns. It now carries its own
+   size like everything else, so the special case is gone. */
+
+.ss-home .dash-block { position: relative; }
+
+.ss-home .dash-blocks.editing .dash-block .panel {
+  border-style: dashed;
+  border-color: var(--accent);
+}
+
+.ss-home .dash-block-tools {
+  position: absolute; top: 8px; right: 8px;
+  display: flex; gap: 4px; z-index: 3;
+}
+
+.ss-home .dash-tool {
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.ss-home .dash-tool:hover { border-color: var(--accent); color: var(--accent); }
+
+.ss-home .dash-tool:disabled { opacity: .3; pointer-events: none; }
+
+.ss-home .dash-tool-x:hover { border-color: var(--danger); color: var(--danger); }
+
+.ss-home /* the block picker */
+.dash-add-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.ss-home .dash-add-opt {
+  display: flex; flex-direction: column; gap: 3px; text-align: left;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--panel); color: var(--text); cursor: pointer;
+}
+
+.ss-home .dash-add-opt:hover { border-color: var(--accent); }
+
+.ss-home .dash-add-opt .stamp { margin: 0; }
+
+.ss-home /* ------------------------------------------------------------ the frame */
+.dash-frame-card { display: flex; flex-direction: column; }
+
+.ss-home .dash-frame {
+  width: 100%; aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  background: var(--elevated);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+.ss-home .dash-frame img {
+  width: 100%; height: 100%;
+  /* contain, not cover: a photo frame that crops the top off everyone's
+     head defeats the point */
+  object-fit: contain;
+  display: block;
+}
+
+.ss-home .dash-frame-cap {
+  margin: 10px 0 0; text-align: center;
+  font-size: 0.84375rem; color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.ss-home /* recent-photo strip */
+.dash-photo-row {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px; margin-top: 4px;
+}
+
+.ss-home .dash-photo {
+  aspect-ratio: 1; border-radius: var(--radius);
+  background: var(--elevated); overflow: hidden; cursor: pointer;
+}
+
+.ss-home .dash-frame-links { display: inline-flex; gap: 12px; }
+
+.ss-home .dash-frame-src {
+  margin: 3px 0 0; text-align: center;
+  font-size: 0.75rem; color: var(--muted);
+}
+
+.ss-home .cal-event-stamp { font-size: 1.1875rem; line-height: 1; flex: none; }
+
+.ss-home /* the month grid shows a stamp in place of the plain dot, .ss-home so a birthday
+   is spottable without opening the day */
+.cal-cell-stamp {
+  font-size: 0.875rem; line-height: 1; margin-top: 2px;
+}
+
+.ss-home .cal-repeat {
+  font-size: 0.75rem; color: var(--muted); margin-left: 5px;
+}
+
+.ss-home /* -------------------------------------------------------------- contacts */
+.contact-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.ss-home .contact-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 15px 17px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); cursor: pointer;
+}
+
+.ss-home .contact-card:hover { border-color: var(--accent); }
+
+.ss-home .contact-avatar {
+  width: 46px; height: 46px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--accent); color: var(--on-accent);
+  font-weight: 700; font-size: 1rem;
+}
+
+.ss-home .contact-meta { min-width: 0; flex: 1; }
+
+.ss-home .contact-name {
+  font-weight: 700; color: var(--text); font-size: 0.96875rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.ss-home .contact-line {
+  font-size: 0.8125rem; color: var(--muted); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.ss-home .contact-bday { color: var(--accent); }
+
+.ss-home /* ==========================================================================
+   Calendar — side-by-side
+   ==========================================================================
+   Cam: "the calander lags when scrolling down to see the list of stuff
+   on that day, .ss-home lets split the screen."
+
+   The month grid and the selected day sit side by side, .ss-home and each
+   column scrolls on its own. That's the part that actually fixes the
+   complaint: with one page-level scrollbar, .ss-home a day with a lot on it
+   would still push the calendar out of view.
+   ========================================================================== */
+.cal-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.ss-home .cal-split { grid-template-columns: 1fr; }
+
+.ss-home .cal-right { margin-top: 4px; }
+
+.ss-home .cal-left { min-width: 0; }
+
+.ss-home .cal-day-panel {
+  /* tall enough to feel like a column rather than a stub, capped so a
+     busy day scrolls inside the panel instead of stretching the page */
+  min-height: 320px;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  padding: var(--sp-3);
+}
+
+.ss-home /* the month grid gets a little more room now it isn't sharing the
+   width with anything */
+.cal-split .cal-cell { min-height: 74px; }
+
+.ss-home .contact-star { color: var(--accent); font-size: 0.8125rem; }
+
+.ss-home /* ------------------------------------------------------- countdown */
+.countdown-card { text-align: center; }
+
+.ss-home .dash-piggy-row { display: flex; flex-wrap: wrap; }
+
+.ss-home .dash-piggy-item { display: flex; align-items: center; margin: 0 20px 12px 0; min-width: 200px; }
+
+.ss-home .dash-piggy-wrap { width: 56px; height: 46px; margin-right: 10px; }
+
+@media (max-width: 1050px) {
+  .ss-home .cal-split { grid-template-columns: 1fr; }
+  .ss-home .cal-right { margin-top: 4px; }
+  .ss-home .cal-day-panel { max-height: none; min-height: 0; }
+}
+
+/* ==========================================================================
+   EDITING THE DASHBOARD
+   Cam: "lets modernise the edit layout of the dashboard to make it a better
+   tool to use ... drag and drop to reorder when in edit layout", and
+   "Modernize the cards here to please."
+   ========================================================================== */
+
+/* The block's own controls. They used to be three buttons crowded into the
+   corner, sitting ON TOP of the block's heading -- "Open calendar" and the
+   arrows overlapped. Now the block has room reserved for them. */
+.ss-home .dash-blocks.editing .dash-block { padding-top: 34px; position: relative; }
+.ss-home .dash-block-tools {
+  position: absolute; top: 6px; left: 8px; right: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.ss-home .dash-tool {
+  display: grid; place-items: center;
+  width: 24px; height: 24px; padding: 0;
+  border: 1px solid var(--line); border-radius: 7px;
+  background: var(--elevated, var(--panel));
+  color: var(--muted); font-size: 0.75rem; line-height: 1; cursor: pointer;
+}
+.ss-home .dash-tool:hover { background: var(--hover); color: var(--ink, var(--text)); }
+.ss-home .dash-tool-x { margin-left: auto; }
+.ss-home .dash-tool-x:hover { color: var(--danger); border-color: var(--danger); }
+.ss-home .dash-grip { cursor: grab; letter-spacing: -2px; }
+.ss-home .dash-blocks.editing .dash-grip { cursor: grab; }
+.ss-home .dash-block.is-dragging { opacity: .45; cursor: grabbing; }
+.ss-home .dash-block.drop-before { box-shadow: -3px 0 0 0 var(--accent); }
+.ss-home .dash-block.drop-after { box-shadow: 3px 0 0 0 var(--accent); }
+.ss-home .dash-blocks.editing .dash-block { outline: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent); }
+
+/* The chooser: an icon, a name, and the hint on its own line. */
+.ss-home .dash-add-grid,
+.modal .dash-add-grid {
+  display: grid; gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
+}
+.modal .dash-add-opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 11px 12px;
+  border: 1px solid var(--line); border-radius: var(--radius, 10px);
+  background: var(--elevated, var(--panel));
+  color: var(--ink, var(--text));
+  font: inherit; text-align: left; cursor: pointer;
+}
+.modal .dash-add-opt:hover { background: var(--hover); border-color: var(--accent); }
+.modal .dash-add-ic {
+  flex: none; display: grid; place-items: center;
+  width: 30px; height: 30px; border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+}
+.modal .dash-add-ic .ic { width: 16px; height: 16px; }
+.modal .dash-add-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.modal .dash-add-text b { font-size: 0.9375rem; }
+.modal .dash-add-hint { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+/* The music block. */
+.ss-home .dash-music-tabs { display: flex; gap: 4px; margin-left: auto; }
+.ss-home .dash-music-tab {
+  padding: 3px 9px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: transparent; color: var(--muted);
+  font: inherit; font-size: 0.72rem; cursor: pointer;
+}
+.ss-home .dash-music-tab.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent, #fff); }
+.ss-home .dash-music-grid {
+  display: grid; gap: 10px; margin-top: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+}
+.ss-home .dash-music-item {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 0; border: 0; background: none; color: inherit;
+  font: inherit; text-align: left; cursor: pointer; min-width: 0;
+}
+.ss-home .dash-music-art {
+  position: relative; display: grid; place-items: center;
+  aspect-ratio: 1 / 1; width: 100%;
+  border-radius: 10px; overflow: hidden;
+  background: color-mix(in srgb, var(--accent) 12%, var(--elevated, var(--panel)));
+  color: var(--accent); font-size: 1.4rem;
+}
+.ss-home .dash-music-art img { width: 100%; height: 100%; object-fit: cover; }
+.ss-home .dash-music-play {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: rgba(0, 0, 0, .45); color: #fff; font-size: 1.2rem;
+  opacity: 0; transition: opacity .12s ease;
+}
+.ss-home .dash-music-item:hover .dash-music-play,
+.ss-home .dash-music-item:focus-visible .dash-music-play { opacity: 1; }
+.ss-home .dash-music-name {
+  font-size: 0.8125rem; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ss-home .dash-music-sub { font-size: 0.68rem; color: var(--muted); }
+
+/* The random circuit, and the quick note. */
+.ss-home .dash-circuit-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 6px;
+  font-size: 0.72rem; color: var(--muted);
+}
+.ss-home .dash-circuit-meta span {
+  padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px;
+}
+/* Scrollable on purpose -- Cam: "displays a random circuit in the widget
+   windows that is scrollable". A long circuit must not stretch the block. */
+.ss-home .dash-circuit-scroll { max-height: 260px; overflow-y: auto; padding-right: 4px; }
+.ss-home .dash-circuit-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; }
+.ss-home .dash-circuit-list li { line-height: 1.35; }
+.ss-home .dash-circuit-name { display: block; font-size: 0.875rem; font-weight: 600; }
+.ss-home .dash-circuit-sub { display: block; font-size: 0.72rem; color: var(--muted); }
+.ss-home .dash-circuit-notes {
+  margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line);
+  font-size: 0.78rem; color: var(--muted);
+}
+.ss-home .dash-circuit-again { padding: 3px 10px; font-size: 0.72rem; }
+
+.ss-home .dash-qn-text { width: 100%; margin-top: 10px; resize: vertical; font: inherit; }
+.ss-home .dash-qn-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.ss-home .dash-qn-hint { flex: 1; min-width: 0; font-size: 0.72rem; color: var(--muted); }
+
+/* A square that is already taken: the shadow says so before the drop. */
+
+/* ==========================================================================
+   Puzzle, Quick recipe and the Fleeting viewer
+   ========================================================================== */
+/* A header of their own: the older widgets' .dash-card-h carries no style at
+   all, and restyling it would move every widget already on the board. */
+.ss-home .dash-w-h {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 8px; min-height: 26px;
+}
+.ss-home .dash-w-h > b { font-size: 1rem; color: var(--ink); }
+
+/* ---- Puzzle. Every board fits the widget's one fixed height, digit pad
+   and all: a Sudoku you have to scroll to finish is not a dashboard toy. */
+.ss-home .dash-pz:focus { outline: none; }
+.ss-home .dash-pz:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+/* Four tabs and New on one line in a third of a 1280px window. */
+.ss-home .dash-pz-tabs { margin-left: 0; flex-wrap: wrap; gap: 3px; min-width: 0; }
+.ss-home .dash-pz-tabs .dash-music-tab { padding: 3px 7px; }
+.ss-home .dash-pz .dash-w-h .dash-circuit-again { padding: 3px 8px; flex: none; }
+.ss-home .dash-pz-board {
+  display: grid; grid-template-columns: repeat(9, 1fr);
+  width: min(100%, 198px); margin: 0 auto;
+  border: 2px solid var(--ink); border-radius: 4px; overflow: hidden;
+  background: var(--line);
+  gap: 1px;
+}
+.ss-home .dash-pz-kakuro { width: min(100%, 196px); }
+.ss-home .dash-pz-words { width: min(100%, 180px); border-width: 1px; }
+.ss-home .dash-pz-cell {
+  aspect-ratio: 1 / 1; min-width: 0; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 0;
+  background: var(--panel, var(--bg)); color: var(--accent);
+  font: inherit; font-size: 0.8rem; font-weight: 600; line-height: 1;
+  cursor: pointer;
+}
+.ss-home .dash-pz-cell:hover { background: color-mix(in srgb, var(--accent) 10%, var(--panel, var(--bg))); }
+.ss-home .dash-pz-cell.given { color: var(--ink); font-weight: 700; }
+.ss-home .dash-pz-cell.sel { background: color-mix(in srgb, var(--accent) 28%, var(--panel, var(--bg))); }
+.ss-home .dash-pz-cell.bad { color: var(--danger); background: var(--danger-tint, color-mix(in srgb, var(--danger) 15%, transparent)); }
+/* The Sudoku's boxes: a thicker line after every third row and column. */
+.ss-home .dash-pz-sudoku .edge-r { box-shadow: 1px 0 0 0 var(--ink); }
+.ss-home .dash-pz-sudoku .edge-b { box-shadow: 0 1px 0 0 var(--ink); }
+.ss-home .dash-pz-sudoku .edge-r.edge-b { box-shadow: 1px 0 0 0 var(--ink), 0 1px 0 0 var(--ink), 1px 1px 0 0 var(--ink); }
+
+/* The black squares are a shade off the page, not the text colour: in a
+   dark theme the text colour is light, and the board came out inverted. */
+.ss-home .dash-kk-wall { background: color-mix(in srgb, var(--ink) 22%, var(--bg)); }
+/* Right-going total above the diagonal, down-going total below it. */
+.ss-home .dash-kk-clue {
+  position: relative; aspect-ratio: 1 / 1;
+  background:
+    linear-gradient(to top right, transparent calc(50% - .5px),
+      var(--muted) 50%, transparent calc(50% + .5px)),
+    color-mix(in srgb, var(--ink) 22%, var(--bg));
+  color: var(--ink); font-size: 0.56rem; font-weight: 700; line-height: 1;
+}
+.ss-home .dash-kk-right { position: absolute; top: 2px; right: 3px; }
+.ss-home .dash-kk-down { position: absolute; bottom: 2px; left: 3px; }
+
+.ss-home .dash-ms {
+  background: color-mix(in srgb, var(--ink) 26%, var(--panel, var(--bg))); color: var(--ink);
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--ink) 25%, transparent);
+}
+.ss-home .dash-ms:hover { background: color-mix(in srgb, var(--ink) 34%, var(--panel, var(--bg))); }
+.ss-home .dash-ms.open { background: var(--panel, var(--bg)); box-shadow: none; cursor: default; }
+.ss-home .dash-ms.flag { color: var(--danger); }
+.ss-home .dash-ms.boom { background: var(--danger); color: #fff; }
+.ss-home .dash-ms.n1 { color: #4a8fe0; }
+.ss-home .dash-ms.n2 { color: #3aa35b; }
+.ss-home .dash-ms.n3 { color: #e0616b; }
+.ss-home .dash-ms.n4 { color: #8f7ad6; }
+.ss-home .dash-ms.n5 { color: #c77d2e; }
+.ss-home .dash-ms.n6 { color: #2aa198; }
+
+.ss-home .dash-ws { color: var(--ink); font-weight: 500; font-size: 0.64rem; }
+.ss-home .dash-ws.found { background: color-mix(in srgb, var(--accent) 30%, var(--panel, var(--bg))); }
+.ss-home .dash-ws.sel { background: var(--accent); color: var(--on-accent, #fff); }
+.ss-home .dash-ws-list {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px;
+  margin-top: 4px; font-size: 0.66rem; color: var(--muted); letter-spacing: .03em;
+}
+.ss-home .dash-ws-list .found { text-decoration: line-through; opacity: .55; }
+/* A narrow column (the default 1280px window wraps the tabs onto two lines):
+   the word search gives up a little board so its word list still fits. */
+.ss-home .dash-pz { container-type: inline-size; }
+@container (max-width: 250px) {
+  .ss-home .dash-pz-words { width: min(100%, 160px); }
+  .ss-home .dash-ws { font-size: 0.6rem; }
+  .ss-home .dash-ws-list { gap: 1px 6px; font-size: 0.62rem; }
+}
+
+.ss-home .dash-pz-pad {
+  display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px;
+  width: min(100%, 198px); margin: 6px auto 0;
+}
+.ss-home .dash-pz-pad button {
+  height: 22px; padding: 0;
+  border: 1px solid var(--line); border-radius: 5px;
+  background: transparent; color: var(--ink);
+  font: inherit; font-size: 0.72rem; cursor: pointer;
+}
+.ss-home .dash-pz-pad button:hover { border-color: var(--accent); color: var(--accent); }
+.ss-home .dash-pz-foot { margin: 6px 0 0; text-align: center; font-size: 0.72rem; color: var(--muted); }
+.ss-home .dash-pz-won { color: var(--accent); font-weight: 600; }
+
+/* ---- Quick recipe: one field at a time. */
+.ss-home .dash-qr-steps { display: flex; gap: 10px; margin-bottom: 8px; font-size: 0.72rem; color: var(--muted); }
+.ss-home .dash-qr-steps .on { color: var(--accent); font-weight: 700; }
+.ss-home .dash-qr-steps .done { text-decoration: line-through; opacity: .6; }
+.ss-home .dash-qr-title {
+  margin-bottom: 6px; font-weight: 600; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ss-home .dash-qr-field { width: 100%; font: inherit; resize: none; }
+
+/* ---- Fleeting viewer: the note scrolls inside the widget, the buttons
+   stay put under it. */
+.ss-home .dash-fv { display: flex; flex-direction: column; }
+.ss-home .dash-fv:focus { outline: none; }
+.ss-home .dash-fv:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+.ss-home .dash-fv-nav { display: flex; align-items: center; gap: 6px; }
+.ss-home .dash-fv-count { font-size: 0.72rem; color: var(--muted); min-width: 44px; text-align: center; }
+.ss-home .dash-fv-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; }
+.ss-home .dash-fv-size { display: inline-flex; gap: 2px; }
+.ss-home .dash-fv-text {
+  flex: 1; min-height: 0; max-height: 18rem; overflow-y: auto; padding-right: 4px;
+  font-size: 0.875rem; line-height: 1.5; color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* ---- Random movie: a card dealt face down, turned over to show the cover.
+   Two faces back to back in 3D; .turned rotates the card half a turn. */
+/* The cover fits the card rather than the card scrolling (2026-10-06, the
+   audit: "Random movie has a scrollbar inside the card"): the stage takes
+   what the title and the line under it leave, and the cover its height. */
+.ss-home .dash-block > .dash-card.dash-movie { display: flex; flex-direction: column; overflow: hidden; }
+.ss-home .dash-movie-stage { display: flex; justify-content: center; padding: 6px 0 2px; perspective: 900px;
+  flex: 1 1 auto; min-height: 0; }
+.ss-home .dash-movie-stage > .dash-movie-card { height: 100%; width: auto; max-width: 150px; max-height: 211px; }
+.ss-home .dash-movie-stage > .dash-album-card { max-width: 170px; max-height: 170px; }
+.ss-home .dash-movie-card {
+  position: relative; width: 150px; aspect-ratio: 135 / 190; padding: 0; border: 0;
+  background: none; cursor: pointer; transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.2, .8, .25, 1);
+}
+.ss-home .dash-movie-card.turned { transform: rotateY(180deg); }
+.ss-home .dash-movie-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.ss-home .dash-movie-face {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 6px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .45);
+}
+/* The back: a patterned card, the same for every film, so nothing gives
+   away which one it is. */
+.ss-home .dash-movie-back {
+  display: grid; place-items: center; border: 1px solid var(--line-strong);
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .05) 0 6px, transparent 6px 12px),
+    linear-gradient(160deg, var(--accent-deep, #8E2418), #1a0f0c);
+}
+.ss-home .dash-movie-back span {
+  width: 54px; height: 54px; display: grid; place-items: center; border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .5); color: #fff;
+  font: 700 1.8rem/1 Georgia, serif;
+}
+.ss-home .dash-movie-card:hover:not(.turned) { transform: translateY(-3px) rotateZ(-1.5deg); }
+.ss-home .dash-movie-front { transform: rotateY(180deg); background: #111; }
+.ss-home .dash-movie-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ss-home .dash-movie-front .sh-plain b { font-size: 0.95rem; }
+.ss-home .dash-movie-sub { text-align: center; margin: 8px 0 0; }
+@media (prefers-reduced-motion: reduce) { .ss-home .dash-movie-card { transition: none; } }
+
+/* ---- Random album: the Random movie card, square like a CD case, with a
+   disc on its back instead of the question mark. */
+.ss-home .dash-album-card { width: 170px; aspect-ratio: 1 / 1; }
+.ss-home .dash-album-card .dash-movie-back span {
+  width: 96px; height: 96px; border: 0;
+  background: radial-gradient(circle, #1a0f0c 0 10px, rgba(255, 255, 255, .55) 11px 13px,
+    rgba(255, 255, 255, .12) 14px 44px, rgba(255, 255, 255, .45) 45px 47px, transparent 48px);
+}
+.ss-home .dash-album-plain {
+  display: grid; place-items: center; height: 100%; padding: 12px; text-align: center; color: #fff;
+}
+
+/* ---- Random pull: a card dealt face down, as Random movie is. The front is
+   turned upside down when the card came out reversed. Once turned, the card
+   sits beside what it means, with a box for a quick journal entry. */
+.ss-home .dash-pull-tabs .dash-music-tab { padding: 3px 7px; }
+.ss-home .dash-pull-stage { display: flex; justify-content: center; padding: 6px 0 2px; perspective: 900px; }
+.ss-home .dash-pull-card {
+  position: relative; width: 124px; aspect-ratio: 5 / 7; padding: 0; border: 0;
+  background: none; cursor: pointer; transform-style: preserve-3d; flex: none;
+  transition: transform .65s cubic-bezier(.2, .8, .25, 1);
+}
+.ss-home .dash-pull-card.turned { transform: rotateY(180deg); cursor: default; }
+.ss-home .dash-pull-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 7px; }
+.ss-home .dash-pull-card:hover:not(.turned) { transform: translateY(-3px) rotateZ(-1.5deg); }
+.ss-home .dash-pull-face {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 7px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .45);
+}
+.ss-home .dash-pull-back {
+  display: grid; place-items: center; border: 1px solid var(--line-strong);
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .05) 0 6px, transparent 6px 12px),
+    linear-gradient(160deg, #6b3a86, #160e1c);
+}
+.ss-home .dash-pull-back span {
+  width: 50px; height: 50px; display: grid; place-items: center; border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .5); color: #f3e3ff; font: 1.6rem/1 Georgia, serif;
+}
+.ss-home .dash-pull-back img, .ss-home .dash-pull-front img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.ss-home .dash-pull-front {
+  transform: rotateY(180deg); background: #111; display: grid; place-items: center;
+  color: #fff; text-align: center; padding: 6px;
+}
+.ss-home .dash-pull-front img { position: absolute; inset: 0; }
+.ss-home .dash-pull-front.rev img, .ss-home .dash-pull-front.rev b { transform: rotate(180deg); }
+.ss-home .dash-pull-sub { text-align: center; margin: 8px 0 0; }
+
+.ss-home .dash-pull-open { display: flex; flex-direction: column; gap: 8px; }
+.ss-home .dash-pull-body { display: flex; gap: 12px; min-height: 0; }
+.ss-home .dash-pull-open .dash-pull-stage { padding: 0; }
+.ss-home .dash-pull-open .dash-pull-card { width: 84px; }
+.ss-home .dash-pull-text { flex: 1; min-width: 0; }
+.ss-home .dash-pull-way {
+  display: inline-block; margin: 0 0 3px; padding: 1px 8px; border-radius: 999px;
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  background: color-mix(in srgb, var(--good) 20%, transparent); color: var(--good);
+}
+.ss-home .dash-pull-way.rev { background: var(--danger-tint); color: var(--danger); }
+.ss-home .dash-pull-deck { margin: 0 0 4px; font-size: 0.72rem; color: var(--muted); }
+.ss-home .dash-pull-meaning {
+  margin: 0; font-size: 0.8125rem; line-height: 1.45; color: var(--text);
+  max-height: 96px; overflow-y: auto; white-space: pre-wrap;
+}
+.ss-home .dash-pull-none { color: var(--muted); font-style: italic; }
+.ss-home .dash-pull-note { width: 100%; resize: none; font: inherit; font-size: 0.8125rem; }
+.ss-home .dash-pull-acts { display: flex; justify-content: flex-end; gap: 6px; }
+.ss-home .dash-pull-saved { margin: 0; font-size: 0.8125rem; color: var(--good); }
+@media (prefers-reduced-motion: reduce) { .ss-home .dash-pull-card { transition: none; } }

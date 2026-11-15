@@ -1,0 +1,204 @@
+#!/usr/bin/env python3
+"""neuronet-menu -- put NeuroNet into the Omarchy menu, searchable.
+
+Cam: "Omarchy menu search for NeuroNet" -- open the menu, type a few letters
+of a note, album, playlist, recipe or NeuroNet tool, Enter.
+
+Omarchy's menu is extended with ~/.config/omarchy/extensions/omarchy-menu.jsonc
+and can't run a program to fill a list (its "providers" are built in), so
+this WRITES the rows: a block between the two marker lines below, leaving
+everything else in the file alone. The menu reloads the file by itself.
+
+Run it again when NeuroNet's things change -- the systemd user unit
+neuronet-menu.path does that whenever the music library, the recipes or the
+notes vault change (see the NeuroNet README, "The Omarchy menu").
+
+    neuronet-menu            write the block (only if it changed)
+    neuronet-menu --print    print the rows instead
+
+Super+Alt+A opens the menu straight on NeuroNet (`omarchy menu summon
+neuronet`). Every row runs something beside this file: neuronet-quick (open a
+tool), neuronet-call (play an album), neuronet-open (a note or recipe),
+neuronet-capture, or the bar tools' IPC. Nothing here writes NeuroNet's data.
+"""
+import json
+import os
+import re
+import shlex
+import sys
+
+APP = os.path.dirname(os.path.realpath(__file__))
+DATA = os.path.join(APP, "neuronet_data")
+MENU = os.path.expanduser(os.environ.get(
+    "NEURONET_MENU_FILE", "~/.config/omarchy/extensions/omarchy-menu.jsonc"))
+BEGIN = "  // >>> NeuroNet -- written by neuronet-menu; edits between these lines are replaced"
+END = "  // <<< NeuroNet"
+
+SECTIONS = [  # (neuronet-quick name, label, icon, key)
+    ("home", "Home", "󰋜", "H"), ("notes", "Scribe", "󰎞", "N"), ("creative", "Creative", "󰏘", "B"),
+    ("music", "M&T: Music", "󰎆", "M"), ("photos", "Photos", "󰉏", "P"),
+    ("training", "Training", "󰖏", "T"), ("cookery", "Kitchen", "󰩰", "R"),
+    ("money", "Money", "󰄔", "C"), ("mind", "Mindfulness", "󰧱", "Z"),
+    ("divination", "Divination", "󰫢", "D"), ("stuff", "M&T: Media", "󰆧", "I"),
+    ("games", "Puzzles", "󰐱", "Q"),
+]
+QS = "qs ipc -p /usr/share/omarchy/shell call"
+
+
+def q(*words):
+    return " ".join(shlex.quote(str(w)) for w in words)
+
+
+def tool(name, *args):
+    return q(os.path.join(APP, name), *args)
+
+
+def load(path, default):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return default
+
+
+def slug(s):
+    return re.sub(r"[^a-z0-9]+", "-", str(s).lower()).strip("-") or "x"
+
+
+def rows():
+    out = []                    # [(id, fields)] in menu order
+    add = lambda i, **f: out.append((i, {k: v for k, v in f.items() if v not in (None, "", [])}))
+
+    add("neuronet", icon="󰧑", label="NeuroNet", aliases=["nn"],
+        description="Notes, music, recipes and NeuroNet's tools")
+
+    # ---- tools ---------------------------------------------------------
+    add("neuronet.tools", icon="󰕰", label="Open a tool",
+        description="A NeuroNet tool as a popup over what you're doing")
+    for name, label, icon, key in SECTIONS:
+        add("neuronet.tools." + name, icon=icon, label=label,
+            description="NeuroNet · Super+Alt+" + key, action=tool("neuronet-quick", name))
+    add("neuronet.tools.full", icon="󰍹", label="Whole app",
+        description="NeuroNet · Super+Alt+O", action=tool("neuronet-quick", "full"))
+
+    # ---- quick things ------------------------------------------------------
+    add("neuronet.capture", icon="󰩫", label="Snip",
+        description="Omarchy's screenshot tool, into NeuroNet Snips · Super+Alt+X",
+        action=tool("neuronet-capture"))
+    add("neuronet.capture-window", icon="󰖯", label="Snip a window",
+        description="Click a window; it goes into NeuroNet Snips",
+        action=tool("neuronet-capture", "windows"))
+    add("neuronet.timer", icon="󰔛", label="Class timer",
+        description="EMOM, AMRAP, Tabata, For time, intervals · Super+Alt+E",
+        action=QS + " neuronet.training toggle")
+    add("neuronet.tarot", icon="✦", label="Today's tarot card",
+        action=QS + " neuronet.tarot toggle")
+    add("neuronet.oracle", icon="☾", label="Today's oracle & Lenormand cards",
+        action=QS + " neuronet.oracle toggle")
+
+    # ---- music -------------------------------------------------------------
+    chords = load(os.path.join(DATA, "chords", "chords.json"), {})
+    artist_of = {}
+    tracks = chords.get("tracks") or {}
+    for f, t in (tracks.items() if isinstance(tracks, dict) else []):
+        if isinstance(t, dict):
+            artist_of[f] = t.get("artist") or ""
+    albums = [a for a in chords.get("albums") or [] if isinstance(a, dict) and a.get("files")]
+    if albums:
+        add("neuronet.albums", icon="󰀥", label="Play an album",
+            description="%d albums" % len(albums))
+        for a in sorted(albums, key=lambda a: str(a.get("name", "")).lower()):
+            artist = a.get("artist") or next((artist_of.get(f) for f in a["files"] if artist_of.get(f)), "")
+            add("neuronet.albums." + slug(a["id"]), icon="󰀥", label=a.get("name") or "Album",
+                description=artist, aliases=[artist] if artist else [],
+                action=tool("neuronet-call", "album.play", json.dumps({"id": a["id"]})))
+    lists = [p for p in chords.get("playlists") or [] if isinstance(p, dict) and p.get("files")]
+    if lists:
+        add("neuronet.playlists", icon="󰲸", label="Play a playlist")
+        for p in lists:
+            add("neuronet.playlists." + slug(p["id"]), icon="󰲸", label=p.get("name") or "Playlist",
+                description="%d songs" % len(p["files"]),
+                action=tool("neuronet-call", "playlist.play", json.dumps({"id": p["id"]})))
+
+    # ---- notes -------------------------------------------------------------
+    vault = os.path.join(DATA, "notes", "vault")
+    notes = []
+    for root, dirs, files in os.walk(vault):
+        rel_root = os.path.relpath(root, vault)
+        if rel_root == ".":
+            dirs[:] = [d for d in dirs if d not in ("attachments", "Fleeting") and not d.startswith(".")]
+        else:
+            dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for f in files:
+            if f.lower().endswith(".md") and not f.startswith("."):
+                rel = os.path.normpath(os.path.join(rel_root, f)).replace(os.sep, "/")
+                notes.append(rel)
+    if notes:
+        add("neuronet.notes", icon="󰎞", label="Open a note", description="%d notes" % len(notes))
+        for rel in sorted(notes, key=str.lower):
+            folder = os.path.dirname(rel)
+            add("neuronet.notes." + slug(rel), icon="󰎞", label=os.path.basename(rel)[:-3],
+                description=folder, action=tool("neuronet-open", "note", rel))
+
+    # ---- recipes -----------------------------------------------------------
+    kitchen = load(os.path.join(DATA, "kitchen", "cookery.json"), {})
+    recipes = [r for r in kitchen.get("recipes") or [] if isinstance(r, dict) and r.get("id")]
+    if recipes:
+        add("neuronet.recipes", icon="󰩰", label="Open a recipe", description="%d recipes" % len(recipes))
+        for r in sorted(recipes, key=lambda r: str(r.get("name", "")).lower()):
+            tags = [t for t in r.get("tags") or [] if isinstance(t, str)]
+            add("neuronet.recipes." + slug(r["id"]), icon="󰩰", label=r.get("name") or "Recipe",
+                description=", ".join(tags), aliases=tags,
+                action=tool("neuronet-open", "recipe", r["id"]))
+
+    add("neuronet.refresh", icon="󰑐", label="Refresh this list",
+        description="Happens by itself when NeuroNet's things change",
+        action=q(os.path.realpath(__file__)))
+    return out
+
+
+def block(items):
+    lines = [BEGIN]
+    for i, f in items:
+        lines.append("  %s: %s," % (json.dumps(i), json.dumps(f, ensure_ascii=False)))
+    lines.append(END)
+    return "\n".join(lines)
+
+
+def write(items):
+    try:
+        with open(MENU, encoding="utf-8") as f:
+            text = f.read()
+    except FileNotFoundError:
+        text = "{\n}\n"
+    new = block(items)
+    if BEGIN in text and END in text:
+        a = text.index(BEGIN)
+        b = text.index(END, a) + len(END)
+        out = text[:a] + new + text[b:]
+    else:
+        brace = text.find("{")
+        if brace < 0:
+            raise SystemExit("%s doesn't look like a menu file (no '{')." % MENU)
+        out = text[:brace + 1] + "\n" + new + text[brace + 1:]
+    if out == text:
+        return False
+    os.makedirs(os.path.dirname(MENU), exist_ok=True)
+    tmp = MENU + ".neuronet-tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(out)
+    os.replace(tmp, MENU)
+    return True
+
+
+def main():
+    items = rows()
+    if "--print" in sys.argv:
+        print(block(items))
+        return
+    changed = write(items)
+    print("%s: %d NeuroNet rows%s" % (MENU, len(items), "" if changed else " (unchanged)"))
+
+
+if __name__ == "__main__":
+    main()

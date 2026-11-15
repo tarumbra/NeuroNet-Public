@@ -1,0 +1,115 @@
+{
+  "//": [
+    "Content for ui/pet/core/38-the-pyramid.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "EGGS.sarcophagus": {"name": "Sarcophagus egg", "hatch": 10800000, "found": "the Pharaoh's sarcophagus, now and then", "pool": [["scorpion/golden", 1]]},
+  "more ITEMS": {
+    "pharaohcrown": {"name": "Pharaoh's crown", "gem": 9, "gear": {"who": "player", "slot": "helmet", "def": 11, "mag": 5, "xp": 0.04, "set": "pharaoh"}},
+    "pharaohrobe": {"name": "Pharaoh's robe", "gem": 9, "gear": {"who": "player", "slot": "torso", "def": 12, "mag": 7, "dodge": 0.03, "set": "pharaoh"}},
+    "pharaohsceptre": {"name": "Pharaoh's sceptre", "gem": 9, "gear": {"who": "player", "slot": "weapon", "att": 26, "mag": 6, "style": "melee", "set": "pharaoh"}},
+    "pharaohsandals": {"name": "Pharaoh's sandals", "gem": 9, "gear": {"who": "player", "slot": "feet", "def": 8, "xp": 0.04, "set": "pharaoh"}},
+    "pharaohamulet": {"name": "Pharaoh's amulet", "gem": 9, "gear": {"who": "player", "slot": "necklace", "def": 4, "mag": 4, "hp": 4, "set": "pharaoh"}},
+    "sarcophagusegg": {"name": "Sarcophagus egg", "gem": 10, "egg": "sarcophagus"}
+  },
+  "more WEAR": {
+    "pharaohcrown": {"defence": 45},
+    "pharaohrobe": {"defence": 45},
+    "pharaohsceptre": {"attack": 45},
+    "pharaohsandals": {"defence": 45},
+    "pharaohamulet": {"defence": 40}
+  },
+  "WEAPONS.pharaohsceptre": ["crush", "adamant"],
+  "PHARAOH_SET": ["pharaohcrown", "pharaohrobe", "pharaohsceptre", "pharaohsandals", "pharaohamulet"],
+  "MONSTERS.tombguardian": {
+    "name": "Tomb guardian",
+    "boss": true,
+    "hp": 300,
+    "att": 33,
+    "def": 28,
+    "maxHit": 11,
+    "xp": 900,
+    "atk": "crush",
+    "weak": {"slash": 1.25},
+    "resist": {"pierce": 0.75},
+    "drops": [["bones", 3, 5, 1]]
+  },
+  "MONSTERS.pharaoh": {
+    "name": "The Pharaoh",
+    "boss": true,
+    "hp": 340,
+    "att": 37,
+    "def": 30,
+    "maxHit": 13,
+    "xp": 2600,
+    "atk": "slash",
+    "eva": 0.1,
+    "weak": {"crush": 1.25},
+    "resist": {"slash": 0.75},
+    "drops": [["bones", 4, 6, 1], ["glyphsun", 1, 1, 0.25]]
+  },
+  "PYR_GUARDS": ["sandscorpion", "deathstalker", "viper", "jackal", "camelspider", "cobra"],
+  "PYR_TRAPS": [
+    {
+      "name": "The falling ceiling",
+      "text": "Stone grinds overhead -- the ceiling is coming down.",
+      "ways": [["defence", 40, "Shield your head and push through"], ["construction", 38, "Prop it up with beams"]]
+    },
+    {
+      "name": "The dart corridor",
+      "text": "Holes line the walls, each one dark and waiting.",
+      "ways": [["ranged", 40, "Shoot the triggers first"], ["herblore", 36, "Chew a counter-herb and run"]]
+    },
+    {
+      "name": "The sand pit",
+      "text": "The floor tips and pours you toward the dark.",
+      "ways": [["mining", 40, "Cut footholds in the stone"], ["digging", 40, "Dig yourself out"]]
+    },
+    {
+      "name": "The rolling stone",
+      "text": "A boulder starts down the slope toward you.",
+      "ways": [["attack", 42, "Smash it apart"], ["construction", 40, "Wedge it to a stop"]]
+    },
+    {
+      "name": "The scarab swarm",
+      "text": "The walls glitter -- then the glitter moves.",
+      "ways": [["magic", 40, "Burn them back"], ["foraging", 40, "Smoke them out with herbs"]]
+    },
+    {
+      "name": "The flooding hall",
+      "text": "Water roars in through the old sluices.",
+      "ways": [["fishing", 40, "Swim for the far door"], ["crafting", 40, "Patch the sluice"]]
+    }
+  ],
+  "PYR_RIDDLES": [
+    ["I roll the sun across the sky each morning, and I am born again from the earth.", "glyphscarab"],
+    ["A key that opens no door, but holds the breath of life.", "glyphankh"],
+    ["The scribe's pen and the river's edge -- I bow to both.", "glyphreed"],
+    ["We come as a cloud, and leave the fields bare.", "glyphlocust"],
+    ["Born every morning, dead every night, and a boat carries me under the world.", "glyphsun"],
+    ["I shed my skin and keep my secrets coiled.", "glyphserpent"]
+  ],
+  "PYR_GLYPHS": ["glyphscarab", "glyphankh", "glyphreed", "glyphlocust", "glyphsun", "glyphserpent"],
+  "PYR_LOOT": [
+    ["goldnugget", 6, 16, 30],
+    ["gold", 10, 30, 25],
+    ["oldcoin", 10, 30, 25],
+    ["scarab", 6, 16, 20],
+    ["lapis", 2, 5, 20],
+    ["stardust", 1, 3, 10],
+    ["sapphire", 1, 2, 10],
+    ["emerald", 1, 2, 8],
+    ["ruby", 1, 1, 5],
+    ["ironcrate", 1, 1, 10],
+    ["ancientchest", 1, 1, 3],
+    ["nemes", 1, 1, 2],
+    ["linenrobe", 1, 1, 2],
+    ["khopesh", 1, 1, 2],
+    ["ankhring", 1, 1, 2],
+    ["pharaohcrown", 1, 1, 2],
+    ["pharaohrobe", 1, 1, 2],
+    ["pharaohsceptre", 1, 1, 2],
+    ["pharaohsandals", 1, 1, 2],
+    ["pharaohamulet", 1, 1, 2]
+  ]
+}

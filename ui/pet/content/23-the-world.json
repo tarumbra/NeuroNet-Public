@@ -1,0 +1,192 @@
+{
+  "//": [
+    "Content for ui/pet/core/23-the-world.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "REGIONS": {
+    "village": {"name": "Village", "x": 50, "y": 50, "hub": true, "blurb": "Home: the workshops, the merchants and the notice board."},
+    "farmyard": {"name": "Farmyard", "x": 29, "y": 71, "level": 1, "expedition": "farm", "blurb": "Hens, hedgerows and a muck heap. Where everyone starts."},
+    "pasture": {"name": "Pasture", "x": 13, "y": 47, "level": 5, "blurb": "Rolling fields of sheep and cattle, and the herb patch."},
+    "meadow": {"name": "Meadow", "x": 30, "y": 24, "level": 10, "expedition": "meadow", "blurb": "Wildflowers, bees and bunnies -- and things that hunt them."},
+    "forest": {"name": "Forest", "x": 56, "y": 17, "level": 18, "expedition": "forest", "blurb": "Old oaks and mushrooms. Something watches from the trees."},
+    "deepforest": {
+      "name": "Deep Forest",
+      "x": 82,
+      "y": 17,
+      "level": 28,
+      "expedition": "deepforest",
+      "blurb": "Where the light gives up. Wolves, bears and older things."
+    },
+    "coast": {"name": "Coast", "x": 86, "y": 50, "level": 22, "expedition": "ocean", "blurb": "Rock pools, gulls and a wreck on the sand."},
+    "jungle": {"name": "Jungle", "x": 66, "y": 80, "level": 40, "blurb": "Hot, loud and dangerous. The ruins are older than the village."},
+    "deepjungle": {
+      "name": "Deep Jungle",
+      "x": 90,
+      "y": 84,
+      "level": 45,
+      "needs": {"item": "machete", "skills": {"attack": 40}, "how": "to cut through the vines"},
+      "blurb": "Past a wall of vines no one has cut. Some say there's a temple."
+    },
+    "crystalcaves": {
+      "//": "more closed regions (2026-10-07, Cam: \"no 1 and 2 please\" -- more gated regions, and people with quests)",
+      "name": "Crystal Caves",
+      "x": 70,
+      "y": 40,
+      "level": 32,
+      "needs": {"item": "lantern", "also": ["rope"], "skills": {"mining": 30}, "how": "to find your way in the dark"},
+      "blurb": "Under the hills, the walls glitter. Miners went in; not all came out."
+    },
+    "mistyisle": {
+      "name": "Misty Isle",
+      "x": 11,
+      "y": 89,
+      "level": 36,
+      "island": true,
+      "needs": {"ship": 1, "skills": {"fishing": 35}, "how": "to cross the water"},
+      "blurb": "An island that comes and goes with the fog. There are stories about pirates."
+    },
+    "magetower": {"name": "Mage tower", "x": 40, "y": 47, "level": 1, "tower": true, "blurb": "A tall, crooked tower. The mages inside will duel you for a rank."},
+    "frostpeak": {
+      "//": "level: (the climb, with a climbing kit, is the Summit's)",
+      "name": "Frostpeak Foothills",
+      "x": 12,
+      "y": 13,
+      "level": 42,
+      "blurb": "Snowfields under the peak: leopards by day, wolves and owls by night -- and footprints leading up."
+    }
+  },
+  "REGION_ORDER": [
+    "village",
+    "magetower",
+    "farmyard",
+    "pasture",
+    "meadow",
+    "forest",
+    "deepforest",
+    "coast",
+    "jungle",
+    "deepjungle",
+    "crystalcaves",
+    "mistyisle",
+    "frostpeak"
+  ],
+  "REGION_LINKS": [
+    ["village", "farmyard"],
+    ["farmyard", "pasture"],
+    ["pasture", "meadow"],
+    ["meadow", "forest"],
+    ["forest", "deepforest"],
+    ["village", "meadow"],
+    ["village", "coast"],
+    ["deepforest", "coast"],
+    ["village", "jungle"],
+    ["coast", "jungle"],
+    ["jungle", "deepjungle"],
+    ["village", "magetower"],
+    ["crystalcaves", "deepforest"],
+    ["crystalcaves", "coast"],
+    ["farmyard", "mistyisle"],
+    ["pasture", "frostpeak"],
+    ["meadow", "frostpeak"]
+  ],
+  "SECRETS": {
+    "farmyard": [
+      {"id": "hayloft", "kind": "cache", "name": "Behind the hayloft", "text": "A tin box someone forgot", "coins": 150, "items": {"woodcrate": 1}},
+      {"id": "speckled", "kind": "egg", "name": "A nest in the hedge", "text": "Warm, and speckled gold", "egg": "speckledegg"}
+    ],
+    "pasture": [
+      {
+        "id": "oldwell",
+        "kind": "cache",
+        "name": "The old well",
+        "text": "Coins at the bottom, and a crate on a rope",
+        "coins": 300,
+        "items": {"woodcrate": 1, "oldcoin": 5}
+      },
+      {"id": "woolly", "kind": "egg", "name": "Under the shearing shed", "text": "Wrapped in black wool", "egg": "woollyegg"}
+    ],
+    "meadow": [
+      {
+        "id": "fairyring",
+        "kind": "cache",
+        "name": "A fairy ring",
+        "text": "Mushrooms in a perfect circle -- and something lucky",
+        "coins": 400,
+        "items": {"clovercharm": 1}
+      },
+      {"id": "dewy", "kind": "egg", "name": "Among the bluebells", "text": "Cold to the touch, white as frost", "egg": "dewyegg"}
+    ],
+    "forest": [
+      {"id": "hiddenglade", "kind": "spot", "name": "The hidden glade", "text": "A foraging spot no path leads to (Foraging 22)"},
+      {"id": "hunterstash", "kind": "cache", "name": "A hunter's stash", "text": "Hidden in a hollow log", "coins": 600, "items": {"ironcrate": 1}},
+      {"id": "mossy", "kind": "egg", "name": "Inside a hollow oak", "text": "Moss-covered, and humming", "egg": "mossyegg"}
+    ],
+    "deepforest": [
+      {
+        "id": "woodcutter",
+        "kind": "cache",
+        "name": "The woodcutter's hut",
+        "text": "Abandoned, but not empty",
+        "coins": 900,
+        "items": {"ironcrate": 1}
+      },
+      {"id": "shadowed", "kind": "egg", "name": "Under the old roots", "text": "Silver threads in the shell", "egg": "shadowedegg"}
+    ],
+    "coast": [
+      {"id": "smugglerscove", "kind": "spot", "name": "Smugglers' cove", "text": "A digging spot behind the rocks (Digging 28)"},
+      {"id": "pearly", "kind": "egg", "name": "A rock-pool cave", "text": "Pearly, and it smells of the sea", "egg": "pearlyegg"}
+    ],
+    "jungle": [
+      {
+        "id": "sunkenshrine",
+        "kind": "cache",
+        "name": "A sunken shrine",
+        "text": "Gold offerings, long forgotten",
+        "coins": 1500,
+        "items": {"relic": 1, "ironcrate": 1}
+      },
+      {"id": "striped", "kind": "egg", "name": "A tiger's den", "text": "Striped -- and nobody's home", "egg": "stripedegg"}
+    ],
+    "deepjungle": [
+      {"id": "losttemple", "kind": "spot", "name": "The lost temple", "text": "A digging spot in the ruins (Digging 48)"},
+      {
+        "id": "lastcamp",
+        "kind": "cache",
+        "name": "An explorer's last camp",
+        "text": "Their notes end here",
+        "coins": 3000,
+        "items": {"relic": 2, "ironcrate": 1}
+      },
+      {"id": "vine", "kind": "egg", "name": "A vine-wrapped nest", "text": "Green as emerald", "egg": "vineegg"}
+    ],
+    "crystalcaves": [
+      {
+        "id": "lostpack",
+        "kind": "cache",
+        "name": "A miner's lost pack",
+        "text": "Still full of his finds",
+        "coins": 1200,
+        "items": {"ironcrate": 1, "amethyst": 2}
+      },
+      {"id": "geodechamber", "kind": "spot", "name": "The geode chamber", "text": "A mining spot lined with crystal (Mining 40)"},
+      {"id": "crystal", "kind": "egg", "name": "A web of light", "text": "Clear as glass, and something moves inside", "egg": "crystalegg"}
+    ],
+    "mistyisle": [
+      {
+        "id": "bottle",
+        "kind": "cache",
+        "name": "A message in a bottle",
+        "text": "A map -- and the coins to follow it",
+        "coins": 1500,
+        "items": {"relic": 1}
+      },
+      {"id": "piratebeach", "kind": "spot", "name": "Pirates' beach", "text": "A digging spot where X marks it (Digging 40)"},
+      {"id": "coral", "kind": "egg", "name": "A coral nest", "text": "Pink, and warm from the sun", "egg": "coralegg"}
+    ],
+    "frostpeak": [
+      {"id": "yetihoard", "kind": "cache", "name": "A yeti's hoard", "text": "It collects shiny things", "coins": 2500, "items": {"relic": 2}},
+      {"id": "icecave", "kind": "spot", "name": "The ice cave", "text": "Runite in the ice (Mining 46)"},
+      {"id": "frosted", "kind": "egg", "name": "A frozen ledge", "text": "Rimed with frost, and still warm", "egg": "frostedegg"}
+    ]
+  }
+}

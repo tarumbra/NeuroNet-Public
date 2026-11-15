@@ -1,0 +1,97 @@
+/* ==========================================================================
+   The Neuro Guide (ui/guide/guide.js). NeuroNet's manual: a split -- the
+   chapter's topics on the left, the chosen one read on the right -- as
+   Training's guides are laid out. Each chapter's own colour is --ng; the
+   app's theme names (--panel, --line, --text, --brand ...) do the rest, so
+   it reads right in every theme, light or dark.
+   ========================================================================== */
+.ng { --ng: var(--brand); max-width: 1180px; }
+.ng-head { margin-bottom: 16px; }
+.ng-kicker {
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--brand);
+}
+.ng-head .page-h { margin: 2px 0 4px; }
+.ng-head .page-h::after {
+  content: ""; display: block; width: 46px; height: 4px; border-radius: 2px; margin-top: 8px;
+  background: linear-gradient(90deg, var(--ng), color-mix(in srgb, var(--ng) 30%, transparent));
+}
+
+.ng-split { display: grid; grid-template-columns: minmax(240px, 320px) 1fr; gap: 18px; align-items: start; }
+@media (max-width: 900px) { .ng-split { grid-template-columns: 1fr; } }
+
+/* ---- the topics ---- */
+.ng-list { position: sticky; top: 0; display: flex; flex-direction: column; gap: 8px; }
+.ng-list .input { width: 100%; height: 38px; }
+#ng-items { display: flex; flex-direction: column; gap: 6px; }
+.ng-item {
+  display: flex; flex-direction: column; gap: 2px; text-align: left; width: 100%;
+  padding: 10px 12px 10px 14px; border-radius: 10px; cursor: pointer; font: inherit;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--line); border-left: 4px solid color-mix(in srgb, var(--ng) 45%, transparent);
+  transition: border-color 140ms, background 140ms;
+}
+.ng-item:hover { border-color: var(--ng); }
+.ng-item.on {
+  border-color: var(--ng); border-left-color: var(--ng);
+  background: color-mix(in srgb, var(--ng) 12%, var(--panel));
+}
+.ng-item-title { font-weight: 700; }
+.ng-item-sub { font-size: 0.82rem; opacity: 0.72; line-height: 1.35; }
+
+/* ---- the page ---- */
+.ng-page {
+  padding: 22px 26px; border-radius: 14px; background: var(--panel);
+  border: 1px solid var(--line); border-top: 4px solid var(--ng); min-height: 320px;
+}
+.ng-title { margin: 0 0 4px; font-size: 1.35rem; color: var(--ink, var(--text)); }
+.ng-blurb { margin: 0 0 16px; color: var(--ng); font-weight: 600; }
+.ng-prose { line-height: 1.65; color: var(--text); }
+.ng-prose p { margin: 0 0 12px; }
+.ng-prose ul, .ng-prose ol { margin: 0 0 12px; padding-left: 1.3em; }
+.ng-prose li { margin: 4px 0; }
+.ng-prose code {
+  padding: 1px 6px; border-radius: 5px; font-size: 0.9em;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+.ng-steps li::marker { color: var(--ng); font-weight: 800; }
+
+/* key caps */
+.ng-prose kbd, .ng-keys kbd {
+  display: inline-block; min-width: 1.6em; padding: 1px 7px; text-align: center;
+  font: 600 0.82em/1.6 var(--font-mono, monospace);
+  border-radius: 6px; border: 1px solid var(--line); border-bottom-width: 2px;
+  background: var(--elevated, var(--panel)); color: var(--ink, var(--text));
+}
+.ng-plus { margin: 0 3px; opacity: 0.5; font-size: 0.85em; }
+
+/* the tables of shortcuts */
+.ng-scroll { overflow-x: auto; margin: 4px 0 14px; }
+.ng-keys { border-collapse: collapse; width: 100%; }
+.ng-keys td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.ng-keys tr:last-child td { border-bottom: 0; }
+.ng-keys .ng-k { white-space: nowrap; width: 1%; }
+
+/* tips and good-to-knows */
+.ng-tip, .ng-know {
+  margin: 14px 0; padding: 11px 14px; border-radius: 10px; line-height: 1.55;
+  border-left: 4px solid var(--brand);
+  background: color-mix(in srgb, var(--brand) 11%, var(--panel));
+}
+.ng-know { border-left-color: var(--ng); background: color-mix(in srgb, var(--ng) 10%, var(--panel)); }
+.ng-tip > b:first-child, .ng-know > b:first-child {
+  display: block; margin-bottom: 2px; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--brand);
+}
+.ng-know > b:first-child { color: var(--ng); }
+
+/* the header's PDF button, and a page's "Open in NeuroNet" */
+.ng-head { position: relative; }
+.ng-pdf { position: absolute; top: 0; right: 0; }
+@media (max-width: 900px) { .ng-pdf { position: static; margin-top: 8px; } }
+.ng-open { margin: 0 0 14px; border-color: var(--ng); color: var(--ng); }
+.ng-open:hover { background: color-mix(in srgb, var(--ng) 12%, transparent); }
+/* a picture of the section, from the sample household (guide.js SHOTS) */
+.ng-page img.shot { display: block; width: 100%; max-width: 900px; margin: 0 0 16px;
+  border: 1px solid color-mix(in srgb, var(--ng) 40%, transparent); border-radius: 10px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28); }

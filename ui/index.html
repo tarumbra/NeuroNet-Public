@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- SECURITY: only NeuroNet's own scripts run (test_security.py): 'self' is pywebview's
+     server of ui/ on 127.0.0.1, file: the same files opened directly. The hash is the
+     UI-scale snippet below -- change that snippet and the hash must change too.
+     'unsafe-eval' is pywebview's (its bridge is built with new Function). -->
+<meta http-equiv="Content-Security-Policy" content="script-src 'self' file: 'sha256-6vYqmOWMLO8YlZIAT2GSQWRzmpr3nQ1WaIOWHGVWT2w=' 'unsafe-eval' 'wasm-unsafe-eval'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<script>
+/* UI scale, applied before the first paint -- otherwise the window would
+   draw at 100% and then jump to the chosen size a moment later. The saved
+   value lives in prefs; this cached copy only exists to beat that jump,
+   and app.js corrects it if the two ever disagree. */
+(function () {
+  try {
+    var z = parseFloat(localStorage.getItem("ss:uiScale"));
+    if (z >= 0.5 && z <= 3) {
+      document.documentElement.style.zoom = z;
+      document.documentElement.style.setProperty("--ss-zoom", z);
+    }
+  } catch (e) { /* storage unavailable: 100% is fine */ }
+})();
+</script>
+<meta charset="UTF-8">
+<title>NeuroNet</title>
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="games/cranium.css">
+<link rel="stylesheet" href="cards/celestial.css">
+<link rel="stylesheet" href="music/chords.css">
+<link rel="stylesheet" href="topbar.css">
+<link rel="stylesheet" href="training/training.css">
+<link rel="stylesheet" href="notes/notes.css">
+<link rel="stylesheet" href="notes/grid.css">
+<link rel="stylesheet" href="notes/guides.css">
+<link rel="stylesheet" href="notes/books.css">
+<link rel="stylesheet" href="ebooks/ebooks.css">
+<link rel="stylesheet" href="code/code.css">
+<link rel="stylesheet" href="code/library.css">
+<link rel="stylesheet" href="code/web.css">
+<link rel="stylesheet" href="boards/boards.css">
+<link rel="stylesheet" href="scrapbook/scrapbook.css">
+<link rel="stylesheet" href="paper/paper.css">
+<link rel="stylesheet" href="assets/assets.css">
+<link rel="stylesheet" href="pixel/pixel.css">
+<link rel="stylesheet" href="vector/vector.css">
+<link rel="stylesheet" href="cells/cells.css">
+<link rel="stylesheet" href="home/home.css">
+<link rel="stylesheet" href="stats/stats.css">
+<link rel="stylesheet" href="transfer/transfer.css">
+<link rel="stylesheet" href="datafolder/datafolder.css">
+<link rel="stylesheet" href="widgets/widgets.css">
+<link rel="stylesheet" href="welcome/welcome.css">
+<link rel="stylesheet" href="guide/guide.css">
+<link rel="stylesheet" href="home/effects.css">
+<link rel="stylesheet" href="cookery.css">
+<link rel="stylesheet" href="fleeting/fleeting.css">
+<link rel="stylesheet" href="collab/collab.css">
+<link rel="stylesheet" href="archive/archive.css">
+<link rel="stylesheet" href="journal/journal.css">
+<!-- Last, so its per-side layout rules win over each module's own. -->
+<link rel="stylesheet" href="stuff/stuff.css">
+<link rel="stylesheet" href="stuff/shelf.css">
+<link rel="stylesheet" href="reader/reader.css">
+<link rel="stylesheet" href="multitask.css">
+</head>
+<body>
+
+<!-- NOTHING IN HERE MAY REFERENCE A PARENT DIRECTORY. WebKitGTK serving
+     this page over file:// refuses to load any resource above the folder
+     the page is in, silently -- no console error, just a stylesheet or
+     script that never arrives. That is why crux/theme.js is a COPY
+     beside this file rather than a link up to the shared crux/js. -->
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><defs>
+  <g id="i-aperture"><circle cx="12" cy="12" r="9"/><path d="M12 3v7M21 8.5l-6.5 3.5M18.5 19l-3-6.5M5.5 19l6.5-3.5M3 8.5l6.5 6.5"/></g>
+  <g id="i-calendar"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g>
+  <g id="i-person"><circle cx="12" cy="8" r="3.4"/><path d="M5 20a7 7 0 0 1 14 0"/></g>
+  <g id="i-flame"><path d="M12 3s5 4.2 5 9a5 5 0 0 1-10 0c0-1.7.7-3.1 1.5-4.2.4 1.2 1.2 2 2 2 .6 0 1-.5 1-1.3C11.5 6.6 12 4.8 12 3z"/></g>
+  <g id="i-grid"><rect x="3" y="3" width="7.5" height="7.5" rx="1.4"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.4"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.4"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.4"/></g>
+  <!-- Cam: "change the music app icon to a treble cleft please." Drawn as
+       one stroke like the rest: the loop, the stem and the top hook. -->
+  <g id="i-cells"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14.5h18M9 4v16M15 4v16"/></g>
+  <g id="i-scrapbook"><path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M3.5 7H6M3.5 12H6M3.5 17H6"/><path d="M10 9l7-2.5M10.5 15.5l2.5-3 2 2 2-2.5"/></g>
+  <g id="i-creative"><path d="M12 3a9 9 0 0 0 0 18c1.3 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="14.5" cy="7" r="1.2"/><circle cx="17" cy="10.5" r="1.2"/></g>
+  <g id="i-vector"><path d="M4 20C8 8 16 16 20 4"/><rect x="2.5" y="18.5" width="3" height="3"/><rect x="18.5" y="2.5" width="3" height="3"/><path d="M4 20l6-10M20 4l-6 10" stroke-dasharray="1.5 1.5"/></g>
+  <g id="i-pixel"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h3v3h-3zM17 17h3v3h-3z"/></g>
+  <g id="i-paper"><path d="M6 2.5h9l4 4V21.5H6z"/><path d="M14.5 2.5V7h4.5"/><path d="M8.5 11h8M8.5 14h8M8.5 17h8"/></g>
+  <g id="i-assets"><rect x="3" y="3" width="8" height="8" rx="1.5"/><circle cx="17" cy="7" r="4"/><path d="M7 13.5l4.5 7.5h-9z"/><path d="M17 13.5l1.4 2.9 3.1.4-2.3 2.2.6 3.1-2.8-1.5-2.8 1.5.6-3.1-2.3-2.2 3.1-.4z"/></g>
+  <g id="i-board"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h5M7 13h8M16 8.5l2.5 2.5"/></g>
+  <!-- Divination: five entries used to share two icons, which collapsed to
+       three ambiguous pairs once the menus showed icons only. -->
+  <g id="i-tarot"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M12 8.2l1.1 2.3 2.5.35-1.8 1.75.43 2.5L12 13.95l-2.23 1.17.43-2.5-1.8-1.75 2.5-.35z"/></g>
+  <g id="i-oracle"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M8.6 12c1.3-2 5.5-2 6.8 0-1.3 2-5.5 2-6.8 0z"/><circle cx="12" cy="12" r="1.1"/></g>
+  <g id="i-lenormand"><rect x="3.5" y="6" width="10" height="14" rx="1.8"/><path d="M8.5 6V4.6A1.6 1.6 0 0 1 10.1 3h8.3A1.6 1.6 0 0 1 20 4.6v12.8a1.6 1.6 0 0 1-1.6 1.6H13.5"/></g>
+  <g id="i-runes"><path d="M5.5 8.2 12 3.4l6.5 4.8v7.6L12 20.6l-6.5-4.8z"/><path d="M10 8.4v7.2M10 8.4h2.6a1.9 1.9 0 0 1 0 3.8H10M12.3 12.2l2.2 3.4"/></g>
+  <g id="i-astrology"><circle cx="12" cy="11" r="4.2"/><ellipse cx="12" cy="11" rx="9" ry="3.4" transform="rotate(-24 12 11)"/></g>
+  <g id="i-clef"><path d="M12.4 21.6c-1.9 0-3.3-1.3-3.3-3 0-1.4 1-2.5 2.4-2.5 1.2 0 2.1.9 2.1 2 0 1-.6 1.7-1.5 1.8M11.9 19.5 10 8.4C9.6 6 10.5 3.2 12.6 2.6c1.2-.3 2.1.8 2.3 2 .3 2.4-1.6 4.3-3.6 5.7-1.9 1.4-3.6 2.8-3.6 5 0 2.2 1.9 3.8 4.2 3.8"/></g>
+  <g id="i-album"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-4 4 3 3.5-3 5.5 4.5"/><circle cx="9" cy="9" r="1.6"/></g>
+  <g id="i-folder"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></g>
+  <g id="i-tag"><path d="M3 12.5V5a2 2 0 0 1 2-2h7.5L21 11.5 12.5 20z"/><circle cx="7.5" cy="7.5" r="1.4"/></g>
+  <g id="i-paw"><circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6.2" r="1.8"/><circle cx="14" cy="6.2" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M12 11.5c-2.6 0-5.2 3.6-5.2 5.8 0 1.6 1.3 2.5 2.8 2.5 1 0 1.6-.5 2.4-.5s1.4.5 2.4.5c1.5 0 2.8-.9 2.8-2.5 0-2.2-2.6-5.8-5.2-5.8z"/></g>
+  <g id="i-star"><path d="M12 3.5l2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17.4 6.6 20.3l1.1-6.1L3.2 9.9l6.1-.8z"/></g>
+  <g id="i-clock"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/></g>
+  <g id="i-search"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></g>
+  <g id="i-settings"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></g>
+  <g id="i-plus"><path d="M12 5v14M5 12h14"/></g>
+  <g id="i-home"><path d="M4 11l8-6.5 8 6.5"/><path d="M6.5 9.8V20h11V9.8"/><path d="M10 20v-5h4v5"/></g>
+  <g id="i-repeat"><path d="M4 9.5A4.5 4.5 0 0 1 8.5 5H18"/><path d="M15 2.5L18 5l-3 2.5"/><path d="M20 14.5A4.5 4.5 0 0 1 15.5 19H6"/><path d="M9 21.5L6 19l3-2.5"/></g>
+  <g id="i-target"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.2"/></g>
+  <!-- from Amnesia, for the notes shell. 5 of its symbols already
+       existed here (i-bold, i-italic, i-ol, i-table, i-ul) and are not duplicated. -->
+  <g id="i-eye"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></g>
+  <g id="i-pencil"><path d="M4 20h4L20 8a2.4 2.4 0 0 0-3.4-3.4L4 16.6z"/><path d="M14.5 6.5l3 3"/></g>
+  <g id="i-strike"><path d="M4 12h16"/><path d="M17 7c-.6-2-2.6-3-5-3-3 0-5 1.5-5 3.8 0 1.5.9 2.6 2.6 3.2"/><path d="M7.5 16c.6 2.2 2.6 3.2 5 3.2 3.2 0 5-1.5 5-3.6"/></g>
+  <g id="i-h1"><text x="2" y="17" font-size="13" font-weight="700" fill="currentColor" stroke="none" font-family="system-ui">H1</text></g>
+  <g id="i-h2"><text x="2" y="17" font-size="13" font-weight="700" fill="currentColor" stroke="none" font-family="system-ui">H2</text></g>
+  <g id="i-h3"><text x="2" y="17" font-size="13" font-weight="700" fill="currentColor" stroke="none" font-family="system-ui">H3</text></g>
+  <g id="i-highlight"><path d="M5 20h5l9-9a2.5 2.5 0 0 0-3.5-3.5l-9 9z"/><path d="M4 21h16"/></g>
+  <g id="i-task"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M3 6.5l1.4 1.4L7 5.4M3 17.5l1.4 1.4L7 16.4"/></g>
+  <g id="i-quote"><path d="M8 7H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1c0 2-1 3-3 3"/><path d="M19 7h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1c0 2-1 3-3 3"/></g>
+  <g id="i-code"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></g>
+  <g id="i-web"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8.5h18M10 12.5l-2 2 2 2M14 12.5l2 2-2 2"/></g>
+  <g id="i-link"><path d="M10.5 13.5a4 4 0 0 0 5.7 0l2.8-2.8a4 4 0 0 0-5.7-5.7L11.9 6.4"/><path d="M13.5 10.5a4 4 0 0 0-5.7 0L5 13.3a4 4 0 0 0 5.7 5.7l1.4-1.4"/></g>
+  <g id="i-wikilink"><path d="M7 4H4v16h3M17 4h3v16h-3"/><path d="M14 8l-4 8"/></g>
+  <g id="i-rule"><path d="M4 12h16"/><path d="M6 7h12M6 17h12" opacity=".35"/></g>
+  <g id="i-rename"><path d="M4 20h4L20 8l-4-4L4 16z"/></g>
+  <g id="i-copy"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></g>
+  <!-- from Coach Cam, for the training shell. The ten symbols whose
+       names already existed here (i-back, i-book, i-calc, i-calendar, i-check, i-menu, i-plus, i-search, i-settings, i-trash)
+       are NOT duplicated: a repeated id means the first one wins, so
+       a second copy would be dead weight that merely looked used.
+       Training reuses KinCrux's artwork for those, which also keeps
+       the two halves of the window looking like one app. -->
+  <g id="i-chevron"><path d="M9 5l7 7-7 7"/></g>
+  <g id="i-close"><path d="M6 6l12 12M18 6L6 18"/></g>
+  <g id="i-collapse"><path d="M13 5l-7 7 7 7"/><path d="M19 5v14"/></g>
+  <g id="i-more"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></g>
+  <g id="i-library"><path d="M4 5v14M9 5v14"/><path d="M13 6l4-1 3 13-4 1z"/></g>
+  <g id="i-structure"><circle cx="12" cy="5" r="2.3"/><circle cx="6" cy="18.5" r="2.3"/><circle cx="18" cy="18.5" r="2.3"/><path d="M11 7.1l-4 9.3M13 7.1l4 9.3M8.3 18.5h7.4"/></g>
+  <g id="i-circuit"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3.5 2"/></g>
+  <!-- Training (coaching): a stopwatch, after the coaching mark (2026-10-05). -->
+  <g id="i-stopwatch"><circle cx="12" cy="13.5" r="7.5"/><path d="M10 2.5h4M12 2.5v3.5M18 6.5l1.6-1.6M12 13.5V9.5M12 13.5l2.6 1.6"/></g>
+  <g id="i-session"><path d="M4 6h4v12H4zM16 6h4v12h-4z"/><path d="M8 12h8M2 9v6M22 9v6"/></g>
+  <g id="i-guide"><path d="M4 5a2 2 0 0 1 2-2h6v18H6a2 2 0 0 1-2-2z"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></g>
+  <g id="i-form"><path d="M6 4h12a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M9 4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H9z"/><path d="M8.5 11h7M8.5 15h4"/></g>
+  <g id="i-people"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 6.5a3 3 0 0 1 0 6"/><path d="M17.5 14.7c2 .7 3.5 2.5 3.5 5.3"/></g>
+  <!-- Stuff: a lidded box for the section and its inventories, a disc for Media. -->
+  <g id="i-archive"><rect x="3" y="4" width="18" height="4.5" rx="1"/><path d="M4.5 8.5V19a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V8.5"/><path d="M10 12.5h4"/></g>
+  <g id="i-box"><path d="M3.5 8.5 12 4l8.5 4.5v8.2L12 21l-8.5-4.3z"/><path d="M3.5 8.5 12 13l8.5-4.5"/><path d="M12 13v8"/><path d="m7.8 6.3 8.4 4.5"/></g>
+  <g id="i-disc"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.4"/><path d="M12 6.5a5.5 5.5 0 0 1 5.5 5.5"/></g>
+  <g id="i-kit"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></g>
+  <g id="i-chart"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></g>
+  <g id="i-up-right"><path d="M7 17L17 7M9 7h8v8"/></g>
+  <g id="i-down-right"><path d="M7 7l10 10M17 9v8H9"/></g>
+  <g id="i-sheet-out"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/><path d="M13 13h5M13 16h5"/></g>
+  <g id="i-backup"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></g>
+  <g id="i-play"><path d="M7 4.5v15l13-7.5z"/></g>
+  <g id="i-pause"><path d="M8 4v16M16 4v16"/></g>
+  <g id="i-next"><path d="M5 4l11 8-11 8z"/><path d="M19 4v16"/></g>
+  <g id="i-prev"><path d="M19 4L8 12l11 8z"/><path d="M5 4v16"/></g>
+  <g id="i-filter"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></g>
+  <g id="i-plan"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8"/><rect x="8" y="12" width="8" height="6" rx="1"/></g>
+  <g id="i-program"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 13h3M7 16h3M14 13h3M14 16h3"/></g>
+  <g id="i-file"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/></g>
+  <g id="i-table"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></g>
+  <g id="i-photo"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.2"/><path d="M8 6l1.5-2h5L16 6"/></g>
+  <g id="i-group"><circle cx="8" cy="9" r="2.6"/><circle cx="16" cy="9" r="2.6"/><path d="M3 19c0-2.6 2.2-4.4 5-4.4s5 1.8 5 4.4"/><path d="M13.5 19c0-2.6 2-4.4 4.5-4.4s3 1.8 3 4.4"/></g>
+  <g id="i-print"><path d="M7 8V4h10v4"/><rect x="4" y="8" width="16" height="8" rx="2"/><path d="M7 14h10v6H7z"/></g>
+  <g id="i-word"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M8.5 11l1.4 6 2.1-4.4 2.1 4.4 1.4-6"/></g>
+  <g id="i-sheet"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></g>
+  <g id="i-pdf"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 17v-5h1.6a1.4 1.4 0 0 1 0 2.8H9"/><path d="M13.5 17v-5h1a1.9 1.9 0 0 1 0 5z"/></g>
+  <g id="i-bold"><path d="M7 4h6.5a4 4 0 0 1 0 8H7z"/><path d="M7 12h7.5a4 4 0 0 1 0 8H7z"/></g>
+  <g id="i-italic"><path d="M15 4h-6M15 20H9M14 4l-4 16"/></g>
+  <g id="i-underline"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><path d="M5 21h14"/></g>
+  <g id="i-heading"><path d="M5 5v14M13 5v14M5 12h8"/><path d="M17 19v-7l3-1.4"/></g>
+  <g id="i-ul"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/></g>
+  <g id="i-ol"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 8V4l-1 .8M3 12h2.4L3 16h2.6"/></g>
+  <g id="i-clear"><path d="M8 6h12M11 6l-1 12M17 6l-1 12"/><path d="M4 4l6 6M10 4l-6 6"/></g>
+  <g id="i-up"><path d="M12 19V6"/><path d="M6 12l6-6 6 6"/></g>
+  <g id="i-down"><path d="M12 5v13"/><path d="M6 12l6 6 6-6"/></g>
+  <g id="i-note-plus"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M18 2v6M15 5h6"/></g>
+  <g id="i-restore"><path d="M12 9V21"/><path d="M8 17l4 4 4-4"/><path d="M4 8V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/></g>
+  <g id="i-back"><path d="M15 6l-6 6 6 6"/></g>
+  <g id="i-x"><path d="M18 6 6 18M6 6l12 12"/></g>
+  <g id="i-check"><path d="M4 12.5l5 5L20 6.5"/></g>
+  <g id="i-trash"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></g>
+  <g id="i-export"><path d="M12 15V4M8.5 7.5L12 4l3.5 3.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></g>
+  <g id="i-edit"><path d="M4 20h4L20 8a2.4 2.4 0 0 0-3.4-3.4L4 16.6z"/><path d="M14.5 6.5l3 3"/></g>
+  <g id="i-recipe"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="2.4"/></g>
+  <g id="i-menu"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></g>
+  <g id="i-cart"><path d="M4 5h2l2.2 10.5h9.3L20 8H7"/><circle cx="9.5" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></g>
+  <g id="i-book"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5z"/><path d="M8 7h7M8 10h7"/></g>
+  <g id="i-calc"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h1M11.5 11h1M15 11h1M8 15h1M11.5 15h1M15 15h1M8 19h1M11.5 19h1M15 19h1"/></g>
+  <g id="i-info"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r="1"/></g>
+
+  <!-- from Cranium -->
+  <!-- a neuron, in the menus' line style: the Neuro Guide (2026-09-29) -->
+  <g id="i-neuron"><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="0.9" fill="currentColor"/><path d="M12 8.8V4M9.4 10.2 5.6 6.6M14.6 10.2l3.6-3.4M9.2 13.4 5 15.6M14.8 13.4l4.2 2.2M12 15.2v4.4"/><circle cx="12" cy="3.4" r="1" fill="currentColor"/><circle cx="5.1" cy="6.1" r="1" fill="currentColor"/><circle cx="18.7" cy="6.1" r="1" fill="currentColor"/><circle cx="4.5" cy="15.9" r="1" fill="currentColor"/><circle cx="19.5" cy="15.9" r="1" fill="currentColor"/><circle cx="12" cy="20.2" r="1" fill="currentColor"/></g>
+  <g id="i-brain"><path d="M9.5 3.5A2.8 2.8 0 0 0 6.8 6a2.6 2.6 0 0 0-2 3.6A2.8 2.8 0 0 0 4.4 14a2.7 2.7 0 0 0 1.9 3.6 2.8 2.8 0 0 0 3.2 2.8V3.5z"/><path d="M14.5 3.5A2.8 2.8 0 0 1 17.2 6a2.6 2.6 0 0 1 2 3.6 2.8 2.8 0 0 1 .4 4.4 2.7 2.7 0 0 1-1.9 3.6 2.8 2.8 0 0 1-3.2 2.8V3.5z"/></g>
+  <g id="i-mine"><circle cx="12" cy="12" r="5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/></g>
+  <g id="i-grid9"><rect x="3" y="3" width="18" height="18" rx="1.6"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></g>
+  <g id="i-cross"><rect x="3" y="3" width="18" height="18" rx="1.6"/><path d="M3 9h18M9 3v18"/><path d="M4 4l4 4"/></g>
+  <g id="i-2048"><rect x="3" y="3" width="7.5" height="7.5" rx="1.4"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.4"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.4"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.4"/></g>
+  <g id="i-cards"><rect x="3" y="5" width="12" height="15" rx="1.6"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></g>
+  <g id="i-stats"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></g>
+  <g id="i-refresh"><path d="M20 11a8 8 0 1 0-1.4 5.3"/><path d="M20 5v6h-6"/></g>
+  <g id="i-futo"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><path d="M11 6.4l1.8 1.2-1.8 1.2" stroke-width="1.5"/><path d="M6.8 11.2l1.2 1.8-1.2 1.8" stroke-width="1.5"/></g>
+  <g id="i-kakuro"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 3l6 6M9 3v18M3 9h18"/><path d="M4.6 6.6h2.2M6.4 4.4v2.4" stroke-width="1.4"/></g>
+  <g id="i-hangman"><path d="M4 21h8M6 21V4h9M15 4v3"/><circle cx="15" cy="10" r="2.6"/><path d="M15 12.6v5M15 14l-3 2.4M15 14l3 2.4M15 17.6l-2.4 3.4M15 17.6l2.4 3.4"/></g>
+  <g id="i-nono"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/><rect x="9" y="9" width="6" height="6" fill="currentColor" stroke="none"/></g>
+  <g id="i-bulb"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .8 1.6v.5h5.4v-.5c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 3z"/></g>
+  <g id="i-shade"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 8h5v5H3zM13 11h5v5h-5z" fill="currentColor" stroke="none"/></g>
+  <g id="i-letters"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M7 15l2.2-6 2.2 6M7.7 13.2h3.1M15 9v6M14 9h2.4M14 15h2.4"/></g>
+  <g id="i-slide"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M9 3v18M3 9h18"/><path d="M13 13h5v5"/></g>
+  <g id="i-wave"><path d="M2 12h3l2-5 3 10 3-13 3 16 2-8h4"/></g>
+  <g id="i-tower"><path d="M12 4v13M4 20h16"/><path d="M7 9h10M5.5 13h13M4 17h16"/></g>
+  <g id="i-cardfan"><rect x="4" y="6" width="9" height="13" rx="1.5" transform="rotate(-12 8.5 12.5)"/><rect x="10" y="5" width="9" height="13" rx="1.5" transform="rotate(10 14.5 11.5)"/></g>
+  <g id="i-pyramid"><rect x="10" y="3" width="4" height="5" rx="0.8"/><rect x="7.5" y="9.5" width="4" height="5" rx="0.8"/><rect x="12.5" y="9.5" width="4" height="5" rx="0.8"/><rect x="5" y="16" width="4" height="5" rx="0.8"/><rect x="10" y="16" width="4" height="5" rx="0.8"/><rect x="15" y="16" width="4" height="5" rx="0.8"/></g>
+  <g id="i-palette"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2s-.8-1.6-.8-2.6c0-1.1.9-1.9 2-1.9H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="14.5" cy="7" r="1.2"/></g>
+  <!-- Training, moved here from KinCrux. Only the symbols NeuroNet did
+       not already define are added: a repeated id means the first one
+       wins, so a second copy would be dead weight that looked used.
+       Reused from NeuroNet: i-chevron, i-close, i-collapse, i-more, i-library, i-circuit, i-session, i-guide, i-form, i-people, i-kit, i-chart, i-up-right, i-down-right, i-sheet-out, i-backup, i-play, i-pause, i-next, i-prev, i-filter, i-plan, i-program, i-file, i-table, i-photo, i-group, i-print, i-word, i-sheet, i-pdf, i-bold, i-italic, i-underline, i-heading, i-ul, i-ol, i-clear, i-up, i-down, i-note-plus, i-restore, i-back, i-x, i-check, i-trash, i-export, i-edit, i-recipe, i-menu, i-cart, i-book, i-calc. -->
+
+  <!-- used by training but defined in KinCrux's OWN icon set, not its
+       training block -- so they did not come across with the rest -->
+
+  <!-- i-note and i-move: training draws both -- a note beside a session's or
+       circuit's notes, and a reorder button -- but they were never defined,
+       not in KinCrux and not in standalone Coach Cam either. Both places
+       have been showing an empty space. Drawn here in the set's own style. -->
+  <g id="i-note"><path d="M5 4h11l3 3v13H5z"/><path d="M16 4v3h3"/><path d="M8 11h8M8 15h6"/></g>
+  <g id="i-move"><path d="M12 3v18M3 12h18"/><path d="M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/></g>
+  <!-- Cam's own neuronet mark, traced from the artwork he supplied so it
+       stays crisp at any size and takes its colour from CSS rather than
+       being a green PNG on a black square. SYMBOL, not g: these have their
+       own coordinate space (the sprite's icons are all 24x24) and only a
+       symbol carries its own viewBox through <use>. Filled outlines, not
+       strokes, so they do not use .ic -- see .ss-brand-mark. -->
+  <symbol id="i-neuronet" viewBox="0 0 384.48 100"><path d="M218.98 99.11C218.31 98.37 218.18 98.06 218.18 97.22C218.18 96.66 218.33 95.92 218.51 95.58C218.91 94.81 220.13 94.01 220.91 94.01C221.39 94.01 221.64 93.75 222.41 92.44C223.79 90.07 224.78 87.99 224.95 87.08C225.12 86.17 224.47 83.67 223.66 82.09C223.02 80.85 221.55 79.23 220.81 78.96C220.49 78.84 219.07 78.64 217.65 78.5C214.24 78.19 211.52 77.53 208.43 76.28C205.74 75.2 202.75 76.18 199.23 79.31L197.24 81.08L197.23 83.07C197.23 84.89 197.18 85.13 196.63 85.85C195.46 87.38 193.25 87.9 191.5 87.04C189.73 86.18 188.87 83.64 189.75 81.92C190.79 79.89 192.47 79.19 194.68 79.85C195.4 80.07 195.57 80.04 195.94 79.68C196.18 79.46 197.12 78.61 198.03 77.8C200.01 76.04 201.12 74.1 201.29 72.14C201.34 71.46 201.3 70.84 201.19 70.76C200.79 70.47 198.4 66.49 197.56 64.68C197.08 63.65 196.57 62.3 196.44 61.67C196.14 60.28 195.44 59.39 194.15 58.77C193.37 58.4 192.7 58.29 190.74 58.25L188.3 58.2L187.07 59.37C185.95 60.43 185.74 60.53 184.81 60.53C183.37 60.53 182.53 60.03 182.01 58.85C181.23 57.09 182.06 55.24 183.84 54.76C184.98 54.45 185.93 54.75 187.19 55.81L188.14 56.6L190.24 56.45C193.07 56.25 193.97 55.98 194.84 55.06C195.42 54.45 195.57 54.11 195.57 53.37C195.57 50.94 196.6 47.14 198.03 44.26C199.09 42.13 200.33 40.37 202.42 38.03C203.44 36.89 204.08 35.95 204.23 35.4C204.55 34.24 204.29 32.59 203.61 31.31C203.3 30.74 202.68 29.57 202.23 28.71C200.62 25.63 199.45 24.15 198.13 23.53C197.34 23.16 191.14 21.76 187.14 21.06C186.59 20.96 185.39 20.72 184.48 20.53C182.26 20.06 182.22 20.07 181.31 20.92C180.39 21.8 179.53 22.02 178.36 21.7C176.78 21.26 175.8 19.62 176.15 18.01C176.3 17.34 177.12 16.43 177.98 15.99C179.3 15.31 181.16 16.07 181.87 17.58C182.1 18.06 182.46 18.44 182.76 18.51C183.9 18.77 190.05 20.0 191.79 20.31C192.82 20.49 194.06 20.73 194.56 20.85C195.05 20.96 195.89 21.06 196.42 21.06C197.26 21.06 197.38 21.01 197.28 20.66C197.23 20.43 195.19 17.48 192.77 14.1L188.36 7.96L187.34 8.1C183.31 8.65 180.69 4.16 183.35 1.25C185.15 -0.74 188.75 -0.26 189.92 2.13C190.47 3.24 190.47 4.96 189.93 6.05L189.52 6.89L190.44 8.16C190.95 8.85 191.68 9.87 192.06 10.42C192.66 11.27 197.97 18.36 198.84 19.47C199.48 20.29 199.86 19.46 201.83 12.95C202.89 9.42 203.76 6.36 203.77 6.14C203.77 5.92 203.53 5.42 203.24 5.03C202.44 3.96 202.33 3.08 202.86 1.89C203.99 -0.66 207.71 -0.43 208.43 2.23C208.89 3.96 208.07 5.45 206.32 6.06L205.45 6.36L203.73 12.1C201.57 19.36 201.23 20.78 201.42 21.78C201.62 22.89 202.67 24.8 204.45 27.3C206.19 29.75 207.51 31.0 209.29 31.87C210.8 32.61 211.94 32.63 214.68 31.96C215.74 31.7 216.8 31.49 217.05 31.49C217.92 31.49 219.86 30.59 220.88 29.71C222.5 28.32 223.62 25.56 224.62 20.54L224.88 19.24L223.97 18.31C222.65 16.97 222.27 15.29 222.93 13.72C224.33 10.39 228.91 10.34 230.4 13.63C230.87 14.66 230.9 15.1 230.59 16.23C230.26 17.42 229.35 18.39 228.01 18.99C226.62 19.6 226.36 20.08 225.68 23.39C225.03 26.58 225.03 29.3 225.69 30.65C226.28 31.86 227.58 32.91 229.85 33.98C231.09 34.56 231.65 34.7 232.82 34.7C235.23 34.7 236.52 33.91 240.4 30.04C244.67 25.8 244.72 25.7 244.92 20.84L245.07 17.18L244.47 16.86C242.1 15.59 242.46 12.04 245.02 11.31C248.18 10.4 250.15 14.81 247.39 16.61L246.56 17.15L246.56 20.91L246.56 24.67L249.83 24.51C251.63 24.43 253.26 24.32 253.45 24.26C253.64 24.21 253.97 23.77 254.18 23.29C255.15 21.1 258.15 20.88 259.4 22.91C261.39 26.14 257.04 29.31 254.54 26.46L253.83 25.64L250.36 26.04C248.46 26.25 246.63 26.57 246.3 26.74C245.45 27.18 239.71 33.16 238.61 34.75C237.93 35.74 237.25 37.81 237.25 38.89C237.26 39.61 237.51 40.18 238.45 41.63C240.76 45.16 242.07 49.3 242.28 53.77C242.5 58.43 241.84 61.76 239.77 66.35C238.78 68.56 238.61 69.58 239.09 70.44C239.24 70.7 240.07 71.66 240.94 72.56L242.51 74.2L244.2 74.18C245.81 74.17 245.92 74.2 246.59 74.87C247.53 75.81 247.72 77.54 247.01 78.67C246.24 79.9 244.52 80.38 243.25 79.72C242.09 79.12 241.69 78.36 241.69 76.82L241.69 75.44L240.08 74.15C238.31 72.71 237.18 72.06 236.46 72.06C235.93 72.06 228.7 76.8 227.55 77.89C226.42 78.97 226.09 80.13 226.21 82.54C226.33 84.79 226.82 86.22 227.76 87.08C228.88 88.12 234.05 91.57 234.48 91.57C234.72 91.57 235.36 91.41 235.9 91.23C237.74 90.59 239.92 91.6 240.7 93.45C241.82 96.13 239.93 99.11 237.11 99.11C235.81 99.11 234.22 98.09 233.57 96.85C233.38 96.49 233.26 95.59 233.26 94.59L233.26 92.93L230.14 90.81C228.43 89.65 226.89 88.69 226.73 88.69C226.57 88.69 226.26 88.96 226.05 89.29C225.31 90.4 223.28 94.31 223.28 94.6C223.28 94.76 223.49 95.32 223.75 95.84C224.15 96.68 224.18 96.92 223.96 97.72C223.83 98.23 223.41 98.95 223.04 99.32C222.44 99.92 222.21 100.0 221.07 100.0C219.85 100.0 219.74 99.95 218.98 99.11Z M72.39 78.6C63.28 76.91 56.67 71.05 54.23 62.52C52.13 55.17 53.29 46.99 57.27 41.09C60.3 36.59 64.45 33.76 70.2 32.26C72.97 31.53 77.05 31.31 80.18 31.7C92.7 33.28 100.02 42.24 99.73 55.65L99.67 58.65L81.54 58.7L63.41 58.76L63.41 59.29C63.41 60.03 64.25 62.65 64.88 63.9C66.23 66.58 68.96 68.89 72.1 70.02C73.48 70.52 74.18 70.61 76.77 70.69C79.43 70.76 80.0 70.71 81.31 70.29C83.96 69.45 85.94 67.99 87.47 65.76L88.32 64.52L93.38 64.52L98.45 64.52L98.45 65.03C98.45 65.79 96.8 68.87 95.41 70.68C92.55 74.43 88.77 76.89 83.89 78.17C81.09 78.91 75.25 79.12 72.39 78.6Z M125.78 78.71C117.81 77.59 112.14 72.59 110.2 65.0C109.41 61.88 109.31 59.85 109.31 45.84L109.31 32.14L114.25 32.2L119.18 32.26L119.31 46.67C119.38 54.6 119.51 61.39 119.61 61.75C119.7 62.12 120.21 63.32 120.74 64.43C122.35 67.8 124.93 69.76 128.59 70.42C130.77 70.81 131.94 70.8 133.68 70.39C137.05 69.6 139.69 67.64 141.29 64.75C142.96 61.74 142.89 62.49 143.01 46.56L143.13 32.26L148.06 32.2L152.99 32.14L152.99 55.1L152.99 78.05L148.0 78.05L143.02 78.05L143.02 75.72C143.02 74.15 142.93 73.39 142.77 73.39C142.63 73.39 141.93 73.94 141.21 74.6C139.63 76.07 136.55 77.64 134.04 78.28C132.0 78.79 127.86 79.01 125.78 78.71Z M324.06 78.61C316.97 77.49 310.73 73.22 307.67 67.41C302.13 56.88 304.67 42.9 313.32 36.24C319.05 31.83 327.39 30.38 335.37 32.4C337.53 32.95 340.77 34.45 342.38 35.64C343.83 36.73 346.22 39.2 347.21 40.65C348.34 42.31 349.6 45.18 350.26 47.59C350.81 49.61 350.86 50.11 350.87 54.21L350.89 58.65L332.87 58.7L314.86 58.76L314.86 59.37C314.86 59.7 315.06 60.62 315.31 61.39C316.74 65.98 320.15 69.24 324.71 70.4C327.73 71.16 332.23 70.72 334.81 69.4C335.97 68.81 338.14 66.8 339.06 65.47L339.71 64.52L344.83 64.52L349.94 64.52L349.81 65.2C349.73 65.57 349.31 66.59 348.87 67.47C345.83 73.55 340.33 77.45 333.15 78.61C330.76 79.0 326.51 79.0 324.06 78.61Z M372.44 77.83C367.34 76.75 364.4 73.95 363.52 69.33C363.25 67.91 363.19 65.11 363.19 54.0L363.19 40.41L362.69 40.27C362.42 40.2 360.92 40.14 359.37 40.14L356.54 40.13L356.54 36.14L356.54 32.15L359.87 32.15L363.19 32.15L363.19 26.39L363.19 20.62L368.07 20.62L372.95 20.62L372.95 26.39L372.95 32.15L378.71 32.15L384.48 32.15L384.48 36.14L384.48 40.13L378.77 40.18L373.06 40.24L372.99 52.88C372.92 66.71 372.96 67.34 374.1 68.64C375.12 69.8 376.47 70.1 380.83 70.13L384.48 70.16L384.48 74.22L384.48 78.27L379.43 78.25C375.42 78.24 373.99 78.16 372.44 77.83Z M0.0 55.1L0.0 32.14L4.93 32.2L9.87 32.26L9.93 34.65C10.0 37.31 10.13 37.48 11.21 36.35C12.16 35.35 14.56 33.81 16.33 33.06C18.46 32.15 20.55 31.71 23.39 31.56C29.23 31.27 34.69 33.13 38.14 36.58C40.05 38.5 41.01 40.03 42.05 42.78C43.42 46.43 43.46 47.03 43.46 63.33L43.46 78.05L38.58 78.05L33.7 78.05L33.7 64.73C33.7 50.92 33.62 49.34 32.76 47.01C32.16 45.37 30.55 42.97 29.5 42.14C27.67 40.69 24.72 39.71 22.17 39.7C17.39 39.69 13.41 41.95 11.52 45.75C10.04 48.75 9.99 49.27 9.99 64.58L9.98 78.05L4.99 78.05L0.0 78.05L0.0 55.1Z M165.29 77.77C165.23 77.62 165.21 67.32 165.24 54.88L165.3 32.26L170.18 32.26L175.06 32.26L175.12 35.31C175.16 37.61 175.25 38.36 175.46 38.36C175.62 38.36 176.22 37.81 176.8 37.15C179.47 34.05 185.27 31.33 188.77 31.53L189.91 31.6L189.91 36.57L189.91 41.55L187.4 41.63C180.8 41.84 177.33 44.26 175.7 49.78C175.35 50.97 175.3 52.5 175.22 64.58L175.14 78.05L170.27 78.05C166.57 78.05 165.37 77.98 165.29 77.77Z M251.88 55.1L251.88 32.15L256.76 32.15L261.64 32.15L261.64 34.59C261.64 36.09 261.73 37.03 261.87 37.03C261.99 37.03 262.84 36.43 263.75 35.71C267.84 32.46 272.96 31.04 278.27 31.69C281.43 32.08 283.03 32.53 285.52 33.73C289.98 35.86 292.36 38.88 294.16 44.68L294.78 46.67L294.85 62.36L294.92 78.05L290.03 78.05L285.14 78.05L285.14 64.0C285.14 50.65 285.12 49.87 284.7 48.21C283.88 45.0 281.72 42.2 279.09 40.92C277.69 40.24 275.14 39.69 273.41 39.69C271.78 39.69 269.03 40.39 267.56 41.18C265.88 42.09 264.24 43.84 263.32 45.72C261.81 48.79 261.8 48.88 261.7 64.25L261.61 78.05L256.75 78.05L251.88 78.05L251.88 55.1Z M223.02 69.2C226.2 68.1 229.25 65.44 230.69 62.48C231.93 59.95 232.25 58.41 232.23 55.1C232.22 52.63 232.13 51.93 231.62 50.23C230.77 47.42 229.84 45.81 228.04 44.0C225.49 41.43 222.83 40.36 218.95 40.36C215.02 40.35 212.49 41.37 209.83 44.04C207.99 45.88 206.71 48.25 206.06 51.0C205.54 53.21 205.54 57.43 206.06 59.42C207.39 64.47 210.86 68.26 215.33 69.51C217.09 70.0 221.18 69.84 223.02 69.2Z M89.8 50.71C89.8 49.85 88.87 47.08 88.15 45.79C85.94 41.85 81.9 39.69 76.72 39.69C74.23 39.69 71.74 40.24 70.01 41.18C68.53 41.98 66.41 43.95 65.52 45.34C64.71 46.61 63.76 48.94 63.54 50.17L63.39 51.0L76.6 51.0C87.37 51.0 89.8 50.94 89.8 50.71Z M341.24 50.71C341.24 49.94 340.48 47.66 339.75 46.25C338.16 43.18 335.13 40.84 331.7 40.03C329.93 39.62 326.74 39.6 324.87 40.01C323.08 40.39 320.6 41.63 319.23 42.81C317.33 44.45 315.46 47.75 315.15 50.01L315.02 51.0L328.13 51.0C338.69 51.0 341.24 50.94 341.24 50.71Z"/></symbol>
+  <symbol id="i-neuronet-node" viewBox="0 0 83.81 100"><path d="M42.93 99.11C42.26 98.37 42.13 98.06 42.13 97.22C42.13 96.66 42.28 95.92 42.46 95.58C42.85 94.81 44.08 94.01 44.86 94.01C45.34 94.01 45.59 93.75 46.36 92.44C47.74 90.07 48.73 87.99 48.9 87.08C49.07 86.17 48.42 83.67 47.61 82.09C46.97 80.85 45.5 79.23 44.76 78.96C44.44 78.84 43.01 78.64 41.6 78.5C38.19 78.19 35.47 77.53 32.37 76.28C29.69 75.2 26.7 76.18 23.17 79.31L21.18 81.08L21.18 83.07C21.18 84.89 21.12 85.13 20.58 85.85C19.41 87.38 17.19 87.9 15.45 87.04C13.68 86.18 12.81 83.64 13.7 81.92C14.74 79.89 16.42 79.19 18.63 79.85C19.35 80.07 19.52 80.04 19.89 79.68C20.13 79.46 21.07 78.61 21.98 77.8C23.96 76.04 25.07 74.1 25.23 72.14C25.29 71.46 25.25 70.84 25.14 70.76C24.73 70.47 22.35 66.49 21.5 64.68C21.02 63.65 20.52 62.3 20.38 61.67C20.09 60.28 19.39 59.39 18.09 58.77C17.32 58.4 16.65 58.29 14.69 58.25L12.25 58.2L11.02 59.37C9.9 60.43 9.69 60.53 8.76 60.53C7.32 60.53 6.48 60.03 5.96 58.85C5.18 57.09 6.01 55.24 7.79 54.76C8.93 54.45 9.87 54.75 11.14 55.81L12.08 56.6L14.19 56.45C17.02 56.25 17.92 55.98 18.79 55.06C19.37 54.45 19.51 54.11 19.51 53.37C19.52 50.94 20.54 47.14 21.97 44.26C23.03 42.13 24.27 40.37 26.37 38.03C27.39 36.89 28.03 35.95 28.18 35.4C28.49 34.24 28.24 32.59 27.55 31.31C27.25 30.74 26.63 29.57 26.18 28.71C24.57 25.63 23.4 24.15 22.08 23.53C21.28 23.16 15.09 21.76 11.09 21.06C10.54 20.96 9.34 20.72 8.43 20.53C6.21 20.06 6.17 20.07 5.26 20.92C4.33 21.8 3.48 22.02 2.31 21.7C0.73 21.26 -0.25 19.62 0.1 18.01C0.25 17.34 1.07 16.43 1.93 15.99C3.24 15.31 5.11 16.07 5.82 17.58C6.05 18.06 6.41 18.44 6.71 18.51C7.84 18.77 13.99 20.0 15.73 20.31C16.76 20.49 18.01 20.73 18.5 20.85C19.0 20.96 19.84 21.06 20.37 21.06C21.2 21.06 21.32 21.01 21.23 20.66C21.17 20.43 19.14 17.48 16.72 14.1L12.31 7.96L11.29 8.1C7.26 8.65 4.64 4.16 7.29 1.25C9.1 -0.74 12.69 -0.26 13.87 2.13C14.41 3.24 14.42 4.96 13.88 6.05L13.47 6.89L14.39 8.16C14.89 8.85 15.62 9.87 16.01 10.42C16.6 11.27 21.92 18.36 22.79 19.47C23.43 20.29 23.81 19.46 25.77 12.95C26.84 9.42 27.71 6.36 27.71 6.14C27.71 5.92 27.48 5.42 27.19 5.03C26.38 3.96 26.28 3.08 26.81 1.89C27.93 -0.66 31.66 -0.43 32.38 2.23C32.84 3.96 32.02 5.45 30.26 6.06L29.39 6.36L27.68 12.1C25.51 19.36 25.17 20.78 25.36 21.78C25.57 22.89 26.62 24.8 28.4 27.3C30.14 29.75 31.46 31.0 33.23 31.87C34.74 32.61 35.89 32.63 38.63 31.96C39.68 31.7 40.75 31.49 41.0 31.49C41.87 31.49 43.8 30.59 44.83 29.71C46.44 28.32 47.57 25.56 48.56 20.54L48.82 19.24L47.91 18.31C46.59 16.97 46.22 15.29 46.88 13.72C48.28 10.39 52.86 10.34 54.35 13.63C54.82 14.66 54.85 15.1 54.54 16.23C54.21 17.42 53.29 18.39 51.95 18.99C50.56 19.6 50.31 20.08 49.63 23.39C48.98 26.58 48.98 29.3 49.63 30.65C50.22 31.86 51.53 32.91 53.8 33.98C55.03 34.56 55.59 34.7 56.77 34.7C59.17 34.7 60.46 33.91 64.35 30.04C68.62 25.8 68.67 25.7 68.87 20.84L69.02 17.18L68.41 16.86C66.05 15.59 66.4 12.04 68.97 11.31C72.12 10.4 74.1 14.81 71.33 16.61L70.51 17.15L70.51 20.91L70.51 24.67L73.78 24.51C75.58 24.43 77.21 24.32 77.4 24.26C77.59 24.21 77.92 23.77 78.13 23.29C79.1 21.1 82.09 20.88 83.35 22.91C85.34 26.14 80.99 29.31 78.49 26.46L77.77 25.64L74.31 26.04C72.4 26.25 70.57 26.57 70.24 26.74C69.4 27.18 63.65 33.16 62.56 34.75C61.87 35.74 61.2 37.81 61.2 38.89C61.2 39.61 61.45 40.18 62.4 41.63C64.71 45.16 66.01 49.3 66.23 53.77C66.45 58.43 65.78 61.76 63.72 66.35C62.73 68.56 62.56 69.58 63.03 70.44C63.18 70.7 64.01 71.66 64.88 72.56L66.46 74.2L68.15 74.18C69.76 74.17 69.87 74.2 70.54 74.87C71.48 75.81 71.67 77.54 70.96 78.67C70.19 79.9 68.47 80.38 67.19 79.72C66.04 79.12 65.63 78.36 65.63 76.82L65.63 75.44L64.03 74.15C62.26 72.71 61.13 72.06 60.4 72.06C59.88 72.06 52.65 76.8 51.5 77.89C50.37 78.97 50.03 80.13 50.16 82.54C50.28 84.79 50.76 86.22 51.7 87.08C52.83 88.12 58.0 91.57 58.43 91.57C58.67 91.57 59.31 91.41 59.85 91.23C61.69 90.59 63.87 91.6 64.64 93.45C65.76 96.13 63.87 99.11 61.06 99.11C59.76 99.11 58.16 98.09 57.52 96.85C57.33 96.49 57.21 95.59 57.21 94.59L57.21 92.93L54.09 90.81C52.37 89.65 50.84 88.69 50.68 88.69C50.52 88.69 50.21 88.96 49.99 89.29C49.26 90.4 47.23 94.31 47.23 94.6C47.23 94.76 47.44 95.32 47.69 95.84C48.1 96.68 48.13 96.92 47.91 97.72C47.77 98.23 47.36 98.95 46.98 99.32C46.38 99.92 46.16 100.0 45.02 100.0C43.8 100.0 43.69 99.95 42.93 99.11Z M46.97 69.2C50.15 68.1 53.19 65.44 54.64 62.48C55.88 59.95 56.2 58.41 56.18 55.1C56.17 52.63 56.08 51.93 55.56 50.23C54.72 47.42 53.79 45.81 51.99 44.0C49.44 41.43 46.77 40.36 42.9 40.36C38.96 40.35 36.43 41.37 33.78 44.04C31.94 45.88 30.66 48.25 30.01 51.0C29.49 53.21 29.49 57.43 30.01 59.42C31.33 64.47 34.81 68.26 39.27 69.51C41.04 70.0 45.13 69.84 46.97 69.2Z"/></symbol>
+</defs></svg>
+
+<div id="ss-app">
+  <aside id="ss-sidebar">
+    <div id="ss-brand">
+      <!-- Cam: "Please incorporate this as the icon in the top left of the
+           App." The mark carries the name itself, so the word that used to
+           sit beside it would read "neuronet NeuroNet". It stays as the
+           accessible name instead, for screen readers and the window. -->
+      <svg class="ss-brand-mark" role="img" aria-label="NeuroNet"><use href="#i-neuronet"/></svg>
+      <svg class="ss-brand-node" role="img" aria-label="NeuroNet" aria-hidden="true"><use href="#i-neuronet-node"/></svg>
+      <!-- Cam: "A minimize button for the navbar side menu as well, which
+           collapses it to just show the icons, when hovered over they should
+           show alt text with the tool name." -->
+      <button id="ss-collapse" type="button" aria-pressed="false"
+              title="Collapse the menu" aria-label="Collapse the menu">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+    </div>
+    <nav id="ss-nav"></nav>
+    <div id="ss-sidebar-foot">
+      <button class="btn btn-primary" id="ss-add"><span class="ss-add-plus">+</span><span
+        class="ss-label"> Add photos</span></button>
+      <button class="ss-foot-btn" id="ss-settings">
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-settings"/></svg>
+        <span class="ss-label">Settings</span></button>
+    </div>
+  </aside>
+  <!-- ONE APP. Cam: "make that top bar the default for the entire app ...
+       Think of NeuroNet as one complete app with multiple tools, don't treat
+       it as separate applications within NeuroNet."
+
+       The bar used to live inside the music section and only showed there.
+       It now sits across the top of the whole content side, above every
+       tool, and each tool keeps only the controls that belong to it.
+       Everything except the sidebar lives in this column: the bar, then the
+       stage where whichever tool is open is drawn. -->
+  <div id="ss-column">
+    <div id="ss-topbar">
+<div id="ch-top-bar">
+  <!-- Toggles the left-hand navigation sidebar — Cam: "add a hide
+       menu button for the menu (similar to the hide playlist
+       sidebar)." Pinned to the far left, same real pattern as the
+       right panel's own toggle below. -->
+  <button id="ch-menu-toggle" class="chord-btn sm" type="button"
+          title="Menu" aria-label="Show or hide the navigation menu"
+          aria-pressed="true"></button>
+
+  <span id="ch-top-bar-clock"></span>
+
+  <div id="cc-mini" class="cc-mini">
+    <button id="cc-mini-prev" class="chord-btn sm" type="button"
+            title="Previous" aria-label="Previous track"></button>
+    <button id="cc-mini-play" class="chord-btn" type="button"
+            title="Play" aria-label="Play or pause"></button>
+    <button id="cc-mini-next" class="chord-btn sm" type="button"
+            title="Next" aria-label="Next track"></button>
+    <span id="cc-mini-art" class="cc-mini-art" aria-hidden="true"></span>
+    <div class="cc-mini-track">
+      <span id="cc-mini-title" class="cc-mini-title">Nothing playing</span>
+      <span class="cc-mini-bar"><span id="cc-mini-fill"
+            class="cc-mini-fill"></span></span>
+    </div>
+    <span id="cc-mini-elapsed" class="cc-mini-elapsed">0:00</span>
+    <button id="cc-mini-fav" class="chord-btn sm cc-mini-fav" type="button"
+            title="Favourite this song" aria-label="Favourite this song">&#9825;</button>
+    <button id="cc-mini-add" class="chord-btn sm" type="button"
+            title="Add to a playlist" aria-label="Add this song to a playlist">+</button>
+    <button id="cc-mini-note" class="chord-btn sm" type="button"
+            title="Queue" aria-label="Show the play queue"></button>
+  </div>
+
+  <!-- Toggles the right-hand playlist panel — lives in the top bar so
+       it's reachable from every section, not just Playlists. -->
+  <div id="ss-topbar-end">
+  <!-- Find (2026-10-06): pages, recipes, notes, sessions, albums -- Ctrl+K -->
+  <button id="ss-find" type="button" title="Find anything in NeuroNet (Ctrl+K)" aria-label="Find">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+    <span>Find</span><kbd>Ctrl K</kbd>
+  </button>
+  <button id="ch-panel-toggle" class="chord-btn sm" type="button"
+          title="Playlist panel" aria-label="Show or hide the playlist panel"
+          aria-pressed="false"></button>
+  <!-- Cam: "a Multitask mode (Found as a icon on the top right of the top
+       bar in the app) ... The icon for multitask should also match the theme
+       selected, but i dont want its icon to mirror the main and sub section
+       icons." A bare outline in the theme's accent, no tinted tile: it reads
+       as a control on the bar, not as one more section. -->
+  <!-- Quick access: shown only while NeuroNet is the popup (neuronet-quick). -->
+  <button id="ss-quick-full" type="button" hidden
+          title="Open the whole NeuroNet (Super+Alt+O)" aria-label="Open the whole NeuroNet">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/>
+    </svg>
+  </button>
+  <!-- Snip (15 Nov 2026): Omarchy's screenshot tool, into Photos -> NeuroNet Snips
+       and NeuroNet Picture References/NeuroNet Snips. Right-click for region, window, full screen, scrolling. -->
+  <button id="ss-snip" type="button" title="Snip (Super+Alt+X) · right-click for more" aria-label="Snip">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/>
+      <path d="M8.1 7.6 20 17M8.1 16.4 20 7M14 12h0"/>
+    </svg>
+  </button>
+  <button id="ss-multitask" type="button" aria-pressed="false"
+          title="Multitask — two sections side by side" aria-label="Multitask">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>
+      <path d="M12 4.5v15"/>
+      <path class="mt-arrows" d="M6 12h3M7.5 10.5 6 12l1.5 1.5M18 12h-3M16.5 10.5 18 12l-1.5 1.5"/>
+    </svg>
+  </button>
+  </div>
+</div>
+
+<!-- The queue popover the ♪ button opens.
+
+     IT LIVES IN THE BAR, not in the music shell. Cam: "please fix this
+     mini pop up, it only opens when in music main section."
+
+     It used to be the first child of #ch-shell, and the router hides
+     every element whose id ends in "-shell" the moment you leave its
+     section. A child of a hidden element cannot be shown, whatever
+     class you put on it -- so the popover was told to open, took the
+     class, computed display: block, and still measured 0x0. Measured
+     exactly that: open true, display block, 330x526 in Music and 0x0
+     in every other section, hidden by "ch-shell [hidden]".
+
+     The styles for this placement were already written and had never
+     matched anything: topbar.css carries both
+     "#ss-topbar .cc-queue-pop" and its ".open" rule, which is the bar
+     this belongs to. Outside #ss-topbar those never applied and the
+     shell-scoped pair in chords.css did the work instead.
+
+     position: fixed, so being in the bar does not confine it -- and
+     when the bars are hidden with F9 the popover goes with them, which
+     is right: it is the bar's own panel. -->
+<div id="cc-queue-pop" class="cc-queue-pop"></div>
+    </div>
+    <!-- A section's pages as tabs (2026-10-05, the audit: the right-hand menu
+         took 210px from every page). Photos keeps its menu (folders, albums,
+         tags); "Menu on the right" at the end switches back. -->
+    <nav id="ss-tabs" aria-label="Pages in this section" hidden></nav>
+    <div id="ss-stage">
+
+  <main id="ss-main"></main>
+
+<!-- Code -> IDE: Algorithm's editor. Empty here: ide.js draws Algorithm's
+     own page into this element's shadow root the first time Code opens, so
+     its ids and styles (it has a #toast and a .sheet too) never meet
+     NeuroNet's. Hidden, not destroyed, when another screen opens -- open
+     files keep their undo history and a running command keeps running. -->
+<div id="code-shell" hidden></div>
+
+<!-- Amnesia's shell: the notes vault. Inline and hidden for the same
+     reason as the two below -- its app.js wires listeners at parse time,
+     so injecting the markup later made every lookup return null.
+
+     Its own #modal-veil, #confirm-veil and #toasts are renamed "cx-" and
+     kept in here: NeuroNet has those ids too, and Amnesia's dialog
+     styling is scoped to this element, so sharing the host's would have
+     left every dialog body unstyled. -->
+<div id="cx-shell" hidden>
+<div id="cx-app">
+    <div id="cx-sidebar">
+      <div id="cx-sidebar-header">
+        <div id="cx-brand">
+          <span id="cx-brand-mark" aria-hidden="true"><img src="data:image/png;base64,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" alt="" width="24" height="24"></span>
+          <span id="cx-vault-name">Amnesia</span>
+        </div>
+        <button class="cx-icon-btn" id="cx-new-note-btn" title="New note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <button class="cx-icon-btn" id="cx-new-canvas-btn" title="New canvas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/>
+               <rect x="5" y="7" width="6" height="4" rx="0.5" stroke-width="1.6"/>
+               <rect x="13" y="8.5" width="6" height="5" rx="0.5" stroke-width="1.6"/>
+               <rect x="6" y="14" width="5" height="4" rx="0.5" stroke-width="1.6"/></svg>
+        </button>
+        <button class="cx-icon-btn" id="cx-web-btn" title="Web of knowledge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.7">
+            <circle cx="12" cy="12" r="9" stroke-width="1"/>
+            <circle cx="12" cy="12" r="5.5" stroke-width="1"/>
+            <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"
+                  stroke-width=".9"/>
+            <circle cx="12" cy="12" r="2"/>
+          </svg>
+        </button>
+        <button class="cx-icon-btn" id="cx-new-folder-btn" title="New folder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0
+               0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/>
+               <path d="M9.5 12.5h5M12 10v5"/></svg>
+        </button>
+        <button class="cx-icon-btn" id="cx-collapse-all-btn"
+                title="Collapse all folders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2"><path d="M7 8l5 5 5-5"/>
+               <path d="M7 16l5-5 5 5"/></svg>
+        </button>
+        <button class="cx-icon-btn" id="cx-hide-sidebar-btn"
+                title="Hide sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2"><rect x="3" y="4" width="18" height="16"
+               rx="2"/><path d="M9 4v16"/></svg>
+        </button>
+      </div>
+      <div id="cx-vault-bar" aria-label="Vaults"></div>
+      <div id="cx-search-wrap">
+        <input type="text" id="cx-search" placeholder="Search notes">
+      </div>
+      <div id="cx-tree" tabindex="0" aria-label="Notes and folders — Delete deletes what is chosen"></div>
+      <div id="cx-sidebar-footer">
+        <button id="cx-import-btn" title="Import .md files from Obsidian">
+          Import files
+        </button>
+        <button id="cx-import-folder-btn" title="Import a whole Obsidian vault folder">
+          Import folder
+        </button>
+        <button id="cx-import-pdf-btn" title="Import PDF files">
+          Import PDF
+        </button>
+      </div>
+    </div>
+
+    <div id="cx-main">
+      <div id="cx-tabbar"></div>
+      <div id="cx-topbar">
+        <button class="cx-icon-btn" id="cx-show-sidebar-btn"
+                title="Show sidebar" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2"><rect x="3" y="4" width="18" height="16"
+               rx="2"/><path d="M9 4v16"/></svg>
+        </button>
+        <div id="cx-breadcrumb"></div>
+        <div id="cx-zoom-control" style="display:none">
+          <button class="cx-icon-btn" id="cx-zoom-out" title="Smaller text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M5 12h14"/></svg>
+          </button>
+          <span id="cx-zoom-level">100%</span>
+          <button class="cx-icon-btn" id="cx-zoom-in" title="Larger text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <div id="cx-pdf-zoom-control" style="display:none">
+          <button class="cx-icon-btn" id="cx-pdf-zoom-out" title="Zoom out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M5 12h14"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-pdf-zoom-in" title="Zoom in">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <div id="cx-canvas-toolbar" style="display:none">
+          <button class="cx-icon-btn" id="cx-canvas-add-card"
+                  title="Add a text card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-canvas-add-file"
+                  title="Add an existing note or PDF">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M6 2h9l5 5v15H6Z"/><path d="M14 2v6h6"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-canvas-add-image"
+                  title="Add a photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><rect x="3" y="4" width="18" height="16"
+                 rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/>
+                 <path d="M21 16l-5.5-5.5L4 20"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-canvas-add-link"
+                  title="Add a link card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0
+                 0 0-5.66-5.66l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.66 0l-3
+                 3a4 4 0 0 0 5.66 5.66l1.5-1.5"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-canvas-add-group"
+                  title="Add a group">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><rect x="3" y="3" width="18" height="18"
+                 rx="2" stroke-dasharray="3 2.5"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-canvas-add-shape"
+                  title="Add a shape">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><rect x="3" y="10" width="11"
+                 height="11" rx="1.5"/><circle cx="16.5" cy="7.5" r="5"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-canvas-zoom-out" title="Zoom out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M5 12h14"/></svg>
+          </button>
+          <span id="cx-canvas-zoom-level">100%</span>
+          <button class="cx-icon-btn" id="cx-canvas-zoom-in" title="Zoom in">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button class="cx-icon-btn" id="cx-canvas-zoom-fit"
+                  title="Zoom to fit all cards">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2
+                 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0
+                 1-2-2v-3"/></svg>
+          </button>
+        </div>
+        <div class="cx-mode-toggle" id="cx-mode-toggle">
+          <button data-mode="edit" class="cx-on" title="Edit (raw markdown)"
+                  aria-label="Edit">
+            <svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-pencil"/></svg>
+          </button>
+          <button data-mode="preview" title="View (formatted, editable)"
+                  aria-label="View">
+            <svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-eye"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="cx-workspace">
+        <div id="cx-editor-column">
+        <div id="cx-editor-area"></div>
+        
+        <div id="cx-toolbar-wrap" style="display:none">
+          <div id="cx-toolbar" role="toolbar" aria-label="Formatting">
+            <button class="cx-tool" data-cmd="bold" title="Bold" aria-label="Bold"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-bold"/></svg></button>
+            <button class="cx-tool" data-cmd="italic" title="Italic" aria-label="Italic"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-italic"/></svg></button>
+            <button class="cx-tool" data-cmd="strike" title="Strikethrough" aria-label="Strikethrough"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-strike"/></svg></button>
+            <button class="cx-tool" data-cmd="highlight" title="Highlight" aria-label="Highlight"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-highlight"/></svg></button>
+            <span class="cx-tool-sep" aria-hidden="true"></span>
+            <button class="cx-tool" data-cmd="h1" title="Heading 1" aria-label="Heading 1"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-h1"/></svg></button>
+            <button class="cx-tool" data-cmd="h2" title="Heading 2" aria-label="Heading 2"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-h2"/></svg></button>
+            <button class="cx-tool" data-cmd="h3" title="Heading 3" aria-label="Heading 3"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-h3"/></svg></button>
+            <span class="cx-tool-sep" aria-hidden="true"></span>
+            <button class="cx-tool" data-cmd="ul" title="Bulleted list" aria-label="Bulleted list"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-ul"/></svg></button>
+            <button class="cx-tool" data-cmd="ol" title="Numbered list" aria-label="Numbered list"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-ol"/></svg></button>
+            <button class="cx-tool" data-cmd="task" title="Checklist" aria-label="Checklist"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-task"/></svg></button>
+            <button class="cx-tool" data-cmd="quote" title="Quote" aria-label="Quote"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-quote"/></svg></button>
+            <span class="cx-tool-sep" aria-hidden="true"></span>
+            <button class="cx-tool" data-cmd="wikilink" title="Link to a note" aria-label="Link to a note"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-wikilink"/></svg></button>
+            <button class="cx-tool" data-cmd="link" title="Web link" aria-label="Web link"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-link"/></svg></button>
+            <button class="cx-tool" data-cmd="code" title="Code" aria-label="Code"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-code"/></svg></button>
+            <button class="cx-tool" data-cmd="table" title="Table" aria-label="Table"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-table"/></svg></button>
+            <!-- Grid: a spreadsheet inside the note. Cam: "a new tool in the notes
+                 bottom toolbar and called Grid". class="cx-tool" is what
+                 wireToolbar() connects -- the first version of this button
+                 lacked it, so it was drawn but did nothing when clicked. -->
+            <button class="cx-tool" data-cmd="grid" title="Grid (spreadsheet)" aria-label="Grid"><svg class="cx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9.5h18M3 15h18M9 4v16M15 4v16"/></svg></button>
+            <button class="cx-tool" data-cmd="rule" title="Divider" aria-label="Divider"><svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-rule"/></svg></button>
+          </div>
+        </div>
+        </div>
+        <div id="cx-split-divider" style="display:none" title="Drag to resize"></div>
+        <div id="cx-split-area" style="display:none">
+          <div id="cx-split-topbar">
+            <div id="cx-split-breadcrumb"></div>
+            <div id="cx-split-pdf-zoom-control" style="display:none">
+              <button class="cx-icon-btn" id="cx-split-pdf-zoom-out"
+                      title="Zoom out">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2"><path d="M5 12h14"/></svg>
+              </button>
+              <button class="cx-icon-btn" id="cx-split-pdf-zoom-in"
+                      title="Zoom in">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+            <div class="cx-mode-toggle" id="cx-split-mode-toggle">
+              <button data-mode="edit" class="cx-on" title="Edit (raw markdown)"
+                      aria-label="Edit">
+                <svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-pencil"/></svg>
+              </button>
+              <button data-mode="preview" title="View (formatted, editable)"
+                      aria-label="View">
+                <svg class="cx-ic" viewBox="0 0 24 24"><use href="#i-eye"/></svg>
+              </button>
+            </div>
+            <button class="cx-icon-btn" id="cx-split-close"
+                    title="Close split">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div id="cx-split-editor-area"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cx-ctx-menu" class="cx-ctx-menu"></div>
+  <div id="cx-link-suggest"></div>
+
+  <div id="cx-toasts"></div>
+  <div id="cx-confirm-veil" class="modal-veil"></div>
+  <div id="cx-modal-veil" class="modal-veil"></div>
+</div>
+
+<!-- ==========================================================================
+     Coach Cam's shell, inline and hidden until the training module is opened.
+     ==========================================================================
+     It lives in the document from the start rather than being injected on
+     demand, because Coach Cam's app.js wires its event listeners at PARSE
+     time, not inside init(). Injected later, every one of those lookups
+     came back null and the file threw before it finished loading.
+
+     So the markup is here, the scripts below find exactly what they expect,
+     and opening Training is only a matter of showing it. Nothing is moved
+     in the DOM either -- moving a subtree would tear down and rebuild every
+     listener attached to it.
+
+     Its own sidebar, scrim and resizers are hidden by the stylesheet:
+     NeuroNet's sidebar drives navigation now, but app.js writes to #nav and
+     #dataStamp without checking they exist, so the markup has to stay.
+     ========================================================================= -->
+<!-- Lens: the read-only gym view. Bigger text, no save path anywhere in
+     its file -- safe to leave open on a phone propped against a rack.
+     Inline and hidden for the same reason as the shell below: its script
+     wires itself at parse time. Its ids are all prefixed "lens-" because
+     it shipped as its own window and had its own #toast and #sheetHost,
+     which the shell also has. -->
+<div id="cf-lens" hidden>
+<header class="tool-top">
+  <div class="tool-brand">
+    <svg class="ic" viewBox="0 0 24 24"><use href="#i-search"/></svg>
+    <span>Lens</span>
+  </div>
+  <select id="lens-what" class="tool-what" aria-label="What to view">
+    <option value="">What do you want to look at?</option>
+    <option value="sessions">Sessions</option>
+    <option value="circuits">Circuits</option>
+    <option value="programs">Programs</option>
+    <option value="guides">Guides</option>
+    <option value="exercises">Exercises</option>
+    <option value="athletes">Athletes</option>
+    <option value="documents">Documents</option>
+  </select>
+  <select id="lens-which" class="tool-which" aria-label="Which one" hidden></select>
+  <div class="lens-actions" id="lens-lensActions" hidden></div>
+  <span class="tool-status" id="lens-status"></span>
+</header>
+
+<main class="tool-body" id="lens-body"></main>
+
+<div class="sheet-host" id="lens-sheetHost" hidden>
+  <div class="sheet-scrim" data-close></div>
+  <div class="sheet" role="dialog" aria-modal="true">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <h2 class="sheet-title" id="lens-sheetTitle"></h2>
+    <div class="sheet-body" id="lens-sheetBody"></div>
+  </div>
+</div>
+
+<div class="fs-host" id="lens-fsHost" hidden></div>
+<div class="toast" id="lens-toast" hidden></div>
+</div>
+
+<div id="cf-shell" hidden>
+<div class="app" id="app">
+
+  <aside class="sidebar" id="sidebar" aria-label="Sections">
+    <div class="sidebar-head">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Coaching</span>
+      </div>
+      <button class="icon-btn" id="collapseBtn" aria-label="Close menu">
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-collapse"/></svg>
+      </button>
+    </div>
+    <div class="search-wrap global-search">
+      <svg class="ic search-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
+      <input id="globalSearch" class="search-input" type="search"
+             placeholder="Search everything" autocomplete="off"
+             autocapitalize="off" spellcheck="false" aria-label="Search everything">
+      <button class="icon-btn search-clear" id="globalClear" aria-label="Clear search" hidden>
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="suggest-pop" id="searchSuggest" hidden role="listbox"></div>
+
+    <nav class="nav" id="nav" aria-label="Sections"></nav>
+    <div class="sidebar-foot">
+      <span id="dataStamp">—</span>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <!-- Drag handles sit on the boundaries between columns. Hidden below the
+       three-column layout, where there is nothing to resize. -->
+  <div class="resizer" id="resizeSidebar" role="separator"
+       aria-orientation="vertical" aria-label="Resize sidebar" tabindex="0"></div>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-menu"/></svg>
+      </button>
+      <div class="topbar-title">
+        <span class="crumb" id="crumb"></span>
+        <span class="page-title" id="pageTitle">Library</span>
+      </div>
+      <div class="topbar-actions" id="topbarActions"></div>
+    </header>
+    <section class="page" id="page"></section>
+  </main>
+
+  <div class="resizer" id="resizeList" role="separator"
+       aria-orientation="vertical" aria-label="Resize list column" tabindex="0"></div>
+
+  <!-- Detail slides over the list, the way a phone expects. -->
+  <section class="detail" id="detail" hidden aria-label="Detail">
+    <header class="topbar">
+      <button class="icon-btn" id="detailBack" aria-label="Back">
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-back"/></svg>
+      </button>
+      <div class="topbar-title">
+        <span class="crumb" id="detailCrumb"></span>
+        <span class="page-title" id="detailTitle"></span>
+      </div>
+      <div class="topbar-actions" id="detailActions"></div>
+    </header>
+    <div class="detail-body" id="detailBody"></div>
+  </section>
+</div>
+
+<div class="sheet-host" id="sheetHost" hidden>
+  <div class="sheet-scrim" data-close></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <h2 class="sheet-title" id="sheetTitle"></h2>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<input type="file" id="restoreInput" accept=".json,application/json" hidden>
+</div>
+
+<!-- ==========================================================================
+     Cranium's shell, inline and hidden until a Games view is opened.
+     ==========================================================================
+     It lives in the document from the start rather than being injected on
+     demand, because Cranium's app.js wires its listeners at PARSE time, not
+     inside boot(). Injected later every one of those lookups came back null
+     and the file threw before it finished loading -- the same lesson Coach
+     Cam's shell taught in KinCrux.
+
+     Every id is prefixed "cr-": Cranium's were #app, #sidebar, #content,
+     #toasts and #modal-veil, all of which NeuroNet also has. Its dialog
+     and toast styling is scoped to this element, so sharing the host's
+     containers would have left every Cranium dialog unstyled.
+
+     Its own sidebar is hidden by the stylesheet -- NeuroNet's sidebar
+     drives navigation now -- but the element stays, because renderSidebar()
+     writes to it without checking it exists.
+     ========================================================================= -->
+<div id="cr-shell" hidden>
+
+  <header id="cr-topbar">
+    <span id="cr-brand">
+      <svg class="ic" viewBox="0 0 24 24"><use href="#i-brain"/></svg>
+      Cranium
+    </span>
+    <span id="cr-topbar-title"></span>
+    <span class="spacer"></span>
+    <div id="cr-topbar-actions" class="row"></div>
+    <div id="cr-zoom" class="row" title="Zoom (Ctrl +/- , Ctrl 0 to reset)">
+      <button class="cc-zoom-btn" id="cr-zoom-out" aria-label="Zoom out">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+      </button>
+      <span id="cr-zoom-level">100%</span>
+      <button class="cc-zoom-btn" id="cr-zoom-in" aria-label="Zoom in">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+    <div id="cr-clock" aria-label="Current time"></div>
+  </header>
+
+  <div id="cr-body">
+    <aside id="cr-sidebar"></aside>
+    <main id="cr-content"></main>
+  </div>
+  <!-- Inside the shell, like Celestial's: cranium.css styles these as
+       "#cr-shell #cr-modal-veil" and so on, and gets its colours from the
+       shell. Left outside it, every Puzzles dialog (Add to book, confirm)
+       and toast drew unstyled below the bottom of the window, so "Add to
+       book" looked like it did nothing. -->
+  <div id="cr-modal-veil"></div>
+  <div id="cr-confirm-veil"></div>
+  <div id="cr-toasts" aria-live="polite"></div>
+</div>
+
+<!-- ==========================================================================
+     Celestial's shell: divination and mindfulness, hidden until opened.
+     ==========================================================================
+     Inline for the same reason Cranium's is -- its scripts wire
+     themselves at parse time. Its top nav is deliberately NOT here:
+     NeuroNet's sidebar does that job now, and the document-wide click
+     handler that closed its dropdowns would have fired on every click
+     in the host.
+
+     Ids prefixed "cs-": #app, #toasts, #modal-veil and #confirm-veil
+     are all names NeuroNet already owns, and Celestial's dialog
+     styling is scoped to this element.
+     ========================================================================= -->
+<div id="cs-shell" hidden>
+  <div id="cs-app"></div>
+  <div id="cs-toasts" aria-live="polite"></div>
+  <div id="cs-modal-veil"></div>
+  <div id="cs-confirm-veil"></div>
+</div>
+
+<!-- ==========================================================================
+     Chords' shell: the music module, hidden until a Music view is opened.
+     ==========================================================================
+     Its own top bar is in here but not drawn -- the mini player moved to
+     NeuroNet's sidebar, where every screen can see it, which is what
+     background play has to mean. The bar stays in the document because
+     the player writes to its elements without checking they exist.
+
+     The <audio> element is NOT in here. chords_player.js appends it to
+     document.body, which is exactly why the music survives hiding this
+     shell to show a game.
+     ========================================================================= -->
+<div id="ch-shell" hidden>
+
+<!-- The app shell: a persistent left nav, the main content area
+     chords.js still owns, and a persistent, toggleable right panel.
+     Both sidebars live outside #app for the exact same reason the
+     top bar does — chords.js replaces #app's innerHTML on every
+     section switch, and an element owned by that render pass would
+     be destroyed the instant the section changed. -->
+<div id="ch-inner">
+  <nav id="ch-sidebar-left" aria-label="Main navigation"></nav>
+  <main id="ch-app"></main>
+  <aside id="ch-sidebar-right" aria-label="Playlist panel"></aside>
+</div>
+
+<!-- shared chrome -->
+<div id="ch-toasts" aria-live="polite"></div>
+<div id="ch-modal-veil"></div>
+<!-- CC.confirm's own stacking overlay, separate from #modal-veil, so a
+     confirm launched from inside an already-open dialog (a delete
+     confirmation from inside the Track details editor, say) can never
+     clobber that dialog's own live DOM. -->
+<div id="ch-confirm-veil"></div>
+</div>
+
+
+          <!-- The right bar: the subsections of whatever main section is open.
+           Cam: "the right navbar containing all the sub sections of that
+           main section. For example Sessions is a sub section of Training." -->
+      <aside id="ss-subnav" aria-label="Section menu">
+        <div id="ss-subnav-head">
+          <span id="ss-subnav-title"></span>
+          <button id="ss-subnav-tabs" type="button" title="Show these pages as tabs across the top"
+                  aria-label="Show these pages as tabs across the top">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 7v11h16V7M8 7V4h5v3"/></svg>
+          </button>
+          <button id="ss-subnav-collapse" type="button" aria-pressed="false"
+                  title="Collapse this menu" aria-label="Collapse this menu">
+            <svg class="ic" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <nav id="ss-subnav-body"></nav>
+        <div id="ss-subnav-foot"></div>
+      </aside>
+    </div>
+    <!-- Where you are: "Training - Sessions". -->
+    <div id="ss-bottombar"><span id="ss-crumb"></span></div>
+  </div>
+</div>
+
+
+</div>
+
+<div id="viewer-veil"></div>
+<div id="editor-veil"></div>
+<div id="modal-veil"></div>
+<div id="confirm-veil"></div>
+<div id="drop-overlay">
+  <div class="drop-inner">
+    <div class="drop-icon">&#8681;</div>
+    <div class="drop-title">Drop photos to add them</div>
+  </div>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<input type="file" id="file-input" accept="image/*" multiple hidden>
+
+
+
+<!-- theme.js first, and deliberately BEFORE app.js: it applies the saved
+     theme from its own top level, so the first paint is already in the
+     right colours instead of flashing the default and flipping. -->
+<script src="crux/theme.js"></script>
+<script src="display.js"></script>
+<script src="app.js"></script>
+<!-- the house print style (2026-10-05): every printout's shared pieces -->
+<script src="print-house.js"></script>
+<script src="find.js"></script>
+<!-- Cranium, one bundle: see build_games.py for why. -->
+<script src="games/cranium.js"></script>
+<!-- Celestial, one bundle: see build_cards.py. -->
+<script src="cards/celestial.js"></script>
+<!-- Chords, one bundle: see build_music.py. -->
+<script src="music/nnviz.js"></script>
+<script src="music/chords.js"></script>
+<!-- training, from Coach Cam. bridge.js first: it creates window.CF,
+     which every file below assigns itself onto as it parses. -->
+<script src="training/bridge.js"></script>
+<script src="training/storage.js"></script>
+<script src="training/blocks.js"></script>
+<script src="training/timer.js"></script>
+<script src="training/calculators.js"></script>
+<script src="training/builders.js"></script>
+<script src="training/manage.js"></script>
+<script src="training/library.js"></script>
+<script src="training/programs.js"></script>
+<script src="training/lessons.js"></script>
+<script src="training/books.js"></script>
+<script src="training/search.js"></script>
+<script src="training/app.js"></script>
+<script src="training/lens.js"></script>
+<!-- Notes: Amnesia's vault, NeuroNet's own copy. bridge.js last, as
+     in KinCrux: it registers CP.Notes once app.js and graph.js exist. -->
+<script src="home/home.js"></script>
+<!-- Stuff: Media (the old Personal Effects) and inventories. -->
+<script src="stuff/stuff.js"></script>
+<script src="stuff/shelf.js"></script>
+<script src="stuff/cinema-player.js"></script>
+<script src="cookery.js"></script>
+<script src="cookery-print.js"></script>
+<script src="money.js"></script>
+<script src="fleeting/fleeting.js"></script>
+<script src="collab/collab.js"></script>
+<script src="archive/archive.js"></script>
+<script src="journal/journal.js"></script>
+<script src="cells/cells.js"></script>
+<script src="boards/editor.js"></script>
+<script src="boards/boards.js"></script>
+<script src="scrapbook/materials.js"></script>
+<script src="assets/clipart.js"></script>
+<script src="scrapbook/scrapbook.js"></script>
+<script src="assets/assets.js"></script>
+<script src="paper/paper.js"></script>
+<script src="pet/petart.js"></script>
+<script src="pet/petcore.js"></script>
+<script src="pixel/pixelcore.js"></script>
+<script src="pixel/pixel.js"></script>
+<script src="vector/vectorcore.js"></script>
+<script src="vector/vector.js"></script>
+<script src="notes/grid.js"></script>
+<script src="notes/grid-view.js"></script>
+<script src="notes/app.js"></script>
+<script src="notes/graph.js"></script>
+<script src="notes/guides.js"></script>
+<script src="notes/books.js"></script>
+<script src="notes/books-print.js"></script>
+<script src="ebooks/ebooks.js"></script>
+<script src="reader/reader.js"></script>
+<!-- Code -> IDE: Algorithm (ui/code/). Its own page is drawn inside
+     #code-shell's shadow root by ide.js; these four are Algorithm's scripts. -->
+<script src="code/highlight.js"></script>
+<script src="code/store.js"></script>
+<script src="code/editor.js"></script>
+<script src="code/ide.js"></script>
+<!-- Code -> Guides, Research, Data Structures: NeuroNet screens (not in the
+     shadow root), with code_library.py behind them. -->
+<script src="code/library.js"></script>
+<script src="code/guides.js"></script>
+<script src="code/research.js"></script>
+<script src="code/structures.js"></script>
+<script src="code/web.js"></script>
+<script src="notes/bridge.js"></script>
+<!-- App stats: the usage tracker, and Settings -> App stats. -->
+<script src="stats/stats.js"></script>
+<script src="transfer/transfer.js"></script>
+<script src="datafolder/datafolder.js"></script>
+<script src="widgets/widgets.js"></script>
+<script src="welcome/welcome.js"></script>
+<script src="guide/guide.js"></script>
+</body>
+</html>

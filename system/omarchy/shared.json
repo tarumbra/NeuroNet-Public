@@ -1,0 +1,43 @@
+{
+  "_about": "Files the NeuroNet widgets share. Each has ONE source; the plugins' copies are made from it (system/shared_files.py). The installer builds the widgets from these sources, so a copy that was forgotten can't be installed; collect.sh takes an edit made in one copy back to its source and the other copies. Paths are from the NeuroNet folder.",
+  "files": [
+    {
+      "from": "system/qml/NeuroNetPaths.qml",
+      "name": "NeuroNetPaths.qml",
+      "to": [
+        "neuronet.fleeting",
+        "neuronet.lenormand",
+        "neuronet.music",
+        "neuronet.oracle",
+        "neuronet.tarot"
+      ]
+    },
+    {
+      "from": "system/omarchy/shared/cards/BarWidget.qml",
+      "name": "BarWidget.qml",
+      "to": [
+        "neuronet.tarot",
+        "neuronet.oracle",
+        "neuronet.lenormand"
+      ]
+    },
+    {
+      "from": "system/omarchy/shared/cards/Service.qml",
+      "name": "Service.qml",
+      "to": [
+        "neuronet.tarot",
+        "neuronet.oracle",
+        "neuronet.lenormand"
+      ]
+    },
+    {
+      "from": "system/omarchy/shared/cards/journal_add.py",
+      "name": "journal_add.py",
+      "to": [
+        "neuronet.tarot",
+        "neuronet.oracle",
+        "neuronet.lenormand"
+      ]
+    }
+  ]
+}

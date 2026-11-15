@@ -1,0 +1,45 @@
+#!/bin/bash
+# neuronet-open -- open one note or recipe in NeuroNet's popup.
+#
+#     neuronet-open note "Folder/My note.md"    (a path inside the notes vault)
+#     neuronet-open recipe <recipe id>
+#     neuronet-open snip <number>     (a snip's Save as -- the notification
+#         neuronet-snip shows when a snip is taken, 15 Nov 2026)
+#     neuronet-open collab <code>      (a Collaboration document: I13, PT80 ... -- the
+#         pop-up tools/collab_post.py shows when the team adds one, 8 Nov 2026)
+#     neuronet-open book <kind> <id>
+#         kind: training | puzzles | notebook | recipes | money | ebook -- the
+#         desktop Bookshelf (2026-10-02): opens it in NeuroNet's reader, and
+#         closing it puts NeuroNet away again.
+#
+# The Omarchy menu's NeuroNet rows use this (neuronet-menu writes them). It
+# shows the tool with neuronet-quick, then asks NeuroNet to open the item
+# (neuronet-call open.note / open.recipe -> SS.boardDo in ui/app.js).
+set -u
+HERE="$(dirname "$(readlink -f "$0")")"
+kind="${1:-}"; what="${2:-}"
+case "$kind" in
+  note)   section=notes;   payload=$(jq -nc --arg v "$what" '{path: $v}') ;;
+  recipe) section=cookery; payload=$(jq -nc --arg v "$what" '{id: $v}') ;;
+  collab) section=notes;  payload=$(jq -nc --arg v "$what" '{ref: $v}') ;;
+  snip)   section=photos; payload=$(jq -nc --argjson v "${what//[^0-9]/}" '{n: $v}') ;;
+  book)
+    id="${3:-}"
+    case "$what" in
+      training) section=training ;; puzzles) section=games ;; recipes) section=cookery ;;
+      money) section=money ;; notebook|ebook) section=notes ;;
+      *) echo "neuronet-open book: no such kind of book: $what" >&2; exit 2 ;;
+    esac
+    [ -n "$id" ] || { echo "neuronet-open: which book?" >&2; exit 2; }
+    payload=$(jq -nc --arg k "$what" --arg i "$id" '{kind: $k, id: $i}') ;;
+  *) echo "Usage: neuronet-open note <path> | recipe <id> | book <kind> <id> | collab <code> | snip <number>" >&2; exit 2 ;;
+esac
+[ -n "$what" ] || { echo "neuronet-open: nothing to open" >&2; exit 2; }
+"$HERE/neuronet-quick" open "$section" >/dev/null 2>&1
+res=$("$HERE/neuronet-call" "open.$kind" "$payload")
+if ! printf '%s' "$res" | jq -e '.ok' >/dev/null 2>&1; then
+  err=$(printf '%s' "$res" | jq -r '.error // empty' 2>/dev/null)
+  omarchy-notification-send --app-name NeuroNet "NeuroNet" "${err:-That could not be opened.}" >/dev/null 2>&1 \
+    || notify-send -a NeuroNet "NeuroNet" "${err:-That could not be opened.}" >/dev/null 2>&1 || true
+  exit 1
+fi

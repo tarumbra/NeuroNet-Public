@@ -1,0 +1,55 @@
+#!/bin/bash
+# neuronet-raise -- bring a NeuroNet window to the front on KDE Plasma.
+#
+#     neuronet-raise NeuroNet            un-minimise it, put it on this desktop, focus it
+#     neuronet-raise NeuroNet --center   ... and centre it (the popup)
+#
+# KDE Plasma (Wayland) won't let an app pull its own window in front of what
+# you're using ("focus stealing prevention"): shown from the background it
+# only flashes in the taskbar. KWin itself may, so this hands KWin a one-off
+# script over the session bus (org.kde.KWin /Scripting) that finds the window
+# by its app id and activates it, then unloads it. Cam, 2026-10-14: KDE mode.
+#
+# Anywhere else (no KWin on the bus) it does nothing and says nothing: the
+# app's own show is all there is. Hyprland never runs this (neuronet-quick
+# uses its scratchpad there).
+set -u
+id="${1:-}"; center="${2:-}"
+[ -n "$id" ] || { echo "Usage: neuronet-raise <app id> [--center]" >&2; exit 2; }
+# spliced into a script below: an app id and nothing else
+[[ "$id" =~ ^[A-Za-z0-9._-]+$ ]] || exit 2
+
+busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
+  NameHasOwner s org.kde.KWin 2>/dev/null | grep -q true || exit 0
+
+js="$(mktemp --suffix=.js "${XDG_RUNTIME_DIR:-/tmp}/neuronet-raise.XXXXXX")"
+trap 'rm -f "$js"' EXIT
+cat >"$js" <<EOF
+(function () {
+  var want = "$id".toLowerCase();
+  var list = workspace.windowList ? workspace.windowList() : workspace.clientList();   // Plasma 6 : 5
+  for (var i = 0; i < list.length; i++) {
+    var w = list[i];
+    if (String(w.resourceClass).toLowerCase() !== want && String(w.desktopFileName).toLowerCase() !== want) continue;
+    if (w.minimized) w.minimized = false;
+    if (w.desktops !== undefined && workspace.currentDesktop) w.desktops = [workspace.currentDesktop];
+    if ("$center" === "--center") {
+      var a = workspace.clientArea(KWin.PlacementArea, w), g = w.frameGeometry;
+      w.frameGeometry = { x: Math.round(a.x + (a.width - g.width) / 2), y: Math.round(a.y + (a.height - g.height) / 2),
+                          width: g.width, height: g.height };
+    }
+    if (workspace.activeWindow !== undefined) workspace.activeWindow = w; else workspace.activeClient = w;
+    break;
+  }
+})();
+EOF
+
+name="neuronet-raise-$$"
+n=$(busctl --user call org.kde.KWin /Scripting org.kde.kwin.Scripting loadScript ss "$js" "$name" 2>/dev/null | awk '{print $2}')
+[ -n "$n" ] || exit 0
+# Plasma 6 names the script's object /Scripting/Script<n>; Plasma 5 /<n>
+busctl --user call org.kde.KWin "/Scripting/Script$n" org.kde.kwin.Script run >/dev/null 2>&1 \
+  || busctl --user call org.kde.KWin "/$n" org.kde.kwin.Script run >/dev/null 2>&1
+sleep 0.2
+busctl --user call org.kde.KWin /Scripting org.kde.kwin.Scripting unloadScript s "$name" >/dev/null 2>&1
+exit 0

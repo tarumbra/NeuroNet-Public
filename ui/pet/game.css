@@ -1,0 +1,464 @@
+/* ==========================================================================
+   NeuroPets -- the game's own look (2026-10-03).
+
+   Cam: "look over the whole app and modernize the UI ... look in
+   /home/cam/Pictures/NeuroPets Reference UI for a refference" (Melvor Idle):
+   a dark slate sidebar of skills with their levels, a coloured bar on top
+   with the page's icon, a panel of LEVEL / XP badges over one long bar, and
+   cards with a coloured top edge. Pixel art stays ("later we will be moving
+   to Vectors"). Loaded AFTER pet.css: the tokens pet.css uses (--panel,
+   --line, ...) are set here, and its cards are re-skinned at the bottom.
+   ========================================================================== */
+:root {
+  --bg: #1b1e27;
+  --bg2: #20242f;
+  --panel: #282d3b;
+  --elevated: #2e3444;
+  --hover: #353c4f;
+  --line: #3a4154;
+  --line-strong: #4b5469;
+  --ink: #e9ecf3;
+  --text: #e9ecf3;
+  --muted: #9aa4b8;
+  --faint: #6c7589;
+  --good: #31b36b;
+  --info: #4f8fe6;
+  --warn: #e3a33a;
+  --bad: #e05656;
+  --pink: #e8a0bf;
+  --danger: #e05656;
+  --accent: #e8a0bf;
+  --radius: 8px;
+  --radius-lg: 10px;
+  --ease: cubic-bezier(.3, .7, .2, 1);
+  --side-w: 248px;
+  --top-h: 60px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body.np {
+  background: var(--bg); color: var(--ink);
+  font: 14px/1.45 "Inter", "Noto Sans", "Segoe UI", "Ubuntu", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased; overflow: hidden;
+}
+img { image-rendering: pixelated; }
+a { color: var(--info); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #3a4154; border-radius: 6px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---- the shell: sidebar | top bar over the page ---------------------------------------- */
+.np-app { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); height: 100vh; }
+.np-side { background: #161922; border-right: 1px solid #10131a; display: flex; flex-direction: column; min-height: 0; }
+.np-brand { display: flex; align-items: center; gap: 10px; padding: 14px 16px 12px; border-bottom: 1px solid #10131a; }
+.np-brand img { width: 36px; height: 36px; }
+.np-brand b { display: block; font-size: 1.15rem; letter-spacing: .02em; }
+.np-brand small { color: var(--faint); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+.np-nav { flex: 1; overflow-y: auto; padding: 6px 0 12px; }
+.np-group { margin-top: 10px; }
+.np-group > h6 { margin: 0; padding: 6px 18px 4px; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); font-weight: 700; }
+.np-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 16px 6px 18px; border: 0; background: none;
+  color: #cdd3e0; font: inherit; font-size: .9rem; text-align: left; cursor: pointer; position: relative; }
+.np-row:hover { background: #1f2330; color: #fff; }
+.np-row.on { background: #232838; color: #fff; box-shadow: inset 3px 0 0 var(--row-accent, var(--pink)); }
+.np-row img { width: 22px; height: 22px; object-fit: contain; flex: none; }
+.np-row .np-row-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-row .np-row-n { color: var(--faint); font-size: .75rem; font-variant-numeric: tabular-nums; }
+.np-row.busy .np-row-name::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 7px; border-radius: 50%;
+  background: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 25%, transparent); vertical-align: 1px; animation: np-pulse 1.6s ease-in-out infinite; }
+@keyframes np-pulse { 50% { opacity: .35; } }
+.np-side-foot { border-top: 1px solid #10131a; padding: 10px 16px; display: flex; flex-direction: column; gap: 6px; }
+.np-switch { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .82rem; cursor: pointer; }
+.np-switch input { accent-color: var(--warn); }
+
+.np-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.np-top { height: var(--top-h); flex: none; display: flex; align-items: center; gap: 14px; padding: 0 22px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 88%, #000), color-mix(in srgb, var(--accent) 62%, #000)); color: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.25); position: relative; z-index: 2; }
+.np-top-icon { width: 40px; height: 40px; border-radius: 9px; background: rgba(255,255,255,.92); display: grid; place-items: center; flex: none; }
+.np-top-icon img { width: 30px; height: 30px; object-fit: contain; }
+.np-top h1 { margin: 0; font-size: 1.2rem; font-weight: 700; letter-spacing: .01em; }
+.np-top-hint { font-size: .8rem; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-top-title { min-width: 0; display: flex; flex-direction: column; }
+.np-top-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; }
+.np-chip { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; border-radius: 8px; border: 0;
+  background: rgba(0,0,0,.28); color: #fff; font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.np-chip:hover { background: rgba(0,0,0,.4); }
+.np-chip img { width: 20px; height: 20px; }
+.np-chip .np-mini { width: 60px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.2); overflow: hidden; }
+.np-chip .np-mini span { display: block; height: 100%; background: #6be39a; }
+.np-chip .np-mini span.mid { background: #ffd76a; } .np-chip .np-mini span.low { background: #ff7a7a; }
+.np-chip.sandbox { background: #f2c43c; color: #2a1d00; }
+.np-scroll { flex: 1; overflow: auto; min-height: 0;
+  background: radial-gradient(1200px 500px at 70% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%), var(--bg); }
+.np-host { padding: 22px 26px 40px; max-width: 1500px; }
+
+/* toasts: every message, instead of a line on each page */
+/* above every pop-up (the crafting window is 9000-9100), so "bag full" and "you made..." show while it's open (2026-10-11) */
+.np-toasts { position: fixed; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; z-index: 9500; pointer-events: none; }
+.np-toast { max-width: 420px; padding: 10px 14px; border-radius: 8px; background: #2e3444; color: var(--ink); font-size: .86rem;
+  border-left: 4px solid var(--good); box-shadow: 0 8px 24px rgba(0,0,0,.35); animation: np-toast-in .18s ease-out; pointer-events: auto; }
+.np-toast.bad { border-left-color: var(--bad); }
+.np-toast.out { opacity: 0; transform: translateY(6px); transition: .25s; }
+@keyframes np-toast-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* ---- the basics pet.js uses (NeuroNet used to provide them) --------------------------------- */
+.page-h { margin: 0 0 4px; font-size: 1.25rem; font-weight: 700; }
+.stamp { color: var(--muted); font-size: .8rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 6px;
+  border: 0; background: #3a4155; color: #eef1f7; font: inherit; font-size: .86rem; font-weight: 600; cursor: pointer;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.22); transition: filter .12s, transform .08s; }
+.btn:hover:not(:disabled) { filter: brightness(1.15); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn-sm { height: 28px; padding: 0 10px; font-size: .8rem; }
+.btn-primary { background: var(--good); color: #fff; }
+.btn-quiet { background: transparent; box-shadow: none; color: var(--muted); }
+.btn-quiet:hover:not(:disabled) { background: var(--hover); filter: none; color: var(--ink); }
+.btn img { width: 18px; height: 18px; }
+.input, select.input { height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line); background: #1f2330; color: var(--ink);
+  font: inherit; font-size: .85rem; }
+.input:focus { outline: 2px solid color-mix(in srgb, var(--info) 60%, transparent); outline-offset: 0; border-color: var(--info); }
+.np-link { color: var(--info); font-size: .82rem; font-weight: 600; text-decoration: none; margin-left: auto; }
+.np-hint { margin: -4px 0 12px; color: var(--muted); font-size: .82rem; }
+
+/* ---- Melvor's skill panel: LEVEL / XP badges over one long bar ------------------------------ */
+.np-panel { background: var(--panel); border-radius: var(--radius-lg); border-top: 3px solid var(--accent); padding: 14px 18px 12px;
+  margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.np-sp-row, .np-statstrip { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px; }
+.np-statstrip { padding: 12px 18px; }
+.np-sp-stat { display: inline-flex; align-items: center; gap: 8px; font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #c9cfdc; }
+.np-badge { padding: 2px 8px; border-radius: 4px; background: #3a4155; color: #fff; font-size: .78rem; letter-spacing: .03em; text-transform: none; }
+.np-badge.good { background: var(--good); } .np-badge.info { background: var(--info); } .np-badge.warn { background: var(--warn); color: #241800; }
+.np-badge.bad { background: var(--bad); } .np-badge.pink { background: var(--pink); color: #2a1020; }
+.np-sp-bar { height: 10px; border-radius: 5px; background: #1c2029; overflow: hidden; margin-top: 12px; }
+.np-sp-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--good), #5ee08f); transition: width .5s var(--ease); }
+.np-sp-sub { margin-top: 6px; color: var(--muted); font-size: .76rem; font-variant-numeric: tabular-nums; }
+.np-skillpanel.pp-skill { border: 0; border-top: 3px solid var(--accent); }
+
+/* ---- pet.js's pieces, re-skinned: slate cards with a coloured top edge ---------------------- */
+.pp-page { max-width: none; }
+.pp-status { display: none !important; }            /* messages are toasts now */
+.pp-shop, .pp-area, .pp-skill, .pp-gather-card, .pp-villager, .pp-dex-card, .pp-incubator, .pp-pot, .pp-trip, .pp-reveal,
+.pp-stat-tile, .pp-hunt-fold, .pp-hunt-sum, .pp-item, .pp-egg, .pp-class, .pp-monster, .pp-petcard, .pp-plot, .pp-group.np-card {
+  background: var(--panel); border: 0; border-radius: var(--radius); box-shadow: 0 2px 8px rgba(0,0,0,.16);
+}
+.pp-gather-card, .pp-area, .pp-skill, .pp-villager, .pp-shop, .pp-trip, .pp-plot, .pp-petcard, .pp-incubator, .pp-pot {
+  border-top: 3px solid var(--accent);
+}
+.pp-gather-card.here, .pp-skill.boosted, .pp-hunt-fold.here { box-shadow: 0 0 0 2px var(--good) inset, 0 2px 8px rgba(0,0,0,.16); }
+.pp-label { color: #c9cfdc; letter-spacing: .1em; font-size: .7rem; }
+.pp-bar { background: #1c2029; border-radius: 4px; }
+.pp-bar span { background: linear-gradient(90deg, var(--good), #5ee08f); }
+.pp-skill-head b { font-size: .95rem; }
+.pp-level { color: var(--muted); font-size: .78rem; font-weight: 700; }
+.pp-subarea { background: #222634; border-radius: 6px; }
+.pp-subarea.essence { background: linear-gradient(135deg, #2e2747, #24304a); border: 1px solid #5b4a8a; }
+.pp-villager { text-align: center; }
+.pp-villager:hover, .pp-egg:hover { background: var(--elevated); }
+.pp-item { border-top: 3px solid #3a4155; }
+.pp-item.gem-5, .pp-item.gem-6, .pp-item.gem-7 { border-top-color: #b48cf0; }
+.pp-item.gem-3, .pp-item.gem-4 { border-top-color: var(--info); }
+.pp-hunt-fold > summary:hover { background: var(--elevated); }
+.pp-modal { background: rgba(8, 10, 16, .66); backdrop-filter: blur(3px); }
+.pp-modal-card { background: var(--panel); border: 0; border-top: 3px solid var(--accent); border-radius: var(--radius-lg); }
+.pp-rarity { border-radius: 4px; }
+.pp-boost { background: color-mix(in srgb, var(--good) 22%, transparent); color: #7fe3a8; border-radius: 4px; }
+.pp-need-chip.lack { color: #ff9090; }
+.pp-stage { background: linear-gradient(180deg, #2b3146, #232838 70%); border: 0; border-top: 3px solid var(--accent); }
+.pp-log li { padding: 4px 0; border-bottom: 1px solid #2f3546; }
+.pp-msg { font-family: inherit; }
+@media (max-width: 900px) {
+  :root { --side-w: 200px; }
+  .np-host { padding: 16px; }
+  .np-top-hint { display: none; }
+}
+
+/* ---- Melvor's material cards (2026-10-03): one per thing you gather, by area --------------- */
+.np-area { margin-bottom: 22px; }
+.np-area-h { margin: 0 0 10px; font-size: .95rem; font-weight: 700; letter-spacing: .02em; display: flex; align-items: baseline; gap: 10px; }
+.np-area-h small { color: var(--faint); font-weight: 600; font-size: .72rem; letter-spacing: .06em; }
+.np-area.here .np-area-h { color: #7fe3a8; }
+.np-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+.np-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 14px 12px 0;
+  background: var(--panel); border: 0; border-top: 3px solid var(--accent); border-radius: var(--radius); color: var(--ink);
+  font: inherit; text-align: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.16); overflow: hidden;
+  transition: transform .1s, background .15s; }
+.np-card:hover { background: var(--elevated); transform: translateY(-1px); }
+.np-card[aria-disabled="true"] { cursor: default; transform: none; }
+.np-card-verb { font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.np-card-title { font-size: .95rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.np-card-sub { font-size: .66rem; font-weight: 700; letter-spacing: .1em; color: #c9cfdc; }
+.np-card-icon { width: 48px; height: 48px; object-fit: contain; margin: 6px 0 2px; }
+.np-card-place { font-size: .72rem; color: var(--muted); }
+.np-card-needs, .np-card-drops { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 18px; }
+.np-card-drops img { width: 16px; height: 16px; opacity: .85; }
+.np-need { display: inline-flex; align-items: center; gap: 3px; padding: 1px 6px; border-radius: 4px; background: #1f2330; font-size: .7rem; font-weight: 700; color: #9fe3b8; }
+.np-need img { width: 14px; height: 14px; }
+.np-need.lack { color: #ff9090; background: #3a2228; }
+.np-card-state { min-height: 16px; font-size: .7rem; color: var(--muted); padding: 0 4px; }
+.np-card.here .np-card-state { color: #7fe3a8; font-weight: 700; }
+.np-card.blocked .np-card-state { color: #ff9a9a; }
+.np-card-bar { align-self: stretch; height: 6px; margin: 8px -12px 0; background: #1c2029; }
+.np-card-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--good), #5ee08f); transition: width 1s linear; }
+.np-card.here { box-shadow: 0 0 0 2px var(--good) inset, 0 2px 8px rgba(0,0,0,.16); }
+.np-card.locked { opacity: .5; }
+.np-card.locked .np-card-icon { filter: grayscale(.8) brightness(.7); }
+.np-card.essence { background: linear-gradient(160deg, #2e2747, #24304a); border-top-color: #b48cf0; }
+
+/* ---- 2026-10-04: Outskirts / Workshop hubs, the back link, the new Player sheet ---------------- */
+.np-title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.np-back { font: inherit; font-size: .75rem; font-weight: 700; color: inherit; background: rgba(0, 0, 0, .22); border: 0;
+  border-radius: 999px; padding: 3px 10px; cursor: pointer; white-space: nowrap; }
+.np-back:hover { background: rgba(0, 0, 0, .35); }
+.np-back[hidden] { display: none; }
+
+.pl-page { display: flex; flex-direction: column; gap: 14px; }
+.pl-hero { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; padding: 18px 20px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, var(--panel)), var(--panel) 60%);
+  border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.pl-avatar { width: 96px; height: 96px; image-rendering: pixelated; background: rgba(0, 0, 0, .2); border-radius: 12px; padding: 4px; }
+.pl-hero-main { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.pl-name { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pl-name h2 { margin: 0; font-size: 1.5rem; }
+.pl-chip { font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--ink); }
+.pl-chip.none { background: var(--elevated); color: var(--muted); }
+.pl-nums { display: flex; gap: 10px; flex-wrap: wrap; }
+.pl-nums > div { display: flex; flex-direction: column; padding: 6px 14px; background: rgba(0, 0, 0, .18); border-radius: var(--radius); min-width: 96px; }
+.pl-nums span { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.pl-nums b { font-size: 1.2rem; }
+.pl-hp { display: flex; align-items: center; gap: 10px; font-size: .85rem; color: var(--muted); }
+.pl-hp b { color: var(--ink); }
+.pl-hp-bar { flex: 1; max-width: 340px; height: 8px; border-radius: 4px; background: #1c2029; overflow: hidden; }
+.pl-hp-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--good), #5ee08f); }
+.pl-hp-bar span.mid { background: var(--warn); } .pl-hp-bar span.low { background: var(--bad); }
+.pl-comp { font-size: .8rem; color: var(--muted); }
+.pl-look { align-self: start; }
+
+.pl-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; }
+.pl-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 14px 16px; min-width: 0; }
+.pl-card h3 { margin: 0 0 10px; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.pl-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.pl-stat { display: grid; grid-template-columns: 24px 1fr auto; grid-template-rows: auto auto; column-gap: 10px; align-items: center;
+  padding: 8px 10px; background: var(--elevated); border-radius: var(--radius); }
+.pl-stat img { grid-row: span 2; width: 24px; height: 24px; image-rendering: pixelated; }
+.pl-stat-l { font-size: .8rem; color: var(--muted); }
+.pl-stat-v { font-size: 1.05rem; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.pl-stat-s { grid-column: 2 / 4; font-size: .72rem; color: var(--faint); }
+/* V17: the equipment stats grid (attack by style, Defence by kind of attack) */
+.pl-astats { grid-column: 1 / -1; width: 100%; border-collapse: collapse; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.pl-astats th, .pl-astats td { padding: 3px 6px; text-align: right; }
+.pl-astats th:first-child { text-align: left; }
+.pl-astats .pl-ahead th { font-size: .7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding-top: 8px; }
+.pl-astats tr:not(.pl-ahead) th { font-weight: 400; color: var(--faint); font-size: .72rem; }
+.pl-astats td { font-size: 1rem; font-weight: 700; }
+.pl-astats td.neg { color: var(--bad); }
+.pl-astats td.pos { color: var(--good); }
+.pl-extras { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pl-extras span { font-size: .75rem; padding: 3px 9px; border-radius: 999px; background: color-mix(in srgb, var(--info) 22%, transparent); }
+.pl-note { font-size: .78rem; color: var(--muted); margin: 10px 0 0; }
+.pl-card .pp-classes { grid-template-columns: 1fr; }
+.pl-card .pp-class .stamp { font-size: .75rem; }
+
+.pl-skillcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.pl-skillgroup h4 { margin: 0 0 6px; font-size: .72rem; color: var(--faint); text-transform: uppercase; letter-spacing: .06em; }
+.pl-skill { display: grid; grid-template-columns: 24px 1fr auto; grid-template-rows: auto auto; column-gap: 10px; row-gap: 4px; align-items: center;
+  width: 100%; padding: 7px 10px; margin-bottom: 4px; font: inherit; color: inherit; text-align: left; cursor: pointer;
+  background: transparent; border: 1px solid transparent; border-radius: var(--radius); }
+.pl-skill:hover { background: var(--elevated); border-color: var(--line); }
+.pl-skill.on { border-color: var(--pink); background: color-mix(in srgb, var(--pink) 10%, transparent); }
+.pl-skill img { grid-row: span 2; width: 24px; height: 24px; image-rendering: pixelated; }
+.pl-skill-name { font-weight: 600; font-size: .9rem; }
+.pl-skill-lv { font-weight: 700; font-variant-numeric: tabular-nums; }
+.pl-skill-lv small { color: var(--faint); font-weight: 400; }
+.pl-skill-bar { grid-column: 2 / 4; height: 5px; border-radius: 3px; background: #1c2029; overflow: hidden; }
+.pl-skill-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--good), #5ee08f); transition: width .4s var(--ease); }
+.pl-skill-xp { display: none; }
+.pl-star { color: var(--pink); }
+
+.pl-out-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.pl-out { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 14px 14px; font: inherit; color: inherit; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: var(--radius-lg);
+  transition: transform .15s var(--ease), background .15s; }
+.pl-out:hover { transform: translateY(-2px); background: var(--elevated); }
+.pl-out.here { border-color: var(--pink); box-shadow: 0 0 0 1px var(--pink) inset; }
+.pl-out img { width: 48px; height: 48px; image-rendering: pixelated; }
+.pl-out b { font-size: 1.05rem; }
+.pl-out-lv { font-size: .8rem; color: var(--muted); }
+.pl-out .pl-skill-bar { width: 80%; }
+.pl-out-tool { font-size: .75rem; color: var(--muted); }
+.pl-out-tool.worn { color: var(--bad); }
+.pl-out-state { font-size: .75rem; color: var(--pink); min-height: 1em; }
+
+@media (max-width: 900px) {
+  .pl-cols { grid-template-columns: 1fr; }
+  .pl-skillcols { grid-template-columns: 1fr; }
+  .pl-hero { grid-template-columns: auto 1fr; }
+  .pl-look { grid-column: 1 / -1; justify-self: start; }
+}
+
+/* the sidebar can be hidden (2026-10-08, Settings or the top bar's ☰) */
+.np-menu { flex: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(0,0,0,.15);
+  color: #fff; font-size: 18px; line-height: 1; cursor: pointer; }
+.np-menu:hover { background: rgba(0,0,0,.3); }
+body.np-noside .np-app { grid-template-columns: minmax(0, 1fr); }
+body.np-noside .np-side { display: none; }
+
+/* a game, not a page (2026-10-08): nothing turns blue on a stray drag, double-click or Ctrl+A -- typing still works */
+body.np { -webkit-user-select: none; user-select: none; }
+body.np input, body.np textarea, body.np [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
+body.np img, body.np svg image { -webkit-user-drag: none; }
+
+/* the navigation bar above every page (2026-10-09): Back, Map, Home -- and the page's own switch (the Sea chart) */
+.np-pathbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 26px 0; max-width: 1500px; }
+.np-path { font: inherit; font-size: .82rem; font-weight: 700; height: 32px; padding: 0 14px; border-radius: 8px; cursor: pointer;
+  color: var(--text, #e8e6ef); background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); }
+.np-path:hover:not([disabled]) { background: color-mix(in srgb, var(--accent) 22%, transparent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.np-path.on { background: color-mix(in srgb, var(--accent) 30%, transparent); border-color: var(--accent); }
+.np-path[disabled] { opacity: .45; cursor: not-allowed; }
+.np-pathbar + .np-host { padding-top: 12px; }
+@media (max-width: 700px) { .np-pathbar { padding: 12px 16px 0; } }
+
+/* the play area in the middle of the window (2026-10-09, Cam: "centralise the play area so it takes up the centre of the window") */
+.np-host, .np-pathbar { margin-left: auto; margin-right: auto; box-sizing: border-box; width: 100%; }
+/* the sandbox's quick switches in the sidebar (PT19 b1) */
+.np-quick { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 16px 8px 18px; }
+.np-quick-seg { display: inline-flex; border: 1px solid #8a5434; border-radius: 8px; overflow: hidden; }
+.np-quick-seg button { border: 0; background: #3a2214; color: #f1dcb4; padding: 3px 10px; cursor: pointer; font-size: 12px; font-weight: 600; }
+.np-quick-seg button + button { border-left: 1px solid #8a5434; }
+.np-quick-seg button:hover { background: #4e2d1b; }
+.np-quick-seg button.on { background: #f2c43c; color: #2a1608; }
+.np-quick-seg button:focus-visible, .np-quick-cls:focus-visible { outline: 2px solid #f2c43c; outline-offset: 1px; }
+.np-quick-cls { flex: 1 1 100px; min-width: 0; background: #ecd3a4; color: #3b2213; border: 1px solid #8a5434; border-radius: 8px; padding: 3px 6px; font-size: 12px; }
+
+/* ---- the Kit: bag, gear and magic at the side (Modernize/Reduce Nav, 2026-10-18) ---- */
+:root { --kit-w: 268px; }
+body.np-kit-on .np-app { grid-template-columns: var(--side-w) minmax(0, 1fr) var(--kit-w); }
+body.np-kit-on.np-noside .np-app { grid-template-columns: minmax(0, 1fr) var(--kit-w); }
+.np-kit { display: flex; flex-direction: column; min-height: 0; overflow: hidden; background: #2a1810 url(art/ui/planks.png) 0 0 / 666px 348px repeat;
+  border-left: 2px solid #22130b; color: #f1dcb4; }
+.np-kit[hidden] { display: none; }
+.np-kit.np-kit-flash .np-kit-body { animation: np-kit-flash .9s ease-out; }
+@keyframes np-kit-flash { from { box-shadow: inset 0 0 0 3px #f2c43c; } to { box-shadow: inset 0 0 0 3px transparent; } }
+@media (prefers-reduced-motion: reduce) { .np-kit.np-kit-flash .np-kit-body { animation: none; } }
+.np-kit-tabs { display: flex; align-items: stretch; gap: 2px; padding: 6px 6px 0; background: #22130b; }
+.np-kit-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 2px 4px; border: 0; border-radius: 8px 8px 0 0;
+  background: #3a2214; color: #d2b083; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+.np-kit-tab img { width: 24px; height: 24px; image-rendering: pixelated; }
+.np-kit-tab.on { background: #d8b67f; color: #3b2213; }
+.np-kit-tab:focus-visible, .np-kit-x:focus-visible { outline: 2px solid #f2c43c; outline-offset: -2px; }
+.np-kit-x { width: 26px; border: 0; background: none; color: #d2b083; font-size: 18px; cursor: pointer; }
+.np-kit-body { flex: 1; overflow-y: auto; padding: 10px; background: #d8b67f; color: #3b2213; display: flex; flex-direction: column; gap: 8px; }
+.np-kit-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; } .np-kit-head span { color: #6f4a2b; font-size: 12px; }
+.np-kit-sub { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #6f4a2b; margin-top: 2px; }
+.np-kit-hint { margin: 0; font-size: 11px; color: #6f4a2b; }
+.np-kit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.np-kit-slot { position: relative; aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 0; cursor: pointer;
+  background: url(art/ui/item-slot.png) center / 100% 100% no-repeat; }
+.np-kit-slot img { width: 34px; height: 34px; image-rendering: pixelated; pointer-events: none; }
+.np-kit-slot.empty { cursor: default; opacity: .45; }
+.np-kit-slot:hover:not(.empty) { filter: brightness(1.08); } .np-kit-slot:focus-visible { outline: 2px solid #7a4aa8; outline-offset: -1px; }
+.np-kit-n { position: absolute; left: 4px; top: 2px; font-size: 11px; font-weight: 800; color: #f2e05a; text-shadow: 1px 1px 0 #000, -1px 0 0 #000; pointer-events: none; }
+.np-kit-slot.using { outline: 2px solid #f2c43c; outline-offset: -2px; } .np-kit-slot.use-ok { outline: 2px solid #4e8a2c; outline-offset: -2px; } .np-kit-slot.dim { opacity: .4; }
+.np-kit-use { font-size: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px 6px; border-radius: 6px; background: #ecd3a4; }
+.np-kit-gear { display: grid; grid-template-columns: repeat(3, 64px); justify-content: center; gap: 6px; }
+.np-kit-gslot { width: 64px; height: 64px; display: grid; place-items: center; padding: 0; border: 0; cursor: pointer; background: url(art/ui/item-slot.png) center / 100% 100% no-repeat; }
+.np-kit-gslot { position: relative; } .np-kit-gslot img { width: 38px; height: 38px; image-rendering: pixelated; }
+.np-kit-gempty { font-size: 9px; color: #e0c69a; text-transform: uppercase; text-align: center; line-height: 1.1; padding: 0 4px; }
+.np-kit-gslot:focus-visible { outline: 2px solid #7a4aa8; outline-offset: -1px; }
+.np-kit-tools { display: flex; flex-wrap: wrap; gap: 4px; }
+.np-kit-tool { position: relative; display: grid; place-items: center; width: 36px; height: 36px; background: url(art/ui/item-slot.png) center / 100% 100% no-repeat; }
+.np-kit-tool img { width: 24px; height: 24px; image-rendering: pixelated; }
+.np-kit-tool small { position: absolute; left: 2px; top: 0; font-size: 9px; font-weight: 800; color: #f2e05a; text-shadow: 1px 1px 0 #000; }
+.np-kit-load, .np-kit-book { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.np-kit-spell { display: flex; flex-direction: column; align-items: flex-start; padding: 5px 7px; border-radius: 6px; border: 1px solid #a97a49; background: #ecd3a4;
+  color: #3b2213; font: inherit; font-size: 12px; font-weight: 700; text-align: left; cursor: pointer; }
+.np-kit-spell small { font-weight: 400; color: #6f4a2b; font-size: 10px; }
+.np-kit-spell.on { background: #7a4aa8; border-color: #4a2a6a; color: #fff; } .np-kit-spell.on small { color: #e8dcf5; }
+.np-kit-spell.empty { cursor: default; font-weight: 400; color: #8a6643; border-style: dashed; background: none; }
+.np-kit-more { align-self: flex-start; }
+.np-chip.np-kit-toggle.on { background: #f2c43c; color: #2a1608; }
+/* the right-click menu */
+.np-ctx { position: fixed; z-index: 9500; min-width: 180px; max-width: 280px; padding: 4px; border-radius: 8px; background: #2a1810; border: 2px solid #8a5434;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5); color: #f1dcb4; font-size: 13px; }
+.np-ctx-title { padding: 4px 8px 6px; font-weight: 800; color: #f2c43c; border-bottom: 1px solid #5a3420; margin-bottom: 2px; }
+.np-ctx-item { display: block; width: 100%; padding: 5px 8px; border: 0; border-radius: 5px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.np-ctx-item:hover:not(:disabled), .np-ctx-item:focus-visible { background: #4e2d1b; outline: none; }
+.np-ctx-item:disabled { opacity: .45; cursor: default; } .np-ctx-item.bad { color: #f08a6e; }
+.np-ctx-sep { height: 1px; margin: 3px 4px; background: #5a3420; }
+/* a middling window: the kit stays beside the page, slimmer (2026-10-20) */
+@media (max-width: 1100px) { :root { --kit-w: 228px; } .np-kit-tab span { font-size: 9px; } }
+/* a small window: the kit slides over the page from the right */
+@media (max-width: 760px) {
+  body.np-kit-on .np-app, body.np-kit-on.np-noside .np-app { grid-template-columns: var(--side-w) minmax(0, 1fr); }
+  body.np-kit-on.np-noside .np-app { grid-template-columns: minmax(0, 1fr); }
+  .np-kit { position: fixed; top: 0; right: 0; bottom: 0; width: min(var(--kit-w), 86vw); z-index: 800; box-shadow: -8px 0 24px rgba(0,0,0,.45); }
+}
+@media (prefers-reduced-motion: reduce) { .np-kit-slot:hover { filter: none; } }
+.np-kit-sets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.np-kit-set { display: flex; flex-direction: column; align-items: center; padding: 5px 4px; border-radius: 6px; border: 1px solid #a97a49; background: #ecd3a4;
+  color: #3b2213; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; overflow: hidden; text-overflow: ellipsis; }
+.np-kit-set small { font-weight: 400; font-size: 10px; color: #6f4a2b; }
+.np-kit-set.empty { border-style: dashed; background: none; font-weight: 400; color: #6f4a2b; }
+.np-kit-set.on { background: #4e8a2c; border-color: #2e5a1a; color: #fff; } .np-kit-set.on small { color: #dff0d0; }
+/* N22 (2026-10-20): the Combat and Skills tabs -- five tabs, so the labels stay small */
+.np-kit-tab { min-width: 0; font-size: 10px; } .np-kit-tab span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.np-kit-weapon { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; background: #ecd3a4; border: 1px solid #a97a49; }
+.np-kit-weapon img { width: 32px; height: 32px; image-rendering: pixelated; } .np-kit-weapon b { display: block; font-size: 13px; }
+.np-kit-weapon small, .np-kit-cbtn small, .np-kit-spick small { display: block; font-size: 10px; font-weight: 400; color: #6f4a2b; }
+.np-kit-stances { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.np-kit-cbtn { display: flex; flex-direction: column; align-items: flex-start; padding: 6px 8px; border-radius: 6px; border: 1px solid #a97a49; background: #ecd3a4;
+  color: #3b2213; font: inherit; font-size: 12px; font-weight: 700; text-align: left; cursor: pointer; min-height: 44px; }
+.np-kit-cbtn:hover:not(:disabled), .np-kit-spick:hover:not(:disabled) { filter: brightness(1.06); }
+.np-kit-cbtn:focus-visible, .np-kit-spec:focus-visible, .np-kit-spick:focus-visible, .np-kit-skill:focus-visible { outline: 2px solid #7a4aa8; outline-offset: 1px; }
+.np-kit-cbtn:disabled, .np-kit-spick:disabled { opacity: .5; cursor: default; }
+.np-kit-cbtn.stance.on { background: #c0392b; border-color: #7a2018; color: #fff; } .np-kit-cbtn.stance.on small { color: #f7d9d4; }
+.np-kit-cbtn.run { background: #5a3420; border-color: #2a1810; color: #f1dcb4; } .np-kit-cbtn.run small { color: #d2b083; }
+.np-kit-cbtn.go { background: #4e8a2c; border-color: #2e5a1a; color: #fff; } .np-kit-cbtn.go small { color: #dff0d0; }
+.np-kit-cbtn.go.danger { background: #a12a1d; border-color: #5a140c; }
+.np-kit-cbtn.on { outline: 2px solid #f2c43c; outline-offset: -2px; }
+.np-kit-moves { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.np-kit-spec { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 7px 8px; border-radius: 8px; border: 2px solid #2a1810;
+  background: #3a2214; color: #f1dcb4; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+.np-kit-spec > * { position: relative; } .np-kit-spec small { font-size: 10px; font-weight: 400; color: #e0c69a; }
+.np-kit-specfill { position: absolute !important; left: 0; top: 0; bottom: 0; background: #4e8a2c; opacity: .55; transition: width .3s; }
+.np-kit-spec.ready { border-color: #f2c43c; box-shadow: 0 0 0 2px rgba(242,196,60,.35); } .np-kit-spec.ready .np-kit-specfill { background: #f2c43c; opacity: .45; }
+.np-kit-spec.queued { border-color: #7a4aa8; } .np-kit-spec:disabled { cursor: default; }
+.np-kit-specs { display: flex; flex-wrap: wrap; gap: 4px; }
+.np-kit-spick img { width: 20px; height: 20px; vertical-align: middle; margin-right: 3px; }
+.np-kit-spick { padding: 3px 7px; border-radius: 6px; border: 1px solid #a97a49; background: #ecd3a4; color: #3b2213; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+.np-kit-spick.on { background: #7a4aa8; border-color: #4a2a6a; color: #fff; } .np-kit-spick.on small { color: #e8dcf5; }
+.np-kit-spell.next { outline: 2px solid #f2c43c; outline-offset: -2px; }
+.np-kit-skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+.np-kit-skill { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 2px; padding: 4px 6px 6px; border-radius: 4px;
+  border: 1px solid #2a1810; background: #4a3020; color: #f2e05a; font: inherit; cursor: pointer; }
+.np-kit-skill img { width: 24px; height: 24px; image-rendering: pixelated; }
+.np-kit-lv { display: flex; flex-direction: column; align-items: center; line-height: 1; font-weight: 800; text-shadow: 1px 1px 0 #000; }
+.np-kit-lv b { font-size: 13px; } .np-kit-lv small { font-size: 10px; padding-top: 2px; margin-top: 1px; border-top: 1px solid #c9a25a; min-width: 18px; text-align: center; }
+.np-kit-xp { position: absolute; left: 3px; right: 3px; bottom: 2px; height: 2px; background: rgba(0,0,0,.4); }
+.np-kit-xp span { display: block; height: 100%; background: #4e8a2c; }
+.np-kit-skill:hover { filter: brightness(1.15); }
+.np-kit-tip { display: none; position: absolute; z-index: 30; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 190px;
+  padding: 5px 8px; border: 1px solid #000; background: #4a3c22; color: #f1dcb4; font-size: 11px; font-weight: 400; line-height: 1.45; text-align: left; text-shadow: none; pointer-events: none; }
+.np-kit-tip b { color: #f2e05a; }
+.np-kit-skill:hover .np-kit-tip, .np-kit-skill:focus-visible .np-kit-tip { display: block; }
+.np-kit-skill:nth-child(3n+1) .np-kit-tip { left: 0; transform: none; } .np-kit-skill:nth-child(3n) .np-kit-tip { left: auto; right: 0; transform: none; }
+.np-kit-body { overflow-x: hidden; }
+.np-kit-search { flex: 1; min-width: 0; margin: 0 6px; padding: 2px 6px; border: 1px solid #a97a49; border-radius: 6px; background: #ecd3a4; color: #3b2213; font: inherit; font-size: 12px; }
+.np-kit-slot[hidden] { display: none; }
+.np-kit-sub small { font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 4px; }
+.np-kit-quick { display: flex; gap: 6px; } .np-kit-quick .pp-quick-slot { width: 48px; height: 48px; }
+.np-kit-plan { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+.np-kit-prow { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.np-kit-prow > span:first-child { font-weight: 700; } .np-kit-pctl { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.np-kit-pctl select.input { max-width: 120px; font-size: 11px; padding: 2px 4px; } .np-kit-pctl .stamp { font-size: 11px; }
+.pp-cmds.pp-cmds-kitted { display: block; } .pp-cmds-kit { margin: 0; font-size: 12px; line-height: 1.5; color: #ecd9b4; } .pp-cmds-kit b { color: #f2c43c; }
+@media (prefers-reduced-motion: reduce) { .np-kit-specfill { transition: none; } }
+.np-kit-why { margin: 0; padding-left: 16px; font-size: 11px; color: #6f4a2b; }
+/* the chips at the top of the left panel (Q6 q5, 2026-10-19) */
+.np-side-chips { display: flex; flex-direction: column; gap: 6px; padding: 4px 12px 10px; border-bottom: 1px solid #10131a; }
+.np-side-chips:empty { display: none; }
+.np-side-chips .np-chip { width: 100%; justify-content: flex-start; height: 34px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-side-chips .np-chip .np-mini { margin-left: auto; }

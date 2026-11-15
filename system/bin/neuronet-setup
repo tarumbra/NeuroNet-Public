@@ -1,0 +1,175 @@
+#!/bin/bash
+# neuronet-setup -- tell this computer where NeuroNet is, and wire it up.
+#
+#   neuronet-setup                   NeuroNet is the folder this script is in
+#   neuronet-setup --app DIR         ... or DIR
+#   neuronet-setup --data DIR        its data somewhere other than DIR/neuronet_data
+#   neuronet-setup --check           say what would change, change nothing
+#   neuronet-setup --app-only        no Omarchy here (install-app.sh): leave out
+#                                    the Omarchy-menu indexer and the widgets' shell
+#
+# NeuroNet System plan, Stage 1 (2026-09-29): nothing in NeuroNet's desktop
+# layer names a folder any more. This writes the one place that does --
+# ~/.config/neuronet/paths.json -- and puts in place the few things that
+# can't read it themselves:
+#
+#   ~/.local/bin/neuronet-path       answers "where is NeuroNet?"
+#   ~/.local/bin/neuronet-quick ...  NeuroNet's commands, found through it --
+#                                    so shortcuts, the dock and the launcher
+#                                    just say "neuronet-quick notes"
+#   ~/.config/systemd/user/neuronet-menu.{path,service}
+#   ~/.local/share/applications/NeuroNet.desktop
+#                                    made from system/templates/*.in for this
+#                                    computer's folders
+#
+# Run it again after moving NeuroNet or its data. Safe to run any number of
+# times: a file it replaces is kept as <file>.bak.<date> when it differs.
+set -euo pipefail
+
+SYS="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+APP="$(cd "$SYS/.." && pwd)"
+DATA=""
+DATA_GIVEN=""
+CHECK=""
+APP_ONLY=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --app) APP="$(cd "${2:?folder}" && pwd)"; shift 2 ;;
+    --data) DATA="$(realpath -m -- "${2:?folder}")"; DATA_GIVEN=1; shift 2 ;;
+    --check) CHECK=1; shift ;;
+    --app-only) APP_ONLY=1; shift ;;
+    -h|--help) sed -n '2,28p' "$0"; exit 0 ;;
+    *) echo "neuronet-setup: unknown option $1 (see --help)" >&2; exit 2 ;;
+  esac
+done
+# NeuroNet's folder can't be / or a system folder (or the home folder itself):
+# the updater copies new code over it. On Cam's desktop (2026-10-01) a copy
+# made with an empty folder variable ("sudo rsync ... "$N/"") put NeuroNet in /,
+# and paths.json then said "app": "/".
+unsafe_app() {
+  case "$(realpath -m -- "$1")" in
+    /|/bin|/boot|/dev|/etc|/home|/lib|/lib64|/mnt|/media|/opt|/proc|/root|/run|/sbin|/srv|/sys|/tmp|/usr|/usr/*|/var|"$(realpath -m -- "$HOME")") return 0 ;;
+  esac; return 1
+}
+unsafe_app "$APP" && { echo "neuronet-setup: NeuroNet can't live in $APP -- give it a folder of its own (e.g. ~/NeuroNet)" >&2; exit 1; }
+[ -f "$APP/neuronet.py" ] || { echo "neuronet-setup: $APP is not a NeuroNet folder (no neuronet.py)" >&2; exit 1; }
+
+# a computer set up with install-app.sh (no Omarchy) stays that way, whoever
+# runs this after it -- enable-updates.sh, the updater
+[ -f "${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/install-app.json" ] && APP_ONLY=1
+CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/neuronet"
+CONF="$CONF_DIR/paths.json"
+BIN="$HOME/.local/bin"
+UNITS="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
+APPS="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
+STAMP="$(date +%Y%m%d-%H%M%S)"
+COMMANDS="neuronet-quick neuronet-call neuronet-music neuronet-menu neuronet-capture neuronet-snip neuronet-media-art neuronet-open neuropets neurofarm neurocafe neuroarcana neurotrain claude-dock"
+
+# keep the data folder already set unless told otherwise
+if [ -z "$DATA" ] && [ -f "$CONF" ]; then
+  DATA="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("data") or "")' "$CONF" 2>/dev/null || true)"
+fi
+DATA_SHOWN="${DATA:-$APP/neuronet_data}"
+
+say() { printf '  %s\n' "$*"; }
+changed=0
+
+# put <content> at <dest>, keeping the old one if it differs
+place() {  # dest mode < content
+  local dest="$1" mode="$2" tmp
+  tmp="$(mktemp)"; cat > "$tmp"
+  if [ -f "$dest" ] && cmp -s "$tmp" "$dest"; then rm -f "$tmp"; return; fi
+  changed=$((changed + 1))
+  if [ -n "$CHECK" ]; then say "would write $dest"; rm -f "$tmp"; return; fi
+  mkdir -p "$(dirname "$dest")"
+  [ -e "$dest" ] && cp -a -- "$dest" "$dest.bak.$STAMP"
+  install -m "$mode" "$tmp" "$dest"; rm -f "$tmp"
+  say "wrote $dest"
+}
+
+render() {  # template
+  sed -e "s#@APP@#$APP#g" -e "s#@DATA@#$DATA_SHOWN#g" "$SYS/templates/$1"
+}
+
+echo "NeuroNet: $APP"
+echo "Its data: $DATA_SHOWN"
+
+# A data folder chosen with --data that isn't there yet -- a new computer --
+# is made now. Only then: one remembered from before and missing now may be a
+# drive that isn't plugged in, and an empty folder in its place would open
+# NeuroNet empty (neuronet.py won't use a missing one either).
+if [ -n "$DATA_GIVEN" ] && [ ! -d "$DATA" ]; then
+  changed=$((changed + 1))
+  if [ -n "$CHECK" ]; then say "would make $DATA"
+  elif mkdir -p -- "$DATA" 2>/dev/null; then say "made $DATA"
+  else echo "neuronet-setup: can't make $DATA (is it somewhere you can write?)" >&2; exit 1; fi
+fi
+
+python3 - "$APP" "$DATA" <<'PY' | place "$CONF" 644
+import json, sys
+app, data = sys.argv[1:3]
+out = {"app": app}
+if data:
+    out["data"] = data
+print(json.dumps(out, indent=2))
+PY
+
+place "$BIN/neuronet-path" 755 < "$SYS/bin/neuronet-path"
+place "$BIN/neuronet-doctor" 755 < "$SYS/bin/neuronet-doctor"
+place "$BIN/neuronet-update" 755 < "$SYS/bin/neuronet-update"
+# a computer NeuroNet is developed on (a git checkout): neuronet-dev linked, not copied -- the dev
+# kit's copy (2026-10-24) stayed as it was while main's moved on (2026-11-01)
+if [ -e "$APP/.git" ] && [ -f "$SYS/bin/neuronet-dev" ] && [ "$(readlink -- "$BIN/neuronet-dev")" != "$SYS/bin/neuronet-dev" ]; then
+  changed=$((changed + 1))
+  if [ -n "$CHECK" ]; then say "would link $BIN/neuronet-dev"
+  else
+    mkdir -p "$BIN"; [ -f "$BIN/neuronet-dev" ] && [ ! -L "$BIN/neuronet-dev" ] && cp -a -- "$BIN/neuronet-dev" "$BIN/neuronet-dev.bak.$STAMP"
+    ln -sfn -- "$SYS/bin/neuronet-dev" "$BIN/neuronet-dev"; say "linked $BIN/neuronet-dev"
+  fi
+fi
+for c in $COMMANDS; do
+  [ -f "$APP/$c" ] || continue
+  [ -n "$APP_ONLY" ] && [ "$c" = claude-dock ] && continue   # the Claude dock lives on Omarchy's top bar
+  place "$BIN/$c" 755 < "$SYS/bin/neuronet-shim"
+done
+# retired with the desktop pet and farm cards (2026-10-15): take our old shims out
+for c in neuropets-call neurofarm-call; do
+  [ -f "$BIN/$c" ] && cmp -s "$BIN/$c" "$SYS/bin/neuronet-shim" || continue
+  changed=$((changed + 1))
+  if [ -n "$CHECK" ]; then say "would take out $BIN/$c (no longer used)"; else rm -f -- "$BIN/$c"; say "took out $BIN/$c (no longer used)"; fi
+done
+
+if [ -z "$APP_ONLY" ]; then   # the Omarchy menu's indexer
+  place "$UNITS/neuronet-menu.path" 644 < <(render neuronet-menu.path.in)
+  place "$UNITS/neuronet-menu.service" 644 < <(render neuronet-menu.service.in)
+fi
+place "$APPS/NeuroNet.desktop" 644 < <(render NeuroNet.desktop.in)
+# NeuroPets, the game, in its own window (2026-10-03)
+[ -f "$SYS/templates/NeuroPets.desktop.in" ] && place "$APPS/NeuroPets.desktop" 644 < <(render NeuroPets.desktop.in)
+# NeuroFarm, the farming game, in its own window (2026-10-07)
+[ -f "$SYS/templates/NeuroFarm.desktop.in" ] && place "$APPS/NeuroFarm.desktop" 644 < <(render NeuroFarm.desktop.in)
+# NeuroCafe, the cafe game, in its own window (2026-10-20, V19)
+[ -f "$SYS/templates/NeuroCafe.desktop.in" ] && place "$APPS/NeuroCafe.desktop" 644 < <(render NeuroCafe.desktop.in)
+# NeuroArcana, the tarot card battle game (its own project, carried by NeuroNet from 1.0.163)
+[ -f "$SYS/templates/NeuroArcana.desktop.in" ] && place "$APPS/NeuroArcana.desktop" 644 < <(render NeuroArcana.desktop.in)
+# NeuroTrain, the training planner (~/Work/NeuroTrain, 2026-11-10); the menu entry opens NeuroNet Training where it isn't installed
+[ -f "$SYS/templates/NeuroTrain.desktop.in" ] && place "$APPS/NeuroTrain.desktop" 644 < <(render NeuroTrain.desktop.in)
+# updates (Stage 6): installed everywhere, switched on only where there's an
+# update.json -- a computer from the ISO (neuronet-update --enable)
+place "$UNITS/neuronet-update.service" 644 < <(render neuronet-update.service.in)
+place "$UNITS/neuronet-update.timer" 644 < <(render neuronet-update.timer.in)
+# the desktop widgets in their own Quickshell (2026-10-05); install.sh lays the
+# shell out and starts it
+
+if [ -n "$CHECK" ]; then
+  [ "$changed" = 0 ] && say "nothing to change" || say "$changed file(s) would change"
+  exit 0
+fi
+if [ "$changed" -gt 0 ]; then
+  systemctl --user daemon-reload 2>/dev/null || true
+  if systemctl --user is-enabled neuronet-menu.path >/dev/null 2>&1; then
+    systemctl --user restart neuronet-menu.path 2>/dev/null || true
+  fi
+  command -v update-desktop-database >/dev/null && update-desktop-database "$APPS" 2>/dev/null || true
+fi
+say "done ($changed file(s) changed)"

@@ -1,0 +1,196 @@
+{
+ "FIELD_RECIPES": {
+  "//": "Combining in the bag (V2, carried 10-1 with Cam's yes, 16 October; Cam: \"Follow the economists suggestion of starting small with the hunters 3\"). The first field recipes are the Hunter's living-off-the-land crafts (Part 4), which used to be one-off buttons; now one way in: Use one thing with another. use / on: the two things (either way round; \"@knife\" is any hunting knife, carried or held); act: the rule that makes it (landAct); pass: the \"on\" item goes to the rule as its item. One home per recipe (the team's condition): a field recipe is made only in the bag. Step 2 (16 October, the Economist's plan: arrows and bandages for every class, pages from quests and creatures only): a recipe is known by a Hunter with a knife (hunter: true) or by anyone who has read its PAGE (a scroll, read from the bag like a spell scroll); a recipe with needs (each make takes these, gives n) runs through fieldMake, not landAct -- at about two-thirds of a bench's xp (the Mathematician's condition).",
+  "list": [
+   {
+    "id": "whittle",
+    "name": "Arrow shafts",
+    "use": "@knife",
+    "on": [
+     "twigs",
+     "oak"
+    ],
+    "act": "whittle",
+    "pass": true,
+    "makes": "arrowshaft",
+    "about": "Whittle twigs or an oak log into arrow shafts (birch goes to the fletching table).",
+    "hunter": true
+   },
+   {
+    "id": "carve",
+    "name": "Bone arrowheads",
+    "use": "@knife",
+    "on": [
+     "bones"
+    ],
+    "act": "carve",
+    "makes": "bonearrowheads",
+    "about": "Carve bones into arrowheads.",
+    "hunter": true
+   },
+   {
+    "id": "bonearrows",
+    "name": "Bone arrows",
+    "use": "arrowshaft",
+    "on": [
+     "bonearrowheads"
+    ],
+    "also": "feather",
+    "act": "bonearrows",
+    "makes": "bonearrow",
+    "about": "A shaft, a bone arrowhead and a feather.",
+    "hunter": true
+   },
+   {
+    "id": "improvise",
+    "name": "Improvised arrows",
+    "use": "arrowshaft",
+    "on": [
+     "leaflitter"
+    ],
+    "makes": "improvisedarrow",
+    "about": "A shaft with leaf litter for flights. Hunters with a knife know it; anyone can learn it from Ash's notes.",
+    "hunter": true,
+    "page": "pageimprovise",
+    "needs": {
+     "arrowshaft": 1,
+     "leaflitter": 1
+    },
+    "n": 1,
+    "skill": "fletching",
+    "xp": 0.5
+   },
+   {
+    "id": "bandage",
+    "name": "Bandages",
+    "use": "cloth",
+    "on": [
+     "herb"
+    ],
+    "page": "pagebandage",
+    "needs": {
+     "cloth": 1,
+     "herb": 3
+    },
+    "n": 2,
+    "skill": "crafting",
+    "xp": 5,
+    "makes": "bandage",
+    "about": "Tear a cloth into strips and pack them with herbs: two bandages. Learnt from Beekeeper Nell's page."
+   },
+   {
+    "id": "knap",
+    "//": "I11 (2026-10-20, Cam: \"make flint arrows from the bag as well, using a chisel on flint to shape to arrow heads ... Range level 3 will unlock it by default as a hunter\"; other classes: a page). The fletching bench's flint recipes moved here -- one home per recipe.",
+    "name": "Flint arrowheads",
+    "use": "chisel",
+    "on": [
+     "flint"
+    ],
+    "makes": "flintarrowheads",
+    "about": "Knap flint into arrowheads with a chisel (it wears, a use a head). A Hunter knows how from Ranged 3; anyone can learn it from the knapper's page.",
+    "hunterAt": {
+     "ranged": 3
+    },
+    "page": "pageflint",
+    "needs": {
+     "flint": 1
+    },
+    "n": 1,
+    "wears": "chisel",
+    "skill": "fletching",
+    "xp": 0.9
+   },
+   {
+    "id": "flintarrows",
+    "name": "Flint arrows",
+    "use": "arrowshaft",
+    "on": [
+     "flintarrowheads"
+    ],
+    "also": "feather",
+    "makes": "flintarrow",
+    "about": "A shaft, a flint arrowhead and a feather: a flint arrow, better than bone or twig. A Hunter knows how from Ranged 3; anyone can learn it from the knapper's page.",
+    "hunterAt": {
+     "ranged": 3
+    },
+    "page": "pageflint",
+    "needs": {
+     "arrowshaft": 1,
+     "flintarrowheads": 1,
+     "feather": 1
+    },
+    "n": 1,
+    "skill": "fletching",
+    "xp": 2.5
+   }
+  ]
+ },
+ "FIELD_ITEMS": {
+  "//": "What step 2 adds: the recipe pages (scrolls: read from the bag, the recipe is yours for good) and the bandage (a small heal, in a fight or out -- it costs your next attack, like food). Icon sheet 71.",
+  "pageimprovise": {
+   "name": "Ash's notes: improvised arrows",
+   "gem": 2,
+   "price": 30,
+   "learn": {
+    "field": "improvise"
+   }
+  },
+  "pagebandage": {
+   "name": "Nell's page: bandages",
+   "gem": 2,
+   "price": 30,
+   "learn": {
+    "field": "bandage"
+   }
+  },
+  "pageflint": {
+   "name": "The knapper's page: flint arrows",
+   "gem": 2,
+   "price": 30,
+   "iconAs": "pageimprovise",
+   "learn": {
+    "field": "knap"
+   }
+  },
+  "bandage": {
+   "name": "Bandage",
+   "gem": 1,
+   "heal": 7,
+   "verb": "bound a wound with",
+   "price": 10
+  }
+ },
+ "FIELD_PAGES": {
+  "//": "Where pages turn up besides their quests (Ash's \"Too many legs\", Nell's \"Stung\"): carried by these creatures, one kill in `chance`, only while you don't know the recipe and have no copy. Rolled apart from the fight's own dice, so fights play out the same.",
+  "pageimprovise": {
+   "from": [
+    "fox",
+    "hare",
+    "boar",
+    "deer",
+    "wolf"
+   ],
+   "chance": 0.006
+  },
+  "pageflint": {
+   "from": [
+    "pig",
+    "goat",
+    "cattledog",
+    "hedgehog",
+    "straydog"
+   ],
+   "chance": 0.006
+  },
+  "pagebandage": {
+   "from": [
+    "snake",
+    "spider",
+    "wildcat",
+    "bat",
+    "straydog"
+   ],
+   "chance": 0.006
+  }
+ }
+}

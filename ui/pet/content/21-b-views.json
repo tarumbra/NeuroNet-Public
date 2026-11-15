@@ -1,0 +1,20 @@
+{
+  "//": [
+    "Content for ui/pet/core/21-b-views.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "TOKENS_FOR": {"Common": 5, "Uncommon": 10, "Rare": 25, "Special": 50},
+  "NEEDS": {
+    "egg": "",
+    "away": "",
+    "injured": "Ouch… resting",
+    "sick": "I don't feel well…",
+    "asleep": "Zzz…",
+    "hungry": "I'm hungry!",
+    "sleepy": "So sleepy…",
+    "dirty": "I need a clean!",
+    "sad": "Play with me?",
+    "happy": "♪",
+    "ok": ""
+  }
+}

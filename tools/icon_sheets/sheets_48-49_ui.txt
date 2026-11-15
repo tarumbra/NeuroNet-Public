@@ -1,0 +1,4 @@
+# Not items: the game's own icons for the top bar, sidebar, benches and places (2026-10-10).
+48: obj_sun,obj_house,obj_map,obj_village,obj_furnace,obj_anvil,obj_bench,obj_tanner,obj_fletch,obj_herbs,obj_gems,obj_kitchen,obj_compost,obj_wheel,obj_chest,heart
+49 [2x1] {icon- Sheet 49.jpeg}: tome,starteregg
+50 [2x2] {Icon- Sheet 49.jpeg}: specialegg,bredegg,coastegg,poop   # Cam's file name says 49

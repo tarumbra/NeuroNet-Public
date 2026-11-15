@@ -1,0 +1,438 @@
+{
+ "THIEF_ITEMS": {
+  "//": "Battle Re-work Part 7 (2026-10-15): the Thief's things. A dagger is a Thief's blade (dagger: true); one in each hand stabs twice a round, each a little softer (THIEF.dual). Throwing knives are thrown from Tools (hunterTool kind throw: damage [least, most], keep: picked up again after a win) -- they carry your poison. Poisons and venoms coat your weapon (coat: what it does on a hit, hits: how many hits a coating lasts). The venom sac drops from snakes and spiders.",
+  "bronzedagger": {
+   "name": "Bronze dagger",
+   "price": 28,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 3,
+    "style": "melee",
+    "dagger": true,
+    "cls": "thief",
+    "req": {
+     "attack": 1
+    }
+   }
+  },
+  "irondagger": {
+   "name": "Iron dagger",
+   "price": 106,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 4,
+    "style": "melee",
+    "dagger": true,
+    "cls": "thief",
+    "req": {
+     "attack": 10
+    }
+   }
+  },
+  "steeldagger": {
+   "name": "Steel dagger",
+   "price": 122,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 9,
+    "style": "melee",
+    "dagger": true,
+    "cls": "thief",
+    "req": {
+     "attack": 20
+    }
+   }
+  },
+  "mithrildagger": {
+   "name": "Mithril dagger",
+   "price": 264,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 13,
+    "style": "melee",
+    "dagger": true,
+    "cls": "thief",
+    "req": {
+     "attack": 30
+    }
+   }
+  },
+  "adamantdagger": {
+   "name": "Adamant dagger",
+   "price": 383,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 17,
+    "style": "melee",
+    "dagger": true,
+    "cls": "thief",
+    "req": {
+     "attack": 40
+    }
+   }
+  },
+  "runedagger": {
+   "name": "Rune dagger",
+   "price": 516,
+   "gem": 9,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 21,
+    "style": "melee",
+    "dagger": true,
+    "cls": "thief",
+    "req": {
+     "attack": 50
+    }
+   }
+  },
+  "throwingknife": {
+   "name": "Throwing knives",
+   "price": 2,
+   "gem": 2,
+   "hunterTool": {
+    "kind": "throw",
+    "tier": 1,
+    "damage": [
+     2,
+     6
+    ],
+    "keep": 0.5
+   }
+  },
+  "steelthrowingknife": {
+   "name": "Steel throwing knives",
+   "price": 13,
+   "gem": 4,
+   "hunterTool": {
+    "kind": "throw",
+    "tier": 2,
+    "damage": [
+     4,
+     11
+    ],
+    "keep": 0.5
+   }
+  },
+  "runethrowingknife": {
+   "name": "Rune throwing knives",
+   "price": 52,
+   "gem": 8,
+   "hunterTool": {
+    "kind": "throw",
+    "tier": 3,
+    "damage": [
+     8,
+     18
+    ],
+    "keep": 0.5
+   }
+  },
+  "venomsac": {
+   "name": "Venom sac",
+   "gem": 3,
+   "price": 6
+  },
+  "weakpoison": {
+   "name": "Weak poison",
+   "price": 11,
+   "gem": 2,
+   "coat": {
+    "poison": [
+     1,
+     3
+    ],
+    "hits": 20
+   }
+  },
+  "strongpoison": {
+   "name": "Strong poison",
+   "price": 17,
+   "gem": 4,
+   "coat": {
+    "poison": [
+     2,
+     4
+    ],
+    "hits": 25
+   }
+  },
+  "deadlypoison": {
+   "name": "Deadly poison",
+   "price": 114,
+   "gem": 6,
+   "coat": {
+    "poison": [
+     3,
+     5
+    ],
+    "hits": 30
+   }
+  },
+  "paralyticvenom": {
+   "name": "Paralytic venom",
+   "price": 33,
+   "gem": 5,
+   "coat": {
+    "stun": 0.12,
+    "hits": 20
+   }
+  },
+  "weakeningvenom": {
+   "name": "Weakening venom",
+   "price": 69,
+   "gem": 5,
+   "coat": {
+    "weaken": 3,
+    "hits": 20
+   }
+  }
+ },
+ "THIEF_RECIPES": {
+  "//": "Daggers and throwing knives at the anvil; poisons and venoms at the apothecary table (the plan: 'Herblore ... new recipes').",
+  "anvil": [
+   {
+    "make": "bronzedagger",
+    "needs": {
+     "bronzebar": 3,
+     "oak": 2
+    },
+    "level": 3,
+    "xp": 14.2,
+    "fee": 4
+   },
+   {
+    "make": "irondagger",
+    "needs": {
+     "ironbar": 5,
+     "oak": 2
+    },
+    "level": 13,
+    "xp": 27.5,
+    "fee": 12
+   },
+   {
+    "make": "steeldagger",
+    "needs": {
+     "steel": 2,
+     "oak": 2
+    },
+    "level": 21,
+    "xp": 46.3,
+    "fee": 9
+   },
+   {
+    "make": "mithrildagger",
+    "needs": {
+     "mithrilbar": 2,
+     "willow": 2
+    },
+    "level": 31,
+    "xp": 90.0,
+    "fee": 15
+   },
+   {
+    "make": "adamantdagger",
+    "needs": {
+     "adamantbar": 2,
+     "teak": 2
+    },
+    "level": 41,
+    "xp": 149.2,
+    "fee": 21
+   },
+   {
+    "make": "runedagger",
+    "needs": {
+     "runebar": 2,
+     "mahogany": 2
+    },
+    "level": 49,
+    "xp": 201.4,
+    "fee": 27
+   },
+   {
+    "make": "throwingknife",
+    "n": 5,
+    "needs": {
+     "bronzebar": 1
+    },
+    "level": 6,
+    "xp": 12,
+    "fee": 2
+   },
+   {
+    "make": "steelthrowingknife",
+    "n": 5,
+    "needs": {
+     "steel": 1
+    },
+    "level": 24,
+    "xp": 40,
+    "fee": 5
+   },
+   {
+    "make": "runethrowingknife",
+    "n": 5,
+    "needs": {
+     "runebar": 1
+    },
+    "level": 48,
+    "xp": 110,
+    "fee": 15
+   }
+  ],
+  "apothecary": [
+   {
+    "make": "weakpoison",
+    "n": 2,
+    "needs": {
+     "mushroom": 5,
+     "feverfew": 5
+    },
+    "level": 5,
+    "xp": 16
+   },
+   {
+    "make": "strongpoison",
+    "n": 2,
+    "needs": {
+     "venomsac": 1,
+     "valerian": 5
+    },
+    "level": 20,
+    "xp": 60
+   },
+   {
+    "make": "paralyticvenom",
+    "n": 2,
+    "needs": {
+     "stinger": 1,
+     "yarrow": 5
+    },
+    "level": 28,
+    "xp": 90
+   },
+   {
+    "make": "weakeningvenom",
+    "n": 2,
+    "needs": {
+     "batwing": 2,
+     "wolfsbane": 5
+    },
+    "level": 32,
+    "xp": 110
+   },
+   {
+    "make": "deadlypoison",
+    "n": 2,
+    "needs": {
+     "venomsac": 2,
+     "wolfsbane": 5,
+     "mandrake": 2
+    },
+    "level": 36,
+    "xp": 140
+   }
+  ]
+ },
+ "THIEF_TYPES": {
+  "bronzedagger": [
+   "pierce",
+   "bronze"
+  ],
+  "irondagger": [
+   "pierce",
+   "iron"
+  ],
+  "steeldagger": [
+   "pierce",
+   "steel"
+  ],
+  "mithrildagger": [
+   "pierce",
+   "mithril"
+  ],
+  "adamantdagger": [
+   "pierce",
+   "adamant"
+  ],
+  "runedagger": [
+   "pierce",
+   "rune"
+  ],
+  "//": "Daggers pierce, of their metal."
+ },
+ "VENOM_DROPS": {
+  "//": "Who drops a venom sac: [chance].",
+  "snake": 0.3,
+  "viper": 0.4,
+  "cobra": 0.4,
+  "anaconda": 0.5,
+  "spider": 0.15,
+  "giantspider": 0.3,
+  "camelspider": 0.2
+ },
+ "THIEF": {
+  "//": "The Thief (Battle Re-work Part 7). dual: each stab's damage with a dagger in both hands (two a round). poisonChance: the chance a coated hit poisons (Toxic: more); poisonStack: how many poisons stack (Virulence: 3). weakenChance: a weakening venom's chance a hit. smoke: rounds a smoke bomb blinds the creature. classes: who can coat a weapon (the rest learn it on a switch, Part 9).",
+  "dual": 0.5,
+  "poisonChance": 0.3,
+  "poisonStack": 1,
+  "weakenChance": 0.3,
+  "smoke": 2,
+  "classes": [
+   "thief"
+  ]
+ },
+ "THIEF_CLASS": {
+  "name": "Thief",
+  "style": "melee",
+  "styles": [
+   "melee",
+   "ranged"
+  ],
+  "about": "Daggers (one in each hand) or a bow, and poison. Trains Attack (daggers) or Ranged (a bow).",
+  "resist": {
+   "pierce": 0.85
+  },
+  "weak": {
+   "crush": 1.25,
+   "slash": 1.1
+  },
+  "specials": {
+   "backstab": {
+    "name": "Backstab",
+    "cost": 55,
+    "acc": 1.25,
+    "dmg": 2.2,
+    "style": "melee",
+    "about": "A blade in the back: likelier to hit, more than double damage. Daggers only."
+   },
+   "envenom": {
+    "minLevel": 10,
+    "name": "Envenom",
+    "cost": 40,
+    "envenom": true,
+    "about": "Your next hit poisons for sure -- with your coating, or a weak poison if you have none."
+   },
+   "smokebomb": {
+    "minLevel": 20,
+    "name": "Smoke bomb",
+    "cost": 60,
+    "smoke": true,
+    "about": "The creature is lost in the smoke: it misses for 2 rounds."
+   }
+  }
+ }
+}

@@ -1,0 +1,223 @@
+{
+  "//": [
+    "Content for ui/pet/core/28-the-arcane.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "SPELLS": {
+    "windstrike": {"name": "Wind strike", "level": 1, "runes": {"air": 1, "mind": 1}, "base": 2},
+    "waterstrike": {"name": "Water strike", "level": 5, "runes": {"water": 1, "air": 1, "mind": 1}, "base": 3},
+    "earthstrike": {"name": "Earth strike", "level": 9, "runes": {"earth": 2, "air": 1, "mind": 1}, "base": 4},
+    "firestrike": {"name": "Fire strike", "level": 13, "runes": {"fire": 3, "air": 2, "mind": 1}, "base": 5},
+    "windbolt": {"name": "Wind bolt", "level": 17, "runes": {"air": 2, "chaos": 1}, "base": 7},
+    "bind": {
+      "name": "Bind",
+      "level": 20,
+      "runes": {"nature": 1, "earth": 3, "water": 3},
+      "base": 2,
+      "stun": 0.35,
+      "about": "Roots hold them: they often lose their turn"
+    },
+    "waterbolt": {"name": "Water bolt", "level": 23, "runes": {"water": 2, "air": 2, "chaos": 1}, "base": 7},
+    "earthbolt": {"name": "Earth bolt", "level": 29, "runes": {"earth": 3, "air": 2, "chaos": 1}, "base": 8},
+    "hartsblessing": {
+      "name": "Hart's blessing",
+      "level": 30,
+      "runes": {"nature": 2, "earth": 2, "chaos": 1},
+      "base": 7,
+      "heal": 0.3,
+      "req": {"boss": "forest", "wins": 1, "weapon": "antlerwand"},
+      "about": "Heals you a third of what it deals"
+    },
+    "firebolt": {"name": "Fire bolt", "level": 35, "runes": {"fire": 4, "air": 3, "chaos": 1}, "base": 9},
+    "tricksterflurry": {
+      "name": "Trickster's flurry",
+      "level": 38,
+      "runes": {"chaos": 2, "air": 4},
+      "base": 6,
+      "hits": 2,
+      "req": {"boss": "farmyard", "wins": 10, "weapon": "slywand"},
+      "about": "Gideon's trick: two hits at once"
+    },
+    "frostnova": {
+      "name": "Frost nova",
+      "level": 40,
+      "runes": {"water": 5, "cosmic": 1, "astral": 1},
+      "base": 9,
+      "stun": 0.3,
+      "scroll": true,
+      "about": "Freezes them where they stand"
+    },
+    "windblast": {"name": "Wind blast", "level": 41, "runes": {"air": 3, "death": 1}, "base": 10},
+    "petrify": {
+      "name": "Petrifying gaze",
+      "level": 45,
+      "runes": {"earth": 5, "death": 1, "law": 1},
+      "base": 11,
+      "stun": 0.4,
+      "req": {"boss": "jungle", "wins": 1, "weapon": "basiliskstaff"},
+      "about": "The Basilisk's stare: they turn to stone"
+    },
+    "fireblast": {"name": "Fire blast", "level": 47, "runes": {"fire": 5, "air": 4, "death": 1}, "base": 12},
+    "storm": {
+      "name": "Storm of the Isle",
+      "level": 48,
+      "runes": {"air": 6, "water": 6, "death": 1, "law": 1},
+      "base": 11,
+      "hits": 2,
+      "scroll": true,
+      "about": "Two bolts from a clear sky"
+    },
+    "meteor": {
+      "name": "Meteor",
+      "level": 50,
+      "runes": {"fire": 8, "death": 2, "cosmic": 2},
+      "base": 16,
+      "scroll": true,
+      "about": "The hardest-hitting spell there is"
+    }
+  },
+  "ENCHANTS": {
+    "flaming": {
+      "name": "Flaming",
+      "slots": ["weapon"],
+      "level": 20,
+      "bonus": {"maxHit": 2, "magDmg": 1},
+      "cost": {"firerune": 50, "ruby": 1},
+      "coins": 500,
+      "xp": 120,
+      "about": "+2 max hit (+1 to spells)"
+    },
+    "keen": {
+      "name": "Keen",
+      "slots": ["weapon"],
+      "level": 25,
+      "bonus": {"acc": 0.08},
+      "cost": {"airrune": 50, "sapphire": 1},
+      "coins": 600,
+      "xp": 140,
+      "about": "+8% to hit"
+    },
+    "warding": {
+      "name": "Warding",
+      "slots": ["helmet", "torso", "arms", "legs", "feet", "cloak"],
+      "pet": true,
+      "level": 30,
+      "bonus": {"def": 3, "dodge": 0.03},
+      "cost": {"earthrune": 60, "jade": 1},
+      "coins": 800,
+      "xp": 170,
+      "about": "+3 defence, +3% dodge"
+    },
+    "vampiric": {
+      "name": "Vampiric",
+      "slots": ["weapon"],
+      "level": 35,
+      "bonus": {"regen": 3},
+      "cost": {"deathrune": 20, "ruby": 2},
+      "coins": 1500,
+      "xp": 220,
+      "about": "Heal 3 after every fight you win"
+    },
+    "arcanist": {
+      "name": "Arcanist's",
+      "slots": ["weapon", "helmet", "cloak"],
+      "level": 40,
+      "bonus": {"mag": 4, "magDmg": 1},
+      "cost": {"cosmicrune": 20, "enchantedemerald": 1},
+      "coins": 2000,
+      "xp": 260,
+      "about": "+4 magic accuracy, +1 to spells"
+    },
+    "thorns": {
+      "//": "armour and jewellery (Cam, 2026-10-07: \"armour as well. Gems, jewelry\")",
+      "name": "Thorns",
+      "slots": ["helmet", "torso", "arms", "legs", "feet", "cloak"],
+      "level": 33,
+      "bonus": {"reflect": 0.1},
+      "cost": {"chaosrune": 40, "enchantedopal": 1},
+      "coins": 900,
+      "xp": 190,
+      "about": "A tenth of every hit you take goes back at them"
+    },
+    "fortified": {
+      "name": "Fortified",
+      "slots": ["helmet", "torso", "arms", "legs", "feet"],
+      "level": 38,
+      "bonus": {"soak": 1, "hp": 5},
+      "cost": {"earthrune": 80, "enchantedsapphire": 1},
+      "coins": 1400,
+      "xp": 230,
+      "about": "Every hit you take is 1 less; +5 health"
+    },
+    "vitality": {
+      "name": "Vitality",
+      "slots": ["ring", "necklace"],
+      "level": 27,
+      "bonus": {"hp": 8},
+      "cost": {"naturerune": 15, "enchantedopal": 1},
+      "coins": 700,
+      "xp": 160,
+      "about": "+8 health"
+    },
+    "focus": {
+      "name": "Focus",
+      "slots": ["ring", "necklace"],
+      "level": 36,
+      "bonus": {"acc": 0.05, "mag": 2},
+      "cost": {"cosmicrune": 15, "enchantedsapphire": 1},
+      "coins": 1200,
+      "xp": 210,
+      "about": "+5% to hit, +2 magic accuracy"
+    },
+    "swift": {
+      "name": "Swiftness",
+      "slots": ["tool"],
+      "level": 30,
+      "bonus": {"speed": 0.85},
+      "cost": {"airrune": 80, "topaz": 1},
+      "coins": 800,
+      "xp": 170,
+      "about": "A tool works 15% faster"
+    },
+    "wanderer": {
+      "name": "Wanderer's",
+      "slots": [],
+      "pet": true,
+      "level": 28,
+      "bonus": {"success": 0.08, "expXp": 0.1},
+      "cost": {"naturerune": 20, "opal": 1},
+      "coins": 700,
+      "xp": 160,
+      "about": "On a pet's gear: +8% expedition success, +10% expedition xp"
+    },
+    "fortune": {
+      "name": "Fortune's",
+      "slots": ["ring", "necklace", "tool"],
+      "level": 45,
+      "bonus": {"rare": 1.5},
+      "cost": {"naturerune": 30, "enchanteddiamond": 1},
+      "coins": 3000,
+      "xp": 320,
+      "about": "Rare finds half as likely again when gathering"
+    },
+    "sage": {
+      "name": "Sage's",
+      "slots": ["ring", "necklace", "tool"],
+      "level": 50,
+      "bonus": {"xp": 0.1},
+      "cost": {"astralrune": 30, "enchanteddiamond": 1},
+      "coins": 4000,
+      "xp": 400,
+      "about": "+10% gathering xp"
+    }
+  },
+  "MAGE_RANKS": [
+    {"name": "Novice"},
+    {"name": "Apprentice", "again": "\"Again? Good -- I learn as much from these as you do. Come back whenever you like.\"", "rematch": {"airrune": 20, "mindrune": 20, "waterrune": 10, "earthrune": 10}, "beaten": "\"Ow. All right -- that was a proper spell, not a lucky spark. Your training's paying off. Keep at your runes; Selene upstairs won't go easy on you.\"", "needs": {"magic": 10, "runecrafting": 5}, "duel": "apprenticemage", "coins": 300},
+    {"name": "Adept", "again": "\"I'll keep a duelling circle chalked for you. Any time you want the practice.\"", "rematch": {"firerune": 15, "chaosrune": 10}, "beaten": "\"You held your focus when I pressed you. Most apprentices let go. Your training is paying off -- the Magus will want to see it for himself.\"", "needs": {"magic": 20, "runecrafting": 15, "enchanting": 10}, "duel": "adeptmage", "coins": 800},
+    {"name": "Mage", "again": "\"A rematch keeps us both sharp. My door's open -- bring runes.\"", "rematch": {"naturerune": 8, "cosmicrune": 8}, "beaten": "\"Hm. Thirty years I've taught in this tower, and not many have put me on the floor. Wear the robes of a Mage, then. Nyx is on the next floor. She won't be impressed -- so make her be.\"", "needs": {"magic": 30, "runecrafting": 25, "enchanting": 20}, "duel": "magusmage", "coins": 2000},
+    {"name": "Sorcerer", "again": "\"I'd like to try that again. And again. Come back and duel me whenever you're passing.\"", "rematch": {"astralrune": 6, "lawrune": 6}, "beaten": "\"...Well. I'd forgotten what losing feels like. You're a Sorcerer now, and only Vale stands above you. He's been watching you climb. He'll be waiting.\"", "needs": {"magic": 40, "runecrafting": 35, "enchanting": 30}, "duel": "sorceressmage", "coins": 4000},
+    {"name": "Archmage", "again": "\"Even an Archmage needs a sparring partner. Climb the stairs whenever you like.\"", "rematch": {"deathrune": 6, "astralrune": 4}, "beaten": "\"So. The top of the tower, and nothing left here to teach you.\" He sits down slowly. \"Nothing in the tower, anyway.\"", "needs": {"magic": 50, "runecrafting": 44, "enchanting": 40}, "duel": "archmagemage", "coins": 8000}
+  ],
+  "HUNTS.magetower": {"name": "Mage tower", "level": 1, "time": 60, "monsters": [], "boss": "archmagemage", "kills": 0, "tower": true}
+}

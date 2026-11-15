@@ -1,0 +1,37 @@
+{
+  "//": [
+    "Content for ui/pet/core/40-zzz-the-recycle-stash.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "RECYCLE": {
+    "//": [
+      "minutes: a lot takes this many minutes for each tier of the thing (its gem tier, at least 1): old boots 30 min, bronze 1 h, iron 1 h 30, steel 2 h ... (Cam, I4, 2026-10-19)", "speed: the stash, tier 1-4: how long it takes against tier 1 (a better stash is quicker)",
+      "kinds: the recycled materials store, tier 1-4: kinds of material it holds",
+      "share: what comes back of what went into it",
+      "lots: lots in the stash at once",
+      "keep: never thrown away"
+    ],
+    "minutes": 30, "speed": [0, 1, 0.75, 0.5, 0.35],
+    "kinds": [0, 15, 25, 40, 60],
+    "share": 0.5,
+    "lots": 20,
+    "benches": ["furnace", "anvil", "crafting", "tanner", "fletching", "gemology", "spinning", "sawbench"],
+    "keep": ["key", "learn", "glyph", "egg", "ageUp"],
+    "build": {
+      "stash": [
+        null,
+        null,
+        {"con": 10, "coins": 2500, "needs": {"plank": 30, "ironbar": 10}, "xp": 250},
+        {"con": 25, "coins": 10000, "needs": {"hardplank": 30, "steel": 10}, "xp": 900},
+        {"con": 40, "coins": 30000, "needs": {"fineplank": 30, "mithrilbar": 10}, "xp": 2500}
+      ],
+      "store": [
+        null,
+        null,
+        {"con": 8, "coins": 2000, "needs": {"plank": 40, "rope": 5}, "xp": 200},
+        {"con": 20, "coins": 8000, "needs": {"hardplank": 40, "rope": 10}, "xp": 700},
+        {"con": 35, "coins": 25000, "needs": {"fineplank": 40, "rope": 20}, "xp": 2000}
+      ]
+    }
+  }
+}

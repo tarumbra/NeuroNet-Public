@@ -1,0 +1,3 @@
+# C8 (2026-10-20): Light armour to Defence 40 (tiger hide, frost hide) and robes for every mage rank -- planned, prompts in collab
+110 {icon- sheet 110.jpeg}: tigerleather,frostleather,tigercap,tigerbody,tigervambraces,tigerchaps,tigerboots,frostcap,frostbody,frostvambraces,frostchaps,frostboots,apprenticerobetop,apprenticerobebottoms,apprenticegloves,apprenticeboots
+111 {icon- sheet 111.jpeg}: adeptrobetop,adeptrobebottoms,adeptgloves,adeptboots,magerobetop,magerobebottoms,magegloves,mageboots,sorcererrobetop,sorcererrobebottoms,sorcerergloves,sorcererboots,archmagerobetop,archmagerobebottoms,archmagegloves,archmageboots

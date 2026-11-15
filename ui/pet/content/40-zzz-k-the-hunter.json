@@ -1,0 +1,689 @@
+{
+ "HUNTER_ITEMS": {
+  "//": "Battle Re-work Part 4 (2026-10-15): the Hunter's knife (its fallback: a quick stab with the Ranged hand, no ammo; knife: true, double: a second stab now and then), snares and bear traps (hunterTool.kind trap: laid once a fight -- more with Second snare), nets (hunterTool.kind net: thrown, picked up again half the time). hunterTool.rounds: how long it holds [lowest, highest] before diminishing returns, class level against creature level, and a boss's half. spring: the bear trap's snap [lowest, highest]. bleed / burn: [damage a round, rounds]. keep: the chance it's picked up again after a fight you win (nets half the time; a bear trap is steel and reset most times; a snare is spent).",
+  "bronzeknife": {
+   "name": "Bronze hunting knife",
+   "price": 18,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 3,
+    "style": "melee",
+    "knife": true,
+    "double": 0.15,
+    "cls": "hunter",
+    "req": {
+     "ranged": 1
+    }
+   }
+  },
+  "ironknife": {
+   "name": "Iron hunting knife",
+   "price": 62,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 6,
+    "style": "melee",
+    "knife": true,
+    "double": 0.15,
+    "cls": "hunter",
+    "req": {
+     "ranged": 10
+    }
+   }
+  },
+  "steelknife": {
+   "name": "Steel hunting knife",
+   "price": 119,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 9,
+    "style": "melee",
+    "knife": true,
+    "double": 0.15,
+    "cls": "hunter",
+    "req": {
+     "ranged": 20
+    }
+   }
+  },
+  "mithrilknife": {
+   "name": "Mithril hunting knife",
+   "price": 258,
+   "gem": 6,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 12,
+    "style": "melee",
+    "knife": true,
+    "double": 0.15,
+    "cls": "hunter",
+    "req": {
+     "ranged": 30
+    }
+   }
+  },
+  "adamantknife": {
+   "name": "Adamant hunting knife",
+   "price": 375,
+   "gem": 8,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 15,
+    "style": "melee",
+    "knife": true,
+    "double": 0.15,
+    "cls": "hunter",
+    "req": {
+     "ranged": 40
+    }
+   }
+  },
+  "runeknife": {
+   "name": "Rune hunting knife",
+   "price": 505,
+   "gem": 9,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "att": 18,
+    "style": "melee",
+    "knife": true,
+    "double": 0.15,
+    "cls": "hunter",
+    "req": {
+     "ranged": 50
+    }
+   }
+  },
+  "twigsnare": {
+   "name": "Twig snare",
+   "price": 5,
+   "gem": 1,
+   "hunterTool": {
+    "kind": "trap",
+    "tier": 1,
+    "rounds": [
+     1,
+     1
+    ]
+   }
+  },
+  "ropesnare": {
+   "name": "Rope snare",
+   "price": 5,
+   "gem": 2,
+   "hunterTool": {
+    "kind": "trap",
+    "tier": 2,
+    "rounds": [
+     1,
+     2
+    ]
+   }
+  },
+  "spikedsnare": {
+   "name": "Spiked snare",
+   "price": 14,
+   "gem": 3,
+   "hunterTool": {
+    "kind": "trap",
+    "tier": 3,
+    "rounds": [
+     1,
+     2
+    ],
+    "bleed": [
+     2,
+     3
+    ]
+   }
+  },
+  "beartrap": {
+   "name": "Bear trap",
+   "price": 177,
+   "gem": 4,
+   "hunterTool": {
+    "kind": "trap",
+    "tier": 4,
+    "rounds": [
+     2,
+     3
+    ],
+    "spring": [
+     3,
+     8
+    ],
+    "bleed": [
+     2,
+     3
+    ],
+    "keep": 0.9
+   }
+  },
+  "mithrilbeartrap": {
+   "name": "Mithril bear trap",
+   "price": 386,
+   "gem": 6,
+   "hunterTool": {
+    "kind": "trap",
+    "tier": 5,
+    "rounds": [
+     2,
+     4
+    ],
+    "spring": [
+     6,
+     14
+    ],
+    "bleed": [
+     3,
+     3
+    ],
+    "keep": 0.95
+   }
+  },
+  "twinenet": {
+   "name": "Twine net",
+   "price": 34,
+   "gem": 2,
+   "hunterTool": {
+    "kind": "net",
+    "tier": 1,
+    "rounds": [
+     1,
+     2
+    ],
+    "keep": 0.5
+   }
+  },
+  "weightednet": {
+   "name": "Weighted net",
+   "price": 77,
+   "gem": 4,
+   "hunterTool": {
+    "kind": "net",
+    "tier": 2,
+    "rounds": [
+     2,
+     3
+    ],
+    "keep": 0.5
+   }
+  },
+  "firenet": {
+   "name": "Fire net",
+   "price": 117,
+   "gem": 6,
+   "hunterTool": {
+    "kind": "net",
+    "tier": 3,
+    "rounds": [
+     2,
+     3
+    ],
+    "burn": [
+     3,
+     3
+    ],
+    "keep": 0.5
+   }
+  }
+ },
+ "HUNTER_RECIPES": {
+  "//": "Snares at your crafting bench, bear traps and knives at the anvil, nets at the spinning wheel (the plan: \"snares: Crafting (rope and wire); bear traps: smithing at the anvil; nets: spinning plus rope\").",
+  "crafting": [
+   {
+    "make": "twigsnare",
+    "n": 2,
+    "needs": {
+     "twigs": 6,
+     "thread": 1
+    },
+    "level": 3,
+    "xp": 8
+   },
+   {
+    "make": "ropesnare",
+    "n": 2,
+    "needs": {
+     "rope": 1,
+     "twigs": 4
+    },
+    "level": 14,
+    "xp": 18
+   },
+   {
+    "make": "spikedsnare",
+    "n": 2,
+    "needs": {
+     "rope": 1,
+     "ironbar": 1
+    },
+    "level": 26,
+    "xp": 34
+   }
+  ],
+  "anvil": [
+   {
+    "make": "bronzeknife",
+    "needs": {
+     "bronzebar": 2,
+     "oak": 1
+    },
+    "level": 3,
+    "xp": 9,
+    "fee": 2
+   },
+   {
+    "make": "ironknife",
+    "needs": {
+     "ironbar": 3,
+     "oak": 2
+    },
+    "level": 12,
+    "xp": 17,
+    "fee": 6
+   },
+   {
+    "make": "steelknife",
+    "needs": {
+     "steel": 2,
+     "oak": 2
+    },
+    "level": 21,
+    "xp": 30,
+    "fee": 6
+   },
+   {
+    "make": "mithrilknife",
+    "needs": {
+     "mithrilbar": 2,
+     "willow": 2
+    },
+    "level": 31,
+    "xp": 60,
+    "fee": 10
+   },
+   {
+    "make": "adamantknife",
+    "needs": {
+     "adamantbar": 2,
+     "teak": 2
+    },
+    "level": 41,
+    "xp": 100,
+    "fee": 14
+   },
+   {
+    "make": "runeknife",
+    "needs": {
+     "runebar": 2,
+     "mahogany": 2
+    },
+    "level": 49,
+    "xp": 130,
+    "fee": 18
+   },
+   {
+    "make": "beartrap",
+    "needs": {
+     "steel": 3
+    },
+    "level": 30,
+    "xp": 70,
+    "fee": 9
+   },
+   {
+    "make": "mithrilbeartrap",
+    "needs": {
+     "mithrilbar": 3
+    },
+    "level": 42,
+    "xp": 130,
+    "fee": 15
+   }
+  ],
+  "spinning": [
+   {
+    "make": "twinenet",
+    "needs": {
+     "thread": 4
+    },
+    "level": 8,
+    "xp": 14
+   },
+   {
+    "make": "weightednet",
+    "needs": {
+     "twinenet": 1,
+     "rope": 2,
+     "ironbar": 1
+    },
+    "level": 28,
+    "xp": 45
+   },
+   {
+    "make": "firenet",
+    "needs": {
+     "weightednet": 1,
+     "firerune": 30
+    },
+    "level": 45,
+    "xp": 90
+   }
+  ]
+ },
+ "KNIFE_TYPES": {
+  "//": "What a knife does to a creature: a slash, of its metal (weak spots and resistances, as the swords).",
+  "bronzeknife": [
+   "slash",
+   "bronze"
+  ],
+  "ironknife": [
+   "slash",
+   "iron"
+  ],
+  "steelknife": [
+   "slash",
+   "steel"
+  ],
+  "mithrilknife": [
+   "slash",
+   "mithril"
+  ],
+  "adamantknife": [
+   "slash",
+   "adamant"
+  ],
+  "runeknife": [
+   "slash",
+   "rune"
+  ]
+ },
+ "TOOL_RULES": {
+  "//": "classes: who can lay traps and throw nets (the rest learn Trap-making on a class switch, Part 9). trapsPerFight: traps a fight (Second snare: one more). toughBlows: the hunt plan's 'dangerous creatures only' -- a boss, or one whose best blow this many times would finish you. (What is picked up again: each item's keep, plus Net mender for nets.)",
+  "classes": [
+   "hunter"
+  ],
+  "kinds": {
+   "trap": [
+    "hunter"
+   ],
+   "net": [
+    "hunter"
+   ],
+   "throw": [
+    "thief"
+   ]
+  },
+  "trapsPerFight": 1,
+  "toughBlows": 5
+ },
+ "CREATURE_GUARDS": {
+  "//": "Battle Re-work Part 4: what wild creatures shrug off. immune: an effect or its group (flyers aren't caught by a snare on the ground; spiders walk out of nets; shells and bandages don't bleed). resist: a 'lose a turn' effect's rounds times this (snakes slip snares; big beasts tear nets).",
+  "duck": {
+   "immune": [
+    "trapped"
+   ]
+  },
+  "bat": {
+   "immune": [
+    "trapped"
+   ]
+  },
+  "owl": {
+   "immune": [
+    "trapped"
+   ]
+  },
+  "gull": {
+   "immune": [
+    "trapped"
+   ]
+  },
+  "snowyowl": {
+   "immune": [
+    "trapped"
+   ]
+  },
+  "flamingo": {
+   "immune": [
+    "trapped"
+   ]
+  },
+  "ibis": {
+   "immune": [
+    "trapped"
+   ]
+  },
+  "spider": {
+   "immune": [
+    "netted"
+   ]
+  },
+  "giantspider": {
+   "immune": [
+    "netted"
+   ]
+  },
+  "camelspider": {
+   "immune": [
+    "netted"
+   ]
+  },
+  "crab": {
+   "immune": [
+    "bleed"
+   ]
+  },
+  "armadillo": {
+   "immune": [
+    "bleed"
+   ]
+  },
+  "sandscorpion": {
+   "immune": [
+    "bleed"
+   ]
+  },
+  "deathstalker": {
+   "immune": [
+    "bleed"
+   ]
+  },
+  "tombguardian": {
+   "immune": [
+    "bleed"
+   ]
+  },
+  "pharaoh": {
+   "immune": [
+    "bleed"
+   ]
+  },
+  "snake": {
+   "resist": {
+    "trapped": 0.5
+   }
+  },
+  "anaconda": {
+   "resist": {
+    "trapped": 0.5
+   }
+  },
+  "viper": {
+   "resist": {
+    "trapped": 0.5
+   }
+  },
+  "cobra": {
+   "resist": {
+    "trapped": 0.5
+   }
+  },
+  "elk": {
+   "resist": {
+    "netted": 0.5
+   }
+  },
+  "brownbear": {
+   "resist": {
+    "netted": 0.5
+   }
+  },
+  "hippo": {
+   "resist": {
+    "netted": 0.5
+   }
+  },
+  "yak": {
+   "resist": {
+    "netted": 0.5
+   }
+  },
+  "alligator": {
+   "resist": {
+    "netted": 0.5
+   }
+  },
+  "camel": {
+   "resist": {
+    "netted": 0.5
+   }
+  }
+ },
+ "LIVING_OFF_THE_LAND": {
+  "//": "Cam (PT3, 2026-10-15): \"hunters should have the ability to turn twigs straight into wooden arrows using the hunting knife ... in the bag (they are the only class who can do this, it gives them early access to arrows) ... leaf litter as another drop from getting twigs and wood ... then attach leaf litter for improvised arrows\"; Q3: bone arrowheads, plucking and field dressing too. litter: leaf litter's weight in a woodcutting spot's finds. whittle: shafts from one of each, and the Fletching xp a shaft (twigs: half the bench's -- PT4, Cam: 519 twigs made Fletching 9, 'double check it is not unbalanced'). carve: bone arrowheads a bone. xp: Fletching xp an arrow (improvised, bone) and a bone arrowhead. most: the most made in one go. birds: creatures a Hunter plucks for feathers [least, most]. dress: what field dressing doubles now and then (dressChance) -- hides, pelts and meat. (V2, 2026-10-16: birch left the knife's list -- the fletching table makes shafts from birch; one home per recipe.)",
+  "litter": {
+   "prunings": 10,
+   "hedge": 15,
+   "copse": 15,
+   "forest": 8,
+   "ashstand": 10
+  },
+  "whittle": {
+   "twigs": 1,
+   "oak": 3
+  },
+  "shaftXp": {
+   "twigs": 0.2,
+   "oak": 0.33
+  },
+  "carve": 3,
+  "xp": {
+   "arrow": 0.5,
+   "head": 0.2,
+   "bonearrow": 1
+  },
+  "most": 1000,
+  "birds": {
+   "chicken": [
+    1,
+    3
+   ],
+   "duck": [
+    2,
+    4
+   ],
+   "gull": [
+    2,
+    4
+   ],
+   "owl": [
+    2,
+    5
+   ],
+   "snowyowl": [
+    2,
+    5
+   ],
+   "flamingo": [
+    3,
+    6
+   ],
+   "ibis": [
+    3,
+    6
+   ]
+  },
+  "dress": [
+   "cowhide",
+   "rawbeef",
+   "rawpork",
+   "rawmutton",
+   "rawrabbit",
+   "rawpoultry",
+   "venison",
+   "foxpelt",
+   "wolfpelt",
+   "bearpelt",
+   "bigcatpelt",
+   "armadillohide",
+   "snakeskin",
+   "sealskin",
+   "camelhide",
+   "jackalpelt",
+   "gatorhide",
+   "snowpelt",
+   "yakhide"
+  ],
+  "dressChance": 0.1,
+  "items": {
+   "leaflitter": {
+    "name": "Leaf litter",
+    "gem": 0,
+    "price": 0.05
+   },
+   "improvisedarrow": {
+    "name": "Improvised arrow",
+    "gem": 0,
+    "price": 1,
+    "gear": {
+     "who": "player",
+     "slot": "ammo",
+     "ammo": "arrow",
+     "power": 0,
+     "req": {
+      "ranged": 1
+     }
+    }
+   },
+   "bonearrowheads": {
+    "name": "Bone arrowheads",
+    "gem": 0,
+    "price": 0.5
+   },
+   "bonearrow": {
+    "name": "Bone arrow",
+    "gem": 1,
+    "price": 4,
+    "gear": {
+     "who": "player",
+     "slot": "ammo",
+     "ammo": "arrow",
+     "power": 1,
+     "req": {
+      "ranged": 5
+     }
+    }
+   }
+  }
+ },
+ "NET_PLAN": {
+  "//": "The hunt plan's 'throw a net when the creature is above' choices (0: never).",
+  "above": [
+   0,
+   0.5,
+   0.75,
+   0.9
+  ]
+ }
+}

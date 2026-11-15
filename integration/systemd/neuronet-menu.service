@@ -1,0 +1,6 @@
+[Unit]
+Description=NeuroNet: refresh NeuroNet's rows in the Omarchy menu (neuronet-menu)
+
+[Service]
+Type=oneshot
+ExecStart=/home/tarumbra/DataDrive/NeuroNet/neuronet-menu

@@ -1,0 +1,144 @@
+#!/bin/bash
+# neuronet-update -- keep NeuroNet up to date (NeuroNet System plan, Stage 6).
+#
+# Cam: installed machines "update automatically". Releases are git tags
+# (v1.0.0, v1.1.0, ...) on NeuroNet's private GitHub repository; this checks
+# for a newer one and puts it in place.
+#
+#   neuronet-update            update, if there's a newer release
+#   neuronet-update --check    say what's installed and what's newest; change nothing
+#   neuronet-update --enable   switch the daily check on (the ISO's first login)
+#
+# Only on a computer set up for it: ~/.config/neuronet/update.json
+#   {"repo": "git@github.com:<owner>/<repo>.git", "key": "<read-only deploy key>"}
+# which the ISO's first login writes. Never on a NeuroNet that is a git
+# checkout itself (the one it's developed in).
+#
+# SAFE BY DESIGN:
+#   * the DATA FOLDER IS NEVER TOUCHED -- neither NeuroNet's own neuronet_data
+#     nor one paths.json names elsewhere; nor its log, nor library_path.txt
+#   * new files are copied OVER the old ones (never delete-and-replace: see
+#     data_dir() in neuronet.py), after the current code is kept in
+#     ~/.local/state/neuronet/previous/ (neuronet-update --check says which)
+#   * a release is only taken if it's newer (sort -V) and has a VERSION file
+#   * then the desktop layer: system/install.sh --yes --offline --no-start --
+#     or, on a computer set up with install-app.sh (CachyOS, KDE: no Omarchy),
+#     that again: install-app.sh --yes --no-packages (it can't ask for a password)
+#   * NeuroNet restarts only if it's hidden; on screen, it's told instead
+# What it did: ~/.local/state/neuronet/update.log and update.json.
+set -uo pipefail
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/neuronet/update.json"
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet"
+LOG="$STATE/update.log"
+mode="${1:-update}"
+
+app=$(neuronet-path app 2>/dev/null) || { echo "neuronet-update: NeuroNet isn't set up here (neuronet-path)" >&2; exit 1; }
+data=$(neuronet-path data 2>/dev/null || echo "$app/neuronet_data")
+# never copy code over anything but a NeuroNet folder (neuronet-path refuses
+# / and system folders too; this holds even with an older neuronet-path)
+case "$(realpath -m -- "$app")" in /|/usr|/etc|/home|/mnt|/var|/opt|"$(realpath -m -- "$HOME")")
+  echo "neuronet-update: paths.json says NeuroNet is in $app -- not updating; run neuronet-setup from the NeuroNet folder" >&2; exit 1 ;; esac
+[ -f "$app/neuronet.py" ] || { echo "neuronet-update: $app has no neuronet.py -- not updating" >&2; exit 1; }
+
+if [ "$mode" = "--enable" ]; then
+  systemctl --user daemon-reload 2>/dev/null
+  systemctl --user enable --now neuronet-update.timer && echo "daily update check: on"
+  exit $?
+fi
+
+[ -f "$CONF" ] || { echo "neuronet-update: not set up for updates on this computer ($CONF)"; exit 0; }
+[ -e "$app/.git" ] && { echo "neuronet-update: $app is a git checkout -- updated with git, not this"; exit 0; }
+repo=$(jq -r '.repo // empty' "$CONF"); key=$(jq -r '.key // empty' "$CONF")
+[ -n "$repo" ] || { echo "neuronet-update: no repo in $CONF" >&2; exit 1; }
+key="${key/#\~/$HOME}"
+if [ -n "$key" ]; then
+  export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o BatchMode=yes"
+fi
+
+have=$(tr -d ' \n' < "$app/VERSION" 2>/dev/null || echo 0)
+newest=$(git ls-remote --tags --refs "$repo" 'v*' 2>/dev/null | sed -n 's#.*refs/tags/v##p' \
+         | grep -E '^[0-9]+(\.[0-9]+)*$' | sort -V | tail -1)
+if [ -z "$newest" ]; then
+  echo "neuronet-update: couldn't reach $repo (offline?) -- NeuroNet $have stays"; exit 0
+fi
+if [ "$mode" = "--check" ]; then
+  echo "installed: $have   newest release: $newest"
+  [ -d "$STATE/previous" ] && echo "kept from before the last update: $(cat "$STATE/previous/VERSION" 2>/dev/null)"
+  exit 0
+fi
+# The starter's pictures and files (the recipes' photos, the decks, Training's
+# documents -- 2026-10-06) live under their own tag, starter-files-<content>,
+# so they're downloaded only when they change, not with every release.
+# starter_data.py merges them when NeuroNet next starts.
+starter_files() {
+  local want sf="$STATE/starter-files"
+  want=$(jq -r '.files.tag // empty' "$app/system/starter/starter.json" 2>/dev/null)
+  [ -n "$want" ] || return 0
+  [ "$(tr -d ' \n' < "$sf/TAG" 2>/dev/null)" = "$want" ] && return 0
+  mkdir -p "$STATE"
+  local tmp; tmp=$(mktemp -d "$STATE/.starter-files.XXXXXX")
+  if git -c advice.detachedHead=false clone -q --depth 1 --branch "$want" "$repo" "$tmp/new" \
+     && [ "$(tr -d ' \n' < "$tmp/new/TAG" 2>/dev/null)" = "$want" ]; then
+    rm -rf "$tmp/new/.git" "$sf"; mv "$tmp/new" "$sf"
+    echo "starter pictures and files: $want (merged when NeuroNet next starts)"
+  else
+    echo "couldn't download the starter pictures and files ($want) -- they'll be tried again"
+  fi
+  rm -rf "$tmp"
+}
+
+if [ "$(printf '%s\n%s\n' "$have" "$newest" | sort -V | tail -1)" = "$have" ]; then
+  starter_files
+  echo "NeuroNet $have is the newest."; exit 0
+fi
+
+mkdir -p "$STATE"
+exec > >(tee -a "$LOG") 2>&1
+echo "== $(date -Is) updating NeuroNet $have -> $newest"
+work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
+if ! git -c advice.detachedHead=false clone -q --depth 1 --branch "v$newest" "$repo" "$work/new"; then
+  echo "download failed -- nothing changed"; exit 1
+fi
+[ "$(tr -d ' \n' < "$work/new/VERSION" 2>/dev/null)" = "$newest" ] \
+  || { echo "v$newest has no matching VERSION file -- not taken"; exit 1; }
+
+# What's never touched: the data (wherever it is), and what NeuroNet writes beside itself
+excl=(--exclude=.git --exclude=/neuronet_data --exclude=/neuronet.log --exclude=/library_path.txt
+      --exclude='*.bak' --exclude=__pycache__)
+case "$data" in "$app"/*) excl+=("--exclude=/${data#"$app"/}") ;; esac
+
+rm -rf "$STATE/previous"; mkdir -p "$STATE/previous"
+rsync -a "${excl[@]}" "$app/" "$STATE/previous/" || { echo "couldn't keep the current code -- nothing changed"; exit 1; }
+# --checksum: by content, not size and time -- "1.0.0" and "1.1.0" are the same
+# size, and a file cloned in the same second as the old one was written
+# would otherwise be skipped as unchanged (found by test_update.py)
+rsync -a --checksum "${excl[@]}" "$work/new/" "$app/" || { echo "copy failed part-way; the old code is in $STATE/previous"; exit 1; }
+echo "NeuroNet $newest copied in (the previous version is kept in $STATE/previous)"
+
+if [ -f "$STATE/install-app.json" ]; then
+  # set up without Omarchy (install-app.sh, 2026-10-14): its shortcuts and
+  # launchers again, for the same desktop; software it can't install is listed
+  desk=$(jq -r '.desktop // empty' "$STATE/install-app.json" 2>/dev/null)
+  bash "$app/system/install-app.sh" --yes --no-packages ${desk:+--desktop "$desk"} \
+    || echo "the shortcuts and launchers didn't fully update -- see above"
+else
+  bash "$app/system/install.sh" --yes --offline --no-start || echo "the desktop layer didn't fully update -- see above"
+fi
+starter_files
+
+# a hidden NeuroNet restarts into the new version; one on screen is told
+pid=$(pgrep -u "$(id -u)" -f "[n]euronet.py --gui" | head -1)
+shown=$(hyprctl clients -j 2>/dev/null | jq -r '[.[] | select(.class == "NeuroNet") | .workspace.name][0] // ""')
+# without Hyprland (KDE) NeuroNet hides its own window and says so (State)
+own=$(busctl --user call org.neuronet.App /org/neuronet/App org.neuronet.App State 2>/dev/null | sed -E 's/^s "(.*)"$/\1/')
+if [ -n "$pid" ] && { [ "$own" = hidden ] || { [ "$shown" = "special:neuronet" ] && ! hyprctl monitors -j 2>/dev/null \
+     | jq -e 'any(.[]; .specialWorkspace.name == "special:neuronet")' >/dev/null; }; }; then
+  kill -TERM "$pid"; for _ in $(seq 20); do kill -0 "$pid" 2>/dev/null || break; sleep 0.5; done
+  neuronet-quick start >/dev/null 2>&1
+  echo "restarted NeuroNet (it was hidden)"
+elif [ -n "$pid" ]; then
+  notify-send "NeuroNet $newest" "Updated -- close and reopen NeuroNet to use it. What's new: $app/CHANGELOG.md" 2>/dev/null
+fi
+jq -n --arg v "$newest" --arg from "$have" --arg when "$(date -Is)" '{version: $v, from: $from, when: $when}' \
+  > "$STATE/update.json"
+echo "== done: NeuroNet $newest"

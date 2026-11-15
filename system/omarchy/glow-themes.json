@@ -1,0 +1,158 @@
+{
+ "made": "2026-10-02",
+ "note": "Every Omarchy theme on Cam's desktop then: NeuroNet's supported themes for the window glow (window_glow.py).",
+ "themes": {
+  "aether": [
+   "7575aa",
+   "a9accb"
+  ],
+  "artist": [
+   "7575aa",
+   "a9accb"
+  ],
+  "aura": [
+   "8be9fd",
+   "f8f8f2"
+  ],
+  "catppuccin": [
+   "89b4fa",
+   "94e2d5"
+  ],
+  "catppuccin-latte": [
+   "1e66f5",
+   "179299"
+  ],
+  "deckard": [
+   "1fb1a5",
+   "001e49"
+  ],
+  "delete": [
+   "7575aa",
+   "aba8d7"
+  ],
+  "dreamwave": [
+   "f5eafd",
+   "f9f3fd"
+  ],
+  "ethereal": [
+   "7d82d9",
+   "a3bfd1"
+  ],
+  "event-horizon": [
+   "26bbd9",
+   "59e1e3"
+  ],
+  "everforest": [
+   "7fbbb3",
+   "83c092"
+  ],
+  "flexoki-light": [
+   "205ea6",
+   "3aa99f"
+  ],
+  "florida-man": [
+   "8caaee",
+   "e78284"
+  ],
+  "gold-wave": [
+   "e3935f",
+   "a86b4d"
+  ],
+  "gruvbox": [
+   "7daea3",
+   "89b482"
+  ],
+  "hackerman": [
+   "82fb9c",
+   "26a269"
+  ],
+  "harbordark": [
+   "e75a50",
+   "a99b7a"
+  ],
+  "jinx": [
+   "89b4fa",
+   "94e2d5"
+  ],
+  "kanagawa": [
+   "dcd7ba",
+   "6a9589"
+  ],
+  "last-horizon": [
+   "b59790",
+   "8a8588"
+  ],
+  "lumon": [
+   "8bc9eb",
+   "f2fcff"
+  ],
+  "lupine": [
+   "3264eb",
+   "0c67de"
+  ],
+  "matte-black": [
+   "e68e0d",
+   "bebebe"
+  ],
+  "miasma": [
+   "78824b",
+   "c9a554"
+  ],
+  "neuronet": [
+   "5fa665",
+   "00e5ff"
+  ],
+  "neuronet-light": [
+   "2e6b38",
+   "007c8c"
+  ],
+  "nord": [
+   "81a1c1",
+   "88c0d0"
+  ],
+  "ochre": [
+   "798fad",
+   "66a59d"
+  ],
+  "osaka-jade": [
+   "509475",
+   "2dd5b7"
+  ],
+  "retro-82": [
+   "faa968",
+   "8cbfb8"
+  ],
+  "ristretto": [
+   "f38d70",
+   "85dacc"
+  ],
+  "rose-pine": [
+   "56949f",
+   "d7827e"
+  ],
+  "sakura-mochi": [
+   "f23888",
+   "f0b7ca"
+  ],
+  "shadesofjade": [
+   "d1ffb0",
+   "00a86b"
+  ],
+  "solitude": [
+   "798186",
+   "cacccc"
+  ],
+  "tokyo-night": [
+   "7aa2f7",
+   "449dab"
+  ],
+  "vantablack": [
+   "8d8d8d",
+   "b0b0b0"
+  ],
+  "white": [
+   "6e6e6e",
+   "3e3e3e"
+  ]
+ }
+}

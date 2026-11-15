@@ -1,0 +1,3 @@
+/* Painted farm animals (2026-10-12): "kind/breed" -> poses there are (a = standing, walk = walking), as
+   art/livestock/<kind>-<breed>-<pose>.webp. Written by tools/cut_livestock_sheets.py -- don't edit by hand. */
+window.LIVESTOCK_PICS = {"cow/friesian": {"a": 1, "walk": 1}, "cow/highland": {"a": 1}, "cow/jersey": {"a": 1}, "drafthorse/bay": {"a": 1, "walk": 1}, "drafthorse/grey": {"a": 1, "walk": 1}, "duck/white": {"a": 1, "walk": 1}, "goat/nanny": {"a": 1, "walk": 1}, "goose/grey": {"a": 1, "walk": 1}, "hen/brown": {"a": 1, "walk": 1}, "hen/rooster": {"a": 1, "walk": 1}, "pig/sow": {"a": 1, "walk": 1}, "pony/bay": {"a": 1, "walk": 1}, "pony/shetland": {"a": 1}, "sheep/black": {"a": 1}, "sheep/ewe": {"a": 1, "walk": 1}, "sheep/sheared": {"a": 1, "walk": 1}};

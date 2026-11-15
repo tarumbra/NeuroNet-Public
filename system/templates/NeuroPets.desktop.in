@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroPets
+Comment=Raise a pet, gather, craft and hunt -- an idle game
+Exec=neuropets show
+Path=@APP@
+Icon=@APP@/icons/NeuroPets.png
+Terminal=false
+Categories=Game;
+StartupNotify=true
+StartupWMClass=NeuroPets

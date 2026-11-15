@@ -1,0 +1,116 @@
+#!/bin/bash
+# neuronet-dev -- for a computer NeuroNet is developed on (2026-10-24: Cam's PC and his laptop, both).
+#
+#   neuronet-dev pull      the newest main from GitHub (fast-forward only: never over your own
+#                          commits), the starter pictures and files its starter.json names, and the
+#                          games' art kept in step with the other computer (neuronet-dev-art), then
+#                          the desktop layer again for the new code (shortcuts, launchers), as
+#                          neuronet-update does after a release
+#   neuronet-dev art       just the art: new art from the other computer copied here, new art here sent
+#   neuronet-dev data      just the working notes: Collaboration, Scribe notes + ebooks, Claude's memory, sent and
+#                          brought across both ways (neuronet-dev-data; pull does this too)
+#   neuronet-dev apps      just the standalone games in ~/Work (NeuroCafe, NeuroCode, NeuroArcana): each one's
+#                          newest from GitHub, and its packages installed again when they changed (pull does this too)
+#   neuronet-dev mirror    setup|check|copy [user@pc]: this computer's data made a copy of the main PC's, straight over
+#                          the home network -- NeuroNet's whole data folder and the games' saves (neuronet-dev-mirror)
+#   neuronet-dev status    what's here: the branch, anything not committed or not pushed
+#
+# Work on one computer at a time: pull before you start, commit and push when you finish.
+# (2026-10-25: the art folders in ~/Pictures aren't in git -- a sheet saved on the laptop never reached the PC --
+# so pull keeps them in step too, through an `art` branch on GitHub: system/bin/neuronet-dev-art)
+# (2026-11-01: NeuroArcana's code came with a pull, but not its command, launcher or Super+Alt+Y --
+# so pull puts the desktop layer in again too: desktop_layer)
+set -uo pipefail
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet"
+app=$(neuronet-path app 2>/dev/null || true)
+[ -n "$app" ] || app="$(cd "$(dirname "$(readlink -f "$0")")/../.." && pwd)"
+[ -e "$app/.git" ] || { echo "neuronet-dev: $app isn't a git checkout (system/enable-dev.sh makes one)" >&2; exit 1; }
+cd "$app" || exit 1
+
+art_sync() {
+  if [ -x "$app/system/bin/neuronet-dev-art" ]; then python3 "$app/system/bin/neuronet-dev-art" "$app"
+  else echo "art: this NeuroNet hasn't got neuronet-dev-art yet (it comes with a newer main)"; fi
+}
+
+data_sync() {
+  if [ -x "$app/system/bin/neuronet-dev-data" ]; then python3 "$app/system/bin/neuronet-dev-data" "$app"
+  else echo "notes: this NeuroNet hasn't got neuronet-dev-data yet (it comes with a newer main)"; fi
+}
+
+# (8 Nov 2026, Cam: "so i cant use neuronet-dev pull ... for neurocode?": the standalone games live in their own repos in
+#  ~/Work, so pull brings each one up to date too. Not there or no GitHub repo: skipped. Changes not committed, or its own
+#  commits not on GitHub: left alone and said so. Same list as tools/push_apps.sh)
+APPS=(NeuroCafe NeuroCode NeuroArcana NeuroTrain)
+apps_sync() {
+  local root="${NEURO_APPS_DIR:-$HOME/Work}" a d br lock
+  for a in "${APPS[@]}"; do
+    d="$root/$a"
+    [ -d "$d/.git" ] || { echo "$a: not on this computer"; continue; }
+    git -C "$d" remote get-url origin >/dev/null 2>&1 || { echo "$a: no GitHub repo yet, skipped"; continue; }
+    if [ -n "$(git -C "$d" status --porcelain --untracked-files=no)" ]; then echo "$a: changes not committed here, not updated (commit them first)"; continue; fi
+    br=$(git -C "$d" branch --show-current)
+    lock=$(git -C "$d" rev-parse -q --verify "HEAD:package-lock.json" 2>/dev/null)
+    if ! git -C "$d" pull --ff-only -q origin "$br" 2>/dev/null; then echo "$a: couldn't update (no network, or commits here and on GitHub both: git pull it yourself)"; continue; fi
+    git -C "$d" fetch -q --tags origin 2>/dev/null
+    echo "$a: $(git -C "$d" log -1 --format='%h %s' | cut -c1-70)"
+    if [ -f "$d/package.json" ] && { [ ! -d "$d/node_modules" ] || [ "$lock" != "$(git -C "$d" rev-parse -q --verify "HEAD:package-lock.json" 2>/dev/null)" ]; }; then
+      if command -v npm >/dev/null; then (cd "$d" && npm install --no-audit --no-fund --loglevel=error >/dev/null) && echo "$a: packages installed" || echo "$a: npm install failed (run it in $d)"
+      else echo "$a: needs npm install, but npm isn't here"; fi
+    fi
+  done
+}
+
+# install.sh / install-app.sh for this code, as neuronet-update does (and enable-dev.sh did once).
+# Safe to run every time: what's in place is left alone. Last, as it may replace this script.
+desktop_layer() {
+  local out rc
+  if [ -f "$STATE/install-app.json" ]; then
+    local desk; desk=$(jq -r '.desktop // empty' "$STATE/install-app.json" 2>/dev/null)
+    out=$(bash "$app/system/install-app.sh" --yes --no-packages ${desk:+--desktop "$desk"} 2>&1); rc=$?
+  else
+    out=$(bash "$app/system/install.sh" --yes --offline --no-start 2>&1); rc=$?
+  fi
+  # what changed, and what couldn't be done; not the whole report
+  grep -E 'wrote |took out|block updated|replaced by the block|Installed|!' <<<"$out" | sed 's/^ */  /'
+  [ "$rc" = 0 ] && echo "desktop layer: up to date (shortcuts, launchers)" \
+    || echo "desktop layer: didn't fully update -- run bash $app/system/install.sh to see why"
+}
+
+case "${1:-status}" in
+  pull)
+    if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+      echo "neuronet-dev: there are changes not committed here -- commit them (or put them aside) first:"; git status --short --untracked-files=no; art_sync; data_sync; apps_sync
+      # said again last: the syncs above print "from the other computer" lines, which read like the pull worked (8 Nov 2026)
+      echo "neuronet-dev: NeuroNet itself was NOT updated (still $(tr -d ' \n' < VERSION)) -- commit the changes above, then pull again"; exit 1
+    fi
+    git pull --ff-only -q origin main || { echo "neuronet-dev: main here and on GitHub have both moved on -- merge them (git pull) yourself"; art_sync; data_sync; apps_sync; exit 1; }
+    git fetch -q origin 'refs/tags/v*:refs/tags/v*' 2>/dev/null
+    echo "main: $(git log -1 --format='%h %s' | cut -c1-80)  (VERSION $(tr -d ' \n' < VERSION))"
+    # the starter's pictures and files, as neuronet-update fetches them (merged when NeuroNet next starts)
+    want=$(jq -r '.files.tag // empty' system/starter/starter.json 2>/dev/null)
+    sf="$STATE/starter-files"
+    if [ -n "$want" ] && [ "$(tr -d ' \n' < "$sf/TAG" 2>/dev/null)" != "$want" ]; then
+      mkdir -p "$STATE"; tmp=$(mktemp -d "$STATE/.starter-files.XXXXXX")
+      if GIT_SSH_COMMAND="$(git config core.sshCommand || echo ssh)" git -c advice.detachedHead=false clone -q --depth 1 --branch "$want" "$(git remote get-url origin)" "$tmp/new" \
+         && [ "$(tr -d ' \n' < "$tmp/new/TAG" 2>/dev/null)" = "$want" ]; then
+        rm -rf "$tmp/new/.git" "$sf"; mv "$tmp/new" "$sf"; echo "starter pictures and files: $want (merged when NeuroNet next starts)"
+      else echo "couldn't download the starter pictures and files ($want) -- try again later"; fi
+      rm -rf "$tmp"
+    fi
+    art_sync
+    data_sync
+    apps_sync
+    desktop_layer
+    echo "Close and open NeuroNet (and the games) to run the new code." ;;
+  art) art_sync ;;
+  data) data_sync ;;
+  apps) apps_sync ;;
+  mirror) shift; python3 "$app/system/bin/neuronet-dev-mirror" "$app" "${@:-check}" ;;
+  status)
+    echo "NeuroNet $(tr -d ' \n' < VERSION) at $app, on $(git branch --show-current)"
+    git fetch -q origin main 2>/dev/null
+    ahead=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "?"); behind=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo "?")
+    echo "commits not pushed: $ahead   on GitHub, not here yet: $behind"
+    git status --short --untracked-files=no | head -20 ;;
+  *) sed -n '2,22p' "$0"; exit 2 ;;
+esac

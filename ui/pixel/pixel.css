@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Pixel art — Aseprite's arrangement: tools left, sprite centre, preview /
+   colour / palette right, the timeline (layers x frames) along the bottom.
+   ========================================================================== */
+.px-head, .px-ed, .px-tiles { --border: var(--line-strong, #4a3b2a); }
+
+/* ---- home ---- */
+.px-tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); margin-bottom: 8px; }
+.px-tile {
+  display: flex; flex-direction: column; gap: 3px; padding: 0; border: none; background: none;
+  cursor: pointer; text-align: left; font: inherit; color: inherit; min-width: 0;
+}
+.px-tile-img {
+  aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--border);
+  background: center / contain no-repeat, repeating-conic-gradient(#d9d9d9 0 25%, #f2f2f2 0 50%) 0 0 / 16px 16px;
+  image-rendering: pixelated;
+}
+.px-tile:hover .px-tile-img { border-color: var(--accent); }
+.px-tile-name { font-size: 0.82rem; color: var(--ink, var(--text)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.px-tile-meta { font-size: 0.7rem; color: var(--muted, var(--text-faint)); }
+.px-tpl-grid {
+  display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  max-height: 46vh; overflow-y: auto; margin: 8px 0; padding: 2px;
+}
+.px-tpl {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--muted, var(--text-faint));
+  font: inherit; font-size: 0.66rem;
+}
+.px-tpl img { width: 48px; height: 48px; image-rendering: pixelated; }
+.px-tpl span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.px-tpl:hover, .px-tpl.on { border-color: var(--accent); color: var(--ink, var(--text)); background: var(--hover); }
+
+/* ---- the editor ---- */
+.px-ed { display: flex; flex-direction: column; gap: 8px; min-height: calc(100vh - 140px); }
+.px-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.px-bar .btn { padding: 4px 10px; }
+.px-name { width: 200px; }
+.px-grow { flex: 1; }
+.px-chip { font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted, var(--text-faint)); }
+.px-chip.is-done { border-color: #5fa665; color: #5fa665; }
+.px-dirty { font-size: 0.72rem; color: var(--muted, var(--text-faint)); }
+.px-zoomlbl { font-size: 0.78rem; min-width: 48px; text-align: center; }
+.px-tog.on { border-color: var(--accent); color: var(--ink, var(--text)); background: var(--hover); }
+
+.px-body { display: flex; gap: 8px; align-items: stretch; flex: 1; min-height: 300px; }
+.px-tools {
+  flex: none; width: 76px; display: flex; flex-wrap: wrap; gap: 4px; align-content: flex-start; padding: 6px;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--bg-elevated));
+}
+.px-tool {
+  width: 30px; height: 30px; padding: 4px; border-radius: 6px; cursor: pointer;
+  border: 1px solid transparent; background: transparent; color: var(--ink, var(--text));
+}
+.px-tool svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.px-tool:hover { background: var(--hover); }
+.px-tool.on { border-color: var(--accent); background: var(--hover); color: var(--accent); }
+.px-tlbl { width: 100%; font-size: 0.6rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted, var(--text-faint)); margin-top: 6px; }
+.px-sizes { display: flex; flex-wrap: wrap; gap: 3px; }
+.px-size { width: 15px; height: 20px; padding: 0; font-size: 0.66rem; border: 1px solid var(--border); border-radius: 4px; background: transparent; color: var(--ink, var(--text)); cursor: pointer; }
+.px-size.on { border-color: var(--accent); color: var(--accent); }
+.px-fillshapes { font-size: 0.7rem; display: flex; gap: 4px; align-items: center; color: var(--muted, var(--text-faint)); }
+.px-wells { position: relative; width: 62px; height: 52px; }
+.px-well {
+  position: absolute; width: 34px; height: 34px; border-radius: 6px; cursor: pointer; padding: 0;
+  border: 2px solid var(--border);
+  background: linear-gradient(var(--c, #000), var(--c, #000)), repeating-conic-gradient(#d9d9d9 0 25%, #f2f2f2 0 50%) 0 0 / 10px 10px;
+}
+.px-well-fg { left: 0; top: 0; z-index: 1; border-color: var(--ink, var(--text)); }
+.px-well-bg { left: 20px; top: 16px; }
+.px-swap { position: absolute; right: -2px; top: -4px; padding: 0 2px; border: none; background: none; color: var(--muted, var(--text-faint)); cursor: pointer; }
+
+.px-stage {
+  flex: 1; min-width: 0; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px;
+  border: 1px solid var(--border); border-radius: 10px; background: #2b2b33;
+}
+.px-canvas { display: block; image-rendering: pixelated; cursor: crosshair; box-shadow: 0 4px 20px rgba(0,0,0,.45); margin: auto; }
+
+.px-side { flex: none; width: 236px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.px-panel {
+  padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--bg-elevated));
+  display: flex; flex-direction: column; gap: 6px;
+}
+.px-ptitle { font-size: 0.62rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted, var(--text-faint)); }
+.px-preview {
+  align-self: center; image-rendering: pixelated; max-width: 100%;
+  background: repeating-conic-gradient(#d9d9d9 0 25%, #f2f2f2 0 50%) 0 0 / 12px 12px;
+}
+.px-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.px-row input[type="color"] { width: 44px; height: 30px; padding: 0; border: none; background: none; cursor: pointer; }
+.px-hex { width: 110px; font-family: monospace; }
+.px-alpha { font-size: 0.72rem; }
+.px-alpha input { flex: 1; }
+.px-swatches { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; max-height: 150px; overflow-y: auto; }
+.px-sw { aspect-ratio: 1; padding: 0; border: 1px solid rgba(0,0,0,.35); border-radius: 3px; cursor: pointer; }
+.px-sw.on { outline: 2px solid var(--accent); outline-offset: 1px; }
+.px-palbtns .btn { padding: 2px 8px; font-size: 0.74rem; }
+
+.px-timeline {
+  border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--bg-elevated)); padding: 6px 8px;
+}
+.px-tbar { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
+.px-tbar .btn { padding: 2px 8px; font-size: 0.76rem; }
+.px-tlbl2 { font-size: 0.62rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted, var(--text-faint)); }
+.px-op { font-size: 0.72rem; display: flex; gap: 4px; align-items: center; color: var(--muted, var(--text-faint)); }
+.px-grid-wrap { overflow-x: auto; max-height: 180px; overflow-y: auto; }
+.px-cels { border-collapse: collapse; font-size: 0.75rem; }
+.px-cels th, .px-cels td { border: 1px solid var(--border); padding: 0; }
+.px-lh { min-width: 150px; }
+.px-fh { min-width: 26px; cursor: pointer; font-weight: 500; color: var(--muted, var(--text-faint)); }
+.px-fh.on { color: var(--accent); }
+.px-lname { text-align: left; padding: 2px 6px !important; font-weight: 400; white-space: nowrap; }
+.px-lname span { cursor: pointer; }
+.px-cels tr.on .px-lname { background: var(--hover); color: var(--ink, var(--text)); }
+.px-eye { border: none; background: none; color: var(--muted, var(--text-faint)); cursor: pointer; padding: 0 4px 0 0; }
+.px-eye.off { opacity: .5; }
+.px-cel { width: 26px; height: 22px; text-align: center; cursor: pointer; color: var(--muted, var(--text-faint)); }
+.px-cel.col { background: rgba(224,120,158,.08); }
+.px-cel.on { background: var(--accent); color: #fff; }
+
+/* the assets page: in-progress and completed folders, game assets */
+.as-folder { font-weight: 600; }
+.as-stage { font-size: 0.66rem; padding: 0 6px; border-radius: 999px; border: 1px solid var(--border); margin-left: 4px; }
+.as-th img.px-art, .as-img.px-art { image-rendering: pixelated; }
+
+@media (max-width: 1100px) {
+  .px-body { flex-wrap: wrap; }
+  .px-side { width: 100%; flex-direction: row; flex-wrap: wrap; }
+  .px-panel { flex: 1 1 220px; }
+}

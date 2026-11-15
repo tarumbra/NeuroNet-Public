@@ -1,0 +1,83 @@
+# The Battle Re-work's icons, painted by Cam on 16 October 2026 from note 10 (his file names, so each line names its file:
+# his numbers aren't the plan's -- his 55 and 56 are not the Farm's 55 and the tomato seed's 56).
+# 57 in the plan: the status effects -- the fight's effect chips use them (obj_fx<kind>)
+54 {Icon- Sheet 54.jpeg}: obj_fxnetted,obj_fxtrapped,obj_fxstunned,obj_fxpoisoned,obj_fxbleeding,obj_fxburning,obj_fxslowed,obj_fxweakened,obj_fxbrokenguard,obj_fximmune,obj_fxbound,obj_fxfury,obj_fxdevotion,obj_fxbloodlust,obj_fxblock,obj_fxdodge
+# 58 in the plan: the Hunter's knives, snares, bear traps and nets (the grindstone from his single sheet 63)
+55 {Icon - Sheet 55.jpeg}: twinenet,weightednet,firenet,twigsnare,ropesnare,spikedsnare,beartrap,mithrilbeartrap,bronzeknife,ironknife,steelknife,mithrilknife,adamantknife,runeknife,-,obj_tools
+# 59 in the plan: the Berserker's longswords, mauls and spiked gauntlets
+56 {Icon - Sheet 56.jpeg}: bronzelongsword,ironlongsword,steellongsword,mithrillongsword,adamantlongsword,runelongsword,bronzemaul,ironmaul,steelmaul,mithrilmaul,adamantmaul,runemaul,bronzespikedgauntlets,steelspikedgauntlets,mithrilspikedgauntlets,adamantspikedgauntlets
+# 67 in the plan: the maces (six cells of a 4x4)
+57 {Icon- Sheet 57.jpeg}: bronzemace,ironmace,steelmace,mithrilmace,adamantmace,runemace,-,-,-,-,-,-,-,-,-,-
+# 60 in the plan: the battle staves (twelve cells of a 4x4)
+58 {Icon- Sheet 58.jpeg}: oakbattlestaff,maplebattlestaff,yewbattlestaff,magicbattlestaff,airbattlestaff,waterbattlestaff,earthbattlestaff,firebattlestaff,enchantedstormstaff,enchantedfroststaff,enchanteddrainstaff,enchantedburningstaff,-,-,-,-
+# 61 in the plan: the Thief
+59 {Icon- Sheet 59.jpeg}: bronzedagger,irondagger,steeldagger,mithrildagger,adamantdagger,runedagger,throwingknife,steelthrowingknife,runethrowingknife,weakpoison,strongpoison,deadlypoison,paralyticvenom,weakeningvenom,venomsac,obj_smokebomb
+# 62 in the plan: the Paladin (twelve cells of a 4x4)
+60 {Icon- Sheet 60.jpeg}: woodenbuckler,bronzekiteshield,ironkiteshield,steelkiteshield,mithrilkiteshield,adamantkiteshield,runekiteshield,holywater,obj_bash,obj_layonhands,obj_smite,obj_aegis,-,-,-,-
+# note 10's Beast Master sheet: the crook (the oak crook), the paw book (the Beast Master's class book), the six types, the
+# training dummy, the stall sign (whip, horn, treats, pet potion and feed sack have no item of their own -- left out)
+61 {Icon- Sheet 61.jpeg}: -,-,-,-,-,-,-,obj_typebeast,obj_typebird,obj_typewater,obj_typereptile,obj_typebug,obj_typespirit,obj_dummy,obj_stalls,-
+# 65 in the plan: Necromancy (3 across, 2 down)
+62 [3x2] {Icon- Sheet 62.jpeg}: lifeessence,bloodessence,bloodrune,bloodbook,lifepotion,bonestaff
+# the grindstone, on its own
+63 [1x1] {Icon- Sheet 63.jpeg}: obj_grindstone
+# 66 in the plan: leaf litter and the improvised arrow (1 across, 2 down)
+64 [1x2] {Icon- Sheet 64.jpeg}: leaflitter,improvisedarrow
+# 68 in the plan: the class books (5 across)
+65 [5x1] {Icon- Sheet 65.jpeg}: hunterbook,berserkerbook,arcanebook,thiefbook,paladinbook
+# 69 in the plan: quivers (4 across)
+66 [4x1] {Icon- Sheet 66.jpeg}: improvisedquiver,leatherquiver,studdedquiver,gatorquiver
+# Cam's tutor portraits (note 10, "Tutor portraits"; ~/Pictures/NeuroPets Art Assets/Tutors/tutors.jpeg): the real tutors, the
+# Archmage's apprentice (Ilse's place in the Guild hall) and Morvane; the parchment cards (7-16) are for later people
+67 {../Tutors/tutors.jpeg}: obj_pnell,obj_pthorvald,obj_pmaren,obj_pbriar,-,obj_pmorvane,-,-,-,-,-,-,-,-,-,-
+# painted by Cam, 16 October evening: the field recipes' pages and the bandage (71 in the plan), and the move tomes (73; his
+# sheet has two spare books on its last row, left out). His sheet 69 (three tomes again and a rug) isn't cut.
+68 [3x1] {Icon- Sheet 67.jpeg}: pageimprovise,pagebandage,bandage
+69 [3x3] {Icon- Sheet 68.jpeg}: tomebeast,tomebird,tomebug,tomereptile,tomespirit,tomewater,-,-,-
+# painted by Cam, 16 October evening, saved in the main art folder: the crooks (and the Beast Master's book), the bone arrows
+70 [6x1] {Icon - Sheet Crooks.jpeg}: oakcrook,willowcrook,maplecrook,yewcrook,magiccrook,beastmasterbook
+74 [2x1] {Icon - Sheet Bone Arrow heads and Arrow.jpeg}: bonearrowheads,bonearrow
+# Cam, 17 October: Tamsin, the Beast Master's stand-in in the Guild hall (his file says "Tasmin")
+75 [1x1] {../Tutors/Tasmin - Beast Hunter - Tutor.jpeg}: obj_ptamsin
+# Cam, 17 October: Pip (the Thief's stand-in) and Wren (the Hunter's)
+76 [1x1] {../Tutors/Pip - Thief - Tutor.jpeg}: obj_ppip
+77 [1x1] {../Tutors/Wren - Hunter - Tutor.jpeg}: obj_pwren
+# Cam, 17 October (his improved tutor paintings, now in Art Assets/Tutors): Brakka (his file says "Brekka"), Brother Aldo, and Ilse's
+# own painting (it replaces her cell of the tutors sheet, 67)
+78 [1x1] {../Tutors/Brekka - Berserker - Tutor.jpeg}: obj_pbrakka
+79 [1x1] {../Tutors/Brother Aldo - Paladin - Tutor.jpeg}: obj_paldo
+80 [1x1] {../Tutors/Ilse - Arcane - Tutor.jpeg}: obj_pilse
+# the Marketplace's icons and the class starter crates (2026-10-17, Notes: MarketThief vault, "06"): one 4x4 icon sheet in Icons
+81 {Icon - Sheet Market.jpeg}: hunterkit,berserkerkit,arcanekit,thiefkit,paladinkit,beastmasterkit,obj_larceny,lockbox,lockedchest,strongbox,pettonic,-,-,-,-,-
+
+# the Marketplace's people (2026-10-17, Notes: MarketThief vault, "04"): one painting each in Art Assets/Marketplace/People
+83 [1x1] {../Marketplace/People/Old Bess - Fruit stall.jpeg}: obj_pbess
+84 [1x1] {../Marketplace/People/Mabel - Baker.jpeg}: obj_pmabel
+85 [1x1] {../Marketplace/People/Gil - Fishmonger.jpeg}: obj_pgil
+86 [1x1] {../Marketplace/People/Madame Vey - Cloth merchant.jpeg}: obj_pvey
+87 [1x1] {../Marketplace/People/Hester - Apothecary.jpeg}: obj_phester
+88 [1x1] {../Marketplace/People/Mr Quill - Curio dealer.jpeg}: obj_pquill
+89 [1x1] {../Marketplace/People/Dorn - Weaponsmith.jpeg}: obj_pdorn
+90 [1x1] {../Marketplace/People/Perla - Jeweller.jpeg}: obj_pperla
+91 [1x1] {../Marketplace/People/Captain Hale - The watch.jpeg}: obj_phale
+# Guildmaster Orla (Notes: MarketThief vault, Battle-Rework conclusion 01): her painting, like the tutors'
+92 [1x1] {../Tutors/Orla - Guildmaster.jpeg}: obj_porla
+# the talent-node icons (Battle-Rework conclusion 01, optional): two sheets a class (the Arcane's three), branch by branch
+93 {Icon - Sheet Talents Hunter 1.jpeg}: talent_steadyaim,talent_keeneye,talent_calledshot,talent_piercing,talent_secondarrow,talent_deadeye,talent_huntersfocus,talent_killingshot,talent_snarecraft,talent_netmender,talent_barbedjaws,talent_widemesh,talent_secondsnare,talent_ambush,talent_easytarget,talent_killingground
+94 {Icon - Sheet Talents Hunter 2.jpeg}: talent_lightstep,talent_thickhide,talent_quivercraft,talent_fletcherspride,talent_tracker,talent_rootingshot,talent_hardy,talent_patience,-,-,-,-,-,-,-,-
+95 {Icon - Sheet Talents Berserker 1.jpeg}: talent_heavyhands,talent_brutal,talent_cleaver,talent_momentum,talent_flurry,talent_executioner,talent_bloodied,talent_openingblow,talent_ironskin,talent_bulwark,talent_stagger,talent_scartissue,talent_footwork,talent_veteran,talent_unbowed,talent_juggernautks
+96 {Icon - Sheet Talents Berserker 2.jpeg}: talent_seething,talent_thickblood,talent_painfeeds,talent_secondwind,talent_bloodletter,talent_berserk,talent_bloodthirst,talent_redmist,-,-,-,-,-,-,-,-
+97 {Icon - Sheet Talents Arcane 1.jpeg}: talent_kindling,talent_attunement,talent_searing,talent_deepfreeze,talent_overwhelm,talent_spellweaver,talent_primalpower,talent_avatar,talent_wardedrobes,talent_blink,talent_arcaneshield,talent_stafftraining,talent_hex,talent_manaskin,talent_steadyhands,talent_spellblade
+98 {Icon - Sheet Talents Arcane 2.jpeg}: talent_runethrift,talent_focus,talent_surgemastery,talent_wellspring,talent_potency,talent_fourthsigil,talent_overload,talent_twincast,talent_gravewhispers,talent_bonemending,talent_secondrisen,talent_deathless,talent_lingeringcurse,talent_thirdrisen,talent_sacrifice,talent_eternalservants
+99 {Icon - Sheet Talents Thief 1.jpeg}: talent_toxic,talent_potent,talent_lingering,talent_thickcoat,talent_virulence,talent_numbing,talent_rot,talent_blackblood,talent_nimble,talent_lightfingers,talent_ambusher,talent_thickersmoke,talent_evasion,talent_opportunist,talent_vanish,talent_shadowstep
+100 {Icon - Sheet Talents Thief 2.jpeg}: talent_quickhands,talent_keenedge,talent_twinfangs,talent_knifethrower,talent_flurryofsteel,talent_cutthroat,talent_precision,talent_thousandcuts,-,-,-,-,-,-,-,-
+101 {Icon - Sheet Talents Paladin 1.jpeg}: talent_zeal,talent_edge,talent_righteous,talent_twinblades,talent_crusader,talent_judgement,talent_valor,talent_avenger,talent_shieldwall,talent_plated,talent_heavybash,talent_bracing,talent_quickbash,talent_longstun,talent_steadfast,talent_bastion
+102 {Icon - Sheet Talents Paladin 2.jpeg}: talent_devout,talent_firstaid,talent_healinghands,talent_faith,talent_longaegis,talent_mercy,talent_serenity,talent_sanctuary,-,-,-,-,-,-,-,-
+103 {Icon - Sheet Talents Beast Master 1.jpeg}: talent_fiercebond,talent_bmthickhide,talent_packtactics,talent_secondbeast,talent_sharedstrength,talent_bmshieldwall,talent_rallycry,talent_packleader,talent_instinct,talent_quicklearner,talent_venomous,talent_deepreserves,talent_predator,talent_survivor,talent_wildheart,talent_apex
+104 {Icon - Sheet Talents Beast Master 2.jpeg}: talent_goodfeed,talent_softstraw,talent_tending,talent_handling,talent_bigpen,talent_quickrest,talent_fieldrations,talent_whisperer,-,-,-,-,-,-,-,-
+105 {Icon- Sheet 105.jpeg}: goldenfeather,emeraldfly,luckytrotter,foxbrush,ancientfemur,gravesalt,echobell,wraithveil,wispjar,-,-,-,-,-,-,-   # V6 (2026-10-18): the mastery drops + the Grand bone staff; prompt in collab N8
+105 [1x1] {@crops/grandbonestaff-from-sheet-105.png}: grandbonestaff   # the staff runs down cells 10 and 14, cropped by hand (2026-10-18)
+107 {Icon- Sheet 107.jpeg}: tomedavyjones,tomecleopatra,tomeredriver,tomeundead,tomefrostbite,tomecanopy,tomestar,-,-,-,-,-,-,-,-,-   # V11 (2026-10-18): the region tomes; prompt in collab
+106 {Icon- Sheet 106.jpeg}: astralegg,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-   # V10 (2026-10-18): the Astral egg; the other cells are filler
+108 {Icon- Sheet 108.jpeg}: obj_typeastral,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-   # V10: the Astral battle type's badge (prompt in collab N13); the Astral egg stands in until then
+109 {Icon- Sheet 109.jpeg}: obj_sparring,obj_feedstore,obj_restbarn,-,-,-,-,-,-,-,-,-,-,-,-,-   # PT27: the Beast Pen's sheet badges (prompt in collab N14); the show ring, hay and farm barn stand in

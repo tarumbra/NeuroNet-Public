@@ -1,0 +1,734 @@
+{
+ "BEAST_MOVES": {
+  "//": "Battle Re-work Part 11b (2026-10-16), note 06: about 40 moves, 7 a type, learned at battle levels 1, 1, 5, 10, 15, 25 and 35; a pet uses 4. power: x its max hit; acc: x its hit chance; hits: blows; fx: an effect on the creature {kind, rounds, power, chance}; guard: {cut, rounds} less from blows; dodge: {chance, rounds}; heal: a share of its health; drain: a share of the damage back; uses: a fight (0: any number).",
+  "scratch": {
+   "name": "Scratch",
+   "type": "beast",
+   "level": 1,
+   "about": "A quick swipe.",
+   "power": 1.0
+  },
+  "growl": {
+   "name": "Growl",
+   "type": "beast",
+   "level": 1,
+   "about": "The creature's blows weaken for 3 rounds.",
+   "power": 0,
+   "fx": {
+    "kind": "weakened",
+    "rounds": 3
+   }
+  },
+  "bite": {
+   "name": "Bite",
+   "type": "beast",
+   "level": 5,
+   "about": "A hard bite: 30% more.",
+   "power": 1.3
+  },
+  "maul": {
+   "name": "Maul",
+   "type": "beast",
+   "level": 10,
+   "about": "60% more, a little less sure.",
+   "power": 1.6,
+   "acc": 0.85
+  },
+  "rend": {
+   "name": "Rend",
+   "type": "beast",
+   "level": 15,
+   "about": "A tearing blow that bleeds.",
+   "power": 0.9,
+   "fx": {
+    "kind": "bleeding",
+    "rounds": 3,
+    "power": 2
+   }
+  },
+  "hunker": {
+   "name": "Hunker down",
+   "type": "beast",
+   "level": 25,
+   "about": "Takes 40% less for 2 rounds.",
+   "power": 0,
+   "guard": {
+    "cut": 0.4,
+    "rounds": 2
+   }
+  },
+  "feralrush": {
+   "name": "Feral rush",
+   "type": "beast",
+   "level": 35,
+   "about": "Twice as hard and more. Twice a fight.",
+   "power": 2.2,
+   "acc": 0.8,
+   "uses": 2
+  },
+  "peck": {
+   "name": "Peck",
+   "type": "bird",
+   "level": 1,
+   "about": "A quick peck.",
+   "power": 1.0
+  },
+  "gust": {
+   "name": "Gust",
+   "type": "bird",
+   "level": 1,
+   "about": "Knocks the creature off balance for 2 rounds.",
+   "power": 0.5,
+   "fx": {
+    "kind": "offbalance",
+    "rounds": 2
+   }
+  },
+  "dive": {
+   "name": "Dive",
+   "type": "bird",
+   "level": 5,
+   "about": "Out of the sky: 40% more.",
+   "power": 1.4,
+   "acc": 0.9
+  },
+  "flurry": {
+   "name": "Flurry",
+   "type": "bird",
+   "level": 10,
+   "about": "Two quick strikes.",
+   "power": 0.7,
+   "hits": 2
+  },
+  "preen": {
+   "name": "Preen",
+   "type": "bird",
+   "level": 15,
+   "about": "Heals a third of its health. Twice a fight.",
+   "power": 0,
+   "heal": 0.33,
+   "uses": 2
+  },
+  "talon": {
+   "name": "Talon strike",
+   "type": "bird",
+   "level": 25,
+   "about": "A raking blow that bleeds.",
+   "power": 1.3,
+   "fx": {
+    "kind": "bleeding",
+    "rounds": 3,
+    "power": 3
+   }
+  },
+  "skystrike": {
+   "name": "Sky strike",
+   "type": "bird",
+   "level": 35,
+   "about": "Twice as hard. Twice a fight.",
+   "power": 2.0,
+   "acc": 0.9,
+   "uses": 2
+  },
+  "splash": {
+   "name": "Splash",
+   "type": "water",
+   "level": 1,
+   "about": "A wet slap.",
+   "power": 0.9
+  },
+  "shellup": {
+   "name": "Shell up",
+   "type": "water",
+   "level": 1,
+   "about": "Takes 40% less for 2 rounds.",
+   "power": 0,
+   "guard": {
+    "cut": 0.4,
+    "rounds": 2
+   }
+  },
+  "tackle": {
+   "name": "Tackle",
+   "type": "water",
+   "level": 5,
+   "about": "A heavy charge: 30% more.",
+   "power": 1.3
+  },
+  "bubble": {
+   "name": "Bubble",
+   "type": "water",
+   "level": 10,
+   "about": "Slows the creature for 2 rounds.",
+   "power": 0.6,
+   "fx": {
+    "kind": "slowed",
+    "rounds": 2
+   }
+  },
+  "undertow": {
+   "name": "Undertow",
+   "type": "water",
+   "level": 15,
+   "about": "Drags it under and breaks its guard.",
+   "power": 1.2,
+   "fx": {
+    "kind": "brokenguard",
+    "rounds": 3
+   }
+  },
+  "tide": {
+   "name": "Tide",
+   "type": "water",
+   "level": 25,
+   "about": "Heals a third of its health. Twice a fight.",
+   "power": 0,
+   "heal": 0.35,
+   "uses": 2
+  },
+  "crashingwave": {
+   "name": "Crashing wave",
+   "type": "water",
+   "level": 35,
+   "about": "Twice as hard. Twice a fight.",
+   "power": 2.0,
+   "uses": 2
+  },
+  "snap": {
+   "name": "Snap",
+   "type": "reptile",
+   "level": 1,
+   "about": "A sharp snap.",
+   "power": 1.0
+  },
+  "hiss": {
+   "name": "Hiss",
+   "type": "reptile",
+   "level": 1,
+   "about": "The creature's blows weaken for 3 rounds.",
+   "power": 0,
+   "fx": {
+    "kind": "weakened",
+    "rounds": 3
+   }
+  },
+  "venomfang": {
+   "name": "Venom fang",
+   "type": "reptile",
+   "level": 5,
+   "about": "A bite that poisons.",
+   "power": 0.9,
+   "fx": {
+    "kind": "poisoned",
+    "rounds": 4,
+    "power": 2
+   }
+  },
+  "coil": {
+   "name": "Coil",
+   "type": "reptile",
+   "level": 10,
+   "about": "Squeezes: half the time, the creature can't act.",
+   "power": 0.7,
+   "fx": {
+    "kind": "stunned",
+    "rounds": 1,
+    "chance": 0.5
+   }
+  },
+  "deathroll": {
+   "name": "Death roll",
+   "type": "reptile",
+   "level": 15,
+   "about": "60% more, a little less sure.",
+   "power": 1.6,
+   "acc": 0.85
+  },
+  "bask": {
+   "name": "Bask",
+   "type": "reptile",
+   "level": 25,
+   "about": "Heals a third of its health. Twice a fight.",
+   "power": 0,
+   "heal": 0.3,
+   "uses": 2
+  },
+  "crushingcoil": {
+   "name": "Crushing coil",
+   "type": "reptile",
+   "level": 35,
+   "about": "Twice as hard. Twice a fight.",
+   "power": 2.0,
+   "uses": 2
+  },
+  "nip": {
+   "name": "Nip",
+   "type": "bug",
+   "level": 1,
+   "about": "A small nip.",
+   "power": 1.0
+  },
+  "web": {
+   "name": "Web",
+   "type": "bug",
+   "level": 1,
+   "about": "Slows the creature for 2 rounds.",
+   "power": 0.4,
+   "fx": {
+    "kind": "slowed",
+    "rounds": 2
+   }
+  },
+  "sting": {
+   "name": "Sting",
+   "type": "bug",
+   "level": 5,
+   "about": "A sting that poisons.",
+   "power": 0.9,
+   "fx": {
+    "kind": "poisoned",
+    "rounds": 4,
+    "power": 2
+   }
+  },
+  "carapace": {
+   "name": "Carapace",
+   "type": "bug",
+   "level": 10,
+   "about": "Takes 50% less for 2 rounds.",
+   "power": 0,
+   "guard": {
+    "cut": 0.5,
+    "rounds": 2
+   }
+  },
+  "swarm": {
+   "name": "Swarm",
+   "type": "bug",
+   "level": 15,
+   "about": "Three little bites.",
+   "power": 0.5,
+   "hits": 3
+  },
+  "paralyse": {
+   "name": "Paralyse",
+   "type": "bug",
+   "level": 25,
+   "about": "The creature can't act next round.",
+   "power": 0.5,
+   "acc": 0.8,
+   "fx": {
+    "kind": "stunned",
+    "rounds": 1
+   }
+  },
+  "venomburst": {
+   "name": "Venom burst",
+   "type": "bug",
+   "level": 35,
+   "about": "Hard, and it poisons. Twice a fight.",
+   "power": 1.8,
+   "uses": 2,
+   "fx": {
+    "kind": "poisoned",
+    "rounds": 4,
+    "power": 3
+   }
+  },
+  "wisp": {
+   "name": "Wisp",
+   "type": "spirit",
+   "level": 1,
+   "about": "A flicker of cold fire.",
+   "power": 1.0,
+   "dtype": "magic"
+  },
+  "hex": {
+   "name": "Hex",
+   "type": "spirit",
+   "level": 1,
+   "about": "Breaks the creature's guard for 3 rounds.",
+   "power": 0,
+   "fx": {
+    "kind": "brokenguard",
+    "rounds": 3
+   }
+  },
+  "spiritflame": {
+   "name": "Spirit flame",
+   "type": "spirit",
+   "level": 5,
+   "about": "Sets it burning.",
+   "power": 0.9,
+   "dtype": "magic",
+   "fx": {
+    "kind": "burning",
+    "rounds": 3,
+    "power": 2
+   }
+  },
+  "fade": {
+   "name": "Fade",
+   "type": "spirit",
+   "level": 10,
+   "about": "Half the creature's blows miss it for 2 rounds.",
+   "power": 0,
+   "dodge": {
+    "chance": 0.5,
+    "rounds": 2
+   }
+  },
+  "drain": {
+   "name": "Drain",
+   "type": "spirit",
+   "level": 15,
+   "about": "A blow that heals it by half the damage.",
+   "power": 1.2,
+   "dtype": "magic",
+   "drain": 0.5
+  },
+  "curse": {
+   "name": "Curse",
+   "type": "spirit",
+   "level": 25,
+   "about": "Weakens the creature for 3 rounds.",
+   "power": 0.6,
+   "dtype": "magic",
+   "fx": {
+    "kind": "weakened",
+    "rounds": 3
+   }
+  },
+  "soulstorm": {
+   "name": "Soul storm",
+   "type": "spirit",
+   "level": 35,
+   "about": "Twice as hard and more. Twice a fight.",
+   "power": 2.2,
+   "acc": 0.85,
+   "dtype": "magic",
+   "uses": 2
+  }
+ },
+ "BEAST_CREATURE_TYPE": {
+  "//": "A creature's type, for pet moves (strong: x BEAST_RULES.strong, weak: x weak).",
+  "chicken": "bird",
+  "duck": "bird",
+  "cow": "beast",
+  "pig": "beast",
+  "fox": "beast",
+  "goat": "beast",
+  "sheep": "beast",
+  "horse": "beast",
+  "cattledog": "beast",
+  "bunny": "beast",
+  "hare": "beast",
+  "wildcat": "beast",
+  "straydog": "beast",
+  "hedgehog": "beast",
+  "spider": "bug",
+  "deer": "beast",
+  "snake": "reptile",
+  "elk": "beast",
+  "frog": "water",
+  "boar": "beast",
+  "wolf": "beast",
+  "brownbear": "beast",
+  "tiger": "beast",
+  "leopard": "beast",
+  "anaconda": "reptile",
+  "giantspider": "bug",
+  "bat": "bird",
+  "armadillo": "reptile",
+  "gideon": "beast",
+  "billy": "beast",
+  "jack": "beast",
+  "bambi": "beast",
+  "grizz": "beast",
+  "basilisk": "reptile",
+  "crab": "water",
+  "gull": "bird",
+  "seal": "water",
+  "snapjaw": "reptile",
+  "owl": "bird",
+  "viper": "reptile",
+  "sandscorpion": "bug",
+  "deathstalker": "bug",
+  "camelspider": "bug",
+  "camel": "beast",
+  "jackal": "beast",
+  "sphinx": "spirit",
+  "alligator": "reptile",
+  "hippo": "water",
+  "flamingo": "bird",
+  "ibis": "bird",
+  "cobra": "reptile",
+  "kingnile": "reptile",
+  "snowleopard": "beast",
+  "arcticfox": "beast",
+  "mountaingoat": "beast",
+  "yak": "beast",
+  "icewolf": "beast",
+  "snowyowl": "bird",
+  "yeti": "spirit",
+  "apprenticemage": "spirit",
+  "adeptmage": "spirit",
+  "magusmage": "spirit",
+  "sorceressmage": "spirit",
+  "archmagemage": "spirit",
+  "tombguardian": "spirit",
+  "pharaoh": "spirit",
+  "skeleton": "spirit",
+  "ghoul": "spirit",
+  "cryptbat": "bird",
+  "wraith": "spirit",
+  "wisp": "spirit",
+  "morvane": "spirit"
+ },
+ "BEAST_FIGHT": {
+  "//": "The Beast Master's fight (note 06). fight: a pet's attack = level x attLevel + its Attack x attStat; defence the same; max hit = hitBase + (level + Attack) / hitDiv; dodge = Speed x dodgePerSpeed (up to dodgeMax). front: the share of the creature's blows at your front pet (the rest at a random other). pack: pets in a fight to start (Bond adds); bench: more you can swap in. xpShare: each pet's share of a kill's xp by how many fought. foodCut: food heals pets 20% less. regen: a share of its health a pet heals a minute between fights. die: in these modes, beyond the early grounds (level above safeTo), the chance a fainting pet dies (Q11). startMoves: moves a pet knows when it joins; slots: moves it uses.",
+  "fight": {
+   "attLevel": 1,
+   "attStat": 2,
+   "defLevel": 1,
+   "defStat": 2,
+   "hitBase": 2,
+   "hitDiv": 4,
+   "dodgePerSpeed": 0.004,
+   "dodgeMax": 0.3
+  },
+  "front": 0.7,
+  "pack": 1,
+  "bench": 2,
+  "xpShare": [
+   1,
+   0.6,
+   0.5
+  ],
+  "foodCut": 0.8,
+  "regen": 0.02,
+  "die": {
+   "hardcore": 0.1,
+   "hell": 0.25
+  },
+  "safeTo": 18,
+  "startMoves": 2,
+  "slots": 4
+ },
+ "BEASTMASTER_CLASS": {
+  "name": "Beast Master",
+  "style": "pack",
+  "styles": [
+   "pack"
+  ],
+  "about": "Your battle pets fight for you -- you choose their moves, feed them and swap them. You're never hurt. Trains Attack.",
+  "resist": {},
+  "weak": {},
+  "specials": {
+   "command": {
+    "name": "Command",
+    "cost": 40,
+    "command": true,
+    "about": "Your front pet acts twice next round. 40% bar."
+   },
+   "rally": {
+    "minLevel": 10,
+    "name": "Rally",
+    "cost": 60,
+    "rally": 0.25,
+    "about": "Every pet in the fight heals a quarter of its health. 60% bar."
+   },
+   "wildcall": {
+    "name": "Wild call",
+    "cost": 80,
+    "wild": 0.5,
+    "minLevel": 25,
+    "about": "For 3 rounds your pets hit 50% harder. From class level 25. 80% bar."
+   }
+  }
+ },
+ "BEASTMASTER_ITEMS": {
+  "//": "Crooks: the Beast Master's weapon (note 03: 'a whip or crook ... a weak hit of your own'). att: added to every pet's attack; your own blow: up to 1 + att / 3.",
+  "oakcrook": {
+   "name": "Oak crook",
+   "price": 30,
+   "gem": 1,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "pack",
+    "att": 2,
+    "cls": "beastmaster",
+    "req": {
+     "attack": 1
+    }
+   }
+  },
+  "willowcrook": {
+   "name": "Willow crook",
+   "price": 60,
+   "gem": 2,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "pack",
+    "att": 4,
+    "cls": "beastmaster",
+    "req": {
+     "attack": 10
+    }
+   }
+  },
+  "maplecrook": {
+   "name": "Maple crook",
+   "price": 110,
+   "gem": 3,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "pack",
+    "att": 5,
+    "cls": "beastmaster",
+    "req": {
+     "attack": 20
+    }
+   }
+  },
+  "yewcrook": {
+   "name": "Yew crook",
+   "price": 200,
+   "gem": 4,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "pack",
+    "att": 7,
+    "cls": "beastmaster",
+    "req": {
+     "attack": 30
+    }
+   }
+  },
+  "magiccrook": {
+   "name": "Magic crook",
+   "price": 360,
+   "gem": 5,
+   "gear": {
+    "who": "player",
+    "slot": "weapon",
+    "style": "pack",
+    "att": 9,
+    "cls": "beastmaster",
+    "req": {
+     "attack": 40
+    }
+   }
+  }
+ },
+ "BEASTMASTER_RECIPES": {
+  "//": "Crooks at your crafting bench.",
+  "crafting": [
+   {
+    "make": "oakcrook",
+    "needs": {
+     "oak": 6,
+     "rope": 1
+    },
+    "level": 3,
+    "xp": 14
+   },
+   {
+    "make": "willowcrook",
+    "needs": {
+     "willow": 6,
+     "rope": 1
+    },
+    "level": 12,
+    "xp": 30
+   },
+   {
+    "make": "maplecrook",
+    "needs": {
+     "maple": 6,
+     "rope": 2
+    },
+    "level": 22,
+    "xp": 60
+   },
+   {
+    "make": "yewcrook",
+    "needs": {
+     "yew": 6,
+     "rope": 2
+    },
+    "level": 32,
+    "xp": 100
+   },
+   {
+    "make": "magiccrook",
+    "needs": {
+     "magiclog": 6,
+     "rope": 3
+    },
+    "level": 42,
+    "xp": 160
+   }
+  ]
+ },
+ "BEASTMASTER_WEAPONS": {
+  "//": "What a crook hits with.",
+  "oakcrook": [
+   "crush",
+   "wood"
+  ],
+  "willowcrook": [
+   "crush",
+   "wood"
+  ],
+  "maplecrook": [
+   "crush",
+   "wood"
+  ],
+  "yewcrook": [
+   "crush",
+   "wood"
+  ],
+  "magiccrook": [
+   "crush",
+   "wood"
+  ]
+ },
+ "BEAST_PP": {
+  "//": "V5 (2026-10-17, Cam's PT17 note: 'should their be a PP system similar to pokemon ... Once all PP is exhausted there will be a default attack which will continue infinetly'). Every move has PP by kind -- the 9 strong ones (their old '2 a fight' limit) few, everyday hits many; a use spends one, and they carry from fight to fight through a hunt. A win gives `regen` back to every move (a breather); the pack coming home from a hunt, or resting in the Pen, fills them; a Pet tonic fills one pet's. Out of PP, a pet uses Scrap (never runs out). The Mathematician: a pack makes ~1,250 moves an hour, so pools are per hunt with the breather -- a pet leaning on one move runs it down and must use the others; Scrap fills the gaps. The talent that gave limited moves more uses gives them more PP (+2 a rank).",
+  "strong": 6,
+  "big": 14,
+  "hit": 24,
+  "status": 12,
+  "heal": 8,
+  "bigPower": 1.5,
+  "regen": 2,
+  "talentPP": 2,
+  "scrap": {
+   "name": "Scrap",
+   "power": 0.6,
+   "about": "A tired, scrappy swipe -- never runs out."
+  },
+  "tonic": {
+   "item": {
+    "name": "Pet tonic",
+    "gem": 3,
+    "about": "Fills a battle pet's PP: in a hunt (the fight's Feed menu), and a pet down to Scrap drinks one between fights on its own.",
+    "price": 30
+   },
+   "recipe": {
+    "make": "pettonic",
+    "needs": {
+     "chamomile": 2,
+     "honey": 1
+    },
+    "level": 12,
+    "xp": 28
+   }
+  }
+ }
+}

@@ -1,0 +1,4 @@
+-- >>> NeuroNet desktop integration (install.sh)
+-- Added by the NeuroNet migration; see QUICK-ACCESS.md in the NeuroNet folder.
+o.launch_on_start("neuronet-quick start")
+-- <<< NeuroNet desktop integration (install.sh)

@@ -1,0 +1,87 @@
+{
+  "_about": "NeuroNet's part of ~/.config/omarchy/shell.json, collected by system/collect.sh. 'replaces' are plugins NeuroNet's own take the place of, and must be switched off where these are switched on; 'retired' are NeuroNet widgets no longer part of NeuroNet. 'takes_over' are hand-made copies of a NeuroNet widget: off, off the bar and set aside, NeuroNet's in their place.",
+  "plugins": [
+    {
+      "id": "neuronet.dock"
+    },
+    {
+      "id": "neuronet.claudedock"
+    }
+  ],
+  "replaces": [
+    "io.github.claudsondouglas.arcdock",
+    "omadock",
+    "io.github.matheusmedrado.omadock"
+  ],
+  "retired": [
+    "neuronet.training",
+    "neuronet.board",
+    "neuronet.frame",
+    "neuronet.home"
+  ],
+  "takes_over": [
+    "cam.claudedock"
+  ],
+  "bar": {
+    "left": [
+      {
+        "entry": {
+          "id": "neuronet.launcher"
+        },
+        "after": "omarchy.menu",
+        "before": "omarchy.workspaces"
+      }
+    ],
+    "right": [
+      {
+        "entry": {
+          "id": "neuronet.claudedock"
+        },
+        "after": null,
+        "before": "neuronet.gamemode"
+      },
+      {
+        "entry": {
+          "id": "neuronet.gamemode"
+        },
+        "after": null,
+        "before": "omarchy.tray"
+      },
+      {
+        "entry": {
+          "id": "neuronet.music"
+        },
+        "after": "omarchy.tray",
+        "before": "neuronet.fleeting"
+      },
+      {
+        "entry": {
+          "id": "neuronet.fleeting"
+        },
+        "after": "neuronet.music",
+        "before": "neuronet.tarot"
+      },
+      {
+        "entry": {
+          "id": "neuronet.tarot"
+        },
+        "after": "neuronet.fleeting",
+        "before": "neuronet.oracle"
+      },
+      {
+        "entry": {
+          "id": "neuronet.oracle"
+        },
+        "after": "neuronet.tarot",
+        "before": "neuronet.lenormand"
+      },
+      {
+        "entry": {
+          "id": "neuronet.lenormand"
+        },
+        "after": "neuronet.oracle",
+        "before": "omarchy.agents"
+      }
+    ]
+  }
+}

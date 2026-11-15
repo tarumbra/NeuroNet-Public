@@ -1,0 +1,7 @@
+{
+  "//": [
+    "Content for ui/pet/core/40-zz-recipe-xp.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "RECIPE_XP": {"rate": 1, "byproduct": 0.5, "cap": 0.25, "plots": 6, "fights": 10, "kept": [], "was": {}}
+}

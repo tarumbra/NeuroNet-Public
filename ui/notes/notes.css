@@ -1,0 +1,1705 @@
+/* ==========================================================================
+   NOTES — every style Amnesia's shell needs, in one file.
+
+   Copied from KinCrux's shared.css, where Notes also lives -- Cam: "lets
+   add the notes application into NeuroNet as well. Do not remove it from
+   KinCrux". KinCrux keeps its own copy; this is NeuroNet's.
+
+   NeuroNet's shared.css had carried a partial copy -- 42 of these 287
+   rules, left over from when NeuroNet was forked from KinCrux's shell.
+   Notes would have opened mostly unstyled. That copy is gone; this file is
+   the only one here.
+
+   Every rule is scoped under #cx-shell, so nothing here reaches the rest of
+   NeuroNet.
+   ========================================================================== */
+
+/* ==========================================================================
+   NOTES — Amnesia's shell and stylesheet, scoped.
+   ==========================================================================
+   Same treatment as the training shell: 288 rules scoped under #cx-shell
+   by transform, Amnesia's own palette dropped, and its colour names
+   re-pointed at KinCrux's so the notes follow whatever theme is set.
+
+   Amnesia made this easy on itself -- almost every id and class it uses
+   is already prefixed "cx-". Only three ids collided with KinCrux's,
+   and they were the shared dialog and toast containers both apps
+   inherited from the same lineage. Those are renamed "cx-" too and kept
+   inside this element, so Amnesia's own dialog styling still reaches
+   them. Sharing KinCrux's would have left every dialog body unstyled,
+   because the rules that style it are scoped in here.
+
+   --view-zoom is set inline by app.js (the View-mode zoom control), so
+   it is only given a default here rather than mapped.
+   ========================================================================== */
+#cx-shell {
+  --bg-app:        var(--bg);
+  --bg-sidebar:    var(--panel);
+  --bg-elevated:   var(--elevated);
+  --bg-hover:      var(--hover);
+  --bg-active:     var(--active);
+
+  --border:        var(--line-strong);
+  --border-faint:  var(--line);
+
+  --text-muted:    var(--muted);
+  --text-faint:    var(--faint, var(--muted));
+
+  --accent-bright: var(--accent-hover);
+  --accent-dim:    var(--accent-tint);
+
+  --view-zoom: 1;
+
+  /* --text, --accent, --accent-hover, --accent-deep, --danger, --font,
+     --font-mono and --radius are spelled the same in both apps, so they
+     inherit from :root and need no mapping. That is luck, not design:
+     both came from the same house style. */
+
+  /* a pane inside KinCrux, not the window */
+  flex: 1; min-width: 0;
+  height: 100%; min-height: 0; overflow: hidden;
+  /* its dialogs and veils are position:fixed; contain them here rather
+     than let them cover KinCrux's sidebar */
+  transform: translateZ(0);
+  color: var(--text);
+}
+#cx-shell[hidden] { display: none !important; }
+#cx-shell #cx-app { height: 100%; }
+
+/* Amnesia's own brand row. KinCrux's name is already at the top of the
+   window, so a second one is just a truncated "Amn..." taking up space
+   the note tree could use. The buttons beside it are kept -- they are
+   new note, new folder, search and the sidebar toggle. */
+#cx-shell #cx-brand { display: none !important; }
+
+
+#cx-shell * { box-sizing: border-box; }
+#cx-shell, #cx-shell {
+  height: 100%;
+  margin: 0;
+  background: var(--bg-app);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.875rem;
+  -webkit-font-smoothing: antialiased;
+}
+#cx-shell button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+#cx-shell ::selection { background: var(--accent-dim); }
+/* -------------------------------------------------------------- scrollbars */
+#cx-shell ::-webkit-scrollbar { width: 10px; height: 10px; }
+#cx-shell ::-webkit-scrollbar-track { background: transparent; }
+#cx-shell ::-webkit-scrollbar-thumb {
+  background: var(--bg-active);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+#cx-shell ::-webkit-scrollbar-thumb:hover { background: #3c3c44; }
+/* ------------------------------------------------------------------ layout */
+#cx-shell #cx-app {
+  display: flex;
+  /* 100%, not 100vh -- the app-wide bar sits above every tool now. At full
+     window height the bottom of Notes, where Import files / folder / PDF
+     live, was pushed off the screen. */
+  height: 100%;
+  overflow: hidden;
+}
+#cx-shell #cx-sidebar {
+  width: 280px;
+  min-width: 200px;
+  max-width: 480px;
+  flex-shrink: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+/* Cam: "a button to hide the side bar menu." #cx-main is already
+   flex:1 next to it, so hiding the sidebar this way needs nothing
+   else touched — the editor pane just claims the freed width on its
+   own. The button that hides it lives in #cx-sidebar-header and
+   necessarily disappears along with everything else in here; getting
+   the sidebar back is #cx-show-sidebar-btn, the same icon repeated as
+   a small floating button at the start of #cx-topbar, revealed only
+   while this class is applied (see toggleSidebar() in app.js). */
+#cx-shell #cx-sidebar.cx-sidebar-hidden { display: none; }
+#cx-shell #cx-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+/* v291 — Cam: "the split view mode where i can open 2 notes side by
+   side." #cx-workspace is the new flex row; #cx-editor-area (the
+   existing single-pane editor, completely unchanged otherwise) is its
+   first child, #cx-split-area its optional second. Closed by default
+   (see index.html's inline style:none) so a vault that never touches
+   split view renders pixel-identical to before this existed. */
+#cx-shell #cx-workspace {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+/* v300 — the bottom toolbar has to stack UNDER the editor, but
+   #cx-workspace is a horizontal flex row (it holds the split-pane
+   layout side by side). Putting the toolbar directly in that row made
+   it a third column down the right-hand side instead of a bar along
+   the bottom - caught by actually looking at a real browser render,
+   not by the DOM tests, which correctly reported the markup was all
+   present and wired. This column wraps editor + toolbar so they stack
+   vertically, and now carries the row-level flex sizing that
+   #cx-editor-area used to have. */
+#cx-shell #cx-editor-column {
+  flex: 1 1 50%;
+  min-width: 120px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#cx-shell #cx-editor-area {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#cx-shell #cx-split-editor-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#cx-shell #cx-split-area {
+  flex: 1 1 50%;
+  min-width: 120px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* v12 — Cam: "When in split view make the sides of the screen
+   resizable, by draging the middle to either side." A real hit
+   target wider than the thin line it shows, the same reasoning a
+   real window manager's own pane borders already use — a 1px target
+   would be nearly impossible to grab reliably. Hidden alongside
+   #cx-split-area itself; nothing to resize with only one pane open. */
+#cx-shell #cx-split-divider {
+  flex: 0 0 8px;
+  min-width: 0;
+  cursor: col-resize;
+  position: relative;
+  background: transparent;
+}
+#cx-shell #cx-split-divider::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+#cx-shell #cx-split-divider:hover::before, #cx-shell #cx-split-divider.cx-divider-active::before {
+  background: var(--accent);
+}
+#cx-shell #cx-split-topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border-faint);
+  flex-shrink: 0;
+}
+/* ----------------------------------------------------------- PDF viewer */
+/* Cam: "PDF capability, this way i can use it to read PDF or even
+   open it split view with a note beside it and write notes on what i
+   read." Continuous scroll, one real <canvas> per page (rendered by
+   pdf.js — see app.js's own renderPdfPagesInto) — the same default
+   reading experience Obsidian's own built-in PDF viewer uses, rather
+   than a fiddly page-by-page navigator. Pages get a visible edge
+   against the app's own dark background so each one clearly reads as
+   a distinct sheet, closer to a real, physical page than a borderless
+   image would. */
+#cx-shell .cx-pdf-viewer {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--bg-sidebar);
+}
+#cx-shell .cx-pdf-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+}
+#cx-shell .cx-pdf-page {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-faint);
+  background: #fff;
+}
+#cx-shell .cx-pdf-status {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+/* v17 — Cam: "Obisidian has a canvas feature, i would like to
+   implement that into Cortex... Please keep the design true to
+   amnesia." Amnesia's own real palette throughout (--accent,
+   --bg-elevated, etc.), not Obsidian's — the same "true to Amnesia"
+   discipline every other feature in this app already follows,
+   applied to a genuinely new kind of surface. */
+#cx-shell .cx-canvas-viewport {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-sidebar);
+  cursor: default;
+}
+#cx-shell .cx-canvas-world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+#cx-shell .cx-canvas-card {
+  position: absolute;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+  display: flex;
+  padding: 7px;
+}
+#cx-shell .cx-canvas-card:active { cursor: grabbing; }
+#cx-shell .cx-canvas-card-selected {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+/* Cam: "add the ability to add shapes (choose colour, line width
+   ect.)... shapes to be able to have a color fill them as well."
+   A shape card deliberately does NOT get the default card's own
+   background/border/shadow (var(--bg-elevated) fill, 1px border) —
+   every other card kind is a real container FOR something (text,
+   an embedded file, a link), so that chrome makes sense; a shape IS
+   the visual, drawn directly by its own inner <svg>, so the card
+   shell needs to be fully transparent or a shape with "No fill"
+   would show a solid box anyway, defeating the whole point of an
+   outline-only rectangle. */
+#cx-shell .cx-canvas-card-kind-shape {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+#cx-shell .cx-canvas-card-kind-shape.cx-canvas-card-selected {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+#cx-shell .cx-canvas-shape-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+/* the toolbar's own shape-type dropdown, and the style dialog's own
+   colour swatches — both reuse .cx-ctx-menu's real positioning/open
+   behaviour rather than inventing a second popup mechanism */
+#cx-shell .cx-shape-style-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+#cx-shell .cx-shape-style-row label { flex: 0 0 90px; color: var(--text-muted); font-size: 0.8125rem; }
+#cx-shell .cx-shape-style-row input[type="color"] {
+  width: 40px; height: 30px; border: 1px solid var(--border);
+  border-radius: 6px; background: none; padding: 2px; cursor: pointer;
+}
+#cx-shell .cx-shape-style-row input[type="range"] { flex: 1; }
+#cx-shell .cx-shape-style-row input[type="number"] {
+  width: 56px; background: var(--bg-app); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text); padding: 4px 6px;
+}
+#cx-shell .cx-shape-nofill-btn {
+  padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
+  background: none; color: var(--text-muted); font-size: 0.78125rem; cursor: pointer;
+}
+#cx-shell .cx-shape-nofill-btn.cx-on { border-color: var(--accent); color: var(--accent); }
+#cx-shell .cx-shape-preview {
+  width: 100%; height: 70px; border-radius: var(--radius);
+  background: var(--bg-app); display: flex; align-items: center;
+  justify-content: center; margin-bottom: 4px;
+}
+#cx-shell .cx-shape-preview svg { width: 90px; height: 50px; }
+#cx-shell .cx-canvas-card-text {
+  flex: 1;
+  min-width: 0;
+  padding: 3px 5px;
+  color: var(--text);
+  font-size: 0.84375rem;
+  line-height: 1.5;
+  overflow: auto;
+  outline: none;
+  cursor: text;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+#cx-shell .cx-canvas-resize-handle {
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  border-radius: 4px;
+  background: var(--text-faint);
+  opacity: 0.55;
+}
+#cx-shell .cx-canvas-card:hover .cx-canvas-resize-handle, #cx-shell .cx-canvas-card-selected .cx-canvas-resize-handle {
+  opacity: 0.95;
+  background: var(--accent);
+}
+#cx-shell #cx-canvas-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  padding: 14px 22px;
+  font-size: 0.84375rem;
+  font-weight: 600;
+  line-height: 1.7;
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+}
+/* v19 — Phase 2, connections between cards. Sits inside the SAME
+   transformed .cx-canvas-world layer the cards themselves live in
+   (see renderCanvasWorld's own comment), so it inherits the exact
+   same pan/zoom automatically — no separate coordinate handling
+   needed here at all. */
+#cx-shell .cx-canvas-edges-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+#cx-shell .cx-canvas-edge {
+  fill: none;
+  stroke: var(--text-faint);
+  stroke-width: 2;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+#cx-shell .cx-canvas-edge:hover {
+  stroke: var(--text-muted);
+}
+#cx-shell .cx-canvas-edge-selected, #cx-shell .cx-canvas-edge-selected:hover {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+#cx-shell .cx-canvas-edge-drawing {
+  stroke: var(--accent);
+  stroke-dasharray: 5 4;
+  pointer-events: none;
+}
+#cx-shell .cx-canvas-arrowhead-fill {
+  fill: var(--text-faint);
+}
+#cx-shell .cx-canvas-connect-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-elevated);
+  opacity: 0;
+  cursor: crosshair;
+  transition: opacity 0.1s;
+}
+#cx-shell .cx-canvas-card:hover .cx-canvas-connect-handle {
+  opacity: 1;
+}
+#cx-shell .cx-canvas-connect-top {
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#cx-shell .cx-canvas-connect-bottom {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#cx-shell .cx-canvas-connect-left {
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#cx-shell .cx-canvas-connect-right {
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* v20 — Phase 3, more card types: an existing note or PDF embedded
+   as a card, and a plain link card. */
+#cx-shell .cx-canvas-file-card, #cx-shell .cx-canvas-link-card {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: grab;
+}
+#cx-shell .cx-canvas-file-title {
+  flex-shrink: 0;
+  padding: 5px 7px;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1px solid var(--border-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#cx-shell .cx-canvas-file-preview {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 5px 7px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+#cx-shell .cx-canvas-file-preview p, #cx-shell .cx-canvas-file-preview ul, #cx-shell .cx-canvas-file-preview ol {
+  margin: 0 0 0.5em;
+}
+#cx-shell .cx-canvas-file-preview h1, #cx-shell .cx-canvas-file-preview h2, #cx-shell .cx-canvas-file-preview h3 {
+  margin: 0 0 0.3em;
+  font-size: 1.15em;
+  color: var(--text);
+}
+#cx-shell .cx-canvas-file-loading {
+  color: var(--text-faint);
+  font-style: italic;
+}
+#cx-shell .cx-canvas-file-card-pdf {
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+}
+#cx-shell .cx-canvas-file-card-pdf .cx-canvas-file-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--text-faint);
+}
+#cx-shell .cx-canvas-file-card-pdf .cx-canvas-file-title {
+  border-bottom: none;
+  padding: 0;
+  text-align: center;
+  white-space: normal;
+}
+#cx-shell .cx-canvas-link-card {
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+  text-align: center;
+}
+#cx-shell .cx-canvas-link-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+#cx-shell .cx-canvas-link-domain {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text);
+}
+#cx-shell .cx-canvas-link-url {
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Cam: "Does canvas allow me to add photos onto the canvas as
+   well?" -> "Both". Fills the card edge-to-edge — the outer
+   .cx-canvas-card already provides a real 7px frame of its own for
+   dragging, so no separate inner padding is needed here at all. */
+#cx-shell .cx-canvas-file-card-image {
+  padding: 0;
+  overflow: hidden;
+}
+#cx-shell .cx-canvas-file-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: calc(var(--radius) - 2px);
+  /* the same real, native "browser wants to let you drag this image
+     out of the page" behavior that already broke a text card's own
+     custom drag logic once — disabled here proactively (alongside
+     the real draggable="false" attribute already on the tag) rather
+     than waiting for it to resurface as a real, reported bug */
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+/* v21 — Phase 4, groups and colors. */
+#cx-shell .cx-canvas-group {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius);
+  cursor: grab;
+}
+#cx-shell .cx-canvas-group:active { cursor: grabbing; }
+#cx-shell .cx-canvas-group-selected {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+#cx-shell .cx-canvas-group-label {
+  position: absolute;
+  top: -22px;
+  left: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+/* the six real preset colors, confirmed directly against a real
+   Obsidian CSS snippet: 1=red, 2=orange, 3=yellow, 4=green, 5=blue,
+   6=purple — 4/5/6 reuse the exact same shades already established
+   for highlighting in an earlier phase of this app, for one
+   consistent "what green/blue/purple means" across all of Amnesia. */
+#cx-shell .cx-canvas-card.cx-canvas-color-1, #cx-shell .cx-canvas-group.cx-canvas-color-1 {
+  border-left: 3px solid rgba(255, 92, 92, 0.9);
+}
+#cx-shell .cx-canvas-card.cx-canvas-color-2, #cx-shell .cx-canvas-group.cx-canvas-color-2 {
+  border-left: 3px solid rgba(255, 159, 67, 0.9);
+}
+#cx-shell .cx-canvas-card.cx-canvas-color-3, #cx-shell .cx-canvas-group.cx-canvas-color-3 {
+  border-left: 3px solid rgba(255, 214, 51, 0.9);
+}
+#cx-shell .cx-canvas-card.cx-canvas-color-4, #cx-shell .cx-canvas-group.cx-canvas-color-4 {
+  border-left: 3px solid rgba(88, 214, 141, 0.9);
+}
+#cx-shell .cx-canvas-card.cx-canvas-color-5, #cx-shell .cx-canvas-group.cx-canvas-color-5 {
+  border-left: 3px solid rgba(84, 180, 255, 0.9);
+}
+#cx-shell .cx-canvas-card.cx-canvas-color-6, #cx-shell .cx-canvas-group.cx-canvas-color-6 {
+  border-left: 3px solid rgba(187, 134, 252, 0.9);
+}
+#cx-shell #cx-pdf-zoom-control, #cx-shell #cx-split-pdf-zoom-control {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-right: 10px;
+}
+/* v18 — Cam: "Where are all the tools?" The hint bubble was the
+   ONLY thing that ever showed pan/zoom/create, and it disappears the
+   moment a single real card exists — a real, always-visible toolbar
+   fixes that instead of relying on a hint that vanishes exactly when
+   it'd matter most. */
+#cx-shell #cx-canvas-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-right: 10px;
+}
+#cx-shell #cx-canvas-zoom-level {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  min-width: 38px;
+  text-align: center;
+}
+#cx-shell #cx-split-breadcrumb {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* v292 — Cam: "an active note feature, think my hyprland set up,
+   where one window is active at one time." A border around whichever
+   pane a pane-scoped shortcut currently targets — only relevant (and
+   only ever applied) once split view is actually open; see
+   updateActivePaneIndicator in app.js. inset so it doesn't shift any
+   layout when it appears or disappears. */
+#cx-shell .cx-pane-active {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+/* ----------------------------------------------------------- sidebar header */
+#cx-shell #cx-sidebar-header {
+  display: flex;
+  align-items: center;
+  /* Tightened from 6px/10px when the app was renamed: "Amnesia" is a
+     character longer than the previous name and was being truncated to
+     "Amne…". The space comes from the gaps rather than the type size, so
+     the title still reads at its intended weight. */
+  gap: 4px;
+  padding: 12px 8px 10px;
+  border-bottom: 1px solid var(--border-faint);
+}
+#cx-shell #cx-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  overflow: hidden;
+  padding-left: 2px;
+}
+#cx-shell #cx-brand-mark {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: flex;
+}
+#cx-shell #cx-brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#cx-shell #cx-vault-name {
+  font-weight: 700;
+  font-size: 0.90625rem;
+  letter-spacing: 0.1px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#cx-shell .cx-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: none;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+}
+#cx-shell .cx-icon-btn:hover { background: var(--bg-hover); color: var(--text); }
+#cx-shell .cx-icon-btn svg { width: 16px; height: 16px; }
+#cx-shell .cx-icon-btn:disabled { opacity: 0.35; pointer-events: none; }
+/* Cam: "the button to collapse and expand, should be one button" —
+   one element, two states. Its icon is drawn pointing INWARD (the
+   "collapse" look, chevrons converging toward the middle); flipping
+   it 180deg for the "everything's already collapsed, this now
+   expands" state turns the very same two chevrons to point OUTWARD
+   instead, which reads correctly as "expand" without a second SVG to
+   keep in sync — see updateCollapseAllBtn() in app.js, the one place
+   that ever toggles this class. */
+#cx-shell #cx-collapse-all-btn.cx-all-collapsed svg { transform: rotate(180deg); }
+/* Move to...: each vault's heading in the picker (2026-10-12) */
+#cx-shell .cx-move-vault-pick { width: 100%; margin: 0 0 8px; background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text); padding: 5px 8px; font-size: 0.8125rem; }
+/* separate vaults (2026-10-12): which vault is open, at the top of the sidebar */
+#cx-shell #cx-vault-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 8px 10px 0; }
+#cx-shell #cx-vault-pick {
+  flex: 1 1 80px; min-width: 0;
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text); padding: 4px 6px; font-size: 0.8125rem;
+}
+#cx-shell #cx-vault-pick:focus { outline: none; border-color: var(--accent); }
+#cx-shell .cx-vault-btn {
+  background: none; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-muted, var(--text));
+  padding: 3px 7px; font-size: 0.75rem; cursor: pointer;
+}
+#cx-shell .cx-vault-btn:hover { border-color: var(--accent); color: var(--text); }
+#cx-shell #cx-search-wrap { padding: 8px 10px; }
+#cx-shell #cx-search {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 0.8125rem;
+}
+#cx-shell #cx-search:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+#cx-shell #cx-search::placeholder { color: var(--text-faint); }
+/* --------------------------------------------------------------- the tree */
+#cx-shell #cx-tree {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 6px 12px;
+}
+#cx-shell .cx-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--text-muted);
+  user-select: none;
+  position: relative;
+}
+#cx-shell .cx-tree-row:hover { background: var(--bg-hover); color: var(--text); }
+#cx-shell .cx-tree-row.cx-active {
+  background: var(--bg-active);
+  color: var(--text);
+}
+/* chosen in the sidebar (click, Ctrl+click) -- what Delete deletes */
+#cx-shell .cx-tree-row.cx-selected {
+  box-shadow: inset 2px 0 0 var(--accent);
+  color: var(--text);
+}
+#cx-shell #cx-tree:focus { outline: none; }
+#cx-shell #cx-tree:focus .cx-tree-row.cx-selected {
+  background: var(--accent-dim);
+}
+/* drag-and-drop states — Cam: "A drag feature, the ability to drag a
+   file or folder around in the left side bar." Rebuilt on plain mouse
+   events after Cam confirmed the browser's own native HTML5 drag-and-
+   drop wasn't completing a drop at all in his real environment. */
+#cx-shell .cx-tree-row.cx-dragging { opacity: 0.4; }
+#cx-shell .cx-tree-row.cx-drop-target {
+  background: var(--accent-dim);
+  outline: 1px dashed var(--accent);
+  outline-offset: -1px;
+}
+#cx-shell #cx-tree.cx-drop-target {
+  outline: 1px dashed var(--accent);
+  outline-offset: -3px;
+}
+#cx-shell #cx-main.cx-drop-target-main {
+  outline: 2px dashed var(--accent);
+  outline-offset: -4px;
+}
+#cx-shell.cx-drag-active, #cx-shell.cx-drag-active * { cursor: grabbing !important; }
+#cx-shell .cx-tree-row .cx-caret {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+  color: var(--text-faint);
+  transform: rotate(90deg);              /* the icon is a right-pointing triangle: open folders point down */
+}
+#cx-shell .cx-tree-row.cx-collapsed .cx-caret { transform: none; }   /* folded: points right (2026-10-12 fix; it pointed up) */
+#cx-shell .cx-tree-row .cx-caret svg { width: 10px; height: 10px; }
+#cx-shell .cx-tree-row .cx-row-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-faint);
+}
+#cx-shell .cx-tree-row .cx-row-icon svg { width: 14px; height: 14px; }
+#cx-shell .cx-tree-row .cx-row-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.84375rem;
+}
+/* the sidebar's own inline-rename input — Obsidian's own real rename
+   UX (the label itself becomes editable), not a popup dialog. Sized
+   and positioned to match .cx-row-label as closely as possible so
+   starting a rename doesn't visibly shift the row around it. */
+#cx-shell .cx-tree-row input.cx-inline-rename {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-app);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.84375rem;
+  padding: 1px 5px;
+  margin: -2px 0;
+}
+#cx-shell .cx-tree-row input.cx-inline-rename:focus { outline: none; }
+#cx-shell .cx-tree-children { padding-left: 15px; }
+#cx-shell .cx-tree-children.cx-hidden { display: none; }
+@keyframes cx-tree-item-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cx-tree-item-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-6px); }
+}
+#cx-shell #cx-tree-empty {
+  padding: 24px 16px;
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+  text-align: center;
+  line-height: 1.6;
+}
+/* ---------------------------------------------------------- sidebar footer */
+#cx-shell #cx-sidebar-footer {
+  border-top: 1px solid var(--border-faint);
+  padding: 8px 10px;
+  display: flex;
+  gap: 6px;
+}
+#cx-shell #cx-sidebar-footer button {
+  flex: 1;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  padding: 6px 8px;
+  font-size: 0.78125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+#cx-shell #cx-sidebar-footer button:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+/* --------------------------------------------------------------- top bar */
+/* the tab bar — Cam: "A Tab like feature like obisidan (See the
+   image attatched)." */
+#cx-shell #cx-tabbar {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+#cx-shell .cx-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 14px;
+  border-right: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.78125rem;
+  cursor: pointer;
+  max-width: 180px;
+  flex-shrink: 0;
+}
+#cx-shell .cx-tab.cx-tab-active {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+#cx-shell .cx-tab-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#cx-shell .cx-tab-dirty {
+  margin-left: 4px;
+  font-size: 0.5rem;
+  color: var(--accent);
+}
+#cx-shell .cx-tab-close {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 0.9375rem;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+#cx-shell .cx-tab-close:hover { background: var(--bg-hover); color: var(--text); }
+#cx-shell #cx-tab-new {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 1rem;
+  padding: 8px 14px;
+  flex-shrink: 0;
+}
+#cx-shell #cx-tab-new:hover { color: var(--text); }
+#cx-shell #cx-topbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  min-height: 44px;
+}
+#cx-shell #cx-breadcrumb {
+  flex: 1;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#cx-shell #cx-breadcrumb b { color: var(--text); font-weight: 600; }
+/* the View-mode zoom control — Cam: "a text size feature in view
+   mode, think like a zoom feature built into the app." Reasoning:
+   "hyprland doesnt play well in the app when i increase the UI host
+   side" — an in-app control, independent of any OS-level display
+   scaling. */
+#cx-shell #cx-zoom-control {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-right: 10px;
+}
+#cx-shell #cx-zoom-level {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  min-width: 38px;
+  text-align: center;
+}
+#cx-shell .cx-mode-toggle {
+  display: flex;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+/* v300 — icon buttons now (pencil / eye) rather than text labels, so
+   they need a square tap area rather than text padding. */
+#cx-shell .cx-mode-toggle button {
+  background: none;
+  border: none;
+  padding: 0;
+  width: 34px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+}
+#cx-shell .cx-mode-toggle button.cx-on {
+  background: var(--accent-dim);
+  color: var(--accent-bright);
+}
+/* v300 — the shared icon class from the reference app: stroke-based on
+   a 24px grid, inheriting colour from whatever it sits inside so one
+   sprite definition works in every context. */
+#cx-shell .cx-ic {
+  width: 19px;
+  height: 19px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* ------------------------------------------------- task list checkboxes */
+/* v300 — Cam: "in view mode allow me to ... click boxes." The checkbox
+   is a real, clickable target inside an otherwise contenteditable
+   region, so it needs a genuine tap size of its own and must not
+   look like editable text. */
+#cx-shell .cx-task-list { list-style: none; padding-left: 4px; }
+#cx-shell .preview li.cx-task, #cx-shell #cx-preview li.cx-task, #cx-shell #cx-split-preview li.cx-task {
+  list-style: none;
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  margin: .3em 0;
+}
+#cx-shell .cx-checkbox {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border: 1.5px solid var(--accent-deep);
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--bg-app);
+  cursor: pointer;
+  user-select: none;
+}
+#cx-shell .cx-checkbox:hover { border-color: var(--accent-bright); }
+#cx-shell .cx-checkbox-on { background: var(--accent); border-color: var(--accent); }
+#cx-shell .cx-task-done .cx-task-text {
+  color: var(--text-faint);
+  text-decoration: line-through;
+}
+/* -------------------------------------------------------------- the editor */
+#cx-shell #cx-editor-wrap, #cx-shell #cx-split-editor-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+/* v26 — Cam: "Tables should ignore the formatting rule and be able to use
+   the whole note area. I create and write pretty detailed notes and
+   tables."
+
+   The 780px reading measure used to live here, on the container, which
+   meant everything inside it was capped — a wide table had nowhere to go
+   and was squeezed into a column narrower than its own content needed.
+
+   The measure now lives on the blocks instead. Prose, headings and lists
+   still sit in a 780px column, centred exactly as before, so normal notes
+   are unchanged. A table is exempt and may use the full width of the pane,
+   scrolling sideways only if it genuinely exceeds even that. */
+#cx-shell #cx-editor-inner, #cx-shell #cx-split-editor-inner {
+  width: 100%;
+  max-width: none;
+  padding: 40px 32px 120px;
+}
+#cx-shell #cx-editor-inner > *, #cx-shell #cx-split-editor-inner > * {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* The rendered note is the one child that must NOT be capped: it is the
+   container the table lives in, so capping it here would put the ceiling
+   back exactly where it was just removed from. Its own children carry the
+   measure instead (below). */
+#cx-shell #cx-editor-inner > #cx-preview, #cx-shell #cx-split-editor-inner > #cx-split-preview {
+  max-width: none;
+}
+/* The rendered note is itself one block, so the measure has to apply to
+   its children rather than to it. */
+#cx-shell #cx-preview > *, #cx-shell #cx-split-preview > * {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#cx-shell #cx-preview > table, #cx-shell #cx-split-preview > table, #cx-shell #cx-preview > .cx-table-scroll, #cx-shell #cx-split-preview > .cx-table-scroll {
+  max-width: none;
+}
+#cx-shell #cx-title-input {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  font-family: var(--font);
+}
+#cx-shell #cx-title-input:focus { outline: none; }
+#cx-shell #cx-title-input::placeholder { color: var(--text-faint); }
+#cx-shell #cx-editor, #cx-shell #cx-split-editor {
+  width: 100%;
+  min-height: 60vh;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.90625rem;
+  line-height: 1.7;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+#cx-shell #cx-editor:focus, #cx-shell #cx-split-editor:focus { outline: none; }
+#cx-shell #cx-editor::placeholder, #cx-shell #cx-split-editor::placeholder { color: var(--text-faint); }
+/* --------------------------------------------------------------- preview */
+/* v291 — every rule below applies to BOTH #cx-preview (primary pane)
+   and #cx-split-preview (split pane) — Cam: "I just want it to appear
+   exactly as the other notes in the program." Originally just
+   #cx-preview; when split view was built, its own #cx-split-preview
+   element was given none of this at all, so a note opened into the
+   split pane rendered as an unstyled wall of default HTML instead of
+   a formatted note — headings, bold, tables, wikilinks, highlight
+   marks, all missing. One shared rule set now, kept literally
+   identical rather than two copies that can quietly drift apart the
+   next time either one gets tweaked. */
+#cx-shell #cx-preview, #cx-shell #cx-split-preview {
+  line-height: 1.7;
+  font-size: calc(15px * var(--view-zoom, 1));
+}
+#cx-shell #cx-preview[contenteditable], #cx-shell #cx-split-preview[contenteditable] {
+  outline: none;
+  cursor: text;
+  min-height: 50vh;
+  padding: 4px 0;
+}
+#cx-shell #cx-preview[contenteditable]:focus, #cx-shell #cx-split-preview[contenteditable]:focus {
+  box-shadow: -2px 0 0 var(--accent-dim);
+  padding-left: 10px;
+  margin-left: -12px;
+}
+#cx-shell #cx-preview h1, #cx-shell #cx-preview h2, #cx-shell #cx-preview h3, #cx-shell #cx-split-preview h1, #cx-shell #cx-split-preview h2, #cx-shell #cx-split-preview h3 {
+  color: var(--text);
+  font-weight: 700;
+  margin: 1.4em 0 0.5em;
+  line-height: 1.3;
+}
+#cx-shell #cx-preview h1, #cx-shell #cx-split-preview h1 { font-size: 1.7em; }
+#cx-shell #cx-preview h2, #cx-shell #cx-split-preview h2 { font-size: 1.4em; }
+#cx-shell #cx-preview h3, #cx-shell #cx-split-preview h3 { font-size: 1.2em; }
+#cx-shell #cx-preview p, #cx-shell #cx-split-preview p { margin: 0 0 1em; }
+#cx-shell #cx-preview ul, #cx-shell #cx-preview ol, #cx-shell #cx-split-preview ul, #cx-shell #cx-split-preview ol { margin: 0 0 1em; padding-left: 1.6em; }
+#cx-shell #cx-preview li, #cx-shell #cx-split-preview li { margin: 0.25em 0; }
+#cx-shell #cx-preview strong, #cx-shell #cx-split-preview strong { color: var(--text); font-weight: 700; }
+#cx-shell #cx-preview em, #cx-shell #cx-split-preview em { font-style: italic; }
+#cx-shell #cx-preview code, #cx-shell #cx-split-preview code {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+#cx-shell #cx-preview pre, #cx-shell #cx-split-preview pre {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin: 0 0 1em;
+}
+#cx-shell #cx-preview pre code, #cx-shell #cx-split-preview pre code {
+  background: none; border: none; padding: 0;
+}
+#cx-shell #cx-preview blockquote, #cx-shell #cx-split-preview blockquote {
+  border-left: 3px solid var(--border);
+  margin: 0 0 1em;
+  padding: 0.2em 0 0.2em 1em;
+  color: var(--text-muted);
+}
+#cx-shell #cx-preview hr, #cx-shell #cx-split-preview hr {
+  border: none; border-top: 1px solid var(--border); margin: 2em 0;
+}
+#cx-shell #cx-preview img, #cx-shell #cx-split-preview img {
+  max-width: 100%;
+  border-radius: var(--radius);
+  margin: 0.5em 0;
+  display: block;
+}
+#cx-shell #cx-preview a.cx-wikilink, #cx-shell #cx-split-preview a.cx-wikilink {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-dim);
+}
+#cx-shell #cx-preview a.cx-wikilink:hover, #cx-shell #cx-split-preview a.cx-wikilink:hover {
+  border-bottom-color: var(--accent);
+}
+#cx-shell #cx-preview a.cx-wikilink.cx-broken, #cx-shell #cx-split-preview a.cx-wikilink.cx-broken {
+  color: var(--text-faint);
+  border-bottom-style: dashed;
+}
+#cx-shell /* v16 — Cam: "have the ability to change the highlighter color.
+   Green, #cx-shell purple, #cx-shell blue and yellow please." Yellow is the default, #cx-shell unmarked <mark> (matching every highlight Cam already has in his
+   own real notes today, #cx-shell and keeping the common case's own markdown
+   source clean — see the ==text== / == {color}
+#cx-shell text== split in the
+   inline renderer/serializer). Colours picked to read clearly on the
+   app's own dark background while staying visually distinct from
+   --accent itself, #cx-shell so a blue highlight never gets mistaken for an
+   ordinary UI accent. */
+#cx-preview mark, #cx-shell #cx-split-preview mark {
+  color: inherit;
+  border-radius: 2px;
+  padding: 0.05em 0.15em;
+}
+#cx-shell #cx-preview mark, #cx-shell #cx-split-preview mark, #cx-shell #cx-preview mark.cx-hl-yellow, #cx-shell #cx-split-preview mark.cx-hl-yellow {
+  background: rgba(255, 214, 51, 0.28);
+}
+#cx-shell #cx-preview mark.cx-hl-green, #cx-shell #cx-split-preview mark.cx-hl-green {
+  background: rgba(88, 214, 141, 0.28);
+}
+#cx-shell #cx-preview mark.cx-hl-purple, #cx-shell #cx-split-preview mark.cx-hl-purple {
+  background: rgba(187, 134, 252, 0.30);
+}
+#cx-shell #cx-preview mark.cx-hl-blue, #cx-shell #cx-split-preview mark.cx-hl-blue {
+  background: rgba(84, 180, 255, 0.28);
+}
+#cx-shell #cx-preview table, #cx-shell #cx-split-preview table {
+  border-collapse: collapse;
+  margin: 0 0 1em;
+  width: 100%;
+  table-layout: auto;
+}
+/* Once a column has been dragged the table carries a colgroup, and those
+   widths must be obeyed rather than redistributed by the browser's own
+   auto layout — which is what table-layout: fixed is for. */
+#cx-shell #cx-preview table.cx-sized, #cx-shell #cx-split-preview table.cx-sized {
+  table-layout: fixed;
+  /* max-content is what the dragged widths add up to, so a table with room
+     for them shows them exactly. min-width keeps a narrow one filling the
+     pane rather than huddling on the left. The cap below is what stops
+     max-content also meaning "and never reflow again". */
+  width: max-content;
+  min-width: 100%;
+  /* Cam: "i have to scroll sideways to see all my table that i inserted
+     in Vault ... This effects my workflow", and with it: "i want the
+     workspace to be responsive to the sidebars."
+
+     The panes themselves already were -- measured, Notes went 1014 to
+     1328 wide as the two sidebars collapsed. A table that had had a
+     column dragged did not move at all: max-content over a colgroup of
+     absolute pixels is a fixed number, so it sat at 2381px in a 984px
+     pane and at 2381px in a 1328px one. Widening the workspace bought
+     nothing, which is exactly what it felt like.
+
+     A ceiling makes it reflow. table-layout: fixed shares a too-small
+     width out across the columns in proportion, so the shape Cam
+     dragged is kept and only the scale changes: give the pane more room
+     and the table grows back towards its real widths, up to max-content,
+     where it stops.
+
+     There is a floor already and it is the right one, so nothing here
+     invents a second: a table cannot be laid out narrower than its own
+     minimum content width, the width at which the longest word in each
+     column still fits. Measured on a nine-column training table in a
+     670px pane: 2381px before, 770px after -- its min-content -- and a
+     clean fit at 984px once a sidebar is collapsed. Squeezing below that
+     would need word-break, which would chop Cam's own words in half. */
+  max-width: 100%;
+}
+/* A table wider than the pane scrolls rather than forcing the whole note
+   sideways. */
+#cx-shell #cx-preview, #cx-shell #cx-split-preview { overflow-x: auto; }
+/* While a column edge is being dragged, the whole window keeps the resize
+   cursor and stops selecting text — a drag across cells would otherwise
+   highlight everything it passed over. */
+#cx-shell.cx-resizing-col, #cx-shell.cx-resizing-col * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+#cx-shell #cx-preview th, #cx-shell #cx-preview td, #cx-shell #cx-split-preview th, #cx-shell #cx-split-preview td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+}
+#cx-shell #cx-preview th, #cx-shell #cx-split-preview th { background: var(--bg-elevated); }
+/* v289 — Cam: "have the cells of the table not compacted" (Data
+   Entry mode specifically — View's own read-only table is meant to
+   look like a normal published document, so it keeps the compact
+   padding above). A blank cell with only 6px/10px of padding is a
+   sliver to aim for with a mouse; this is deliberately much more
+   generous, and the hover highlight below means you can actually SEE
+   which cell you're about to click into before you do — the
+   "distinguishable... easy to navigate" half of the same request. */
+#cx-shell #cx-preview[contenteditable] td, #cx-shell #cx-preview[contenteditable] th, #cx-shell #cx-split-preview[contenteditable] td, #cx-shell #cx-split-preview[contenteditable] th {
+  padding: 12px 16px;
+}
+#cx-shell #cx-preview[contenteditable] td:hover, #cx-shell #cx-split-preview[contenteditable] td:hover {
+  background: var(--bg-hover);
+}
+#cx-shell #cx-empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+#cx-shell .cx-empty-title {
+  color: var(--text-faint);
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+}
+#cx-shell .cx-empty-action {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  padding: 2px 0;
+}
+#cx-shell .cx-empty-action:hover { text-decoration: underline; }
+/* ---------------------------------------------------- backlinks / tag rail */
+#cx-shell #cx-note-meta {
+  border-top: 1px solid var(--border-faint);
+  margin-top: 32px;
+  padding-top: 16px;
+}
+#cx-shell #cx-note-meta h4 {
+  font-size: 0.71875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+#cx-shell .cx-backlink-item {
+  color: var(--accent);
+  cursor: pointer;
+  padding: 3px 0;
+  font-size: 0.84375rem;
+}
+#cx-shell .cx-backlink-item:hover { text-decoration: underline; }
+/* ------------------------------------------------------------------ toasts */
+#cx-shell #toasts {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 500;
+}
+#cx-shell .toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  animation: cx-toast-in 0.15s ease;
+}
+#cx-shell .toast.error { border-color: var(--danger); color: #ffb3b8; }
+@keyframes cx-toast-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* ------------------------------------------------------------------ modal */
+#cx-shell .modal-veil {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 600;
+}
+#cx-shell .modal-veil.open { display: flex; }
+#cx-shell .modal {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  width: 380px;
+  max-width: 90vw;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+#cx-shell .modal h3 { margin: 0 0 8px; font-size: 0.9375rem; color: var(--text); }
+#cx-shell .modal p { margin: 0 0 14px; font-size: 0.84375rem; color: var(--text-muted);
+          line-height: 1.5; }
+#cx-shell .modal p.fine { font-size: 0.75rem; color: var(--text-faint); margin-top: -8px; }
+#cx-shell .modal input[type=text] {
+  width: 100%;
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 0.84375rem;
+  margin-bottom: 14px;
+}
+#cx-shell .modal input[type=text]:focus { outline: none; border-color: var(--accent); }
+#cx-shell .modal .row { display: flex; justify-content: flex-end; gap: 8px; }
+/* the "Move to..." folder picker */
+/* the "Insert table" size picker */
+#cx-shell .cx-table-size-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+#cx-shell .cx-table-size-row label {
+  flex: 1;
+  font-size: 0.78125rem;
+  color: var(--text-muted);
+}
+#cx-shell .cx-table-size-row input[type=text] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 0.84375rem;
+}
+#cx-shell .cx-table-size-row input[type=text]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+/* the "Copy path" modal's own read-only, pre-selected field - Cam:
+   "Still crashes when i click copy from the right click menu" - a
+   real, visible field ready for Cam's own native Ctrl+C, no JS-
+   triggered clipboard call anywhere. */
+#cx-shell .cx-copy-path-field {
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 0.8125rem;
+  font-family: monospace;
+}
+#cx-shell .cx-copy-path-field:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+#cx-shell .cx-move-list {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+}
+#cx-shell .cx-move-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border-faint);
+  color: var(--text);
+  padding: 8px 14px;
+  font-size: 0.84375rem;
+}
+#cx-shell .cx-move-item:last-child { border-bottom: none; }
+#cx-shell .cx-move-item:hover { background: var(--bg-hover); }
+/* the "Open note or PDF" picker — Cam: "Ability to click open note
+   when i start a new tab." */
+#cx-shell .cx-open-item-path {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+#cx-shell .cx-open-empty {
+  padding: 14px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+#cx-shell .btn {
+  border: 1px solid var(--border);
+  background: var(--bg-hover);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+}
+#cx-shell .btn:hover { background: var(--bg-active); }
+#cx-shell .btn-quiet { background: none; }
+#cx-shell .btn-primary { background: var(--accent); border-color: var(--accent);
+               color: #16161a; font-weight: 600; }
+#cx-shell .btn-primary:hover { background: var(--accent-hover); }
+#cx-shell .btn-danger { background: var(--danger); border-color: var(--danger);
+              color: #16161a; font-weight: 600; }
+/* ------------------------------------------------------------ context menu */
+#cx-shell .cx-ctx-menu {
+  position: fixed;
+  display: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  padding: 4px;
+  min-width: 170px;
+  z-index: 700;
+}
+#cx-shell .cx-ctx-menu.open { display: block; }
+#cx-shell .cx-ctx-menu > button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  padding: 7px 10px;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+}
+#cx-shell .cx-ctx-menu > button:hover { background: var(--bg-hover); }
+#cx-shell .cx-ctx-menu > button.cx-danger-item { color: #ff8891; }
+#cx-shell .cx-ctx-menu > hr {
+  border: none;
+  border-top: 1px solid var(--border-faint);
+  margin: 4px 2px;
+}
+#cx-shell .cx-submenu-arrow {
+  margin-left: auto;
+  padding-left: 12px;
+  color: var(--text-faint);
+}
+#cx-shell .cx-ctx-submenu { z-index: 701; }
+/* -------------------------------------------------------- link autocomplete */
+#cx-shell #cx-link-suggest {
+  position: absolute;
+  display: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  max-height: 220px;
+  overflow-y: auto;
+  min-width: 220px;
+  z-index: 650;
+}
+#cx-shell #cx-link-suggest.open { display: block; }
+#cx-shell .cx-suggest-item {
+  padding: 7px 12px;
+  font-size: 0.84375rem;
+  cursor: pointer;
+  color: var(--text);
+}
+#cx-shell .cx-suggest-item.cx-picked { background: var(--bg-active); }
+#cx-shell .cx-suggest-item .cx-suggest-new { color: var(--text-faint); }
+/* -------------------------------------------------------- bottom toolbar */
+/* v300 — Cam: "they have a tool bar down the bottom with all the useful
+   tools." Adopted from the reference app: one horizontally-scrollable
+   row so it never wraps to two lines or pushes the editor up, with the
+   scrollbar hidden since it's swiped/dragged rather than aimed at. */
+#cx-shell #cx-toolbar-wrap {
+  flex: none;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+}
+#cx-shell #cx-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 6px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+#cx-shell #cx-toolbar::-webkit-scrollbar { display: none; }
+#cx-shell .cx-tool {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 36px;
+  flex: none;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+#cx-shell .cx-tool:hover { background: var(--bg-hover); color: var(--text); }
+#cx-shell .cx-tool:active { background: var(--accent-deep); color: #fff; }
+#cx-shell .cx-tool-sep {
+  width: 1px;
+  height: 20px;
+  flex: none;
+  margin: 0 5px;
+  background: var(--border);
+}
+/* ---- the web of knowledge -----------------------------------------------
+   A force-directed graph of the vault's [[links]], laid out in rings so it
+   reads as a web rather than a scatter.
+
+   The scaffold behind it — guide circles and spokes — is deliberately a
+   different weight and colour from the threads, and is never clickable.
+   This is a picture of what links to what, and a decorative line that could
+   be mistaken for a relationship would make the whole thing lie. */
+#cx-shell .cx-web-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--cx-border, #23282b);
+}
+#cx-shell .cx-web-title { font-size: 0.8125rem; font-weight: 600; }
+#cx-shell .cx-web-stats {
+  flex: 1; min-width: 0;
+  font-size: 0.71875rem; opacity: .6;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#cx-shell .cx-web-filter {
+  width: 160px; height: 26px; padding: 0 9px;
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid var(--cx-border, #23282b);
+  border-radius: 6px;
+  font-size: 0.75rem; color: inherit;
+}
+#cx-shell .cx-web-filter:focus { outline: none; border-color: var(--cx-accent, #4ea36a); }
+#cx-shell .cx-web-btn {
+  height: 26px; padding: 0 10px;
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid var(--cx-border, #23282b);
+  border-radius: 6px;
+  font-size: 0.75rem; color: inherit; cursor: pointer;
+}
+#cx-shell .cx-web-btn:hover { background: rgba(255, 255, 255, .1); }
+#cx-shell .cx-web-wrap {
+  position: relative;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  cursor: grab;
+}
+#cx-shell .cx-web-wrap.is-panning { cursor: grabbing; }
+#cx-shell .cx-web-loading { padding: 40px; text-align: center; opacity: .5; font-size: 0.8125rem; }
+#cx-shell .cx-web-svg {
+  width: 100%; height: 100%;
+  transform-origin: center center;
+  display: block;
+}
+/* Scaffold: background, not data. */
+#cx-shell .cx-web-ring, #cx-shell .cx-web-spoke {
+  fill: none;
+  stroke: currentColor;
+  opacity: .055;
+  stroke-width: 1;
+  pointer-events: none;
+}
+#cx-shell .cx-web-ring { stroke-dasharray: 2 7; }
+/* Threads: the real links. */
+#cx-shell .cx-web-thread {
+  fill: none;
+  stroke: var(--cx-accent, #4ea36a);
+  stroke-width: 1.1;
+  opacity: .42;
+  pointer-events: none;
+  transition: opacity .12s ease, stroke-width .12s ease;
+}
+#cx-shell .cx-web-node { cursor: pointer; }
+#cx-shell .cx-web-halo { fill: transparent; }
+#cx-shell .cx-web-dot {
+  fill: var(--cx-accent, #4ea36a);
+  stroke: var(--cx-bg, #0f1113);
+  stroke-width: 2;
+  transition: r .12s ease;
+}
+#cx-shell .cx-web-label {
+  text-anchor: middle;
+  font-size: 0.65625rem;
+  fill: currentColor;
+  opacity: .62;
+  pointer-events: none;
+}
+/* A note linked to but never written. Hollow, because it is a hole in the
+   vault rather than a note — and those are worth spotting. */
+#cx-shell .cx-web-node.is-missing .cx-web-dot {
+  fill: none;
+  stroke: var(--cx-accent, #4ea36a);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 3;
+  opacity: .8;
+}
+#cx-shell .cx-web-node.is-lonely .cx-web-dot { opacity: .42; }
+#cx-shell .cx-web-node.is-lonely .cx-web-label { opacity: .35; }
+/* Hovering lifts a note and its neighbours and fades the rest, which is the
+   only way a web of any size stays readable. */
+#cx-shell .cx-web-svg.is-focused .cx-web-thread { opacity: .08; }
+#cx-shell .cx-web-svg.is-focused .cx-web-thread.on {
+  opacity: .95; stroke-width: 1.8;
+}
+#cx-shell .cx-web-svg.is-focused .cx-web-node { opacity: .22; }
+#cx-shell .cx-web-svg.is-focused .cx-web-node.on, #cx-shell .cx-web-svg.is-focused .cx-web-node.near { opacity: 1; }
+#cx-shell .cx-web-node.on .cx-web-dot { r: 11; }
+#cx-shell .cx-web-node.on .cx-web-label { opacity: 1; font-weight: 600; }
+/* Filtering dims everything that does not match. */
+#cx-shell .cx-web-svg.is-filtered .cx-web-node { opacity: .15; }
+#cx-shell .cx-web-svg.is-filtered .cx-web-node.hit { opacity: 1; }
+#cx-shell .cx-web-svg.is-filtered .cx-web-thread { opacity: .08; }
+
+
+/* a note that ships with releases (2026-10-11): a small mark at the end of its row */
+#cx-shell .cx-tree-row .cx-ship-mark { margin-left: auto; padding-left: 6px; font-size: .78em; color: var(--accent, #c9a46a); opacity: .85; flex: 0 0 auto; }
+
+/* ticks and flags (2026-11-02) */
+#cx-shell .cx-tree-row .cx-mark { margin-left: auto; padding-left: 6px; font-size: .82em; font-weight: 700; flex: 0 0 auto; }
+#cx-shell .cx-tree-row .cx-mark + .cx-ship-mark { margin-left: 0; }
+#cx-shell .cx-tree-row .cx-mark-tick { color: var(--good, #5fb87a); }
+#cx-shell .cx-tree-row .cx-mark-flag { color: var(--warn, #e0a03c); }

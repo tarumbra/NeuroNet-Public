@@ -1,0 +1,21 @@
+/* Code -> Web playground (web.js): code on the left, the page on the right. */
+.wp { display: flex; flex-direction: column; height: calc(100vh - 120px); min-height: 520px; }
+.wp-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.wp-pages { min-width: 180px; height: 36px; }
+.wp-name { width: 220px; height: 36px; }
+.wp-gap { flex: 1; }
+.wp-live { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+.wp-split { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 900px) { .wp-split { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; } }
+.wp-code, .wp-view { display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; background: var(--panel, var(--surface)); }
+.wp-tabs { display: flex; gap: 2px; padding: 6px 6px 0; border-bottom: 1px solid var(--border); }
+.wp-tab { border: 0; background: transparent; color: var(--muted); padding: 6px 14px; border-radius: 8px 8px 0 0;
+  font: inherit; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; }
+.wp-tab.on { background: color-mix(in srgb, var(--cl) 22%, transparent); color: var(--text); }
+.wp-ed { flex: 1; min-height: 0; resize: none; border: 0; outline: none; padding: 12px 14px;
+  background: transparent; color: var(--text); tab-size: 2;
+  font: 0.86rem/1.55 "JetBrainsMono Nerd Font", "JetBrains Mono", ui-monospace, monospace; }
+.wp-view-h { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px;
+  border-bottom: 1px solid var(--border); font-size: 0.8rem; font-weight: 700; }
+.wp-frame { flex: 1; min-height: 0; width: 100%; border: 0; background: #fff; }

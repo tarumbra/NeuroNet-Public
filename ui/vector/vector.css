@@ -1,0 +1,58 @@
+/* ==========================================================================
+   Vector — Pixel art's arrangement (pixel.css: .px-ed, .px-bar, .px-tools,
+   .px-side, .px-panel ...) with a vector's own panels.
+   ========================================================================== */
+.vx-tools { width: 84px; box-sizing: border-box; overflow: hidden; }
+/* Sides / Points: the label above, the box the column's width -- side by
+   side they ran out of the tool column into the canvas (Cam, 2026-10-04) */
+.vx-tools .vx-mini { width: 100%; flex-direction: column; align-items: stretch; gap: 1px; }
+.vx-mini { font-size: 0.7rem; display: flex; gap: 4px; align-items: center; color: var(--muted, var(--text-faint)); }
+.vx-tools .vx-mini input[type="number"] { width: 100%; box-sizing: border-box; min-width: 0; font-size: 0.7rem; padding: 1px 3px; background: transparent; color: var(--ink, var(--text));
+  border: 1px solid var(--border); border-radius: 4px; }
+.vx-stage { background: #3a3a44; }
+.vx-stage[data-tool="hand"] .vx-svg { cursor: grab; }
+.vx-stage[data-tool="text"] .vx-svg { cursor: text; }
+.vx-stage[data-tool="pen"] .vx-svg, .vx-stage[data-tool="pencil"] .vx-svg,
+.vx-stage[data-tool="rect"] .vx-svg, .vx-stage[data-tool="ellipse"] .vx-svg, .vx-stage[data-tool="line"] .vx-svg,
+.vx-stage[data-tool="polygon"] .vx-svg, .vx-stage[data-tool="star"] .vx-svg { cursor: crosshair; }
+.vx-svg { display: block; margin: auto; }
+.vx-svg .vx-h { cursor: pointer; }
+.vx-svg .vx-h-nw, .vx-svg .vx-h-se { cursor: nwse-resize; }
+.vx-svg .vx-h-ne, .vx-svg .vx-h-sw { cursor: nesw-resize; }
+.vx-svg .vx-h-n, .vx-svg .vx-h-s { cursor: ns-resize; }
+.vx-svg .vx-h-e, .vx-svg .vx-h-w { cursor: ew-resize; }
+.vx-svg .vx-h-rot { cursor: grab; }
+.vx-svg [data-node], .vx-svg [data-hd] { cursor: move; }
+.vx-side { width: 262px; overflow-y: auto; max-height: calc(100vh - 170px); }
+.vx-paint { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.vx-paint input[type="color"] { width: 34px; height: 26px; padding: 0; border: none; background: none; cursor: pointer; }
+.vx-lbl { font-size: 0.72rem; width: 40px; color: var(--muted, var(--text-faint)); }
+.vx-sm { padding: 2px 7px !important; font-size: 0.72rem !important; }
+.vx-sm.on, .vx-ic.on { border-color: var(--accent); color: var(--ink, var(--text)); background: var(--hover); }
+.vx-ic { padding: 2px 6px !important; min-width: 28px; }
+.vx-sel { font-size: 0.72rem; padding: 2px 4px; max-width: 120px; }
+.vx-mini input[type="number"] { width: 54px; }
+.vx-grad { display: flex; flex-direction: column; gap: 4px; padding: 4px 0 2px 44px; }
+.vx-grad[hidden] { display: none; }
+.vx-stop { display: flex; gap: 4px; align-items: center; }
+.vx-stop input[type="color"] { width: 28px; height: 22px; padding: 0; border: none; background: none; }
+.vx-stop input[type="range"] { flex: 1; }
+.vx-xform { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.vx-xform label { font-size: 0.72rem; display: flex; gap: 4px; align-items: center; color: var(--muted, var(--text-faint)); }
+.vx-xform input { width: 100%; min-width: 0; font-size: 0.75rem; padding: 2px 4px; background: transparent; color: var(--ink, var(--text));
+  border: 1px solid var(--border); border-radius: 4px; }
+.vx-btns { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+.vx-bool .vx-sm { flex: 1; }
+.vx-layers { display: flex; flex-direction: column; gap: 2px; max-height: 240px; overflow-y: auto; }
+.vx-layer { display: flex; gap: 2px; align-items: center; padding: 2px 4px; border-radius: 6px; font-size: 0.78rem; }
+.vx-layer.on { background: var(--hover); color: var(--ink, var(--text)); }
+.vx-lname { cursor: pointer; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vx-objects { display: flex; flex-direction: column; padding-left: 26px; }
+.vx-obj { text-align: left; border: none; background: none; color: var(--muted, var(--text-faint)); font: inherit; font-size: 0.72rem;
+  padding: 1px 4px; border-radius: 4px; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vx-obj:hover { color: var(--ink, var(--text)); }
+.vx-obj.on { background: var(--accent); color: #fff; }
+.vx-words { width: 100%; font-size: 1rem; }
+.vx-place-grid { max-height: 30vh; }
+.vx-pthumb { width: 48px; height: 48px; background: center / contain no-repeat; image-rendering: auto; }
+.vx-tile-img { image-rendering: auto; }

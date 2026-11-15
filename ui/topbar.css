@@ -1,0 +1,141 @@
+/* ==========================================================================
+   The app-wide top bar -- GENERATED from music/chords.css by
+   make_topbar_css.py. Re-run it if the bar's music styles change.
+
+   Cam: "make that top bar the default for the entire app ... Think of
+   NeuroNet as one complete app with multiple tools."
+
+   The bar moved out of the music section into #ss-topbar, above every tool.
+   Its styles all lived in chords.css scoped to #ch-shell, and it used the
+   music section's own colour and size tokens, so neither followed it. This
+   file re-applies exactly those rules and tokens at the new location. It is
+   generated rather than copied by hand so the two cannot drift apart, and
+   test_topbar.py checks the bar looks identical in both places.
+   ========================================================================== */
+#ss-topbar {
+  --cream: var(--bg);
+  --cream-deep: var(--elevated);
+  --warm-white: var(--panel);
+  --charcoal: var(--text);
+  --soft-grey: var(--muted);
+  --tomato: var(--accent);
+  --terracotta: var(--accent-hover);
+  --olive: var(--good);
+  --gold: var(--star);
+  --chord-btn: var(--accent);
+  --chord-btn-deep: var(--accent-deep);
+  --chord-btn-tint: var(--accent-tint);
+  --tomato-deep: var(--accent-deep);
+  --terracotta-deep: var(--accent-deep);
+  --olive-deep: var(--good);
+  --tomato-tint: var(--accent-tint);
+  --terracotta-tint: var(--accent-tint);
+  --olive-tint: var(--accent-tint);
+  --gold-tint: var(--accent-tint);
+  --font-body: var(--font);
+  --top-bar-h: 42px;
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
+  --text-md: 0.95rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2.4rem;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35),
+              0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.40),
+              0 10px 28px rgba(0, 0, 0, 0.45);
+  --gold-deep: var(--star);
+}
+#ss-topbar #ch-top-bar { position: fixed; top: 0; left: 0; right: 0; height: var(--top-bar-h); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 0 var(--sp-3); background: var(--warm-white); border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.9rem; letter-spacing: 0.02em; color: var(--soft-grey); }
+#ss-topbar #ch-panel-toggle { position: absolute; right: var(--sp-3); top: 50%; transform: translateY(-50%); }
+#ss-topbar #ch-panel-toggle.on { background: var(--terracotta); color: var(--on-accent); }
+#ss-topbar .chord-btn { --_face: var(--chord-btn-tint); --_ink: var(--chord-btn-deep); flex: none; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--chord-btn); background: var(--_face); color: var(--_ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; box-shadow: 0 2px 0 var(--chord-btn-deep), 0 3px 7px rgba(0, 0, 0, 0.20); transition: transform 90ms var(--ease), box-shadow 90ms var(--ease), background 120ms var(--ease); }
+#ss-topbar .chord-btn svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+#ss-topbar .chord-btn:hover { background: var(--chord-btn); color: var(--on-accent); }
+#ss-topbar .chord-btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--chord-btn-deep), 0 1px 3px rgba(0, 0, 0, 0.22); }
+#ss-topbar .chord-btn.sm { width: 28px; height: 28px; border-width: 1.5px; }
+#ss-topbar .chord-btn.sm svg { width: 14px; height: 14px; }
+#ss-topbar .chord-btn.lg { width: 46px; height: 46px; }
+#ss-topbar .chord-btn.lg svg { width: 23px; height: 23px; }
+#ss-topbar .chord-btn.on { background: var(--chord-btn); color: var(--on-accent); box-shadow: 0 0 0 3px var(--chord-btn-tint), 0 2px 0 var(--chord-btn-deep), 0 3px 7px rgba(0, 0, 0, 0.20); }
+#ss-topbar .chord-btn[data-mode="one"]::after { content: "1"; position: absolute; margin: 14px 0 0 14px; font-size: 0.55rem; font-weight: 800; }
+#ss-topbar .cc-mini { position: absolute; left: 52px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 6px; max-width: 42vw; }
+#ss-topbar #ch-menu-toggle { position: absolute; left: var(--sp-3); top: 50%; transform: translateY(-50%); }
+#ss-topbar #ch-menu-toggle.on { background: var(--terracotta); color: var(--on-accent); }
+#ss-topbar .cc-mini-track { display: flex; flex-direction: column; gap: 2px; min-width: 0; width: 148px; margin-left: 2px; }
+#ss-topbar .cc-mini-title { font-family: var(--font-body); font-size: 0.72rem; font-weight: 700; color: var(--charcoal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1; }
+#ss-topbar .cc-mini-bar { display: block; height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; }
+#ss-topbar .cc-mini-fill { display: block; height: 100%; width: 0; border-radius: 2px; background: var(--chord-btn); transition: width 220ms linear; }
+#ss-topbar .cc-mini-elapsed { font-family: var(--font-mono); font-size: 0.68rem; color: var(--soft-grey); min-width: 30px; }
+#ss-topbar .cc-mini-art { width: 22px; height: 22px; flex: none; border-radius: 5px; overflow: hidden; background: var(--chord-btn-tint); color: var(--chord-btn-deep); display: flex; align-items: center; justify-content: center; }
+#ss-topbar .cc-mini-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#ss-topbar .cc-mini-art svg { width: 13px; height: 13px; fill: currentColor; }
+#ss-topbar .cc-mini:not(.has-track) .cc-mini-art { opacity: 0.45; }
+#ss-topbar .cc-mini:not(.has-track) .cc-mini-track, #ss-topbar .cc-mini:not(.has-track) .cc-mini-elapsed { opacity: 0.45; }
+@media (max-width: 900px) {
+  #ss-topbar .cc-mini-track, #ss-topbar .cc-mini-elapsed, #ss-topbar .cc-mini-art { display: none; }
+  #ss-topbar .cc-mini { max-width: none; }
+}
+#ss-topbar .cc-queue-pop { position: fixed; top: 48px; left: var(--sp-3); width: 330px; max-height: min(74vh, 640px); overflow-y: auto; z-index: 88; display: none; padding: var(--sp-4); border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.10); background: color-mix(in srgb, var(--warm-white) 72%, transparent); backdrop-filter: blur(18px) saturate(1.5); -webkit-backdrop-filter: blur(18px) saturate(1.5); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12); color: var(--ink); }
+#ss-topbar .cc-queue-pop.open { display: block; }
+#ss-topbar .ccq-now { display: flex; gap: 10px; align-items: center; }
+#ss-topbar .ccq-art { width: 54px; height: 54px; flex: none; border-radius: 10px; overflow: hidden; background: var(--chord-btn-tint); color: var(--chord-btn-deep); display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); }
+#ss-topbar .ccq-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#ss-topbar .ccq-art svg { width: 26px; height: 26px; fill: currentColor; }
+#ss-topbar .ccq-meta { min-width: 0; }
+#ss-topbar .ccq-title { font-weight: 800; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#ss-topbar .ccq-sub { font-size: 0.76rem; color: var(--soft-grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#ss-topbar .ccq-seek { height: 6px; border-radius: 3px; background: var(--line); margin: 12px 0 3px; cursor: pointer; overflow: hidden; }
+#ss-topbar .ccq-seek-fill { height: 100%; background: var(--chord-btn); border-radius: 3px; }
+#ss-topbar .ccq-times { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.68rem; color: var(--soft-grey); }
+#ss-topbar .ccq-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px 0 10px; }
+#ss-topbar .ccq-controls .chord-btn { position: relative; }
+#ss-topbar .ccq-vol { padding: 0 2px 10px; }
+#ss-topbar .ccq-vol input[type="range"] { width: 100%; accent-color: var(--chord-btn); }
+#ss-topbar .ccq-next-h { font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft-grey); border-top: 1px solid var(--line); padding-top: 8px; margin-bottom: 4px; }
+#ss-topbar .ccq-list { display: flex; flex-direction: column; gap: 2px; }
+#ss-topbar .ccq-row { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; text-align: left; background: none; border: 0; border-radius: 8px; padding: 6px 8px; cursor: pointer; width: 100%; }
+#ss-topbar .ccq-row:hover { background: color-mix(in srgb, var(--chord-btn) 16%, transparent); }
+#ss-topbar .ccq-row-t { font-size: 0.82rem; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+#ss-topbar .ccq-row-a { font-size: 0.72rem; color: var(--soft-grey); }
+#ss-topbar .ccq-empty { font-size: 0.8rem; color: var(--soft-grey); margin: 4px 0; }
+#ss-topbar #ch-top-bar { display: flex; position: relative; top: auto; left: auto; right: auto; flex: none; z-index: 2; }
+#ss-topbar #ch-menu-toggle { display: none; }
+/* ♥ and + beside the time (chords.js): favourite the song, add it to a playlist */
+#ss-topbar .cc-mini-fav.on { color: #ff4f6d; }
+#ss-topbar #cc-mini-fav, #ss-topbar #cc-mini-add { font-size: 1rem; line-height: 1; }
+/* the "add to a playlist" menu: small, by the button, gone on a click elsewhere */
+.cc-pl-menu { position: fixed; z-index: 900; min-width: 200px; max-width: 280px; max-height: 50vh; overflow-y: auto;
+  padding: 6px; border-radius: 12px; background: var(--panel, #1b1b1b); border: 1px solid var(--line, #0003);
+  box-shadow: 0 14px 40px #0006; display: flex; flex-direction: column; gap: 1px; }
+.cc-pl-head { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; opacity: .6; padding: 6px 10px 4px; }
+.cc-pl-menu button { display: flex; justify-content: space-between; gap: 10px; text-align: left; border: 0; background: transparent;
+  color: inherit; font: inherit; font-size: 0.85rem; padding: 7px 10px; border-radius: 8px; cursor: pointer; }
+.cc-pl-menu button:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.cc-pl-menu button span { opacity: .5; font-size: 0.75rem; }
+.cc-pl-menu .cc-pl-new { border-top: 1px solid var(--line, #0002); border-radius: 0 0 8px 8px; margin-top: 2px; color: var(--accent); }
+.cc-pl-none { padding: 6px 10px; opacity: .6; font-size: 0.8rem; }
+
+/* Nothing playing (2026-10-05, the audit): the player folds to a small pill --
+   play and the queue -- instead of a row of empty controls taking the bar's
+   best spot. A track in the queue brings the full player back. */
+#ss-topbar .cc-mini:not(.has-track) #cc-mini-prev,
+#ss-topbar .cc-mini:not(.has-track) #cc-mini-next,
+#ss-topbar .cc-mini:not(.has-track) #cc-mini-art,
+#ss-topbar .cc-mini:not(.has-track) .cc-mini-bar,
+#ss-topbar .cc-mini:not(.has-track) #cc-mini-elapsed,
+#ss-topbar .cc-mini:not(.has-track) #cc-mini-fav,
+#ss-topbar .cc-mini:not(.has-track) #cc-mini-add { display: none; }
+#ss-topbar .cc-mini:not(.has-track) {
+  gap: 4px; padding: 2px 10px 2px 3px; border-radius: 999px;
+  background: color-mix(in srgb, var(--ink, #fff) 6%, transparent);
+}
+#ss-topbar .cc-mini:not(.has-track) #cc-mini-play { transform: scale(.82); }
+#ss-topbar .cc-mini:not(.has-track) .cc-mini-title { font-size: 0.75rem; opacity: .7; }
+#ss-topbar .cc-mini:not(.has-track) .cc-mini-track { flex: none; width: auto; min-width: 0; }

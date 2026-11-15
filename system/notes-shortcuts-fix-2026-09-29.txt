@@ -1,0 +1,78 @@
+NeuroNet: keyboard shortcuts did nothing (fix notes, 2026-09-29)
+=================================================================
+For: the computer that builds the NeuroNet installer / ISO.
+
+SYMPTOM
+-------
+Every NeuroNet shortcut (Super+Alt+N/T/P/M/C/H/Z/Q/D/I/R/O ...) did nothing,
+even while NeuroNet was open, and couldn't hide or close it either. After about
+30 seconds a notification said "NeuroNet didn't open".
+
+The keybindings themselves were fine. All 20 were registered in Hyprland
+(`hyprctl binds`), `hyprctl configerrors` reported nothing, and
+`neuronet-quick` etc. were on PATH in ~/.local/bin.
+
+ROOT CAUSE
+----------
+1. The python-qtpy package was not installed. NeuroNet is started with
+   `--gui qt`, and pywebview 6.x's Qt backend does `from qtpy import ...`.
+   Without qtpy that import fails, and pywebview QUIETLY FALLS BACK TO GTK
+   (WebKitGTK). The only trace is in ~/.local/state/neuronet/start.log:
+       [pywebview] QT cannot be loaded
+       ModuleNotFoundError: No module named 'qtpy'
+   integration/deps.txt only checked PyQt6.QtWebEngineWidgets (which WAS
+   installed), so the installer said everything was present.
+
+2. neuronet.py set the window's Wayland app id to "NeuroNet" only in the Qt
+   path (QGuiApplication.setDesktopFileName). Under the GTK fallback, GTK
+   named the window after the program: class = "neuronet.py".
+
+3. Everything else looks for class "NeuroNet":
+   - neuronet-quick's win_json() (it also accepted class ^python, but not
+     "neuronet.py")
+   - the Hyprland window rule  o.window("^(NeuroNet)$", ...)
+   So neuronet-quick never found the window. It assumed NeuroNet wasn't
+   running and tried to launch it, but neuronet.py refuses a second copy
+   (single instance via org.neuronet.App). It then waited 30 s, gave up and
+   showed "didn't open". The window rule never applied either, so the
+   window opened tiled instead of in special:neuronet.
+
+FIXES (all made in the NeuroNet source folder; carry them into the build)
+------------------------------------------------------------------------
+a) integration/deps.txt: added a required python dependency
+       python    qtpy    omarchy pkg add python-qtpy
+   so the installer refuses or warns when Qt can't really load.
+   INSTALLER/ISO: include the Arch package  python-qtpy  (extra repo)
+   alongside python-pyqt6 and python-pyqt6-webengine.
+
+b) neuronet.py (main(), right after the Qt setDesktopFileName block):
+   always calls  GLib.set_prgname("NeuroNet")  before webview.start(). The
+   window is then class "NeuroNet" whichever renderer ends up drawing it.
+
+c) neuronet-quick, win_json(): the fallback match now accepts class
+   "neuronet.py" as well as ^python (belt and braces).
+
+d) system/hypr/hyprland.lua.block (and this machine's ~/.config/hypr/hyprland.lua):
+       o.window("^(NeuroNet|neuronet\\.py)$", { workspace = "special:neuronet silent", float = true })
+
+HOW TO VERIFY ON A NEW INSTALL
+------------------------------
+  python3 -c 'import qtpy'                 # must not error
+  hyprctl clients -j | jq -r '.[] | select(.title=="NeuroNet") | .class'
+                                           # must print: NeuroNet
+  neuronet-quick notes ; neuronet-quick notes   # opens, then hides the popup
+  grep -i 'cannot be loaded' ~/.local/state/neuronet/start.log   # no output
+
+A SUGGESTION FOR THE BUILD
+--------------------------
+neuronet-doctor / the installer could warn whenever start.log contains
+"QT cannot be loaded". That silent fallback is what hid this problem.
+
+MINOR, UNRELATED, NOTICED WHILE LOOKING
+---------------------------------------
+- NeuroNet/NeuroNet.desktop (in the app folder) still has
+  Exec/Path=/home/tarumbra/DataDrive/NeuroNet/... from another computer.
+- system/applications/NeuroNet.desktop has Path/Icon=/mnt/mydata/NeuroNet/...
+  The installed ~/.local/share/applications/NeuroNet.desktop on this machine
+  is correct, so the installer evidently rewrites these. Worth checking that
+  it always does.

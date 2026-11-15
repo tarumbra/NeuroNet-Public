@@ -1,0 +1,20 @@
+{
+  "//": [
+    "Content for ui/pet/core/39-zzz-pet-jobs-and-parties.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "JOBS": {
+    "gardener": {"name": "Gardener", "max": 2, "skill": "farming", "says": "Waters the plots, and they grow 10% faster"},
+    "kitchen": {"name": "Kitchen hand", "max": 1, "room": "kitchen", "says": "Kitchen benches: +10% xp, and now and then an ingredient saved"},
+    "smithy": {"name": "Smithy hand", "max": 1, "room": "smithy", "says": "Furnace and anvil: +10% xp, and now and then an ingredient saved"},
+    "shed": {"name": "Shed hand", "max": 1, "room": "shed", "says": "Shed benches: +10% xp, and now and then an ingredient saved"},
+    "library": {"name": "Library hand", "max": 1, "room": "library", "says": "Library benches: +10% xp, and now and then an ingredient saved"},
+    "keeper": {"name": "Store keeper", "max": 2, "says": "Looks after one more chest in the store room"}
+  },
+  "JOB_ORDER": ["gardener", "kitchen", "smithy", "shed", "library", "keeper"],
+  "ROLES": {
+    "scout": {"name": "Scout", "says": "Finds more, steers clear of traps, and turns up crates and eggs more often"},
+    "hauler": {"name": "Hauler", "says": "Carries more home from every find, and one more kind of thing in the pack"},
+    "fighter": {"name": "Fighter", "says": "Fights beside your companion: half its health and attack, some of its defence"}
+  }
+}

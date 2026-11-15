@@ -1,0 +1,71 @@
+#!/bin/bash
+# neuropets -- open the NeuroPets game (its own window).
+#
+#     neuropets             open it, or bring the open one here (the app icon)
+#     neuropets toggle      the same, but if it's already on this workspace,
+#                           tuck it away (Super+Alt+G -- like NeuroNet's key)
+#     neuropets sandbox     open it on the Developer sandbox (a copy to test in)
+#     neuropets start       start it hidden if it isn't running
+#
+# There is only ever one NeuroPets (neuropets.py refuses a second and brings
+# the first forward), so two windows can never save over each other. Tucked
+# away, it waits in a Hyprland scratchpad ("special:neuropets"); after 10
+# minutes out of sight it closes itself to give its memory back (1.0.46 --
+# neuropets.py watch_and_quit), and this starts it again, caught up.
+set -u
+APP_DIR="$(dirname "$(readlink -f "$0")")"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/neuropets.log"
+SPECIAL="neuropets"
+mkdir -p "$(dirname "$LOG")"
+action="${1:-show}"
+
+dsp() { hyprctl dispatch "$1" >/dev/null 2>&1; }
+owned() {
+  busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
+    NameHasOwner s org.neuropets.App 2>/dev/null | grep -q true
+}
+bus() { busctl --user call org.neuropets.App /org/neuropets/App org.neuropets.App "$1" >/dev/null 2>&1; }
+win_json() {
+  command -v hyprctl >/dev/null 2>&1 || return 0
+  hyprctl clients -j 2>/dev/null | jq -c '[.[] | select(.class == "NeuroPets" or .initialClass == "NeuroPets")][0] // empty'
+}
+launch() {
+  local run=(python3 "$APP_DIR/neuropets.py" --gui qt "$@")
+  if command -v uwsm-app >/dev/null 2>&1; then run=(uwsm-app -- "${run[@]}"); fi
+  cd "$APP_DIR" && setsid -f "${run[@]}" >"$LOG" 2>&1
+}
+
+# bring it to the workspace in front of you, or (toggle) tuck it away if it's already there
+here() {
+  local may_hide="$1" j addr ws target win
+  if ! owned; then launch; return; fi
+  # Without Hyprland (KDE Plasma, 2026-10-14): the game shows and hides its own
+  # window (Show/Hide/State) and neuronet-raise asks KWin to bring it forward.
+  if [ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    local state
+    state=$(busctl --user call org.neuropets.App /org/neuropets/App org.neuropets.App State 2>/dev/null | sed -E 's/^s "(.*)"$/\1/')
+    if [ "$may_hide" = yes ] && [ -n "$state" ] && [ "$state" != hidden ]; then bus Hide; return; fi
+    bus Show
+    "$APP_DIR/neuronet-raise" NeuroPets
+    return
+  fi
+  j="$(win_json)"
+  if [ -z "$j" ]; then bus Show; return; fi            # running hidden: show it
+  addr=$(jq -r .address <<<"$j"); ws=$(jq -r .workspace.name <<<"$j")
+  target=$(hyprctl activeworkspace -j | jq -r .name)
+  win="address:$addr"
+  if [ "$may_hide" = yes ] && [ "$ws" = "$target" ]; then
+    dsp "hl.dsp.window.move({ window = \"$win\", workspace = \"special:$SPECIAL\", follow = false })"
+    return
+  fi
+  [ "$ws" != "$target" ] && dsp "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\" })"
+  dsp "hl.dsp.focus({ window = \"$win\" })"
+}
+
+case "$action" in
+  show|"") here no ;;
+  toggle)  here yes ;;
+  sandbox) if owned; then here no; bus Sandbox; else launch --sandbox; fi ;;
+  start)   owned || launch --hidden ;;
+  *) echo "Usage: neuropets [show|toggle|sandbox|start]" >&2; exit 2 ;;
+esac

@@ -1,0 +1,20 @@
+# Cam's full-figure tutor paintings (~/Pictures/NeuroPets Art Assets/Tutors), cut by tools/cut_portraits.py for the tutorial window.
+# Each also has a 128px card icon obj_p<name> (tools/icon_sheets/sheets_battle_rework.txt).
+tamsin: Tasmin - Beast Hunter - Tutor.jpeg
+pip: Pip - Thief - Tutor.jpeg
+wren: Wren - Hunter - Tutor.jpeg
+brakka: Brekka - Berserker - Tutor.jpeg
+aldo: Brother Aldo - Paladin - Tutor.jpeg
+ilse: Ilse - Arcane - Tutor.jpeg
+orla: Orla - Guildmaster.jpeg
+# the Marketplace's people (2026-10-17)
+bess: ../Marketplace/People/Old Bess - Fruit stall.jpeg
+mabel: ../Marketplace/People/Mabel - Baker.jpeg
+gil: ../Marketplace/People/Gil - Fishmonger.jpeg
+vey: ../Marketplace/People/Madame Vey - Cloth merchant.jpeg
+hester: ../Marketplace/People/Hester - Apothecary.jpeg
+quill: ../Marketplace/People/Mr Quill - Curio dealer.jpeg
+dorn: ../Marketplace/People/Dorn - Weaponsmith.jpeg
+perla: ../Marketplace/People/Perla - Jeweller.jpeg
+hale: ../Marketplace/People/Captain Hale - The watch.jpeg
+nell: ../Marketplace/People/Nell - Fence.jpeg

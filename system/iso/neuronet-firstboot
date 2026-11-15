@@ -1,0 +1,72 @@
+#!/bin/bash
+# neuronet-firstboot -- the first login on a computer installed from the
+# NeuroNet ISO (NeuroNet System plan, Stage 5).
+#
+# The ISO's `neuronet` package put NeuroNet at /opt/neuronet/NeuroNet and its
+# software on the computer. This runs once per person, from
+# /etc/xdg/autostart/neuronet-firstboot.desktop, when their desktop starts:
+#
+#   1. a copy of NeuroNet of their own at ~/NeuroNet (it writes beside itself:
+#      its log, and -- on a new computer -- its data folder)
+#   2. system/install.sh --yes --offline: the widgets, dock, themes, shortcuts
+#      and commands, exactly as on any other computer -- offline, because the
+#      ISO brought the software; nothing to download, no password to type
+#   3. NeuroNet opens on its welcome: bring a NeuroNet across, or start fresh
+#
+# Then it never runs again for that person (~/.local/state/neuronet/firstboot.done).
+# What it did is in ~/.local/state/neuronet/firstboot.log.
+set -u
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet"
+DONE="$STATE/firstboot.done"
+LOG="$STATE/firstboot.log"
+OPT="${NEURONET_FIRSTBOOT_OPT:-/opt/neuronet}"
+SRC="${NEURONET_FIRSTBOOT_SRC:-$OPT/NeuroNet}"
+APP="${NEURONET_FIRSTBOOT_APP:-$HOME/NeuroNet}"
+
+[ -e "$DONE" ] && exit 0
+mkdir -p "$STATE"
+exec >>"$LOG" 2>&1
+echo "== $(date -Is) first login for $USER"
+
+# The widgets go into Omarchy's desktop shell: give it time to come up.
+for _ in $(seq 90); do pgrep -u "$(id -u)" -x quickshell >/dev/null && break; sleep 1; done
+sleep "${NEURONET_FIRSTBOOT_SETTLE:-4}"
+
+if [ ! -e "$APP/neuronet.py" ]; then
+  [ -d "$SRC" ] || { echo "no NeuroNet at $SRC"; exit 1; }
+  mkdir -p "$APP"
+  cp -a "$SRC/." "$APP/"
+  echo "copied NeuroNet to $APP"
+fi
+
+if bash "$APP/system/install.sh" --yes --offline --no-start; then
+  # A new NeuroNet takes the desktop's colours -- the NeuroNet theme -- rather
+  # than the app's own default (Hearth's red). Only when it has no settings
+  # yet: anyone's own choice, or an imported NeuroNet's, is never touched.
+  data=$(jq -r '.data // empty' "${XDG_CONFIG_HOME:-$HOME/.config}/neuronet/paths.json" 2>/dev/null)
+  data="${data:-$APP/neuronet_data}"
+  if [ ! -e "$data/neuronet_prefs.json" ]; then
+    mkdir -p "$data" && echo '{"theme": "omarchy"}' > "$data/neuronet_prefs.json" && echo "theme: Follow Omarchy"
+  fi
+  # Updates (Stage 6): where the ISO brought an update set-up -- the
+  # repository and a read-only key for it -- it's this person's, and the daily
+  # check goes on. (A key: ssh wants it private to them.)
+  if [ -f "$OPT/update.json" ]; then
+    conf="${XDG_CONFIG_HOME:-$HOME/.config}/neuronet"
+    mkdir -p "$conf"
+    if [ -f "$OPT/update_key" ]; then
+      install -m 600 "$OPT/update_key" "$conf/update_key"
+      jq --arg k "$conf/update_key" '.key = $k' "$OPT/update.json" > "$conf/update.json"
+    else
+      cp "$OPT/update.json" "$conf/update.json"
+    fi
+    neuronet-update --enable || echo "couldn't switch the daily update check on"
+  fi
+  neuronet-quick start || "$APP/neuronet-quick" start
+  touch "$DONE"
+  echo "== done"
+else
+  echo "== install.sh failed"
+  notify-send -u critical "NeuroNet" "Setting NeuroNet up didn't finish. What it said: $LOG" 2>/dev/null
+  exit 1
+fi

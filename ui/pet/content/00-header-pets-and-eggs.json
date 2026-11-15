@@ -1,0 +1,220 @@
+{
+  "//": [
+    "Content for ui/pet/core/00-header-pets-and-eggs.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "MASTERY": [0, 2, 5, 10, 20],
+  "STATS": ["full", "happy", "energy", "clean", "health"],
+  "STAT_NAMES": {"full": "Food", "happy": "Fun", "energy": "Energy", "clean": "Clean", "health": "Health"},
+  "SPECIES": {
+    "cat": {"name": "Cat", "colours": ["ginger", "grey"]},
+    "bunny": {"name": "Bunny", "colours": ["pink", "cream"]},
+    "frog": {"name": "Frog", "colours": ["green", "lilac"]},
+    "chicken": {"name": "Chicken", "colours": ["white"]},
+    "duck": {"name": "Duck", "colours": ["mallard"]},
+    "pig": {"name": "Pig", "colours": ["pink"]},
+    "fox": {"name": "Fox", "colours": ["red"]},
+    "cow": {"name": "Cow", "colours": ["spotted"]},
+    "goat": {"name": "Goat", "colours": ["white"]},
+    "sheep": {"name": "Sheep", "colours": ["wool"]},
+    "horse": {"name": "Horse", "colours": ["brown"]},
+    "dog": {"name": "Dog", "colours": ["cattle", "stray"]},
+    "ram": {"name": "Ram", "colours": ["wool"]},
+    "hare": {"name": "Hare", "colours": ["brown"]},
+    "hedgehog": {"name": "Hedgehog", "colours": ["brown"]},
+    "deer": {"name": "Deer", "colours": ["fawn"]},
+    "spider": {"name": "Spider", "colours": ["black", "giant"]},
+    "snake": {"name": "Snake", "colours": ["green", "anaconda"]},
+    "elk": {"name": "Elk", "colours": ["brown"]},
+    "boar": {"name": "Boar", "colours": ["brown"]},
+    "wolf": {"name": "Wolf", "colours": ["grey"]},
+    "bear": {"name": "Bear", "colours": ["brown"]},
+    "tiger": {"name": "Tiger", "colours": ["orange"]},
+    "leopard": {"name": "Leopard", "colours": ["spotted"]},
+    "crab": {"name": "Crab", "colours": ["red"]},
+    "gull": {"name": "Seagull", "colours": ["white"]},
+    "seal": {"name": "Seal", "colours": ["grey"]},
+    "mole": {"//": "the diggers (balance audit 2026-10-05): from the Burrow egg, found digging", "name": "Mole", "colours": ["velvet"]},
+    "tarantula": {"name": "Tarantula", "colours": ["redknee"]},
+    "anteater": {"name": "Anteater", "colours": ["giant"]}
+  },
+  "PETS": {
+    "cat/ginger": {"name": "Ginger Cat", "rarity": "Common"},
+    "cat/grey": {"name": "Grey Cat", "rarity": "Common"},
+    "bunny/pink": {"name": "Pink Bunny", "rarity": "Common"},
+    "bunny/cream": {"name": "Cream Bunny", "rarity": "Uncommon"},
+    "frog/green": {"name": "Green Frog", "rarity": "Uncommon"},
+    "frog/lilac": {"name": "Lilac Frog", "rarity": "Rare"},
+    "cat/golden": {"//": "the brief: \"Special rare pets (One way they can be obtained is from special breeding\")", "name": "Golden Cat", "rarity": "Special"},
+    "bunny/moon": {"name": "Moon Bunny", "rarity": "Special"},
+    "frog/ember": {"name": "Ember Frog", "rarity": "Special"},
+    "chicken/white": {
+      "//": [
+        "the hunt's animals, as pets (2026-10-03): from area eggs (Gideon steals them from bosses)",
+        "and -- the fox, the ram and the bosses themselves -- unlocked by beating bosses"
+      ],
+      "name": "Chicken",
+      "rarity": "Common"
+    },
+    "duck/mallard": {"name": "Duck", "rarity": "Common"},
+    "pig/pink": {"name": "Pig", "rarity": "Common"},
+    "fox/red": {"name": "Fox", "rarity": "Uncommon"},
+    "cow/spotted": {"name": "Cow", "rarity": "Common"},
+    "goat/white": {"name": "Goat", "rarity": "Common"},
+    "sheep/wool": {"name": "Sheep", "rarity": "Common"},
+    "horse/brown": {"name": "Horse", "rarity": "Uncommon"},
+    "dog/cattle": {"name": "Cattle Dog", "rarity": "Uncommon"},
+    "ram/wool": {"name": "Ram", "rarity": "Uncommon"},
+    "hare/brown": {"name": "Hare", "rarity": "Common"},
+    "cat/wild": {"name": "Wild Cat", "rarity": "Uncommon"},
+    "dog/stray": {"name": "Stray Dog", "rarity": "Common"},
+    "hedgehog/brown": {"name": "Hedgehog", "rarity": "Uncommon"},
+    "deer/fawn": {"name": "Deer", "rarity": "Uncommon"},
+    "spider/black": {"name": "Spider", "rarity": "Common"},
+    "snake/green": {"name": "Snake", "rarity": "Uncommon"},
+    "elk/brown": {"name": "Elk", "rarity": "Rare"},
+    "boar/brown": {"name": "Boar", "rarity": "Uncommon"},
+    "wolf/grey": {"name": "Wolf", "rarity": "Rare"},
+    "bear/brown": {"name": "Brown Bear", "rarity": "Rare"},
+    "tiger/orange": {"name": "Tiger", "rarity": "Rare"},
+    "leopard/spotted": {"name": "Leopard", "rarity": "Rare"},
+    "snake/anaconda": {"name": "Anaconda", "rarity": "Rare"},
+    "spider/giant": {"name": "Giant Spider", "rarity": "Rare"},
+    "crab/red": {"name": "Crab", "rarity": "Common"},
+    "gull/white": {"name": "Seagull", "rarity": "Common"},
+    "seal/grey": {"name": "Seal", "rarity": "Uncommon"},
+    "fox/gideon": {"name": "Gideon Fox", "rarity": "Legendary"},
+    "ram/billy": {"name": "Billy the Kid", "rarity": "Legendary"},
+    "mole/velvet": {"name": "Mole", "rarity": "Uncommon"},
+    "tarantula/redknee": {"name": "Tarantula", "rarity": "Rare"},
+    "anteater/giant": {"name": "Giant Anteater", "rarity": "Rare"},
+    "chicken/golden": {"//": "hidden in the world (2026-10-07, Cam: \"we can even hide special eggs in hidden areas\")", "name": "Golden Hen", "rarity": "Special"},
+    "sheep/black": {"name": "Black Sheep", "rarity": "Special"},
+    "hare/snow": {"name": "Snow Hare", "rarity": "Special"},
+    "deer/white": {"name": "White Hart", "rarity": "Special"},
+    "seal/selkie": {"name": "Selkie", "rarity": "Special"},
+    "fox/silver": {"name": "Silver Fox", "rarity": "Special"},
+    "tiger/white": {"name": "White Tiger", "rarity": "Special"},
+    "snake/emerald": {"name": "Emerald Serpent", "rarity": "Special"},
+    "spider/crystal": {"name": "Crystal Spider", "rarity": "Special"},
+    "crab/coral": {"name": "Coral Crab", "rarity": "Special"},
+    "ram/frost": {"name": "Frost Ram", "rarity": "Special"}
+  },
+  "EGGS": {
+    "starter": {
+      "name": "Starter egg",
+      "hatch": 180000,
+      "take": true,
+      "pool": [["cat/ginger", 24], ["bunny/pink", 24], ["cat/grey", 20], ["bunny/cream", 14], ["frog/green", 12], ["frog/lilac", 6]]
+    },
+    "common": {
+      "name": "Common egg",
+      "hatch": 600000,
+      "found": "expeditions",
+      "pool": [["cat/ginger", 30], ["bunny/pink", 30], ["cat/grey", 25], ["bunny/cream", 15]]
+    },
+    "uncommon": {
+      "name": "Uncommon egg",
+      "hatch": 1800000,
+      "found": "expeditions",
+      "pool": [["bunny/cream", 35], ["frog/green", 35], ["cat/grey", 20], ["frog/lilac", 10]]
+    },
+    "rare": {"name": "Rare egg", "hatch": 3600000, "found": "loot crates", "pool": [["frog/green", 40], ["frog/lilac", 40], ["bunny/cream", 20]]},
+    "exotic": {
+      "//": [
+        "the travelling merchant's (2026-10-04): rare and special pets, now and then a legend",
+        "boss pets only from beating their boss (audit 2026-10-05)"
+      ],
+      "name": "Exotic egg",
+      "hatch": 7200000,
+      "found": "the travelling merchant (Sundays)",
+      "pool": [
+        ["cat/golden", 14],
+        ["bunny/moon", 14],
+        ["frog/ember", 14],
+        ["tiger/orange", 8],
+        ["leopard/spotted", 8],
+        ["wolf/grey", 8],
+        ["bear/brown", 8],
+        ["elk/brown", 8],
+        ["snake/anaconda", 6],
+        ["spider/giant", 6],
+        ["mole/velvet", 3],
+        ["anteater/giant", 3]
+      ]
+    },
+    "burrow": {
+      "name": "Burrow egg",
+      "hatch": 5400000,
+      "found": "digging deep (Digging 30 and up)",
+      "pool": [["mole/velvet", 45], ["tarantula/redknee", 30], ["anteater/giant", 25]]
+    },
+    "special": {"name": "Special egg", "hatch": 7200000, "found": "special breeding", "pool": [["cat/golden", 34], ["bunny/moon", 33], ["frog/ember", 33]]},
+    "bred": {
+      "//": "laid by two of your pets (2026-10-03): what hatches takes after the parents",
+      "name": "Bred egg",
+      "hatch": 1800000,
+      "found": "breeding",
+      "pool": []
+    },
+    "farmyard": {
+      "//": [
+        "area eggs (2026-10-03): \"the chance to steal a egg respective to the bosses area (Which has the",
+        "chance to hatch into any animal in that area)\" -- Gideon's steals from bosses"
+      ],
+      "name": "Farmyard egg",
+      "hatch": 1200000,
+      "found": "Gideon's steals",
+      "pool": [["chicken/white", 30], ["duck/mallard", 30], ["pig/pink", 25], ["fox/red", 15]]
+    },
+    "pasture": {
+      "name": "Pasture egg",
+      "hatch": 1800000,
+      "found": "Gideon's steals",
+      "pool": [["cow/spotted", 25], ["sheep/wool", 25], ["goat/white", 20], ["horse/brown", 15], ["dog/cattle", 15]]
+    },
+    "meadow": {
+      "name": "Meadow egg",
+      "hatch": 2400000,
+      "found": "Gideon's steals",
+      "pool": [["hare/brown", 25], ["bunny/cream", 20], ["dog/stray", 20], ["cat/wild", 15], ["fox/red", 10], ["hedgehog/brown", 10]]
+    },
+    "forest": {
+      "name": "Forest egg",
+      "hatch": 3600000,
+      "found": "Gideon's steals",
+      "pool": [["spider/black", 25], ["frog/green", 20], ["deer/fawn", 20], ["snake/green", 15], ["boar/brown", 12], ["elk/brown", 8]]
+    },
+    "deepforest": {
+      "name": "Deep forest egg",
+      "hatch": 5400000,
+      "found": "Gideon's steals",
+      "pool": [["deer/fawn", 25], ["snake/green", 20], ["elk/brown", 20], ["wolf/grey", 20], ["bear/brown", 15]]
+    },
+    "coast": {"name": "Coast egg", "hatch": 4500000, "found": "Gideon's steals", "pool": [["crab/red", 40], ["gull/white", 35], ["seal/grey", 25]]},
+    "speckled": {
+      "//": "hidden eggs (2026-10-07): one in each region of the world map, found by exploring it",
+      "name": "Speckled egg",
+      "hatch": 7200000,
+      "found": "hidden in the Farmyard",
+      "pool": [["chicken/golden", 1]]
+    },
+    "woolly": {"name": "Woolly egg", "hatch": 7200000, "found": "hidden in the Pasture", "pool": [["sheep/black", 1]]},
+    "dewy": {"name": "Dewy egg", "hatch": 7200000, "found": "hidden in the Meadow", "pool": [["hare/snow", 1]]},
+    "mossy": {"name": "Mossy egg", "hatch": 7200000, "found": "hidden in the Forest", "pool": [["deer/white", 1]]},
+    "pearly": {"name": "Pearly egg", "hatch": 7200000, "found": "hidden on the Coast", "pool": [["seal/selkie", 1]]},
+    "shadowed": {"name": "Shadowed egg", "hatch": 7200000, "found": "hidden in the Deep Forest", "pool": [["fox/silver", 1]]},
+    "striped": {"name": "Striped egg", "hatch": 7200000, "found": "hidden in the Jungle", "pool": [["tiger/white", 1]]},
+    "vine": {"name": "Vine-wrapped egg", "hatch": 7200000, "found": "hidden in the Deep Jungle", "pool": [["snake/emerald", 1]]},
+    "crystal": {"name": "Crystal egg", "hatch": 7200000, "found": "hidden in the Crystal Caves", "pool": [["spider/crystal", 1]]},
+    "coral": {"name": "Coral egg", "hatch": 7200000, "found": "hidden on the Misty Isle", "pool": [["crab/coral", 1]]},
+    "frosted": {"name": "Frosted egg", "hatch": 7200000, "found": "hidden in the Frostpeak Mountains", "pool": [["ram/frost", 1]]},
+    "jungle": {
+      "name": "Jungle egg",
+      "hatch": 7200000,
+      "found": "Gideon's steals",
+      "pool": [["leopard/spotted", 30], ["tiger/orange", 25], ["snake/anaconda", 25], ["spider/giant", 20]]
+    }
+  },
+  "EGG_ORDER": ["starter", "common", "uncommon", "rare", "special"]
+}

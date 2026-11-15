@@ -1,0 +1,49 @@
+{
+  "//": [
+    "Content for ui/pet/core/31-natures-potential-and-bred-colours.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "GENE_STATS": ["hp", "att", "def", "agi", "knack"],
+  "GENE_NAMES": {"hp": "Health", "att": "Attack", "def": "Defence", "agi": "Agility", "knack": "Knack"},
+  "NATURES": {
+    "hardy": {"name": "Hardy", "fx": {"hp": 0.1}},
+    "brave": {"name": "Brave", "fx": {"att": 0.1, "def": -0.1}},
+    "bold": {"name": "Bold", "fx": {"def": 0.1, "att": -0.1}},
+    "timid": {"name": "Timid", "fx": {"dodge": 0.03, "att": -0.1}},
+    "jolly": {"name": "Jolly", "fx": {"dodge": 0.02, "knack": 0.02}},
+    "gentle": {"name": "Gentle", "fx": {"hp": 0.05, "knack": 0.02}},
+    "wild": {"name": "Wild", "fx": {"att": 0.15, "hp": -0.1}},
+    "calm": {"name": "Calm", "fx": {}},
+    "diligent": {"name": "Diligent", "fx": {"knack": 0.04, "att": -0.05}},
+    "valiant": {
+      "//": "rare: bred only",
+      "name": "Valiant",
+      "rare": true,
+      "from": ["brave", "bold"],
+      "fx": {"att": 0.1, "def": 0.1},
+      "pattern": "royal",
+      "best": "att"
+    },
+    "steadfast": {"name": "Steadfast", "rare": true, "from": ["hardy", "bold"], "fx": {"hp": 0.1, "def": 0.1}, "pattern": "stone", "best": "def"},
+    "fierce": {"name": "Fierce", "rare": true, "from": ["wild", "brave"], "fx": {"att": 0.2, "hp": -0.05}, "pattern": "ember", "best": "att"},
+    "nimble": {"name": "Nimble", "rare": true, "from": ["timid", "jolly"], "fx": {"dodge": 0.06}, "pattern": "mist", "best": "agi"},
+    "serene": {"name": "Serene", "rare": true, "from": ["calm", "gentle"], "fx": {"hp": 0.1, "knack": 0.04}, "pattern": "aurora", "best": "hp"},
+    "sage": {"name": "Sage", "rare": true, "from": ["diligent", "calm"], "fx": {"knack": 0.08}, "pattern": "starlit", "best": "knack"},
+    "gifted": {
+      "//": "a gifted pet's, found gathering (2026-10-12): twice the companion help; it can pass to a young one like any rare nature",
+      "name": "Gifted",
+      "rare": true,
+      "fx": {"knack": 0.1},
+      "best": "knack"
+    }
+  },
+  "PATTERNS": {
+    "royal": {"name": "Royal", "pal": {"b": "#4a3aa8", "l": "#c8b8ff", "s": "#f2c43c", "p": "#f2c43c", "o": "#1e1648"}},
+    "stone": {"name": "Stone", "pal": {"b": "#8a8a92", "l": "#c8c8d0", "s": "#5a5a64", "p": "#b8a090", "o": "#2a2a30"}},
+    "ember": {"name": "Ember", "pal": {"b": "#a8321e", "l": "#ff9a4a", "s": "#ffd04a", "p": "#ffd04a", "o": "#3a0e08", "e": "#ffd04a"}},
+    "mist": {"name": "Mist", "pal": {"b": "#b8d8e0", "l": "#f2fbff", "s": "#8ab0c8", "p": "#d8b8e8", "o": "#3a5868"}},
+    "aurora": {"name": "Aurora", "pal": {"b": "#3ab89a", "l": "#b8f0e0", "s": "#c870ff", "p": "#ff8ac8", "o": "#0e3a30"}},
+    "starlit": {"name": "Starlit", "pal": {"b": "#1e2a5a", "l": "#5a6ac8", "s": "#f2e27a", "p": "#c8a0ff", "o": "#0a0e24", "e": "#f2e27a"}},
+    "shimmer": {"name": "Shimmer", "pal": {"b": "#f2e6c8", "l": "#ffffff", "s": "#ffd86a", "p": "#ffb8d8", "o": "#7a6030", "e": "#4ab8e8"}}
+  }
+}

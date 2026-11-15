@@ -1,0 +1,1857 @@
+/* ==========================================================================
+   TRAINING — every style the training module needs, in one file.
+
+   Moved here from KinCrux's shared.css along with the module itself. There
+   it was interleaved with other modules' styles: the shared photo picker sat
+   in the middle of it, and one training rule was wedged inside the Notes
+   section. Pulling it out meant splitting those by hand, rule by rule. In
+   its own file it cannot get tangled up like that again.
+
+   NeuroNet's shared.css used to carry a partial copy -- 79 of these 507
+   rules, left over from when NeuroNet was forked from KinCrux's shell. That
+   copy is gone; this file is the only one.
+
+   Every rule is scoped under #cf-shell, #cf-lens or #cf-content, so nothing
+   here can reach the rest of NeuroNet.
+   ========================================================================== */
+
+/* ==========================================================================
+   TRAINING — the calculator styles, merged in from Coach Cam.
+   ==========================================================================
+   EVERY RULE IS SCOPED UNDER #cf-content, the element the training
+   module mounts into.
+
+   That is not tidiness. The Money merge pasted Coach-Cam-style rules in
+   unscoped and quietly redefined sixteen of the host's own selectors --
+   .btn, .input, .panel, the veils, the toast stack -- stripping .panel's
+   padding from every panel in the app, Hearth's included. .chip and
+   .field are exactly the kind of generic names that would do it again.
+   Scoping makes the collision impossible rather than merely unlikely,
+   and verify_merge.js fails the build if a module stylesheet redefines a
+   host selector.
+
+   Coach Cam's colour names are remapped onto KinCrux's, so the
+   calculators follow whatever theme is set:
+     --surface -> --panel        --raised     -> --elevated
+     --hairline -> --line        --text-dim   -> --muted
+     --text-faint -> --muted     --moss/--fern -> --accent
+     --moss-dim -> --accent-tint --on-accent-2 -> --on-accent
+   ========================================================================== */
+#cf-content .chips {
+  display: flex; gap: 6px; flex-wrap: wrap; padding-bottom: 10px;
+  margin-bottom: 4px;
+}
+#cf-content .chip {
+  flex: none; padding: 7px 13px; border-radius: 999px;
+  background: var(--elevated); border: 1px solid transparent;
+  color: var(--muted); font-size: 0.84375rem; white-space: nowrap;
+  cursor: pointer;
+}
+#cf-content .chip:hover { background: var(--hover); color: var(--text); }
+#cf-content .chip.on {
+  background: var(--accent); border-color: var(--accent);
+  color: var(--on-accent); font-weight: 600;
+}
+
+#cf-content .calc {
+  padding: var(--sp-3); margin-bottom: 10px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+#cf-content .calc h3 { margin: 0 0 4px; font-size: 0.9375rem; color: var(--text); }
+#cf-content .calc-hint {
+  margin: 0 0 12px; font-size: 0.78125rem; color: var(--muted); line-height: 1.45;
+}
+#cf-content .field { margin-bottom: 10px; }
+#cf-content .field label {
+  display: block; margin-bottom: 5px; font-size: 0.78125rem; color: var(--muted);
+}
+#cf-content .field input,
+#cf-content .field select,
+#cf-content .field textarea {
+  width: 100%; padding: 0 12px;
+  background-color: var(--elevated); border: 1px solid var(--line-strong);
+  border-radius: var(--radius); font-size: 0.9375rem;
+  color: var(--text); font-family: inherit;
+}
+#cf-content .field input,
+#cf-content .field select { height: 42px; }
+#cf-content .field select { padding-right: 32px; }
+#cf-content .field textarea {
+  min-height: 96px; padding: 11px 12px; line-height: 1.55; resize: vertical;
+}
+#cf-content .field input::placeholder,
+#cf-content .field textarea::placeholder { color: var(--muted); }
+#cf-content .field input:focus,
+#cf-content .field select:focus,
+#cf-content .field textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+#cf-content .field-pair { display: flex; gap: 8px; }
+#cf-content .field-pair .field { flex: 1; }
+
+#cf-content .calc-out { margin-top: 12px; }
+#cf-content .calc-out:empty { display: none; }
+#cf-content .out-big {
+  font-size: 1.875rem; font-weight: 600; color: var(--accent);
+  font-variant-numeric: tabular-nums; font-family: var(--font-mono);
+}
+#cf-content .out-label { font-size: 0.78125rem; color: var(--muted); margin-top: 2px; }
+#cf-content .out-table {
+  width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.875rem;
+}
+#cf-content .out-table th,
+#cf-content .out-table td {
+  padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: left;
+}
+#cf-content .out-table th { color: var(--muted); font-size: 0.75rem; font-weight: 500; }
+#cf-content .out-table td:last-child,
+#cf-content .out-table th:last-child {
+  text-align: right; font-variant-numeric: tabular-nums;
+}
+#cf-content .empty-note { color: var(--muted); font-size: 0.8125rem; }
+
+
+/* ==========================================================================
+   TRAINING SHELL — Coach Cam's own chrome and stylesheet, scoped.
+   ==========================================================================
+   Cam chose to bring Coach Cam's shell across rather than lift its
+   nineteen views onto KinCrux's chrome. That keeps 3,519 lines of
+   working view code untouched, which is rule 1 of the build plan:
+   move code, never re-derive it.
+
+   The cost is this file. Coach Cam's stylesheet is 414 rules of generic
+   names -- .card, .chip, .field, .list, .sheet, .topbar -- and pasting
+   it in unscoped would have redefined most of KinCrux's UI. That is not
+   hypothetical: the Money merge did exactly that with sixteen selectors
+   and stripped .panel's padding from every panel in the app.
+
+   So EVERY rule below is scoped under :is(#cf-shell, #cf-lens) -- the
+   two elements the training module mounts into. Both, because Coach
+   Cam's lens.html loads style.css as well as tools.css: scoped to the
+   shell alone, Lens rendered its station lists as bare stacked lines. It was done by transform, not by hand,
+   and verify_merge.js fails the build if even one host selector is
+   redefined.
+
+   TWO THINGS WERE DELIBERATELY DROPPED
+   ------------------------------------
+   1. Coach Cam's :root palette.
+   2. Its [data-theme="aero"] / [data-theme="win98"] blocks.
+
+   Both had to go because KinCrux's theme engine also writes data-theme
+   and data-shape onto the document element. Left in, Coach Cam's theme
+   rules would fire whenever a KinCrux theme happened to share a name,
+   and two palettes would fight over the same window. Stage 0 settled
+   this already: pick one theme system and keep it.
+
+   Instead its colour names are re-pointed at KinCrux's below, so the
+   whole training shell follows whatever theme is set -- including the
+   themes Coach Cam never had.
+   ========================================================================== */
+/* Coach Cam's own sidebar, scrim and column resizers. KinCrux's sidebar
+   drives navigation now, so a second list of the same sections would be
+   confusing as well as redundant -- but app.js writes to #nav, #dataStamp
+   and #collapseBtn without checking they exist, so the markup stays and
+   only the display goes. */
+#cf-shell .sidebar,
+#cf-shell .scrim,
+#cf-shell #resizeSidebar { display: none !important; }
+/* #resizeList is NOT hidden: it is the divider between the list and the
+   detail column, and dragging it is a feature Coach Cam already had.
+   #resizeSidebar is, because the sidebar it resized is gone. */
+
+/* Coach Cam sized itself to the window: 100dvh tall, with a sidebar
+   column beside the main one. Here it is a pane inside KinCrux's page
+   area, so it fills its parent instead and the main column takes the
+   whole width the sidebar used to share. */
+#cf-shell {
+  /* It is a flex item of #cp-app. Left to size itself it took the width
+     of its content -- the 320px list column -- because the detail pane
+     is position:fixed and so out of flow. That made the detail pane's
+     containing block 320 wide too, and left:320 + right:0 collapsed it
+     to nothing: the pane opened, with the right content, invisible. */
+  flex: 1; min-width: 0;
+  height: 100%; min-height: 0; overflow: hidden;
+  /* Coach Cam's detail pane, editor pane and sheets are position:fixed,
+     which was right when it owned the window. Inside a pane they would
+     resolve against the VIEWPORT and sit on top of KinCrux's sidebar.
+     A transform makes this element their containing block, so "fixed"
+     now means "fixed within the training pane" -- which is what the
+     layout always meant. translateZ(0) rather than a class rename,
+     because renaming would mean editing the ported views. */
+  transform: translateZ(0);
+}
+#cf-shell .app {
+  height: 100%;
+  padding-top: 0;
+  --sidebar-w: 0px;
+}
+#cf-shell .main { flex: 1; min-width: 0; }
+#cf-shell[hidden] { display: none !important; }
+
+/* Coach Cam's colour names, re-pointed at KinCrux's, so the whole
+   training shell follows whatever theme is set -- including the themes
+   Coach Cam never had. Its own :root palette and its [data-theme]
+   blocks were dropped: KinCrux's theme engine writes data-theme onto
+   the document element too, so left in, the two would have fought over
+   the same window. Stage 0 settled that -- one theme system. */
+#cf-shell {
+  --black:        var(--bg);
+  --surface:      var(--panel);
+  --raised:       var(--elevated);
+  --raised-2:     var(--hover);
+  --hairline:     var(--line-strong);
+  --hairline-soft: var(--line);
+
+  /* THE SURFACE AN EXERCISE SITS ON.
+
+     Cam: "for the exercises provide another background for the exercises
+     so they are easier to read on the background."
+
+     They had no background. The rows were var(--surface), which is
+     var(--panel) -- the same value as the detail pane behind them, so
+     the only thing separating an exercise from the page was a hairline.
+     Measured in all nine themes, row against pane: a contrast ratio of
+     exactly 1.00 every time, with the border between 1.42 and 1.98 in
+     seven of them. Four exercises read as one dark block.
+
+     MIXED, NOT PICKED. The obvious fix is var(--raised). I assumed it
+     would work in seven themes and fail in the two where --elevated is
+     defined as the same value as --panel. Measured, it fails in EIGHT:
+
+       hearth 1.06   professional 1.06   greenblack 1.06
+       aero   1.04   win98        1.00   icecream   1.05
+       contrast 1.12 lightgreen   1.00   plum       1.06
+
+     Only contrast clears a floor of 1.10. --elevated is a hair off
+     --panel by design -- it is the difference between a panel and a
+     dialog on a panel, not between a row and the page under it. Had I
+     shipped it on the strength of how hearth looked, eight themes would
+     have kept the bug while the screenshot I checked looked fixed.
+
+     Mixing a little --text into the surface cannot be defeated that
+     way: it lifts a dark theme and deepens a light one, because --text
+     is the opposite of the surface in both, and any theme added later
+     gets the same treatment without having to remember this file
+     exists. It lands at 1.18-1.27 across all nine.
+
+     10% is enough to separate and little enough to stay quiet: 1.4-1.6
+     against the pane, which reads as a card rather than a stripe.
+
+     color-mix is checked in Cam's own engine, not assumed -- WebKitGTK
+     2.52 supports it (CSS.supports says true and it resolves), and the
+     plain var() fallback on the line before means an engine without it
+     lands on today's appearance rather than on no background at all. */
+  --station-bg: var(--raised);
+  --station-bg: color-mix(in srgb, var(--surface) 90%, var(--text) 10%);
+
+  /* Coach Cam ran two accents: moss carried every primary action, fern
+     was reserved for the few things that must stand out. */
+  --moss:         var(--accent);
+  --moss-dim:     var(--accent-hover);
+  --fern:         var(--accent);
+  --lichen:       var(--muted);
+  --tint-moss:    var(--accent-tint);
+
+  --text-dim:     var(--muted);
+  --text-faint:   var(--faint, var(--muted));
+  --heading:      var(--ink, var(--text));
+  --on-accent-2:  var(--on-accent);
+
+  --work:         var(--good);          /* go */
+  --rest:         var(--accent);
+  --rest-text:    var(--accent);
+
+  /* Work and rest differ in lightness as well as hue, so the two are
+     still tellable apart without separating green from blue. Kept as
+     Coach Cam measured them rather than re-derived from the accent. */
+  --tint-work:    rgba(31, 78, 56, .26);
+  --tint-rest:    rgba(55, 92, 133, .09);
+  --tint-manual:  rgba(184, 116, 88, .10);
+
+  /* overlays follow the page, not the accent */
+  --scrim:        rgba(0, 0, 0, .42);
+  --scrim-strong: rgba(0, 0, 0, .50);
+  --overlay:      rgba(0, 0, 0, .72);
+  --shadow:       rgba(0, 0, 0, .35);
+
+  --mono: var(--font-mono);
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999086' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+
+  --tap: 44px;
+  --text-scale: 1;
+}
+
+/* Lens needs the same names: it loads style.css as well as tools.css. */
+#cf-lens {
+  --hairline-soft: var(--line);
+  --moss-dim:     var(--accent-hover);
+  --fern:         var(--accent);
+  --lichen:       var(--muted);
+  --tint-moss:    var(--accent-tint);
+  --text-dim:     var(--muted);
+  --on-accent-2:  var(--on-accent);
+  --work:         var(--good);
+  --rest:         var(--accent);
+  --rest-text:    var(--accent);
+  --tint-work:    rgba(31, 78, 56, .26);
+  --tint-rest:    rgba(55, 92, 133, .09);
+  --tint-manual:  rgba(184, 116, 88, .10);
+  --scrim:        rgba(0, 0, 0, .42);
+  --scrim-strong: rgba(0, 0, 0, .50);
+  --overlay:      rgba(0, 0, 0, .72);
+  --shadow:       rgba(0, 0, 0, .35);
+  --mono: var(--font-mono);
+  --tap: 44px;
+  --text-scale: 1.08;   /* it is meant to be read at arm's length */
+}
+
+:is(#cf-shell, #cf-lens) * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* A class setting `display` outranks the browser's own [hidden] rule, which
+   silently leaves anything toggled by .hidden on screen. Settle it once. */
+:is(#cf-shell, #cf-lens) [hidden] { display: none !important; }
+/* The stylesheet is in px throughout, so a root font-size would not scale
+   it. `zoom` scales every length including fixed positioning, which is what
+   a text-size control needs to actually do something here. */
+:is(#cf-shell, #cf-lens) { zoom: var(--text-scale); }
+:is(#cf-shell, #cf-lens), :is(#cf-shell, #cf-lens) {
+  margin: 0; height: 100%;
+  overflow: hidden;
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+:is(#cf-shell, #cf-lens) button, :is(#cf-shell, #cf-lens) input, :is(#cf-shell, #cf-lens) textarea, :is(#cf-shell, #cf-lens) select { font: inherit; color: inherit; }
+:is(#cf-shell, #cf-lens) button { background: none; border: 0; cursor: pointer; }
+:is(#cf-shell, #cf-lens) .ic {
+  width: 22px; height: 22px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+:is(#cf-shell, #cf-lens) .ic-fill { fill: currentColor; stroke: none; }
+:is(#cf-shell, #cf-lens) :focus-visible { outline: 2px solid var(--fern); outline-offset: 2px; }
+/* ---------------------------------------------------------------- shell */
+:is(#cf-shell, #cf-lens) .app { display: flex; height: 100dvh; padding-top: env(safe-area-inset-top); }
+:is(#cf-shell, #cf-lens) .sidebar {
+  position: fixed; inset: 0 auto 0 0; z-index: 40;
+  width: min(82vw, 290px);
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--hairline);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  transform: translateX(-102%);
+  transition: transform .22s cubic-bezier(.2,.7,.3,1);
+}
+:is(#cf-shell, #cf-lens) .sidebar.is-open { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    :is(#cf-shell, #cf-lens) .sidebar { transition: none; }
+}
+:is(#cf-shell, #cf-lens) .sidebar-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 12px 12px 16px;
+}
+:is(#cf-shell, #cf-lens) .brand { display: flex; align-items: center; gap: 9px; margin-right: auto; }
+:is(#cf-shell, #cf-lens) .brand-mark {
+  position: relative; width: 16px; height: 16px; margin-top: 2px;
+  border: 2.2px solid var(--fern);
+  border-radius: 50%;
+}
+:is(#cf-shell, #cf-lens) .brand-mark::after {
+  content: ""; position: absolute;
+  left: 50%; top: -5px; width: 6px; height: 3.5px;
+  background: var(--fern); border-radius: 1px;
+  transform: translateX(-50%);
+}
+:is(#cf-shell, #cf-lens) .brand-name { font-size: 1.0625rem; font-weight: 600; }
+:is(#cf-shell, #cf-lens) .icon-btn {
+  display: grid; place-items: center;
+  width: var(--tap); height: var(--tap);
+  border-radius: 10px; color: var(--text-dim); flex: none;
+}
+:is(#cf-shell, #cf-lens) .icon-btn:active { background: var(--raised); color: var(--text); }
+:is(#cf-shell, #cf-lens) .icon-btn[disabled] { opacity: .3; pointer-events: none; }
+:is(#cf-shell, #cf-lens) .nav {
+  flex: 1; overflow-y: auto; overscroll-behavior: contain;
+  padding: 0 8px 20px;
+}
+:is(#cf-shell, #cf-lens) .nav-group {
+  padding: 14px 10px 5px;
+  font-size: 0.71875rem; color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .nav-btn {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; min-height: 44px; padding: 0 10px;
+  border-radius: 10px;
+  color: var(--text-dim); font-size: 0.9375rem;
+  text-align: left; position: relative;
+}
+:is(#cf-shell, #cf-lens) .nav-btn .ic { width: 19px; height: 19px; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .nav-btn:active { background: var(--raised); }
+:is(#cf-shell, #cf-lens) .nav-btn.on { background: var(--raised-2); color: var(--text); }
+:is(#cf-shell, #cf-lens) .nav-btn.on .ic { color: var(--fern); }
+:is(#cf-shell, #cf-lens) .nav-btn.on::before {
+  content: ""; position: absolute; left: -8px; top: 9px; bottom: 9px;
+  width: 3px; border-radius: 0 3px 3px 0; background: var(--moss);
+}
+:is(#cf-shell, #cf-lens) .nav-count { margin-left: auto; font-size: 0.75rem; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .sidebar-foot {
+  padding: 10px 16px; border-top: 1px solid var(--hairline);
+  font-size: 0.75rem; color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .scrim {
+  position: fixed; inset: 0; z-index: 35;
+  background: var(--scrim);
+  opacity: 0; transition: opacity .22s ease;
+}
+:is(#cf-shell, #cf-lens) .scrim.is-visible { opacity: 1; }
+/* ----------------------------------------------------------------- main */
+:is(#cf-shell, #cf-lens) .main { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; }
+:is(#cf-shell, #cf-lens) .topbar {
+  display: flex; align-items: center; gap: 2px;
+  padding: 6px; flex: none;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--black);
+}
+:is(#cf-shell, #cf-lens) .topbar-title { flex: 1; min-width: 0; padding: 0 6px; }
+:is(#cf-shell, #cf-lens) .crumb {
+  display: block; font-size: 0.6875rem; color: var(--text-faint);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+:is(#cf-shell, #cf-lens) .crumb:empty { display: none; }
+:is(#cf-shell, #cf-lens) .page-title {
+  display: block; font-size: 0.96875rem; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+:is(#cf-shell, #cf-lens) .topbar-actions { display: flex; align-items: center; flex: none; }
+:is(#cf-shell, #cf-lens) .page, :is(#cf-shell, #cf-lens) .detail-body {
+  flex: 1; min-height: 0;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 12px 14px calc(28px + env(safe-area-inset-bottom));
+}
+:is(#cf-shell, #cf-lens) .detail {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column;
+  background: var(--black);
+  padding-top: env(safe-area-inset-top);
+  animation: slideIn .2s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes slideIn { from { transform: translateX(18px); opacity: .4; } }
+@media (prefers-reduced-motion: reduce) {
+    :is(#cf-shell, #cf-lens) .detail { animation: none; }
+}
+/* --------------------------------------------------------------- pieces */
+:is(#cf-shell, #cf-lens) .search-wrap { position: relative; display: flex; align-items: center; margin-bottom: 10px; }
+:is(#cf-shell, #cf-lens) .search-ic {
+  position: absolute; left: 11px; width: 18px; height: 18px;
+  color: var(--text-faint); pointer-events: none;
+}
+:is(#cf-shell, #cf-lens) .search-input {
+  width: 100%; height: 42px; padding: 0 12px 0 37px;
+  background: var(--raised); border: 1px solid transparent;
+  border-radius: 11px; font-size: 0.9375rem;
+}
+:is(#cf-shell, #cf-lens) .search-input::placeholder { color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .search-input:focus { outline: none; border-color: var(--moss-dim); background: var(--raised-2); }
+:is(#cf-shell, #cf-lens) .search-input::-webkit-search-cancel-button { display: none; }
+:is(#cf-shell, #cf-lens) .chips {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px;
+  scrollbar-width: none; margin: 0 -14px; padding-left: 14px; padding-right: 14px;
+}
+:is(#cf-shell, #cf-lens) .chips::-webkit-scrollbar { display: none; }
+/* A filter row wraps instead of scrolling sideways. A horizontal scroller
+   with no visible scrollbar hides its own overflow — with two dozen tags,
+   most of them simply could not be reached. Collapsed to two rows by
+   default so it does not push the list off the screen. */
+:is(#cf-shell, #cf-lens) .chips.is-filter {
+  flex-wrap: wrap;
+  overflow: visible;
+  max-height: 76px;
+  overflow-y: hidden;
+  margin: 0; padding: 0 0 8px;
+}
+:is(#cf-shell, #cf-lens) .chips.is-filter.is-open { max-height: none; }
+:is(#cf-shell, #cf-lens) .filter-wrap { position: relative; margin-bottom: 4px; }
+:is(#cf-shell, #cf-lens) .filter-more {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin: 0 0 10px;
+  padding: 5px 11px; border-radius: 999px;
+  background: none; border: 1px dashed var(--hairline);
+  color: var(--text-dim); font-size: 0.78125rem;
+}
+:is(#cf-shell, #cf-lens) .filter-more:active { background: var(--raised); }
+:is(#cf-shell, #cf-lens) .filter-more .ic { width: 14px; height: 14px; transition: transform .16s ease; }
+:is(#cf-shell, #cf-lens) .filter-more.is-open .ic { transform: rotate(180deg); }
+:is(#cf-shell, #cf-lens) .chip {
+  flex: none; padding: 7px 13px; border-radius: 999px;
+  background: var(--raised); border: 1px solid transparent;
+  color: var(--text-dim); font-size: 0.84375rem; white-space: nowrap;
+}
+/* One action accent, the theme's (2026-10-06, the audit; Cam approved): a
+   section's own colour is for its icon and stripe, never its buttons. */
+:is(#cf-shell, #cf-lens) .chip.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+:is(#cf-shell, #cf-lens) .list { display: flex; flex-direction: column; gap: 6px; }
+:is(#cf-shell, #cf-lens) .card {
+  display: block; width: 100%; text-align: left;
+  padding: 12px 13px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+:is(#cf-shell, #cf-lens) .card:active { border-color: var(--moss-dim); background: var(--raised); }
+:is(#cf-shell, #cf-lens) .card-top { display: flex; align-items: center; gap: 9px; }
+:is(#cf-shell, #cf-lens) .card-title { font-size: 0.9375rem; font-weight: 550; flex: 1; min-width: 0; }
+:is(#cf-shell, #cf-lens) .card-sub { margin-top: 4px; font-size: 0.78125rem; color: var(--text-faint); line-height: 1.45; }
+:is(#cf-shell, #cf-lens) .card-sub.clamp {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+:is(#cf-shell, #cf-lens) .card .ic { color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .tag {
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
+  background: var(--raised-2); color: var(--text-dim);
+  font-size: 0.6875rem; white-space: nowrap;
+}
+:is(#cf-shell, #cf-lens) .tag.moss { background: var(--tint-moss); color: var(--fern); }
+:is(#cf-shell, #cf-lens) .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+:is(#cf-shell, #cf-lens) .count-line { margin: 0 0 10px; font-size: 0.78125rem; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .empty-note {
+  padding: 30px 14px; text-align: center;
+  color: var(--text-faint); font-size: 0.875rem; line-height: 1.55;
+}
+:is(#cf-shell, #cf-lens) .section-h {
+  margin: 22px 0 9px; font-size: 0.78125rem; color: var(--text-faint);
+  font-weight: 500;
+}
+:is(#cf-shell, #cf-lens) .section-h:first-child { margin-top: 4px; }
+:is(#cf-shell, #cf-lens) .primary-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; min-height: 48px; padding: 12px 20px;
+  border-radius: 12px; background: var(--moss); color: var(--on-accent);
+  font-size: 0.96875rem; font-weight: 600;
+}
+:is(#cf-shell, #cf-lens) .primary-btn:active { background: var(--moss-dim); }
+:is(#cf-shell, #cf-lens) .primary-btn .ic { stroke-width: 2; }
+:is(#cf-shell, #cf-lens) .secondary-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: var(--tap); padding: 12px 18px;
+  border-radius: 11px; background: var(--raised);
+  color: var(--text-dim); font-size: 0.9375rem;
+}
+:is(#cf-shell, #cf-lens) .secondary-btn:active { background: var(--raised-2); }
+:is(#cf-shell, #cf-lens) .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+:is(#cf-shell, #cf-lens) .btn-row > * { flex: 1; }
+/* ------------------------------------------------------------- prose */
+:is(#cf-shell, #cf-lens) .prose { font-size: 0.96875rem; line-height: 1.65; }
+:is(#cf-shell, #cf-lens) .prose > :first-child { margin-top: 0; }
+:is(#cf-shell, #cf-lens) .prose p { margin: 0 0 .9em; }
+:is(#cf-shell, #cf-lens) .prose h1, :is(#cf-shell, #cf-lens) .prose h2, :is(#cf-shell, #cf-lens) .prose h3, :is(#cf-shell, #cf-lens) .prose h4 {
+  margin: 1.5em 0 .5em; line-height: 1.3; color: var(--heading);
+}
+:is(#cf-shell, #cf-lens) .prose h1 { font-size: 1.35em; }
+:is(#cf-shell, #cf-lens) .prose h2 { font-size: 1.18em; padding-bottom: .25em; border-bottom: 1px solid var(--hairline); }
+:is(#cf-shell, #cf-lens) .prose h3 { font-size: 1.05em; color: var(--fern); }
+:is(#cf-shell, #cf-lens) .prose ul, :is(#cf-shell, #cf-lens) .prose ol { margin: 0 0 .9em; padding-left: 1.3em; }
+:is(#cf-shell, #cf-lens) .prose li { margin: .3em 0; }
+:is(#cf-shell, #cf-lens) .prose li::marker { color: var(--moss); }
+:is(#cf-shell, #cf-lens) .prose b, :is(#cf-shell, #cf-lens) .prose strong { color: var(--heading); }
+:is(#cf-shell, #cf-lens) .prose blockquote {
+  margin: 0 0 .9em; padding: 2px 0 2px 14px;
+  border-left: 3px solid var(--moss-dim); color: var(--text-dim);
+}
+:is(#cf-shell, #cf-lens) .prose a { color: var(--fern); }
+:is(#cf-shell, #cf-lens) .prose img { max-width: 100%; border-radius: 10px; }
+:is(#cf-shell, #cf-lens) .prose table { border-collapse: collapse; width: 100%; font-size: .92em; }
+:is(#cf-shell, #cf-lens) .prose th, :is(#cf-shell, #cf-lens) .prose td { border: 1px solid var(--hairline); padding: 7px 9px; text-align: left; }
+:is(#cf-shell, #cf-lens) .prose th { background: var(--surface); }
+:is(#cf-shell, #cf-lens) .table-scroll { overflow-x: auto; margin: 0 0 .9em; }
+:is(#cf-shell, #cf-lens) .prose hr { border: 0; border-top: 1px solid var(--hairline); margin: 1.5em 0; }
+/* ------------------------------------------------------- station table */
+:is(#cf-shell, #cf-lens) .stations { display: flex; flex-direction: column; gap: 6px; }
+/* A row carries its block's colour as a left edge and a tinted badge.
+   `--block-rgb` is set per row; anything that does not set it (a circuit
+   station, a program session) falls back to the neutral and looks as it
+   always did. */
+:is(#cf-shell, #cf-lens) .station {
+  display: flex; align-items: center; gap: 11px;
+  padding: 11px 12px;
+  /* Its own surface, not the page's. See --station-bg above. */
+  background: var(--station-bg);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid rgba(var(--block-rgb), .9);
+  border-radius: 4px 11px 11px 4px;
+}
+:is(#cf-shell, #cf-lens) .station-n {
+  width: 26px; height: 26px; flex: none;
+  display: grid; place-items: center; border-radius: 8px;
+  background: rgba(var(--block-rgb), .16);
+  color: rgb(var(--block-rgb));
+  font-size: 0.78125rem; font-weight: 600;
+}
+:is(#cf-shell, #cf-lens) .station-n .ic { color: rgb(var(--block-rgb)); }
+/* Paired work — A1 with A2 — is drawn as one group: the rows sit tight
+   together and only the first and last take a rounded corner, so the pair
+   reads as a unit rather than two rows that happen to share a colour. */
+:is(#cf-shell, #cf-lens) .pair { display: flex; flex-direction: column; gap: 2px; }
+:is(#cf-shell, #cf-lens) .pair .station { border-radius: 4px 6px 6px 4px; }
+:is(#cf-shell, #cf-lens) .pair .station:first-child { border-radius: 4px 11px 6px 4px; }
+:is(#cf-shell, #cf-lens) .pair .station:last-child { border-radius: 4px 6px 11px 4px; }
+:is(#cf-shell, #cf-lens) .pair .station:only-child { border-radius: 4px 11px 11px 4px; }
+:is(#cf-shell, #cf-lens) .station-main { flex: 1; min-width: 0; }
+:is(#cf-shell, #cf-lens) .station-name { font-size: 0.90625rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:is(#cf-shell, #cf-lens) .station-meta { margin-top: 3px; font-size: 0.75rem; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .block-head {
+  display: flex; align-items: center; gap: 8px;
+  margin: 18px 0 7px;
+  font-size: 0.78125rem; font-weight: 600;
+  color: rgb(var(--block-rgb));
+}
+:is(#cf-shell, #cf-lens) .block-head::before {
+  content: ""; width: 9px; height: 9px; flex: none;
+  border-radius: 3px;
+  background: rgb(var(--block-rgb));
+}
+:is(#cf-shell, #cf-lens) .block-head::after {
+  content: ""; flex: 1; height: 1px;
+  background: rgba(var(--block-rgb), .25);
+}
+/* --------------------------------------------------------------- timer */
+:is(#cf-shell, #cf-lens) .runner {
+  position: fixed; inset: 0; z-index: 70;
+  display: flex; flex-direction: column;
+  background: var(--black);
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+:is(#cf-shell, #cf-lens) .runner-head {
+  display: flex; align-items: center; gap: 4px; padding: 6px;
+  border-bottom: 1px solid var(--hairline);
+}
+:is(#cf-shell, #cf-lens) .runner-head .runner-name {
+  flex: 1; min-width: 0; padding: 0 6px; font-size: 0.90625rem; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+:is(#cf-shell, #cf-lens) .runner-face {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 16px; text-align: center; min-height: 0;
+  transition: background-color .25s ease;
+}
+:is(#cf-shell, #cf-lens) .runner-face.is-work { background: var(--tint-work); }
+:is(#cf-shell, #cf-lens) .runner-face.is-rest { background: var(--tint-rest); }
+:is(#cf-shell, #cf-lens) .runner-face.is-manual { background: var(--tint-manual); }
+:is(#cf-shell, #cf-lens) .runner-phase {
+  font-size: 0.8125rem; letter-spacing: .06em; color: var(--text-faint);
+  margin-bottom: 6px;
+}
+:is(#cf-shell, #cf-lens) .runner-face.is-work .runner-phase { color: var(--work); }
+:is(#cf-shell, #cf-lens) .runner-face.is-rest .runner-phase { color: var(--rest-text); }
+:is(#cf-shell, #cf-lens) .runner-clock {
+  font-size: clamp(64px, 24vw, 128px);
+  font-weight: 300; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+}
+:is(#cf-shell, #cf-lens) .runner-station {
+  margin-top: 14px; font-size: 1.25rem; font-weight: 600;
+  max-width: 92%; line-height: 1.25;
+}
+:is(#cf-shell, #cf-lens) .runner-detail { margin-top: 8px; font-size: 0.875rem; color: var(--text-dim); }
+:is(#cf-shell, #cf-lens) .runner-next { margin-top: 16px; font-size: 0.8125rem; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .runner-progress { height: 3px; background: var(--raised); flex: none; }
+:is(#cf-shell, #cf-lens) .runner-progress span { display: block; height: 100%; background: var(--moss); transition: width .3s linear; }
+:is(#cf-shell, #cf-lens) .runner-rounds {
+  display: flex; justify-content: center; gap: 6px; padding: 10px;
+  font-size: 0.78125rem; color: var(--text-faint); flex: none;
+}
+:is(#cf-shell, #cf-lens) .runner-controls {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 10px 16px 20px; flex: none;
+}
+:is(#cf-shell, #cf-lens) .runner-btn {
+  display: grid; place-items: center;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--raised); color: var(--text-dim);
+}
+:is(#cf-shell, #cf-lens) .runner-btn:active { background: var(--raised-2); }
+:is(#cf-shell, #cf-lens) .runner-btn .ic { width: 24px; height: 24px; }
+:is(#cf-shell, #cf-lens) .runner-btn-primary {
+  width: 86px; height: 86px;
+  background: var(--accent); color: var(--on-accent);
+}
+:is(#cf-shell, #cf-lens) .runner-btn-primary .ic { width: 34px; height: 34px; stroke-width: 2; }
+:is(#cf-shell, #cf-lens) .runner-btn-primary:active { background: var(--accent-hover); }
+/* ---------------------------------------------------------- calculators */
+:is(#cf-shell, #cf-lens) .calc {
+  padding: 14px; margin-bottom: 10px;
+  background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px;
+}
+:is(#cf-shell, #cf-lens) .calc h3 { margin: 0 0 4px; font-size: 0.9375rem; }
+:is(#cf-shell, #cf-lens) .calc-hint { margin: 0 0 12px; font-size: 0.78125rem; color: var(--text-faint); line-height: 1.45; }
+:is(#cf-shell, #cf-lens) .field { margin-bottom: 10px; }
+:is(#cf-shell, #cf-lens) .field label { display: block; margin-bottom: 5px; font-size: 0.78125rem; color: var(--text-dim); }
+/* textarea was missing here, which left every multi-line field in a sheet
+   with browser default styling — a narrow white box in a dark app. */
+:is(#cf-shell, #cf-lens) .field input, :is(#cf-shell, #cf-lens) .field select, :is(#cf-shell, #cf-lens) .field textarea {
+  width: 100%; padding: 0 12px;
+  background-color: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 10px; font-size: 1rem;
+  color: var(--text);
+}
+:is(#cf-shell, #cf-lens) .field input, :is(#cf-shell, #cf-lens) .field select { height: 46px; }
+/* Room for the arrow drawn by the `select` rule below, which is less
+   specific than this one and so cannot set it itself. */
+:is(#cf-shell, #cf-lens) .field select { padding-right: 32px; }
+:is(#cf-shell, #cf-lens) .field textarea {
+  min-height: 96px; padding: 11px 12px;
+  line-height: 1.55; resize: vertical;
+  font-family: inherit;
+}
+:is(#cf-shell, #cf-lens) .field textarea::placeholder, :is(#cf-shell, #cf-lens) .field input::placeholder { color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .field input:focus, :is(#cf-shell, #cf-lens) .field select:focus, :is(#cf-shell, #cf-lens) .field textarea:focus {
+  outline: none; border-color: var(--moss);
+}
+:is(#cf-shell, #cf-lens) .field-pair { display: flex; gap: 8px; }
+:is(#cf-shell, #cf-lens) .field-pair .field { flex: 1; }
+:is(#cf-shell, #cf-lens) .calc-out { margin-top: 12px; }
+:is(#cf-shell, #cf-lens) .calc-out:empty { display: none; }
+:is(#cf-shell, #cf-lens) .out-big {
+  font-size: 1.875rem; font-weight: 600; color: var(--fern);
+  font-variant-numeric: tabular-nums;
+}
+:is(#cf-shell, #cf-lens) .out-label { font-size: 0.78125rem; color: var(--text-faint); margin-top: 2px; }
+:is(#cf-shell, #cf-lens) .out-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.875rem; }
+:is(#cf-shell, #cf-lens) .out-table th, :is(#cf-shell, #cf-lens) .out-table td { padding: 8px 6px; border-bottom: 1px solid var(--hairline); text-align: left; }
+:is(#cf-shell, #cf-lens) .out-table th { color: var(--text-faint); font-size: 0.75rem; font-weight: 500; }
+:is(#cf-shell, #cf-lens) .out-table td:last-child, :is(#cf-shell, #cf-lens) .out-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+/* -------------------------------------------------------------- sheet */
+:is(#cf-shell, #cf-lens) .sheet-host { position: fixed; inset: 0; z-index: 80; display: flex; align-items: flex-end; }
+:is(#cf-shell, #cf-lens) .sheet-scrim { position: absolute; inset: 0; background: var(--scrim-strong); }
+:is(#cf-shell, #cf-lens) .sheet {
+  position: relative; width: 100%; max-height: 84dvh; overflow-y: auto;
+  background: var(--surface); border-top: 1px solid var(--hairline);
+  border-radius: 20px 20px 0 0;
+  padding: 8px 12px calc(16px + env(safe-area-inset-bottom));
+  animation: rise .2s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes rise { from { transform: translateY(16px); opacity: .6; } }
+@media (prefers-reduced-motion: reduce) {
+    :is(#cf-shell, #cf-lens) .sheet { animation: none; }
+}
+:is(#cf-shell, #cf-lens) .sheet-grip {
+  display: block; width: 38px; height: 4px; margin: 4px auto 12px;
+  background: var(--hairline); border-radius: 2px;
+}
+:is(#cf-shell, #cf-lens) .sheet-title { margin: 0 6px 10px; font-size: 0.8125rem; font-weight: 500; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .sheet-item {
+  display: flex; align-items: center; gap: 13px;
+  width: 100%; text-align: left; min-height: 50px; padding: 0 12px;
+  border-radius: 11px; font-size: 0.96875rem;
+}
+:is(#cf-shell, #cf-lens) .sheet-item:active { background: var(--raised); }
+:is(#cf-shell, #cf-lens) .sheet-item .ic { color: var(--text-dim); }
+:is(#cf-shell, #cf-lens) .sheet-item.is-danger { color: var(--danger); }
+:is(#cf-shell, #cf-lens) .sheet-item.is-danger .ic { color: var(--danger); }
+:is(#cf-shell, #cf-lens) .sheet-note { padding: 4px 12px 12px; font-size: 0.8125rem; color: var(--text-faint); line-height: 1.5; }
+:is(#cf-shell, #cf-lens) .sheet-row { display: flex; gap: 8px; padding-bottom: 4px; }
+:is(#cf-shell, #cf-lens) .sheet-row > * { flex: 1; }
+:is(#cf-shell, #cf-lens) .toast {
+  position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom));
+  transform: translateX(-50%); z-index: 90;
+  max-width: 88vw; padding: 11px 17px;
+  background: var(--raised-2); border: 1px solid var(--hairline);
+  border-radius: 11px; font-size: 0.875rem;
+  box-shadow: 0 8px 26px var(--shadow);
+  animation: rise .18s ease;
+}
+/* ------------------------------------------------------------ calendar */
+:is(#cf-shell, #cf-lens) .cal-day {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+:is(#cf-shell, #cf-lens) .cal-date { width: 54px; flex: none; text-align: center; }
+:is(#cf-shell, #cf-lens) .cal-dow { font-size: 0.6875rem; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .cal-num { font-size: 1.25rem; font-weight: 600; line-height: 1.2; }
+:is(#cf-shell, #cf-lens) .cal-date.is-today .cal-num { color: var(--fern); }
+:is(#cf-shell, #cf-lens) .cal-entries { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+/* ------------------------------------------------------- questionnaire */
+:is(#cf-shell, #cf-lens) .q-item { margin-bottom: 16px; }
+:is(#cf-shell, #cf-lens) .q-text { font-size: 0.90625rem; line-height: 1.5; margin-bottom: 7px; }
+:is(#cf-shell, #cf-lens) .q-num { color: var(--text-faint); margin-right: 6px; }
+:is(#cf-shell, #cf-lens) .q-item textarea {
+  width: 100%; min-height: 64px; padding: 10px 12px;
+  background: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 10px; font-size: 1rem; line-height: 1.5; resize: vertical;
+}
+:is(#cf-shell, #cf-lens) .q-item textarea:focus { outline: none; border-color: var(--moss); }
+@media (min-width: 620px) {
+    :is(#cf-shell, #cf-lens) .sidebar {
+    position: relative; inset: auto; transform: none;
+    width: var(--sidebar-w); flex: none;
+    transition: width .2s ease, opacity .2s ease;
+  }
+    :is(#cf-shell, #cf-lens) .app.is-collapsed .sidebar {
+    width: 0; opacity: 0; overflow: hidden;
+    border-right-color: transparent; pointer-events: none;
+  }
+    :is(#cf-shell, #cf-lens) .scrim { display: none; }
+    :is(#cf-shell, #cf-lens) .menu-btn { display: none; }
+    :is(#cf-shell, #cf-lens) .app.is-collapsed .menu-btn { display: grid; }
+    :is(#cf-shell, #cf-lens) .detail { left: var(--sidebar-w); }
+    :is(#cf-shell, #cf-lens) .app.is-collapsed .detail { left: 0; }
+    :is(#cf-shell, #cf-lens) .page, :is(#cf-shell, #cf-lens) .detail-body { padding-left: 22px; padding-right: 22px; }
+    :is(#cf-shell, #cf-lens) .prose, :is(#cf-shell, #cf-lens) .stations, :is(#cf-shell, #cf-lens) .list { max-width: 78ch; }
+}
+@media (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .main {
+    width: var(--list-w);
+    flex: none;
+    border-right: 1px solid var(--hairline);
+  }
+    :is(#cf-shell, #cf-lens) .detail {
+    left: calc(var(--sidebar-w) + var(--list-w));
+    animation: none;              /* a permanent column shouldn't slide in */
+  }
+    :is(#cf-shell, #cf-lens) .app.is-collapsed .detail { left: var(--list-w); }
+  /* Back is a phone affordance; here the list is always on screen. */
+  :is(#cf-shell, #cf-lens) #detailBack { display: none; }
+    :is(#cf-shell, #cf-lens) .detail .topbar { padding-left: 16px; }
+    :is(#cf-shell, #cf-lens) .detail .topbar-title { padding-left: 0; }
+    :is(#cf-shell, #cf-lens) .detail-body { padding: 20px 28px 40px; }
+    :is(#cf-shell, #cf-lens) .detail-body .prose, :is(#cf-shell, #cf-lens) .detail-body .stations { max-width: 72ch; }
+  /* The row whose contents are showing in the detail column. */
+  :is(#cf-shell, #cf-lens) .card.is-selected {
+    border-color: var(--moss);
+    background: var(--raised-2);
+  }
+    :is(#cf-shell, #cf-lens) .card.is-selected .card-title { color: var(--fern); }
+  /* A single action shouldn't stretch the width of the whole pane. */
+  :is(#cf-shell, #cf-lens) .detail-body .primary-btn { max-width: 360px; }
+    :is(#cf-shell, #cf-lens) .detail-body .btn-row { max-width: 480px; }
+  /* Pointer devices get hover feedback; touch devices never see this. */
+  :is(#cf-shell, #cf-lens) .card:hover { border-color: var(--moss-dim); background: var(--raised); }
+    :is(#cf-shell, #cf-lens) .nav-btn:hover { background: var(--raised); }
+    :is(#cf-shell, #cf-lens) .sheet-item:hover { background: var(--raised); }
+    :is(#cf-shell, #cf-lens) .chip:hover { border-color: var(--moss-dim); }
+    :is(#cf-shell, #cf-lens) .icon-btn:hover { background: var(--raised); color: var(--text); }
+    :is(#cf-shell, #cf-lens) .runner-btn:hover { background: var(--raised-2); }
+    :is(#cf-shell, #cf-lens) .runner-btn-primary:hover { background: var(--fern); color: var(--on-accent); }
+  /* Scrollbars, styled rather than left as the platform default slab. */
+  :root:not([data-engine="chromium"]) :is(#cf-shell, #cf-lens) :is(.page, .detail-body, .nav) { scrollbar-width: thin; scrollbar-color: var(--hairline) transparent; }
+    :is(#cf-shell, #cf-lens) .page::-webkit-scrollbar, :is(#cf-shell, #cf-lens) .detail-body::-webkit-scrollbar, :is(#cf-shell, #cf-lens) .nav::-webkit-scrollbar { width: 10px; }
+    :is(#cf-shell, #cf-lens) .page::-webkit-scrollbar-thumb, :is(#cf-shell, #cf-lens) .detail-body::-webkit-scrollbar-thumb, :is(#cf-shell, #cf-lens) .nav::-webkit-scrollbar-thumb {
+    background: var(--hairline); border-radius: 6px;
+    border: 3px solid var(--black);
+  }
+    :is(#cf-shell, #cf-lens) .page::-webkit-scrollbar-thumb:hover, :is(#cf-shell, #cf-lens) .detail-body::-webkit-scrollbar-thumb:hover {
+    background: var(--moss-dim);
+  }
+  /* The runner is the one thing that should use the whole window. */
+  :is(#cf-shell, #cf-lens) .runner-clock { font-size: clamp(96px, 13vw, 190px); }
+    :is(#cf-shell, #cf-lens) .runner-station { font-size: 1.75rem; }
+    :is(#cf-shell, #cf-lens) .runner-detail { font-size: 1rem; }
+}
+@media (min-width: 1400px) {
+    :is(#cf-shell, #cf-lens) .detail-body { padding-left: 44px; padding-right: 44px; }
+}
+@media (pointer: fine) and (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .nav-btn { min-height: 38px; }
+    :is(#cf-shell, #cf-lens) .card { padding: 11px 13px; }
+    :is(#cf-shell, #cf-lens) .station { padding: 9px 12px; }
+    :is(#cf-shell, #cf-lens) .sheet-item { min-height: 44px; }
+}
+/* ============================================================== editors ===
+   The circuit and session builders. They sit above the detail pane but
+   below the sheet, since the exercise picker is a sheet opened from here.
+   ======================================================================= */
+:is(#cf-shell, #cf-lens) .editor-pane {
+  position: fixed; inset: 0; z-index: 65;
+  display: flex; flex-direction: column;
+  background: var(--black);
+  padding-top: env(safe-area-inset-top);
+  animation: slideIn .18s cubic-bezier(.2,.7,.3,1);
+}
+@media (prefers-reduced-motion: reduce) {
+    :is(#cf-shell, #cf-lens) .editor-pane { animation: none; }
+}
+:is(#cf-shell, #cf-lens) .editor-body {
+  flex: 1; min-height: 0; overflow-y: auto;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: 14px 14px calc(40px + env(safe-area-inset-bottom));
+}
+:is(#cf-shell, #cf-lens) .topbar-save {
+  flex: none; min-height: 38px; padding: 0 16px;
+  border-radius: 10px; background: var(--moss);
+  color: var(--on-accent); font-size: 0.90625rem; font-weight: 600;
+}
+:is(#cf-shell, #cf-lens) .topbar-save:active { background: var(--moss-dim); }
+:is(#cf-shell, #cf-lens) .editor-hint {
+  margin: 16px 0 0; font-size: 0.78125rem; line-height: 1.55; color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .editor-hint code {
+  font-family: var(--mono); font-size: .92em;
+  background: var(--raised); color: var(--fern);
+  padding: .1em .35em; border-radius: 4px;
+}
+:is(#cf-shell, #cf-lens) .rows { display: flex; flex-direction: column; gap: 8px; }
+:is(#cf-shell, #cf-lens) .row-card {
+  padding: 10px 11px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+:is(#cf-shell, #cf-lens) .row-head { display: flex; align-items: center; gap: 8px; }
+:is(#cf-shell, #cf-lens) .row-name {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 9px;
+  background: var(--raised);
+  font-size: 0.90625rem; text-align: left;
+}
+:is(#cf-shell, #cf-lens) .row-name > span:first-child {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+:is(#cf-shell, #cf-lens) .row-name:active { background: var(--raised-2); }
+:is(#cf-shell, #cf-lens) .block-input {
+  width: 46px; flex: none; height: 36px;
+  padding: 0 8px; text-align: center;
+  background: var(--raised-2); border: 1px solid var(--hairline);
+  border-radius: 8px; color: var(--fern);
+  font-size: 0.8125rem; font-weight: 600;
+}
+:is(#cf-shell, #cf-lens) .block-input:focus { outline: none; border-color: var(--moss); }
+:is(#cf-shell, #cf-lens) .row-tools { display: flex; gap: 2px; flex: none; }
+:is(#cf-shell, #cf-lens) .tool-btn {
+  display: grid; place-items: center;
+  width: 34px; height: 36px; border-radius: 8px;
+  color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .tool-btn .ic { width: 17px; height: 17px; }
+:is(#cf-shell, #cf-lens) .tool-btn:active { background: var(--raised-2); color: var(--text); }
+:is(#cf-shell, #cf-lens) .tool-btn[disabled] { opacity: .25; pointer-events: none; }
+:is(#cf-shell, #cf-lens) .tool-btn.is-danger:active { color: var(--danger); }
+:is(#cf-shell, #cf-lens) .cells {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 6px; margin-top: 9px;
+}
+:is(#cf-shell, #cf-lens) .cell { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+:is(#cf-shell, #cf-lens) .cell-label { font-size: 0.65625rem; color: var(--text-faint); padding-left: 2px; }
+:is(#cf-shell, #cf-lens) .cell input {
+  width: 100%; height: 38px; padding: 0 8px; min-width: 0;
+  background: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 8px; font-size: 0.9375rem;
+}
+:is(#cf-shell, #cf-lens) .cell input:focus { outline: none; border-color: var(--moss); }
+/* Placeholders sit right next to real values in a dense grid, so they are
+   pushed well back — a hinted "40 S" must not read as an entered one. */
+:is(#cf-shell, #cf-lens) .cell input::placeholder { color: var(--text-faint); opacity: .5; }
+:is(#cf-shell, #cf-lens) .add-btn { width: 100%; margin-top: 10px; }
+:is(#cf-shell, #cf-lens) .btn-row .add-btn { margin-top: 10px; }
+/* the exercise picker, inside the sheet */
+:is(#cf-shell, #cf-lens) .pick-list { max-height: 54dvh; overflow-y: auto; overscroll-behavior: contain; }
+:is(#cf-shell, #cf-lens) .pick-row {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; text-align: left;
+  min-height: 46px; padding: 8px 10px;
+  border-radius: 9px;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 0.90625rem;
+}
+:is(#cf-shell, #cf-lens) .pick-row:last-child { border-bottom: 0; }
+:is(#cf-shell, #cf-lens) .pick-row:active { background: var(--raised); }
+:is(#cf-shell, #cf-lens) .pick-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:is(#cf-shell, #cf-lens) .pick-row.is-new { color: var(--fern); }
+:is(#cf-shell, #cf-lens) .pick-row.is-new .ic { width: 17px; height: 17px; }
+@media (max-width: 420px) {
+    :is(#cf-shell, #cf-lens) .cells { grid-template-columns: repeat(2, 1fr); }
+    :is(#cf-shell, #cf-lens) .row-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 8px;
+    align-items: center;
+  }
+    :is(#cf-shell, #cf-lens) .row-tools { grid-column: 1 / -1; justify-self: end; }
+}
+@media (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .editor-pane { left: var(--sidebar-w); animation: none; }
+    :is(#cf-shell, #cf-lens) .app.is-collapsed .editor-pane { left: 0; }
+    :is(#cf-shell, #cf-lens) .editor-body { padding: 20px 28px 40px; }
+    :is(#cf-shell, #cf-lens) .editor-body > .field, :is(#cf-shell, #cf-lens) .editor-body > .field-pair, :is(#cf-shell, #cf-lens) .rows, :is(#cf-shell, #cf-lens) .add-btn, :is(#cf-shell, #cf-lens) .btn-row, :is(#cf-shell, #cf-lens) .editor-hint, :is(#cf-shell, #cf-lens) .section-h { max-width: 780px; }
+    :is(#cf-shell, #cf-lens) .row-name:hover { background: var(--raised-2); }
+    :is(#cf-shell, #cf-lens) .tool-btn:hover { background: var(--raised-2); color: var(--text); }
+    :is(#cf-shell, #cf-lens) .pick-row:hover { background: var(--raised); }
+}
+/* ------------------------------------------------- rich text and ratings */
+:is(#cf-shell, #cf-lens) .rte-tools {
+  display: flex; align-items: center; gap: 2px;
+  flex-wrap: wrap;
+  padding: 5px 6px; margin-bottom: 8px;
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+}
+:is(#cf-shell, #cf-lens) .tool-sep {
+  width: 1px; height: 20px; flex: none; margin: 0 5px;
+  background: var(--hairline);
+}
+:is(#cf-shell, #cf-lens) .swatch {
+  width: 26px; height: 26px; flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-soft);
+}
+:is(#cf-shell, #cf-lens) .swatch:active { transform: scale(.92); }
+:is(#cf-shell, #cf-lens) .rte {
+  min-height: 44vh;
+  padding: 14px 15px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  font-size: 0.96875rem; line-height: 1.65;
+  overflow-y: auto;
+}
+:is(#cf-shell, #cf-lens) .rte:focus { outline: none; border-color: var(--moss-dim); }
+:is(#cf-shell, #cf-lens) .rte p { margin: 0 0 .8em; }
+:is(#cf-shell, #cf-lens) .rte ul, :is(#cf-shell, #cf-lens) .rte ol { margin: 0 0 .8em; padding-left: 1.35em; }
+:is(#cf-shell, #cf-lens) .rte li { margin: .25em 0; }
+:is(#cf-shell, #cf-lens) .rte li::marker { color: var(--moss); }
+:is(#cf-shell, #cf-lens) .rte b, :is(#cf-shell, #cf-lens) .rte strong { color: var(--heading); }
+:is(#cf-shell, #cf-lens) .type-select {
+  flex: none; height: 36px; padding: 0 8px;
+  background-color: var(--raised-2); border: 1px solid var(--hairline);
+  border-radius: 8px; font-size: 0.8125rem; color: var(--text-dim);
+}
+:is(#cf-shell, #cf-lens) .type-select { padding-right: 26px; background-position: right 7px center; }
+:is(#cf-shell, #cf-lens) .type-select:focus { outline: none; border-color: var(--moss); }
+:is(#cf-shell, #cf-lens) .q-text-input {
+  width: 100%; margin-top: 9px; padding: 10px 12px;
+  background: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 9px; font-size: 0.9375rem; line-height: 1.5; resize: vertical;
+}
+:is(#cf-shell, #cf-lens) .q-text-input:focus { outline: none; border-color: var(--moss); }
+:is(#cf-shell, #cf-lens) .rating { display: flex; flex-wrap: wrap; gap: 5px; }
+:is(#cf-shell, #cf-lens) .rating-dot {
+  flex: 1 1 auto; min-width: 38px; height: 42px;
+  border-radius: 9px;
+  background: var(--raised); border: 1px solid var(--hairline);
+  color: var(--text-dim); font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+:is(#cf-shell, #cf-lens) .rating-dot:active { background: var(--raised-2); }
+:is(#cf-shell, #cf-lens) .rating-dot.on {
+  background: var(--moss); border-color: var(--moss);
+  color: var(--on-accent); font-weight: 600;
+}
+@media (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .rte { min-height: 50vh; max-width: 780px; }
+    :is(#cf-shell, #cf-lens) .rte-tools { max-width: 780px; }
+    :is(#cf-shell, #cf-lens) .rating-dot:hover { border-color: var(--moss-dim); }
+    :is(#cf-shell, #cf-lens) .swatch:hover { transform: scale(1.08); }
+}
+/* ------------------------------------------------------------- calendar */
+:is(#cf-shell, #cf-lens) .month-head {
+  display: flex; align-items: center; gap: 4px;
+  margin: 4px 0 10px;
+}
+:is(#cf-shell, #cf-lens) .month-name {
+  flex: 1; min-width: 0; padding: 0 4px;
+  font-size: 0.96875rem; font-weight: 600;
+}
+:is(#cf-shell, #cf-lens) .month-today { min-height: 36px; padding: 8px 12px; font-size: 0.8125rem; flex: none; }
+:is(#cf-shell, #cf-lens) .dow {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 4px; margin-bottom: 5px;
+}
+:is(#cf-shell, #cf-lens) .dow span {
+  text-align: center; font-size: 0.6875rem; color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+:is(#cf-shell, #cf-lens) .day {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+:is(#cf-shell, #cf-lens) .day.is-blank { background: none; pointer-events: none; }
+:is(#cf-shell, #cf-lens) .day:active { background: var(--raised); }
+:is(#cf-shell, #cf-lens) .day.has-items { border-color: var(--hairline); color: var(--text); }
+:is(#cf-shell, #cf-lens) .day.is-today {
+  border-color: var(--moss);
+  color: var(--fern); font-weight: 600;
+}
+:is(#cf-shell, #cf-lens) .day-n { font-size: 0.875rem; line-height: 1; }
+:is(#cf-shell, #cf-lens) .day-dots { display: flex; gap: 3px; height: 5px; }
+:is(#cf-shell, #cf-lens) .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--moss); }
+:is(#cf-shell, #cf-lens) .dot.is-session { background: var(--rest); }
+/* Sheet rows that carry their own controls on the right. */
+:is(#cf-shell, #cf-lens) .sheet-item-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+:is(#cf-shell, #cf-lens) .sheet-item-sub { font-size: 0.75rem; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .sheet-item-tools { display: flex; gap: 2px; flex: none; margin-left: auto; }
+:is(#cf-shell, #cf-lens) .sheet-item.is-on { color: var(--fern); }
+:is(#cf-shell, #cf-lens) .sheet-item.is-on .ic { color: var(--fern); }
+/* Fields inside a bottom sheet. Sized to the sheet's full width so a note
+   box is something you can actually write a sentence in. */
+:is(#cf-shell, #cf-lens) .sheet-field {
+  display: block; width: 100%;
+  height: 46px; padding: 0 13px;
+  background-color: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 10px; font-size: 1rem; color: var(--text);
+  font-family: inherit;
+}
+:is(#cf-shell, #cf-lens) .sheet-field::placeholder { color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .sheet-field:focus { outline: none; border-color: var(--moss); }
+:is(#cf-shell, #cf-lens) select.sheet-field { padding-right: 32px; }
+:is(#cf-shell, #cf-lens) textarea.sheet-field, :is(#cf-shell, #cf-lens) .sheet-field.is-tall {
+  height: auto; min-height: 110px;
+  padding: 11px 13px; line-height: 1.55; resize: vertical;
+}
+@media (min-width: 620px) {
+    :is(#cf-shell, #cf-lens) .month { max-width: 520px; }
+    :is(#cf-shell, #cf-lens) .day-n { font-size: 0.9375rem; }
+}
+@media (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .day:hover { background: var(--raised); }
+    :is(#cf-shell, #cf-lens) .month-today:hover { background: var(--raised-2); }
+}
+/* ---------------------------------------------------------------- photos */
+:is(#cf-shell, #cf-lens) .photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+:is(#cf-shell, #cf-lens) .photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+}
+:is(#cf-shell, #cf-lens) .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+:is(#cf-shell, #cf-lens) .photo-drop {
+  position: absolute; top: 5px; right: 5px;
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--overlay);
+  color: var(--text);
+}
+:is(#cf-shell, #cf-lens) .photo-drop .ic { width: 15px; height: 15px; }
+:is(#cf-shell, #cf-lens) .photo-drop:active { background: var(--danger); color: #fff; }
+/* A photo whose file has gone, and a legacy `images` filename that never had
+   one — both shown rather than hidden, so a missing file is visible instead
+   of looking like no photo was ever attached. */
+:is(#cf-shell, #cf-lens) .photo.is-missing, :is(#cf-shell, #cf-lens) .photo.is-legacy {
+  border-style: dashed;
+  display: grid; place-items: center;
+}
+:is(#cf-shell, #cf-lens) .photo.is-missing img { display: none; }
+:is(#cf-shell, #cf-lens) .photo-missing {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 8px; text-align: center;
+  color: var(--text-faint); font-size: 0.6875rem; line-height: 1.35;
+  overflow: hidden;
+}
+:is(#cf-shell, #cf-lens) .photo-missing .ic { width: 22px; height: 22px; }
+@media (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .photo-grid { max-width: 780px; }
+    :is(#cf-shell, #cf-lens) .photo-drop:hover { background: var(--danger); color: #fff; }
+}
+/* --------------------------------------------------------------- programs */
+:is(#cf-shell, #cf-lens) .meso .meso-summary {
+  margin: 8px 0 0; padding-left: 30px;
+  font-size: 0.75rem; color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .meso.is-open .meso-summary { display: none; }
+:is(#cf-shell, #cf-lens) .meso-toggle {
+  display: grid; place-items: center;
+  width: 26px; height: 36px; flex: none;
+  color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .meso-toggle .twist { width: 18px; height: 18px; transition: transform .16s ease; }
+:is(#cf-shell, #cf-lens) .meso.is-open .meso-toggle .twist { transform: rotate(90deg); }
+:is(#cf-shell, #cf-lens) .meso-name {
+  flex: 1; min-width: 0; height: 36px; padding: 0 10px;
+  background: var(--raised); border: 1px solid transparent;
+  border-radius: 9px; font-size: 0.90625rem;
+}
+:is(#cf-shell, #cf-lens) .meso-name:focus { outline: none; border-color: var(--moss); }
+:is(#cf-shell, #cf-lens) .meso-body {
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--hairline);
+}
+:is(#cf-shell, #cf-lens) .sub-h {
+  margin: 14px 0 7px; font-size: 0.75rem; color: var(--fern); font-weight: 600;
+}
+:is(#cf-shell, #cf-lens) .meso-body .sub-h:first-child { margin-top: 0; }
+:is(#cf-shell, #cf-lens) .weeks { display: flex; flex-direction: column; gap: 5px; }
+:is(#cf-shell, #cf-lens) .week-head, :is(#cf-shell, #cf-lens) .week-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 34px;
+  gap: 5px; align-items: center;
+}
+:is(#cf-shell, #cf-lens) .week-head span {
+  font-size: 0.65625rem; color: var(--text-faint); padding-left: 3px;
+}
+:is(#cf-shell, #cf-lens) .week-row input {
+  width: 100%; min-width: 0; height: 38px; padding: 0 8px;
+  background: var(--raised); border: 1px solid var(--hairline);
+  border-radius: 8px; font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+:is(#cf-shell, #cf-lens) .week-row input:focus { outline: none; border-color: var(--moss); }
+/* ----------------------------------------------------------- lesson plans */
+:is(#cf-shell, #cf-lens) .rte.is-short { min-height: 130px; }
+:is(#cf-shell, #cf-lens) .note-box .rte-tools { margin-top: 10px; }
+:is(#cf-shell, #cf-lens) .photo.is-wide { aspect-ratio: 16 / 10; grid-column: 1 / -1; }
+:is(#cf-shell, #cf-lens) .photo.is-wide img { object-fit: contain; background: var(--black); }
+@media (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .photo.is-wide { grid-column: span 2; }
+}
+/* ----------------------------------------------------------------- notes */
+:is(#cf-shell, #cf-lens) .notes-block {
+  display: flex; gap: 10px; align-items: flex-start;
+  margin-top: 14px; padding: 12px 13px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--moss);
+  border-radius: 4px 11px 11px 4px;
+}
+:is(#cf-shell, #cf-lens) .notes-block .ic { width: 17px; height: 17px; color: var(--moss); margin-top: 2px; }
+:is(#cf-shell, #cf-lens) .notes-block p {
+  margin: 0; flex: 1; min-width: 0;
+  font-size: 0.90625rem; line-height: 1.6; color: var(--text-dim);
+  white-space: pre-wrap;
+}
+/* --------------------------------------------------- post session notes */
+:is(#cf-shell, #cf-lens) .log { display: flex; flex-direction: column; gap: 6px; }
+:is(#cf-shell, #cf-lens) .log-entry {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 12px;
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+}
+:is(#cf-shell, #cf-lens) .log-meta {
+  grid-column: 1; grid-row: 1;
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  min-width: 0;
+}
+:is(#cf-shell, #cf-lens) .log-title { font-size: 0.90625rem; font-weight: 600; color: var(--text); }
+:is(#cf-shell, #cf-lens) .log-date {
+  font-size: 0.78125rem; color: var(--fern);
+  font-variant-numeric: tabular-nums;
+}
+:is(#cf-shell, #cf-lens) .log-entry .row-tools { grid-column: 2; grid-row: 1; }
+:is(#cf-shell, #cf-lens) .log-text {
+  grid-column: 1 / -1;
+  margin: 0; min-width: 0;
+  font-size: 0.90625rem; line-height: 1.6; color: var(--text-dim);
+  white-space: pre-wrap;
+}
+/* ---------------------------------------------------------- diagnostics */
+:is(#cf-shell, #cf-lens) .log-view {
+  max-height: 220px; overflow: auto;
+  margin: 0 0 12px; padding: 11px 12px;
+  background: var(--black);
+  border: 1px solid var(--hairline);
+  border-radius: 9px;
+  font-family: var(--mono); font-size: 0.71875rem; line-height: 1.55;
+  color: var(--text-dim);
+  white-space: pre-wrap; word-break: break-word;
+}
+/* ---------------------------------------------------------------- selects
+
+   A <select> is drawn by the operating system unless told otherwise. On
+   Linux/WebKitGTK that means a GTK widget in the system's own colours —
+   which is how a dark app ends up with a white dropdown and near-invisible
+   text on it. `appearance: none` hands the drawing back to CSS, and the
+   arrow has to be redrawn because the native one goes with it.
+
+   `option` is styled separately: the popup list is a separate surface and
+   does not inherit from the closed control.
+   -------------------------------------------------------------------- */
+:is(#cf-shell, #cf-lens) select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: var(--select-arrow);
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 12px 12px;
+  padding-right: 32px;
+  color: var(--text);
+  cursor: pointer;
+}
+:is(#cf-shell, #cf-lens) select option, :is(#cf-shell, #cf-lens) select optgroup {
+  background-color: var(--raised);
+  color: var(--text);
+}
+/* Some engines honour `appearance: none` on the closed control but still
+   paint their own background beneath it. Stating the colour on the same
+   selectors that set the rest of the control leaves nothing to inherit from
+   the platform. */
+:is(#cf-shell, #cf-lens) .field select, :is(#cf-shell, #cf-lens) .type-select, :is(#cf-shell, #cf-lens) select.sheet-field {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: var(--select-arrow);
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+}
+:is(#cf-shell, #cf-lens) .field select, :is(#cf-shell, #cf-lens) select.sheet-field { background-position: right 11px center; }
+/* Firefox keeps a dotted focus artefact on a styled select. */
+:is(#cf-shell, #cf-lens) select:-moz-focusring { color: transparent; text-shadow: 0 0 0 var(--text); }
+/* -------------------------------------------------------------- resizers
+
+   Draggable boundaries between the three columns. Only present in the
+   three-column layout — below that the columns overlay each other and there
+   is nothing to resize. The hit area is wider than the visible line, because
+   a 1px target is a bad target.
+   -------------------------------------------------------------------- */
+:is(#cf-shell, #cf-lens) .resizer { display: none; }
+@media (min-width: 1000px) {
+    :is(#cf-shell, #cf-lens) .resizer {
+    display: block;
+    position: fixed;
+    top: var(--ss-bar-h, 0px);  /* below the app-wide bar, not through it */ bottom: 0;
+    width: 11px;
+    margin-left: -5px;
+    /* Above the detail pane (50), which otherwise covers the handle on the
+       list/detail boundary and swallows the drag. Below the editor (65) and
+       sheets (80), which should block resizing while they are open. */
+    z-index: 55;
+    cursor: col-resize;
+    background: none;
+  }
+  /* The visible line, centred in the hit area. */
+  :is(#cf-shell, #cf-lens) .resizer::after {
+    content: "";
+    position: absolute; top: 0; bottom: 0; left: 5px;
+    width: 1px;
+    background: none;
+    transition: background-color .15s ease;
+  }
+    :is(#cf-shell, #cf-lens) .resizer:hover::after, :is(#cf-shell, #cf-lens) .resizer.is-dragging::after { background: var(--moss); }
+    :is(#cf-shell, #cf-lens) .resizer:focus-visible::after { background: var(--moss); width: 2px; }
+    :is(#cf-shell, #cf-lens) #resizeSidebar { left: var(--sidebar-w); }
+    :is(#cf-shell, #cf-lens) #resizeList { left: calc(var(--sidebar-w) + var(--list-w)); }
+    :is(#cf-shell, #cf-lens) .app.is-collapsed #resizeSidebar { display: none; }
+    :is(#cf-shell, #cf-lens) .app.is-collapsed #resizeList { left: var(--list-w); }
+  /* While dragging, stop the pointer selecting text across the whole app. */
+  :is(#cf-shell, #cf-lens).is-resizing { user-select: none; cursor: col-resize; }
+    :is(#cf-shell, #cf-lens).is-resizing .resizer::after { background: var(--moss); }
+}
+/* --------------------------------------------------------------- tagging */
+:is(#cf-shell, #cf-lens) .chip.is-empty {
+  background: none;
+  border: 1px dashed var(--hairline);
+  color: var(--text-faint);
+}
+:is(#cf-shell, #cf-lens) .chip[data-drop-tag] span { opacity: .7; margin-left: 2px; }
+/* A card can carry several tags; keep them from crowding the sub-line. */
+:is(#cf-shell, #cf-lens) .card .tag-row { margin-top: 7px; }
+:is(#cf-shell, #cf-lens) .card .tag-row .tag { font-size: 0.65625rem; }
+:is(#cf-shell, #cf-lens) .block-note {
+  font-weight: 400; font-size: 0.6875rem;
+  color: var(--text-faint);
+  padding: 1px 7px; border-radius: 999px;
+  border: 1px solid var(--hairline);
+}
+/* ---------------------------------------------------------------- results */
+:is(#cf-shell, #cf-lens) .result-card .card-top { align-items: baseline; }
+:is(#cf-shell, #cf-lens) .result-value {
+  flex: none;
+  font-size: 1.1875rem; font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--heading);
+}
+:is(#cf-shell, #cf-lens) .result-unit { font-size: 0.75rem; font-weight: 400; color: var(--text-faint); }
+:is(#cf-shell, #cf-lens) .trend {
+  display: inline-flex; align-items: center; gap: 3px;
+  margin-left: 6px; padding: 1px 7px 1px 4px;
+  border-radius: 999px;
+  font-size: 0.71875rem; font-variant-numeric: tabular-nums;
+  background: var(--raised);
+  color: var(--text-dim);
+}
+:is(#cf-shell, #cf-lens) .trend .ic { width: 13px; height: 13px; }
+/* Improvement and decline are coloured, but the arrow direction carries the
+   same information — colour is never the only channel. */
+:is(#cf-shell, #cf-lens) .trend.is-up { color: rgb(var(--block-a)); background: rgba(var(--block-a), .13); }
+:is(#cf-shell, #cf-lens) .trend.is-down { color: var(--danger); background: rgba(var(--block-c), .13); }
+:is(#cf-shell, #cf-lens) .trend-pct { opacity: .75; }
+/* ------------------------------------------------------------ section tabs */
+:is(#cf-shell, #cf-lens) .chips.is-tabs {
+  flex-wrap: wrap;
+  overflow: visible;
+  margin: 0 0 12px;
+  padding: 0 0 2px;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 10px;
+}
+:is(#cf-shell, #cf-lens) .chip-count {
+  font-size: 0.65625rem; opacity: .65;
+  margin-left: 3px;
+  font-variant-numeric: tabular-nums;
+}
+/* ------------------------------------------------------------ global search */
+:is(#cf-shell, #cf-lens) .global-search { margin: 0 12px 10px; }
+:is(#cf-shell, #cf-lens) .global-search .search-input { height: 38px; font-size: 0.875rem; }
+:is(#cf-shell, #cf-lens) .suggest-pop {
+  margin: -4px 12px 10px;
+  max-height: 220px; overflow-y: auto;
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+:is(#cf-shell, #cf-lens) .suggest-row {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 12px;
+  font-size: 0.875rem; color: var(--text);
+  border-bottom: 1px solid var(--hairline);
+}
+:is(#cf-shell, #cf-lens) .suggest-row:last-child { border-bottom: 0; }
+:is(#cf-shell, #cf-lens) .suggest-row:active, :is(#cf-shell, #cf-lens) .suggest-row:hover { background: var(--raised-2); }
+:is(#cf-shell, #cf-lens) .suggest-hash { color: var(--fern); margin-right: 2px; }
+:is(#cf-shell, #cf-lens) .count-line code, :is(#cf-shell, #cf-lens) .empty-note code {
+  font-family: var(--mono); font-size: .9em;
+  background: var(--raised); color: var(--fern);
+  padding: .1em .35em; border-radius: 4px;
+}
+/* ---------------------------------------------------------- section toggles */
+:is(#cf-shell, #cf-lens) .toggle-row { padding: 10px 13px; }
+:is(#cf-shell, #cf-lens) .toggle-row.is-sub { margin-left: 18px; }
+:is(#cf-shell, #cf-lens) .toggle-row .card-top { align-items: center; }
+/* A switch, drawn rather than a checkbox, so it matches everything else. */
+:is(#cf-shell, #cf-lens) .switch {
+  flex: none; width: 34px; height: 20px;
+  border-radius: 999px;
+  background: var(--raised-2);
+  border: 1px solid var(--hairline);
+  position: relative;
+  transition: background-color .15s ease;
+}
+:is(#cf-shell, #cf-lens) .switch::after {
+  content: ""; position: absolute;
+  top: 2px; left: 2px; width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  transition: transform .15s ease, background-color .15s ease;
+}
+:is(#cf-shell, #cf-lens) .switch.on { background: var(--moss); border-color: var(--moss); }
+:is(#cf-shell, #cf-lens) .switch.on::after { transform: translateX(14px); background: var(--on-accent); }
+/* ------------------------------------------------------------------ books */
+
+/* A preview of the printed cover: same order, same centring. */
+:is(#cf-shell, #cf-lens) .book-cover {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 34px 20px;
+  min-height: 210px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+}
+:is(#cf-shell, #cf-lens) .book-mark { width: 52px; height: 52px; border-radius: 12px; }
+:is(#cf-shell, #cf-lens) .book-brand {
+  margin-top: 10px;
+  font-size: 0.8125rem; font-weight: 700; letter-spacing: .03em;
+  color: var(--text-dim);
+}
+:is(#cf-shell, #cf-lens) .book-rule {
+  width: 92px; height: 2px; margin: 13px 0;
+  background: var(--moss); border-radius: 2px;
+}
+:is(#cf-shell, #cf-lens) .book-title {
+  font-size: 1.4375rem; font-weight: 700; line-height: 1.25;
+  color: var(--heading);
+}
+:is(#cf-shell, #cf-lens) .book-sub {
+  margin-top: 6px;
+  font-size: 0.8125rem; font-style: italic; color: var(--text-faint);
+}
+/* An entry whose record has been deleted since it was added. */
+:is(#cf-shell, #cf-lens) .station.is-missing-ref { border-left-color: var(--danger); }
+:is(#cf-shell, #cf-lens) .station.is-missing-ref .station-name { color: var(--text-faint); }
+/* A custom cover image is any shape; keep it from stretching the preview. */
+:is(#cf-shell, #cf-lens) .book-mark {
+  width: auto; height: auto;
+  max-width: 84px; max-height: 84px;
+  object-fit: contain;
+}
+/* ------------------------------------------------------- document library */
+:is(#cf-shell, #cf-lens) .doc-head {
+  display: flex; align-items: center; gap: 13px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+:is(#cf-shell, #cf-lens) .doc-mark { width: 30px; height: 30px; color: var(--moss); }
+:is(#cf-shell, #cf-lens) .doc-name { font-size: 0.96875rem; font-weight: 650; color: var(--heading);
+            word-break: break-word; }
+:is(#cf-shell, #cf-lens) .doc-meta { margin-top: 3px; font-size: 0.78125rem; color: var(--text-faint); }
+/* The path, shown because "where did that file actually go" is a fair
+   question and the answer should not require opening a file manager. */
+:is(#cf-shell, #cf-lens) .mono-line {
+  padding: 9px 12px;
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  border-radius: 9px;
+  font-family: var(--mono); font-size: 0.71875rem; color: var(--text-dim);
+  word-break: break-all;
+}
+/* --------------------------------------------- selecting several to export */
+
+/* A picked card. Marked with a tick and a border rather than a colour wash
+   alone — the block colours already use fills, and a second meaning for a
+   coloured card would be one too many. */
+:is(#cf-shell, #cf-lens) .card.is-picked {
+  border-color: var(--moss);
+  box-shadow: inset 0 0 0 1px var(--moss);
+}
+:is(#cf-shell, #cf-lens) .card.is-picked::after {
+  content: "✓";
+  position: absolute; top: 9px; right: 11px;
+  width: 19px; height: 19px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--moss); color: var(--on-accent);
+  font-size: 0.75rem; font-weight: 700;
+}
+:is(#cf-shell, #cf-lens).is-selecting .card[data-id] { position: relative; cursor: copy; }
+:is(#cf-shell, #cf-lens) .sel-bar {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+  z-index: 70;
+  display: flex; align-items: center; gap: 10px;
+  max-width: calc(100vw - 32px);
+  padding: 9px 10px 9px 16px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 13px;
+  box-shadow: 0 10px 30px var(--shadow);
+}
+:is(#cf-shell, #cf-lens) .sel-count { font-size: 0.84375rem; font-weight: 600; white-space: nowrap; }
+:is(#cf-shell, #cf-lens) .sel-hint {
+  font-size: 0.71875rem; color: var(--text-faint);
+  white-space: nowrap;
+}
+:is(#cf-shell, #cf-lens) .sel-bar .primary-btn, :is(#cf-shell, #cf-lens) .sel-bar .secondary-btn {
+  min-height: 36px; padding: 0 13px; font-size: 0.8125rem;
+}
+:is(#cf-shell, #cf-lens) .sel-bar .primary-btn:disabled, :is(#cf-shell, #cf-lens) .sel-bar .secondary-btn:disabled {
+  opacity: .5; cursor: default;
+}
+@media (max-width: 720px) {
+    :is(#cf-shell, #cf-lens) .sel-hint { display: none; }
+}
+
+/* ==========================================================================
+   TRAINING LENS — the read-only gym view, scoped.
+   ==========================================================================
+   Coach Cam's tools.css, scoped under #cf-lens by the same transform as
+   the shell above, and pointed at KinCrux's colours so it follows the
+   theme. Bigger text than the rest of the app on purpose: it is meant to
+   be read at arm's length from a phone propped against a rack.
+   ========================================================================== */
+#cf-lens {
+  --black:        var(--bg);
+  --surface:      var(--panel);
+  --raised:       var(--elevated);
+  --raised-2:     var(--hover);
+  --hairline:     var(--line-strong);
+  --moss:         var(--accent);
+  --text:         var(--text);
+  --text-faint:   var(--muted);
+  --heading:      var(--ink, var(--text));
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999086' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+
+  /* a pane inside KinCrux, not the window */
+  flex: 1; min-width: 0;
+  height: 100%; min-height: 0; overflow: auto;
+  /* its sheet is position:fixed; contain it here rather than let it
+     cover KinCrux's sidebar */
+  transform: translateZ(0);
+  display: flex; flex-direction: column;
+}
+#cf-lens[hidden] { display: none !important; }
+
+/* ==========================================================================
+   Forge and Lens — the two sister windows.
+
+   Every var() here carries a fallback. An undefined custom property
+   resolves to nothing and still overrides whatever was set before it, so a
+   stylesheet that fails to load does not degrade — it produces a window of
+   invisible furniture on an invisible background. The fallbacks mean the
+   worst case is plain rather than blank.
+
+   They borrow the main app's stylesheet wholesale, so every card, chip,
+   sheet and theme variable is the one Coach Cam already uses. This file
+   adds only the chrome the tools need, which is almost nothing: a top bar
+   with a dropdown, and a body.
+
+   Keeping it this thin is deliberate. The moment these windows have their
+   own idea of what a card looks like, they stop feeling like the same
+   product sitting beside itself.
+   ========================================================================== */
+#cf-lens.tool {
+  display: flex;
+  flex-direction: column;
+  /* 100%, not 100vh: the app-wide bar now sits above every tool, and a
+     full-window height pushed the bottom of Lens off-screen by its height. */
+  height: 100%;
+  overflow: hidden;
+  background: var(--black, #F4F1EB);
+  color: var(--text, #1D2321);
+  font-family: var(--font, system-ui, sans-serif);
+}
+#cf-lens .tool-top {
+  flex: none;
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface, #FCFAF6);
+  border-bottom: 1px solid var(--hairline, #D6CFC2);
+}
+#cf-lens .tool-brand {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.90625rem; font-weight: 700; letter-spacing: .02em;
+  color: var(--heading, #141917);
+}
+#cf-lens .tool-brand .ic { width: 18px; height: 18px; color: var(--moss, #536972); }
+/* The dropdown is the whole interface, so it is given room rather than
+   tucked into a corner. */
+#cf-lens .tool-what, #cf-lens .tool-which {
+  height: 40px;
+  min-width: 210px;
+  padding: 0 34px 0 12px;
+  background: var(--raised, #EFEAE0);
+  border: 1px solid var(--hairline, #D6CFC2);
+  border-radius: 10px;
+  font-size: 0.90625rem;
+  color: var(--text, #1D2321);
+  appearance: none; -webkit-appearance: none;
+  background-image: var(--select-arrow, none);
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 13px 13px;
+}
+#cf-lens .tool-which { min-width: 260px; }
+#cf-lens .tool-what:focus, #cf-lens .tool-which:focus { outline: none; border-color: var(--moss, #536972); }
+#cf-lens .tool-what option, #cf-lens .tool-which option {
+  background-color: var(--raised, #EFEAE0); color: var(--text, #1D2321);
+}
+#cf-lens .tool-status {
+  flex: 1; min-width: 0; text-align: right;
+  font-size: 0.71875rem; color: var(--text-faint, #6B6F6A);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#cf-lens .tool-body { flex: 1; min-height: 0; overflow-y: auto; padding: 18px; }
+#cf-lens .tool-empty {
+  padding: 60px 24px; text-align: center;
+  color: var(--text-faint, #6B6F6A); font-size: 0.875rem; line-height: 1.7;
+}
+#cf-lens .tool-empty-mark { width: 30px; height: 30px; opacity: .5; margin-bottom: 12px; }
+#cf-lens .tool-hint { font-size: 0.78125rem; color: var(--text-faint, #6B6F6A); line-height: 1.65; }
+#cf-lens .tool-section {
+  margin: 0 0 10px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--text-faint, #6B6F6A);
+}
+/* Lens is read-only, and says so rather than leaving you to discover it by
+   looking for a button that is not there. */
+#cf-lens .is-lens .tool-brand::after {
+  content: "read only";
+  margin-left: 2px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--raised-2, #E3DCCE);
+  color: var(--text-faint, #6B6F6A);
+  font-size: 0.625rem; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase;
+}
+/* ---- Lens's reading view ------------------------------------------------ */
+#cf-lens .lens-head {
+  display: flex; align-items: flex-start; gap: 13px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--hairline, #D6CFC2);
+}
+#cf-lens .lens-mark { width: 26px; height: 26px; color: var(--moss, #536972); margin-top: 4px; }
+#cf-lens .lens-kind {
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--text-faint, #6B6F6A);
+}
+#cf-lens .lens-title {
+  margin: 3px 0 0;
+  font-size: 1.4375rem; line-height: 1.25; font-weight: 700;
+  color: var(--heading, #141917);
+}
+/* Bigger than the main app's, on purpose: this is the window you read from
+   across a gym floor with your hands full. */
+#cf-lens.is-lens .station-name { font-size: 1rem; }
+#cf-lens.is-lens .station-meta { font-size: 0.84375rem; }
+#cf-lens.is-lens .prose { font-size: 0.96875rem; line-height: 1.75; }
+/* ---- Lens: print and export --------------------------------------------- */
+#cf-lens .lens-actions { display: flex; gap: 6px; flex: none; }
+#cf-lens .lens-actions .secondary-btn {
+  min-height: 34px; padding: 0 12px; font-size: 0.8125rem;
+}
+#cf-lens .lens-actions .ic { width: 15px; height: 15px; }
+/* ---- Lens: block colours ------------------------------------------------
+   The same run of colour down the left of each exercise the main app uses,
+   driven by the same CF.Blocks mapping so the two windows cannot disagree
+   about what colour Block B is. */
+#cf-lens .block-h {
+  display: flex; align-items: center; gap: 7px;
+}
+#cf-lens .block-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgb(var(--block-rgb, 120, 120, 120));
+}
+#cf-lens .block-h { color: rgb(var(--block-rgb, 120, 120, 120)); }
+#cf-lens .block-alt {
+  margin-left: 4px;
+  background: rgba(var(--block-rgb, 120, 120, 120), .16);
+  color: rgb(var(--block-rgb, 120, 120, 120));
+  text-transform: none; letter-spacing: 0;
+}
+#cf-lens.is-lens .station {
+  border-left: 3px solid rgb(var(--block-rgb, 120, 120, 120));
+}
+#cf-lens.is-lens .station-n {
+  background: rgba(var(--block-rgb, 120, 120, 120), .16);
+  color: rgb(var(--block-rgb, 120, 120, 120));
+  font-weight: 700;
+}
+
+
+
+/* Cam: "Calculator tools for Training doesn't need to be in split view."
+
+   Coach Cam's layout above 1000px is a fixed 320px list column with a
+   permanent detail column beside it. That is right for Sessions and
+   Circuits, where you pick one and read it next to the list. The
+   calculators, settings and backup views are not lists of anything --
+   they were rendering into 320px with a 744px empty pane beside them.
+
+   The class is set by the training bridge from Coach Cam's own current
+   view, so no ported view had to be edited. */
+#cf-shell.cf-no-detail .main {
+  width: auto;
+  flex: 1;
+  border-right: none;
+}
+#cf-shell.cf-no-detail .detail { display: none !important; }
+/* the divider between the two columns has nothing left to divide */
+#cf-shell.cf-no-detail #resizeList { display: none !important; }
+
+/* ==========================================================================
+   TRAINING CONTENT ON A PANEL — Cam: "UI change for when displaying content
+   in the workspace inside of the Training main section ... make it more align
+   with how old Cams Collective handled the display of content ... keep the
+   side bars that we have in Cam's Collective S and only apply the UI to the
+   workspace content."
+
+   The detail pane was position: fixed, inset: 0 — a full-window sheet painted
+   flat black. It covered the app, menus and all, and an exercise ended up as
+   text floating on black. It now sits INSIDE the workspace as a raised panel,
+   the way the old Collective showed a session: a titled card on the page.
+
+   Scoped to #cf-shell only. Lens (#cf-lens) is the gym view and is meant to
+   take the whole window — it keeps the full-screen behaviour.
+   ========================================================================== */
+#cf-shell .app {
+  position: relative;
+  /* 100%, not the 100dvh set further up: that is a leftover from Coach Cam
+     owning the whole window. Here Training sits between a top bar and a
+     bottom bar, so a full-window height ran its foot off the screen. Lens
+     keeps 100dvh -- it really does take the window. */
+  height: 100%;
+}
+/* The list keeps its own width and shares the row with the panel. */
+#cf-shell .main { min-width: 0; }
+
+#cf-shell .detail {
+  /* BESIDE the list, not over it. Absolute-positioning it inside the shell
+     covered the list as well -- the old Collective shows the list on the left
+     and the content beside it, and so does this. Hidden, it takes no room. */
+  position: relative;
+  inset: auto;
+  flex: 1 1 62%;
+  min-width: 0;
+  margin: 10px 10px 10px 0;
+  border: 1px solid var(--hairline, rgba(255,255,255,.12));
+  border-radius: 14px;
+  background: var(--panel, var(--black));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .45);
+  overflow: hidden;
+  /* The panel is the height of the row; its BODY scrolls inside it. Without
+     this the content pushed the panel taller than the workspace and its foot
+     disappeared under the bottom bar. */
+  align-self: stretch;
+  height: auto;
+  min-height: 0;
+}
+#cf-shell .detail .detail-body { flex: 1 1 auto; min-height: 0; overflow: auto; }
+
+/* The title block: a quiet eyebrow over a large title, as in the old app. */
+#cf-shell .detail > .topbar {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--hairline, rgba(255,255,255,.12));
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--accent, #d8b23a) 10%, transparent), transparent);
+}
+#cf-shell .detail .page-title { font-size: 1.35rem; letter-spacing: .01em; }
+#cf-shell .detail .crumb {
+  font-size: 0.7rem; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--accent, #d8b23a); opacity: .9;
+}
+
+/* The body: a readable column on the panel, not edge-to-edge text. */
+#cf-shell .detail .detail-body { padding: 20px 26px 34px; }
+#cf-shell .detail .detail-body > * { max-width: 78ch; }
+
+/* Sections and tables, the shape the old Collective used: a coloured heading,
+   then rows under a ruled header. */
+#cf-shell .detail .detail-body h2,
+#cf-shell .detail .detail-body .sub-h {
+  margin: 26px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent, #d8b23a) 45%, transparent);
+  color: var(--accent, #d8b23a);
+  font-size: 0.82rem; letter-spacing: .08em; text-transform: uppercase;
+}
+#cf-shell .detail .detail-body table { width: 100%; border-collapse: collapse; max-width: none; }
+#cf-shell .detail .detail-body th {
+  padding: 8px 10px;
+  border-bottom: 2px solid color-mix(in srgb, var(--accent, #d8b23a) 45%, transparent);
+  color: var(--muted, #9a9a9a);
+  font-size: 0.68rem; letter-spacing: .09em; text-transform: uppercase; text-align: left;
+}
+#cf-shell .detail .detail-body td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--hairline, rgba(255,255,255,.08));
+}
+#cf-shell .detail .detail-body tr:last-child td { border-bottom: 0; }
+
+/* The list beside it gets the same treatment, so the two read as one page. */
+#cf-shell .page {
+  padding: 14px 16px;
+}
+#cf-shell .page .card,
+#cf-shell .page .list > * {
+  border-radius: 10px;
+}
+/* the log's week picker (2026-10-05): wraps in the sheet rather than scrolling */
+:is(#cf-shell, #cf-lens) .chips.log-weeks { flex-wrap: wrap; overflow: visible; margin: 0 0 10px; padding: 0 2px; }

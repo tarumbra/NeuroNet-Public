@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroNet
+Comment=Desktop Shell Suite
+Exec=/mnt/Cams_Collective/NeuroNet/neuronet-quick show
+Path=/mnt/Cams_Collective/NeuroNet
+Terminal=false
+Categories=Utility;Development;
+StartupNotify=true

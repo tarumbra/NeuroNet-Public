@@ -1,0 +1,59 @@
+{
+ "LEGACY": {
+  "//": "New Game Plus legacies (Battle Re-work Part 12, note 05; Cam, 16 October: build the whole project, play-test at the end). Your last game's highest class gives its gift; its level gives free talent points for that class (one for every pointsPer levels, up to maxPoints -- worth about the class's first 10 levels, the Mathematician's target); every technique you learned comes with you; each game you finish adds a prestige mark, and from freeRespecAt marks one respec a game is free. A Beast Master brings one battle pet from the old Pen, back at battleLevel. An Arcane who had learnt Necromancy gets the Necromancer's gift instead (Part 13).",
+  "pointsPer": 10,
+  "maxPoints": 5,
+  "freeRespecAt": 3,
+  "battleLevel": 5,
+  "gifts": {
+   "hunter": {
+    "items": {
+     "twinenet": 10,
+     "ropesnare": 10,
+     "bronzeknife": 1
+    },
+    "line": "Ranger Ash left a bundle by your door: \"Nets, snares and a knife. You'll know what to do.\""
+   },
+   "thief": {
+    "items": {
+     "weakpoison": 5,
+     "bronzedagger": 2
+    },
+    "line": "Nell's ledger has your name in it, crossed out and paid: two daggers and a little poison."
+   },
+   "berserker": {
+    "items": {
+     "bronzemaul": 1
+    },
+    "line": "Old Thorvald sent a maul. \"SWING IT,\" says the note. That's the whole note."
+   },
+   "paladin": {
+    "items": {
+     "woodenbuckler": 1,
+     "holywater": 5
+    },
+    "line": "Sister Maren blessed a buckler for you, and five flasks of holy water."
+   },
+   "arcane": {
+    "items": {
+     "airstaff": 1,
+     "airrune": 150,
+     "mindrune": 150
+    },
+    "line": "The Archmage remembers you: a staff of air and three hundred runes, \"to start with\"."
+   },
+   "beastmaster": {
+    "items": {},
+    "beast": true,
+    "line": "Warden Briar kept one back for you. \"Knew you'd come round again.\""
+   },
+   "necromancer": {
+    "items": {
+     "lifeessence": 3,
+     "bonestaff": 1
+    },
+    "line": "A bone staff on your doorstep, and three little lights in a jar. No note. The Archmage never was one for notes."
+   }
+  }
+ }
+}

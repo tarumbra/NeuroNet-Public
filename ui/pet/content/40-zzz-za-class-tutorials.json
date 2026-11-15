@@ -1,0 +1,903 @@
+{
+ "CLASS_TUTORIALS": {
+  "//": "Cam (2026-10-17): every tutor offers a lesson -- 'all basic provisions and how to do everything related to that class. Inclusive of poison making, weapon crafting, holy water, etc.' -- and a starter kit in a wooden crate at the end. Kits: the Game Developer with the Economist (Collaboration N3); stories: the Narrative Designer (each tutor leaves for their real master -- threads for the story re-work, N2). A step: say, then a job (check), a thing to make (make + ws: for real if the bench is open to you, else the tutor makes it -- show -- and says what opens it), or just words. gift: given on the step, once per class ever. items: lent at the start. gifts + kit: the farewell. Checks: wear:<item>, ranged, magic, dual, shield, coat, bless, brew, special, loadout, tools, made:<item>, skill:<skill>, hunt:<n>, crook, train, fed, pack.",
+  "hunter": {
+   "title": "Hunter tutor",
+   "goodbye": "Watch the treeline, and don't touch Ash's snares.",
+   "items": {
+    "shortbow": 1,
+    "improvisedarrow": 60,
+    "improvisedquiver": 1,
+    "bronzeknife": 1,
+    "shrimps": 6
+   },
+   "kit": {
+    "id": "hunterkit",
+    "name": "Hunter's starter crate",
+    "about": "Wren's parting gift: a quiver, arrows, snares and nets, and the Hunter's book.",
+    "contents": {
+     "hunterbook": 1,
+     "leatherquiver": 1,
+     "bronzearrow": 150,
+     "twigsnare": 5,
+     "twinenet": 2,
+     "feather": 30,
+     "shrimps": 10
+    }
+   },
+   "steps": [
+    {
+     "id": "offer",
+     "say": [
+      "Wren. Ash's apprentice -- he's away, so you get me. You've taken the Hunter's road: shall I show you how it works? It won't take long, and I'll lend you what you need.",
+      "Press Next and we'll start -- or Skip the lesson, and I'll still leave you a starter crate."
+     ]
+    },
+    {
+     "id": "hello",
+     "say": [
+      "Ash said you'd come. He's out past the Forest after something big -- he left me to start you off, and then I'm to catch him up, so let's not dawdle.",
+      "The Hunter's road is patience: a bow, a knife for when the arrows run out, and a trap for anything that thinks it's quicker than you. Everything you need today is in your bag -- a short bow, sixty improvised arrows, a quiver to carry them and a knife."
+     ]
+    },
+    {
+     "id": "quiver",
+     "say": [
+      "Quiver first: arrows only go in a quiver -- no quiver, no arrows. Wear the improvised one. It only holds arrows you make yourself; a leather quiver holds far more, and bronze, when you're ready for it."
+     ],
+     "goal": "Wear the quiver",
+     "go": "pet:gear",
+     "check": "wear:improvisedquiver",
+     "point": [
+      ".pp-picker [data-pick=\"improvisedquiver\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"quiver\"]",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "bow",
+     "say": [
+      "Now the bow. Put the short bow in your hand and the improvised arrows in your quiver -- your Character sheet, Gear, click a slot on your figure."
+     ],
+     "goal": "Hold the bow, with arrows",
+     "go": "pet:gear",
+     "check": "ranged",
+     "point": [
+      ".pp-picker [data-pick=\"shortbow\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"weapon\"]",
+      ".np-me",
+      ".pp-picker [data-pick=\"improvisedarrow\"]",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"ammo\"]"
+     ]
+    },
+    {
+     "id": "whittle",
+     "say": [
+      "Arrows run out. A Hunter with a knife never does: in your bag, use your knife on twigs (or an oak log) to whittle arrow shafts.",
+      "Here's a bundle of twigs. Open your bag, choose Use with... on the twigs, and whittle."
+     ],
+     "gift": {
+      "twigs": 10
+     },
+     "goal": "Whittle some arrow shafts",
+     "go": "pet:bag",
+     "check": "made:arrowshaft",
+     "point": [
+      "#np-kit .np-kit-slot.use-ok",
+      "#np-kit [data-kitem=\"twigs\"]",
+      "#np-kit [data-kittab=\"bag\"]:not(.on)"
+     ]
+    },
+    {
+     "id": "improvise",
+     "say": [
+      "A shaft and some leaf litter for flights makes an improvised arrow. Poor, but it flies -- and leaf litter falls in every twiggy wood.",
+      "Use a shaft with the leaf litter I've given you."
+     ],
+     "gift": {
+      "leaflitter": 10
+     },
+     "goal": "Make improvised arrows",
+     "go": "pet:bag",
+     "check": "made:improvisedarrow",
+     "point": [
+      "#np-kit .np-kit-slot.use-ok",
+      "#np-kit [data-kitem=\"arrowshaft\"]",
+      "#np-kit [data-kittab=\"bag\"]:not(.on)"
+     ]
+    },
+    {
+     "id": "traps",
+     "say": [
+      "Now the clever part. A trap holds a creature for a round or two; a net slows it. Your hunt plan decides which you take into a fight -- set it on your Character sheet's Combat tab.",
+      "I've given you three twig snares and a twine net. Choose them in your plan."
+     ],
+     "gift": {
+      "twigsnare": 3,
+      "twinenet": 1
+     },
+     "goal": "Choose a trap or a net in your hunt plan",
+     "go": "sheet:combat",
+     "check": "tools",
+     "point": [
+      ".pp-trapwhich",
+      ".pp-netwhich",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "snare",
+     "say": [
+      "You'll go through snares. A twig snare is six twigs and a thread at the crafting bench -- here are the makings."
+     ],
+     "gift": {
+      "twigs": 6,
+      "thread": 1
+     },
+     "make": "twigsnare",
+     "ws": "crafting",
+     "show": {
+      "twigsnare": 2
+     }
+    },
+    {
+     "id": "specials",
+     "say": [
+      "When your special bar fills in a fight, a Hunter has two tricks: an Aimed shot (far likelier to hit, double damage, two arrows) and a Volley (three arrows at once).",
+      "Pick one on the Combat tab -- it fires itself when the bar is full, or press it yourself in a fight you're playing."
+     ],
+     "goal": "Choose a special",
+     "go": "sheet:combat",
+     "check": "special",
+     "point": [
+      ".pp-special",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "hunt",
+     "say": [
+      "Now let's see it. The Farmyard's hunting ground -- win three fights. Keep an eye on your arrows; if they run low, come home and whittle."
+     ],
+     "goal": "Win 3 fights",
+     "go": "region:farmyard",
+     "check": "hunt:3",
+     "point": [
+      ".pp-spot[data-key=\"hunt\"]",
+      "g.pp-region[data-region=\"farmyard\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "farewell",
+     "say": [
+      "That'll do. You'll make a Hunter yet.",
+      "I'm off after Ash -- he's three days ahead and he never waits. Take this crate: a proper quiver, arrows, snares, nets, and the Hunter's book. Read the book; it's everything I'd tell you if I had the time."
+     ],
+     "finale": true
+    }
+   ]
+  },
+  "berserker": {
+   "title": "Berserker tutor",
+   "goodbye": "Hit first. Hit hardest. Don't stop.",
+   "items": {
+    "bronzelongsword": 1,
+    "bronzespikedgauntlets": 1,
+    "berserkerbrew": 2,
+    "shrimps": 8
+   },
+   "kit": {
+    "id": "berserkerkit",
+    "name": "Berserker's starter crate",
+    "about": "Brakka's parting gift: a maul, brews, food and the Berserker's book.",
+    "contents": {
+     "berserkerbook": 1,
+     "bronzemaul": 1,
+     "berserkerbrew": 2,
+     "bronzebar": 10,
+     "oak": 10,
+     "trout": 10
+    }
+   },
+   "steps": [
+    {
+     "id": "offer",
+     "say": [
+      "Brakka. You've picked the Berserker's road -- good choice, the only choice. Want me to show you how it's done? I'll lend you the iron.",
+      "Press Next and we'll start -- or Skip the lesson, and I'll still leave you a starter crate."
+     ]
+    },
+    {
+     "id": "hello",
+     "say": [
+      "Thorvald's in the north with the cold and the yaks. He'll send for me soon -- until then, you're mine.",
+      "The Berserker's road is simple: hit it, get hit, get angrier. Every blow you take fills your fury, and fury pays for your specials. I've put a longsword, spiked gauntlets and two Berserker brews in your bag."
+     ]
+    },
+    {
+     "id": "sword",
+     "say": [
+      "A longsword. Heavier than a sword, harder than a sword, and only a Berserker swings one. Put it in your hand."
+     ],
+     "goal": "Hold the longsword",
+     "go": "pet:gear",
+     "check": "wear:bronzelongsword",
+     "point": [
+      ".pp-picker [data-pick=\"bronzelongsword\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"weapon\"]",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "gauntlets",
+     "say": [
+      "Spiked gauntlets on your hands -- your figure's arms slot: a punch with them can open a bleed. And if your sword breaks mid-fight, they're still there."
+     ],
+     "goal": "Wear the spiked gauntlets",
+     "go": "pet:gear",
+     "check": "wear:bronzespikedgauntlets",
+     "point": [
+      ".pp-picker [data-pick=\"bronzespikedgauntlets\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"arms\"]",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "forge",
+     "say": [
+      "Your weapons are forged at the anvil -- longswords, mauls, spiked gauntlets, all of it. A maul hits harder still. Here's bronze and oak: forge one."
+     ],
+     "gift": {
+      "bronzebar": 6,
+      "oak": 6
+     },
+     "make": "bronzemaul",
+     "ws": "anvil",
+     "show": {
+      "bronzemaul": 1
+     }
+    },
+    {
+     "id": "fury",
+     "say": [
+      "Fury. It fills as you're hit and as you hit. Spend it on Cleave (a heavy swing), Rage (two and a half times the damage -- but you take more this fight) or Bloodlust (you heal from what you deal). Choose one on the Combat tab."
+     ],
+     "goal": "Choose a special",
+     "go": "sheet:combat",
+     "check": "special",
+     "point": [
+      ".pp-special",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "brew",
+     "say": [
+      "A Berserker brew: more attack and a harder hit, for thirty blows. Drink one before a big fight -- from your bag.",
+      "You'll brew your own at the apothecary table one day, from mandrake, rosemary and truffles. That's a long way off."
+     ],
+     "goal": "Drink a Berserker brew",
+     "go": "pet:bag",
+     "check": "brew",
+     "point": [
+      "#np-kit [data-kitem=\"berserkerbrew\"]",
+      "#np-kit [data-kittab=\"bag\"]:not(.on)"
+     ]
+    },
+    {
+     "id": "hunt",
+     "say": [
+      "Go on then. The Farmyard. Three fights. Don't run."
+     ],
+     "goal": "Win 3 fights",
+     "go": "region:farmyard",
+     "check": "hunt:3",
+     "point": [
+      ".pp-spot[data-key=\"hunt\"]",
+      "g.pp-region[data-region=\"farmyard\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "farewell",
+     "say": [
+      "Ha! That's the stuff.",
+      "Thorvald's sent word -- the yaks are restless and so am I. I'm away north. Here: a maul, more brews, bronze and oak for the anvil, food, and the Berserker's book. Don't read it in front of Wren, she'll never let you forget it."
+     ],
+     "finale": true
+    }
+   ]
+  },
+  "arcane": {
+   "title": "Arcane tutor",
+   "goodbye": "Read before you swing.",
+   "items": {
+    "willowwand": 1,
+    "airrune": 200,
+    "mindrune": 200,
+    "waterrune": 60,
+    "earthrune": 60,
+    "shrimps": 6
+   },
+   "kit": {
+    "id": "arcanekit",
+    "name": "Arcane's starter crate",
+    "about": "Ilse's parting gift: runes of every element, essence stones and the Arcane's book.",
+    "contents": {
+     "arcanebook": 1,
+     "airrune": 300,
+     "mindrune": 300,
+     "waterrune": 150,
+     "earthrune": 150,
+     "firerune": 150,
+     "runeessence": 60,
+     "wizardhat": 1
+    }
+   },
+   "steps": [
+    {
+     "id": "offer",
+     "say": [
+      "Ilse, the Archmage's apprentice. You've chosen the Arcane road. Shall I show you how it works, properly, before you set something on fire? I'll lend you a wand and runes.",
+      "Press Next and we'll start -- or Skip the lesson, and I'll still leave you a starter crate."
+     ]
+    },
+    {
+     "id": "hello",
+     "say": [
+      "The Archmage is busy, which is why you have me. I'm Ilse. Try to keep up.",
+      "The Arcane road: four elements, a wand or a staff, and the patience to read before you swing. Fire burns, water slows, earth breaks a guard, air topples. Every spell costs runes -- I've put a willow wand and a good stack of runes in your bag."
+     ]
+    },
+    {
+     "id": "wand",
+     "say": [
+      "A wand in your hand. Without one, your spells stay in the book."
+     ],
+     "goal": "Hold a wand",
+     "go": "pet:gear",
+     "check": "magic",
+     "point": [
+      ".pp-picker [data-pick=\"willowwand\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"weapon\"]",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "spells",
+     "say": [
+      "You take a few spells into a fight, in order, and cast the first you have runes for. Wind strike is air and mind runes. Choose your spells on the Combat tab -- more unlock as your Magic grows."
+     ],
+     "goal": "Choose your spells",
+     "go": "sheet:combat",
+     "check": "loadout",
+     "point": [
+      "[data-sp-on]",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "runes",
+     "say": [
+      "Runes run out. You make more at the rune shrines: carry essence stones to a shrine and each becomes a handful of runes. The Air shrine is in the Meadow.",
+      "Here are twenty essence stones. Go and craft some air runes -- every spell you know right now needs them."
+     ],
+     "gift": {
+      "runeessence": 20
+     },
+     "goal": "Craft runes at a shrine",
+     "go": "region:meadow",
+     "check": "skill:runecrafting",
+     "point": [
+      ".pp-spot[data-key=\"runecrafting:airshrine\"]",
+      "g.pp-region[data-region=\"meadow\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "staff",
+     "say": [
+      "Wands and staves are made at the altar in your Workshop: a willow wand is willow logs and quartz. Here are the makings."
+     ],
+     "gift": {
+      "willow": 10,
+      "quartz": 5
+     },
+     "make": "willowwand",
+     "ws": "altar",
+     "show": {},
+     "later": "The altar isn't open to you yet. When it is, a willow wand is ten willow logs and five quartz -- keep these until then. Staves come later: air, water, earth and fire, each with its own runes."
+    },
+    {
+     "id": "specials",
+     "say": [
+      "When your bar fills: a Surge (one spell with everything you've got -- likelier to land, double damage) or a Burst (three spells at once, each paying its runes). Choose one."
+     ],
+     "goal": "Choose a special",
+     "go": "sheet:combat",
+     "check": "special",
+     "point": [
+      ".pp-special",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "hunt",
+     "say": [
+      "Now read a creature. The Farmyard's hunting ground: win three fights with your spells. Watch what each element does to them."
+     ],
+     "goal": "Win 3 fights",
+     "go": "region:farmyard",
+     "check": "hunt:3",
+     "point": [
+      ".pp-spot[data-key=\"hunt\"]",
+      "g.pp-region[data-region=\"farmyard\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "farewell",
+     "say": [
+      "Adequate. More than adequate, actually -- don't tell anyone I said so.",
+      "The Archmage wants me back at the tower before the stars turn. Take this: runes of every element, essence stones, a proper hat, and the Arcane's book. The Spellbook in your Library has every spell -- read it."
+     ],
+     "finale": true
+    }
+   ]
+  },
+  "thief": {
+   "title": "Thief tutor",
+   "goodbye": "You never saw me.",
+   "items": {
+    "bronzedagger": 2,
+    "weakpoison": 3,
+    "shrimps": 6
+   },
+   "kit": {
+    "id": "thiefkit",
+    "name": "Thief's starter crate",
+    "about": "Pip's parting gift: poisons, throwing knives, bandages and the Thief's book.",
+    "contents": {
+     "thiefbook": 1,
+     "weakpoison": 5,
+     "throwingknife": 50,
+     "bandage": 10,
+     "mushroom": 10,
+     "feverfew": 10,
+     "venomsac": 2
+    }
+   },
+   "steps": [
+    {
+     "id": "offer",
+     "say": [
+      "Pip. Don't look round. You've gone the Thief's way -- want the quick tour? I'll lend you the tools of the trade.",
+      "Press Next and we'll start -- or Skip the lesson, and I'll still leave you a starter crate."
+     ]
+    },
+    {
+     "id": "hello",
+     "say": [
+      "Psst. Over here. Pip. Nell sent me -- her ledger walked off with some very angry people, and she'd like it back, so I haven't long.",
+      "A Thief fights with a dagger in each hand, or a bow, and poison on the blade. You're quick, you're quiet, and you're never where they swing. Two bronze daggers and three weak poisons are in your bag."
+     ]
+    },
+    {
+     "id": "dual",
+     "say": [
+      "A dagger in each hand: one in your weapon slot, one in your off hand. Two blades, twice the chances for the poison to bite."
+     ],
+     "goal": "Hold a dagger in each hand",
+     "go": "pet:gear",
+     "check": "dual",
+     "point": [
+      ".pp-picker [data-pick=\"bronzedagger\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"weapon\"]",
+      ".np-me",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"offhand\"]"
+     ]
+    },
+    {
+     "id": "coat",
+     "say": [
+      "Now the trick. Coat your blades: open your bag and choose Coat your blades on the weak poison. A coating lasts for a number of hits, and now and then a hit poisons."
+     ],
+     "goal": "Coat your blades",
+     "go": "pet:bag",
+     "check": "coat",
+     "point": [
+      "#np-kit [data-kitem=\"weakpoison\"]",
+      "#np-kit [data-kittab=\"bag\"]:not(.on)"
+     ]
+    },
+    {
+     "id": "poison",
+     "say": [
+      "Poisons are brewed at the apothecary table: a weak poison is five mushrooms and five feverfew. Stronger ones want a venom sac, a scorpion's stinger, bat wings or wolfsbane -- the creatures carry them. Here are the makings of a weak one."
+     ],
+     "gift": {
+      "mushroom": 5,
+      "feverfew": 5
+     },
+     "make": "weakpoison",
+     "ws": "apothecary",
+     "show": {
+      "weakpoison": 2
+     }
+    },
+    {
+     "id": "knives",
+     "say": [
+      "Throwing knives are a Thief's opener: they fly before the fight starts. One bronze bar makes a handful at the anvil."
+     ],
+     "gift": {
+      "bronzebar": 2
+     },
+     "make": "throwingknife",
+     "ws": "anvil",
+     "show": {
+      "throwingknife": 20
+     }
+    },
+    {
+     "id": "pickpocket",
+     "say": [
+      "Now the part Nell pays me for. Off the Village there's the Marketplace -- stalls, crowds, and pockets. That's Larceny: a skill of its own, and it stays yours whatever road you take later.",
+      "Go and lift a farmhand's purse. Quick hands, no staring. If you're caught it's a fine and a sore wrist, nothing worse -- but get caught three times in a quarter of an hour and Captain Hale throws you out for an hour."
+     ],
+     "goal": "Pick a pocket in the Marketplace",
+     "go": "pet:market",
+     "check": "skill:larceny",
+     "point": [
+      "[data-steal=\"farmhand\"]",
+      ".pp-spot[data-key=\"crowd\"]",
+      ".pp-spot[data-key=\"pet:market\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "specials",
+     "say": [
+      "When your bar fills: a Backstab (more than double damage, daggers only), Envenom (your next hit poisons for sure) or a Smoke bomb (they miss for two rounds). Choose one on the Combat tab."
+     ],
+     "goal": "Choose a special",
+     "go": "sheet:combat",
+     "check": "special",
+     "point": [
+      ".pp-special",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "hunt",
+     "say": [
+      "Right. The Farmyard's hunting ground. Win three -- and try not to be there when they swing."
+     ],
+     "goal": "Win 3 fights",
+     "go": "region:farmyard",
+     "check": "hunt:3",
+     "point": [
+      ".pp-spot[data-key=\"hunt\"]",
+      "g.pp-region[data-region=\"farmyard\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "farewell",
+     "say": [
+      "Not bad. Not bad at all. Nell might even like you.",
+      "I've got a ledger to find before someone reads it. Here: poisons, throwing knives, bandages, the makings of more poison, a couple of venom sacs, and the Thief's book. Don't ask where any of it came from."
+     ],
+     "finale": true
+    }
+   ]
+  },
+  "paladin": {
+   "title": "Paladin tutor",
+   "goodbye": "Stand your ground, and the light stands with you.",
+   "items": {
+    "bronzesword": 1,
+    "woodenbuckler": 1,
+    "holywater": 3,
+    "shrimps": 8
+   },
+   "kit": {
+    "id": "paladinkit",
+    "name": "Paladin's starter crate",
+    "about": "Brother Aldo's parting gift: a kite shield, holy water and its makings, and the Paladin's book.",
+    "contents": {
+     "paladinbook": 1,
+     "bronzekiteshield": 1,
+     "holywater": 5,
+     "silverbar": 2,
+     "lavender": 10,
+     "potofwater": 2,
+     "bandage": 10
+    }
+   },
+   "steps": [
+    {
+     "id": "offer",
+     "say": [
+      "Brother Aldo. You've taken the Paladin's road. Let me show you how it's walked -- I'll lend you a sword, a shield and holy water.",
+      "Press Next and we'll start -- or Skip the lesson, and I'll still leave you a starter crate."
+     ]
+    },
+    {
+     "id": "hello",
+     "say": [
+      "Peace be with you. Sister Maren keeps the chapel; I keep the door -- and today, you.",
+      "The Paladin's road: a sword, a shield, and devotion. Devotion grows each time you stand your ground, and it heals. A bronze sword, a wooden buckler and three flasks of holy water are in your bag."
+     ]
+    },
+    {
+     "id": "arms",
+     "say": [
+      "The sword in your hand and the buckler in your off hand. A shield blocks some blows outright -- and every block is devotion earned."
+     ],
+     "goal": "Hold a sword and a shield",
+     "go": "pet:gear",
+     "check": "shield",
+     "point": [
+      ".pp-picker [data-pick=\"bronzesword\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"weapon\"]",
+      ".np-me",
+      ".pp-picker [data-pick=\"woodenbuckler\"]",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"offhand\"]"
+     ]
+    },
+    {
+     "id": "buckler",
+     "say": [
+      "A buckler is two planks and soft leather at the crafting bench; kite shields are forged at the anvil. Make one -- you'll want a spare."
+     ],
+     "gift": {
+      "plank": 2,
+      "leather": 1
+     },
+     "make": "woodenbuckler",
+     "ws": "crafting",
+     "show": {}
+    },
+    {
+     "id": "bless",
+     "say": [
+      "Holy water. Bless your blade with it -- from your bag -- and for thirty hits it strikes harder, and the undead fear it."
+     ],
+     "goal": "Bless your blade",
+     "go": "pet:bag",
+     "check": "bless",
+     "point": [
+      "#np-kit [data-kitem=\"holywater\"]",
+      "#np-kit [data-kittab=\"bag\"]:not(.on)"
+     ]
+    },
+    {
+     "id": "holywater",
+     "say": [
+      "Holy water is made at the apothecary table: a silver bar, five lavender and a pot of water. Here are the makings of one flask."
+     ],
+     "gift": {
+      "silverbar": 1,
+      "lavender": 5,
+      "potofwater": 1
+     },
+     "make": "holywater",
+     "ws": "apothecary",
+     "show": {},
+     "later": "The apothecary isn't ready for holy water yet -- it wants some Alchemy behind it. Keep the silver, lavender and water; when you can, it's a silver bar, five lavender and a pot of water."
+    },
+    {
+     "id": "specials",
+     "say": [
+      "Devotion pays for Lay on hands (heal a third of your health), Smite (a holy blow -- three times as hard on the undead) or Aegis (nothing gets past your shield for three rounds). Choose one."
+     ],
+     "goal": "Choose a special",
+     "go": "sheet:combat",
+     "check": "special",
+     "point": [
+      ".pp-special",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "hunt",
+     "say": [
+      "Now hold. The Farmyard's hunting ground -- win three fights. Block, and let devotion grow."
+     ],
+     "goal": "Win 3 fights",
+     "go": "region:farmyard",
+     "check": "hunt:3",
+     "point": [
+      ".pp-spot[data-key=\"hunt\"]",
+      "g.pp-region[data-region=\"farmyard\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "farewell",
+     "say": [
+      "Well held. Maren will be glad to hear it.",
+      "The chapel door doesn't keep itself, and I've been away too long. Take this: a kite shield, holy water and the makings of more, bandages, and the Paladin's book. Go with the light."
+     ],
+     "finale": true
+    }
+   ]
+  },
+  "beastmaster": {
+   "title": "Beast Master tutor",
+   "items": {
+    "oakcrook": 1,
+    "grainfeed": 12,
+    "shrimps": 6
+   },
+   "loans": [
+    {
+     "name": "Bramble",
+     "species": "bear",
+     "colour": "brown",
+     "level": 6
+    },
+    {
+     "name": "Hoot",
+     "species": "owl",
+     "colour": "barn",
+     "level": 6
+    }
+   ],
+   "gifts": {
+    "uncommonegg": 2
+   },
+   "steps": [
+    {
+     "id": "offer",
+     "say": [
+      "Tamsin. You've taken the lead -- shall I show you how a Beast Master works? I'll lend you two of my own pack to learn with.",
+      "Press Next and we'll start -- or Skip the lesson, and I'll still leave you a starter crate."
+     ]
+    },
+    {
+     "id": "hello",
+     "say": [
+      "So you've taken the lead. Good. I'm Tamsin -- I run with a pack, and for a little while, so will you.",
+      "A Beast Master never swings a sword. Your battle pets fight, you choose their moves, feed them and swap them out -- and you never take a blow yourself. If every pet in the fight faints, you all go home.",
+      "You can't learn this with an empty pen, so I'll lend you two of mine: Bramble, my bear, and Hoot, my owl. They're in your Beast Pen now. I've put a crook, some grain feed and a few shrimps in your bag too."
+     ]
+    },
+    {
+     "id": "crook",
+     "say": [
+      "First, the crook. It's a Beast Master's weapon: it adds to your pets' attack and lets you land a small blow of your own.",
+      "Open your Character sheet (your name at the top), then Gear, click the weapon slot on your figure and choose the oak crook."
+     ],
+     "goal": "Hold the oak crook",
+     "go": "pet:gear",
+     "check": "crook",
+     "point": [
+      ".pp-picker [data-pick=\"oakcrook\"]",
+      ".pl-tabbtn[data-tab=\"gear\"]:not(.on)",
+      "[data-pane=\"gear\"] .pl-doll-slot[data-doll=\"weapon\"]",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "pen",
+     "say": [
+      "Now the Beast Pen, at your Estate. Every battle pet lives in a stall there.",
+      "Each pet has a type -- Beast, Bird, Water, Reptile, Bug or Spirit -- strong against some creatures and weak to others; the Pen shows which. Pets level up from fights, and between fights they train one stat on their own: health, attack, defence or speed.",
+      "Put Bramble or Hoot on a stat to train."
+     ],
+     "goal": "Set a pet training in the Beast Pen",
+     "go": "pet:pen",
+     "check": "train",
+     "point": [
+      ".pen-train",
+      ".pp-spot[data-key=\"pet:pen\"]",
+      "#np-pathbar [data-go=\"pet:estate\"]"
+     ]
+    },
+    {
+     "id": "feed",
+     "say": [
+      "Training only happens while there's feed in the trough -- one grain feed or hay keeps a pet going for six hours, and the troughs hold a day.",
+      "Fill the troughs with the grain feed I gave you. Later you'll make your own at the Farm's Feed store."
+     ],
+     "goal": "Fill the troughs",
+     "go": "pet:pen",
+     "check": "fed",
+     "point": [
+      "#pen-feed",
+      ".pp-spot[data-key=\"pet:pen\"]",
+      "#np-pathbar [data-go=\"pet:estate\"]"
+     ]
+    },
+    {
+     "id": "pack",
+     "say": [
+      "Your pack is who comes hunting: the first fights, and up to two more wait on the bench and step in when one faints.",
+      "You choose it on your Character sheet's Combat tab. Add Bramble and Hoot."
+     ],
+     "goal": "Put a pet in your pack",
+     "go": "sheet:combat",
+     "check": "pack",
+     "point": [
+      "[data-pane=\"combat\"] [data-packadd]",
+      ".pl-tabbtn[data-tab=\"combat\"]:not(.on)",
+      ".np-me"
+     ]
+    },
+    {
+     "id": "crookmake",
+     "say": [
+      "Crooks are made at the crafting bench: oak logs and a rope. A better wood makes a better crook. Here are the makings -- make one."
+     ],
+     "gift": {
+      "oak": 6,
+      "rope": 1
+     },
+     "make": "oakcrook",
+     "ws": "crafting",
+     "show": {}
+    },
+    {
+     "id": "moves",
+     "say": [
+      "Every pet learns its type's moves as it levels and uses up to four -- choose them on its card in the Pen. In a fight, pick a move for a pet and it keeps using it until you change it; leave it alone and it picks for itself.",
+      "In a fight you can also feed a hurt pet (that's its turn), swap in a pet from the bench, and fire a special when the bar fills: Command makes your front pet act twice, Rally heals the whole pack, and Wild call comes later.",
+      "A pet that faints rests in the Pen for a while. Food from your bag cuts its rest short."
+     ]
+    },
+    {
+     "id": "hunt",
+     "say": [
+      "Time to see them work. On the Map, open the Farmyard and click its hunting ground. Your pack does the fighting -- watch how they go, and try picking their moves."
+     ],
+     "goal": "Win 3 fights with your pack",
+     "go": "region:farmyard",
+     "check": "hunt",
+     "point": [
+      ".pp-spot[data-key=\"hunt\"]",
+      "g.pp-region[data-region=\"farmyard\"]",
+      "#np-pathbar [data-go=\"pet:world\"]"
+     ]
+    },
+    {
+     "id": "farewell",
+     "say": [
+      "Sorry, I have to depart now with my pack. Bramble and Hoot have earned a long run, and so have I.",
+      "I bid you good luck with starting your own pack. Take these two eggs as my parting gift: put them in the Hatchery, and when they hatch, send them to the Beast Pen -- it's free while they're new. And a crate for the road: feed, treats and the Beast Master's book."
+     ],
+     "finale": true
+    }
+   ],
+   "goodbye": "Good luck with your own pack!",
+   "kit": {
+    "id": "beastmasterkit",
+    "name": "Beast Master's starter crate",
+    "about": "Tamsin's parting gift: feed, treats and the Beast Master's book.",
+    "contents": {
+     "beastmasterbook": 1,
+     "grainfeed": 40,
+     "hay": 20,
+     "treat": 20,
+     "shrimps": 10
+    }
+   }
+  }
+ }
+}

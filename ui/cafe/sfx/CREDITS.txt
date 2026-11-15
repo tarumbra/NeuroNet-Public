@@ -1,0 +1,10 @@
+Sound effects -- Cam's own recordings for NeuroArcana (~/Music/NeuroArcana Sound Assets/Effects, 3 Nov 2026), each one
+take cut out by NeuroArcana's tools/cut_sounds.py (5 ms fade in, gentle fade out, peak -1 dB, mono Opus). Copied here
+as they are (3 Nov 2026, Cam: "re use some of the sound effects for that game as well"); recut them there and copy
+again. coin.ogg is the Moonstones take; victory.ogg is the battle-won take.
+click.ogg is the café's own softer cut of NeuroArcana's click (3 Nov 2026, Cam: "more relaxed"): ffmpeg lowpass 2200 Hz,
+a 12 ms fade in and a 140 ms fade out from 0.06 s, mono Opus 48k. Copy the others again, but not this one.
+sizzle.ogg, clean.ogg, plate.ogg (the "eating" recording) are the café's own: Cam's recordings in ~/Music/NeuroCafe Sound Assets/Effects
+(3 Nov 2026), cut by tools/cut_cafe_sounds.py (it says which take of each).
+blend.ogg is Cam's milkshake recording (~/Music/Neurocafe Milkshake.mp3, 8 Nov 2026): its first 2.6 s, the blender
+spinning up and a short whir, faded out over the last 0.9 s; cut by tools/cut_cafe_sounds.py blend.

@@ -1,0 +1,1874 @@
+{
+ "//": [
+  "Content for ui/pet/core/40-zzz-j-class-levels-and-talents.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+  "\"//\" keys are notes and are left out."
+ ],
+ "TALENTS": {
+  "//": "Skill trees (Battle Re-work Part 3, 2026-10-15). Each class: three branches; a node opens when the points you've spent in its branch reach its tier's gate (TALENT_RULES.gates) and its parent has a rank. 'choice': only one node of the same choice group can have ranks. fx are per rank: acc, att, maxHit, def, dodge, brace, double, stun, soak, trueStrike, magDmg, specCost (share off a special's cost), specGain (energy per fight), ammoSave, runeSave (chance a shot or cast is free), bossDmg, lowHpDmg (damage below half health), openerDmg (more damage in a fight's first round), xpCls (class xp). 'later': a branch that arrives with its class's own part.",
+  "hunter": {
+   "branches": [
+    {
+     "id": "marksman",
+     "name": "Marksman",
+     "about": "Bow damage and the aimed shot.",
+     "nodes": [
+      {
+       "id": "steadyaim",
+       "name": "Steady aim",
+       "about": "Your shots land more often: +1.5% accuracy a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "acc": 0.015
+       }
+      },
+      {
+       "id": "keeneye",
+       "name": "Keen eye",
+       "about": "+1 max hit.",
+       "ranks": 1,
+       "tier": 0,
+       "fx": {
+        "maxHit": 1
+       }
+      },
+      {
+       "id": "calledshot",
+       "name": "Called shot",
+       "about": "Your special costs 6% less a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "specCost": 0.06
+       },
+       "parent": "steadyaim"
+      },
+      {
+       "id": "piercing",
+       "name": "Piercing tips",
+       "about": "Dodging creatures dodge you less: true strike +6% a rank.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "trueStrike": 0.06
+       },
+       "parent": "keeneye"
+      },
+      {
+       "id": "secondarrow",
+       "name": "Second arrow",
+       "about": "A 1.5% chance a rank of a second arrow in the same round.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "double": 0.015
+       },
+       "choice": "hunter2",
+       "parent": "calledshot"
+      },
+      {
+       "id": "deadeye",
+       "name": "Deadeye",
+       "about": "+4% damage to bosses a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "bossDmg": 0.04
+       },
+       "choice": "hunter2",
+       "parent": "piercing"
+      },
+      {
+       "id": "huntersfocus",
+       "name": "Hunter's focus",
+       "about": "+1 special energy a fight a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "specGain": 1
+       }
+      },
+      {
+       "id": "killingshot",
+       "name": "Killing shot",
+       "about": "Keystone: +30% damage in the first round of every fight.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "openerDmg": 0.3
+       },
+       "parent": "huntersfocus",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "trapper",
+     "name": "Trapper",
+     "about": "Traps and nets: how long they hold, how much they hurt, and what a caught creature suffers.",
+     "nodes": [
+      {
+       "id": "snarecraft",
+       "name": "Snarecraft",
+       "about": "A 20% chance a rank your trap holds a round longer.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "trapRound": 0.2
+       }
+      },
+      {
+       "id": "netmender",
+       "name": "Net mender",
+       "about": "+15% a rank to pick a thrown net up again.",
+       "ranks": 2,
+       "tier": 0,
+       "fx": {
+        "netKeep": 0.15
+       }
+      },
+      {
+       "id": "barbedjaws",
+       "name": "Barbed jaws",
+       "about": "Traps hurt 20% more a rank: the snap and the bleeding.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "trapDmg": 0.2
+       },
+       "parent": "snarecraft"
+      },
+      {
+       "id": "widemesh",
+       "name": "Wide mesh",
+       "about": "A 25% chance a rank your net holds a round longer.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "netRound": 0.25
+       },
+       "parent": "netmender"
+      },
+      {
+       "id": "secondsnare",
+       "name": "Second snare",
+       "about": "Lay two traps a fight instead of one.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "traps": 1
+       },
+       "choice": "hunter4",
+       "parent": "barbedjaws"
+      },
+      {
+       "id": "ambush",
+       "name": "Ambush",
+       "about": "A trap laid as a fight opens doesn't cost your attack.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "ambush": 1
+       },
+       "choice": "hunter4",
+       "parent": "widemesh"
+      },
+      {
+       "id": "easytarget",
+       "name": "Easy target",
+       "about": "+5% accuracy a rank against a trapped or netted creature.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "heldAcc": 0.05
+       }
+      },
+      {
+       "id": "killingground",
+       "name": "Killing ground",
+       "about": "Keystone: a trapped or netted creature takes 25% more from every hit.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "heldDmg": 0.25
+       },
+       "parent": "easytarget",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "wilds",
+     "name": "Wilds",
+     "about": "Staying alive out there, and getting more from it.",
+     "nodes": [
+      {
+       "id": "lightstep",
+       "name": "Light step",
+       "about": "+2% dodge a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "dodge": 0.02
+       }
+      },
+      {
+       "id": "thickhide",
+       "name": "Thick hide",
+       "about": "+2 defence a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "def": 2
+       }
+      },
+      {
+       "id": "quivercraft",
+       "name": "Quiver craft",
+       "about": "A 6% chance a rank a fight's arrow isn't used up.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "ammoSave": 0.06
+       },
+       "parent": "lightstep"
+      },
+      {
+       "id": "fletcherspride",
+       "name": "Fletcher's pride",
+       "about": "+1 attack a rank.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "att": 1
+       },
+       "parent": "thickhide"
+      },
+      {
+       "id": "tracker",
+       "name": "Tracker",
+       "about": "+5% Hunter class xp a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "xpCls": 0.05
+       },
+       "choice": "hunter3",
+       "parent": "quivercraft"
+      },
+      {
+       "id": "rootingshot",
+       "name": "Rooting shot",
+       "about": "A 3% chance a rank the creature loses its turn.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "stun": 0.03
+       },
+       "choice": "hunter3",
+       "parent": "fletcherspride"
+      },
+      {
+       "id": "hardy",
+       "name": "Hardy",
+       "about": "Each blow you take is 1 less a rank.",
+       "ranks": 2,
+       "tier": 3,
+       "fx": {
+        "soak": 1
+       }
+      },
+      {
+       "id": "patience",
+       "name": "Ranger's patience",
+       "about": "Keystone: you take 10% less from every blow.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "brace": 0.1
+       },
+       "parent": "hardy",
+       "keystone": true
+      }
+     ]
+    }
+   ]
+  },
+  "berserker": {
+   "branches": [
+    {
+     "id": "slaughter",
+     "name": "Slaughter",
+     "about": "Damage, and the cleave.",
+     "nodes": [
+      {
+       "id": "heavyhands",
+       "name": "Heavy hands",
+       "about": "+1 max hit.",
+       "ranks": 1,
+       "tier": 0,
+       "fx": {
+        "maxHit": 1
+       }
+      },
+      {
+       "id": "brutal",
+       "name": "Brutal",
+       "about": "+1 attack a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "att": 1
+       }
+      },
+      {
+       "id": "cleaver",
+       "name": "Cleaver",
+       "about": "Your special costs 6% less a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "specCost": 0.06
+       },
+       "parent": "heavyhands"
+      },
+      {
+       "id": "momentum",
+       "name": "Momentum",
+       "about": "+10% fury a rank.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "furyGain": 0.1
+       },
+       "parent": "brutal"
+      },
+      {
+       "id": "flurry",
+       "name": "Flurry",
+       "about": "A 1.5% chance a rank of a second blow in the same round.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "double": 0.015
+       },
+       "choice": "bers2",
+       "parent": "cleaver"
+      },
+      {
+       "id": "executioner",
+       "name": "Executioner",
+       "about": "+4% damage to bosses a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "bossDmg": 0.04
+       },
+       "choice": "bers2",
+       "parent": "momentum"
+      },
+      {
+       "id": "bloodied",
+       "name": "Bloodied",
+       "about": "+4% damage a rank while you're below half health.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "lowHpDmg": 0.04
+       }
+      },
+      {
+       "id": "openingblow",
+       "name": "Opening blow",
+       "about": "Keystone: +30% damage in the first round of every fight.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "openerDmg": 0.3
+       },
+       "parent": "bloodied",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "juggernaut",
+     "name": "Juggernaut",
+     "about": "Armour and staying power.",
+     "nodes": [
+      {
+       "id": "ironskin",
+       "name": "Iron skin",
+       "about": "+2 defence a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "def": 2
+       }
+      },
+      {
+       "id": "bulwark",
+       "name": "Bulwark",
+       "about": "4% less from every blow a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "brace": 0.04
+       }
+      },
+      {
+       "id": "stagger",
+       "name": "Stagger",
+       "about": "A 3% chance a rank the creature loses its turn.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "stun": 0.03
+       },
+       "parent": "ironskin"
+      },
+      {
+       "id": "scartissue",
+       "name": "Scar tissue",
+       "about": "Each blow you take is 1 less a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "soak": 1
+       },
+       "parent": "bulwark"
+      },
+      {
+       "id": "footwork",
+       "name": "Footwork",
+       "about": "+2% dodge a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "dodge": 0.02
+       },
+       "choice": "bers3",
+       "parent": "stagger"
+      },
+      {
+       "id": "veteran",
+       "name": "Veteran",
+       "about": "+5% Berserker class xp a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "xpCls": 0.05
+       },
+       "choice": "bers3",
+       "parent": "scartissue"
+      },
+      {
+       "id": "unbowed",
+       "name": "Unbowed",
+       "about": "+1.5% accuracy a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "acc": 0.015
+       }
+      },
+      {
+       "id": "juggernautks",
+       "name": "Juggernaut",
+       "about": "Keystone: you take 10% less from every blow.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "brace": 0.1
+       },
+       "parent": "unbowed",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "bloodrage",
+     "name": "Bloodrage",
+     "about": "Fury: more of it, and what it does -- Bloodlust's healing, a second wind, and damage when you're hurt.",
+     "nodes": [
+      {
+       "id": "seething",
+       "name": "Seething",
+       "about": "+10% fury a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "furyGain": 0.1
+       }
+      },
+      {
+       "id": "thickblood",
+       "name": "Thick blood",
+       "about": "+4% damage a rank while you're below half health.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "lowHpDmg": 0.04
+       }
+      },
+      {
+       "id": "painfeeds",
+       "name": "Pain feeds",
+       "about": "+25% fury a rank from the blows you take.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "furyTake": 0.25
+       },
+       "parent": "seething"
+      },
+      {
+       "id": "secondwind",
+       "name": "Second wind",
+       "about": "Once a fight, at a fifth of your health or less, a tenth of it comes back.",
+       "ranks": 1,
+       "tier": 1,
+       "fx": {
+        "secondWind": 0.1
+       },
+       "parent": "thickblood"
+      },
+      {
+       "id": "bloodletter",
+       "name": "Bloodletter",
+       "about": "Bloodlust heals 30% of your damage, not 20%.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "lustHeal": 0.1
+       },
+       "choice": "bers4",
+       "parent": "painfeeds"
+      },
+      {
+       "id": "berserk",
+       "name": "Berserk",
+       "about": "Rage makes you take 25% more, not 50%.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "rageCut": 0.25
+       },
+       "choice": "bers4",
+       "parent": "secondwind"
+      },
+      {
+       "id": "bloodthirst",
+       "name": "Bloodthirst",
+       "about": "+1 max hit a rank while your fury is 50 or more.",
+       "ranks": 2,
+       "tier": 3,
+       "fx": {
+        "furyHit": 1
+       }
+      },
+      {
+       "id": "redmist",
+       "name": "Red mist",
+       "about": "Keystone: +15% damage while your fury is 50 or more.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "furyDmg": 0.15
+       },
+       "parent": "bloodthirst",
+       "keystone": true
+      }
+     ]
+    }
+   ]
+  },
+  "arcane": {
+   "branches": [
+    {
+     "id": "elements",
+     "name": "Elements",
+     "about": "The elements: how often fire burns, water slows, earth breaks a guard and air throws them off balance -- and how hard it all hits.",
+     "nodes": [
+      {
+       "id": "kindling",
+       "name": "Kindling",
+       "about": "Your spells' element effects are 4% likelier a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "elemChance": 0.04
+       }
+      },
+      {
+       "id": "attunement",
+       "name": "Attunement",
+       "about": "Spells do 3% more a rank -- and 3% more again on a creature weak to the element.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "magPct": 0.03,
+        "elemWeakDmg": 0.03
+       }
+      },
+      {
+       "id": "searing",
+       "name": "Searing",
+       "about": "Your burns do 1 more a round a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "burnPow": 1
+       },
+       "parent": "kindling"
+      },
+      {
+       "id": "deepfreeze",
+       "name": "Deep freeze",
+       "about": "Your slows last a round longer.",
+       "ranks": 1,
+       "tier": 1,
+       "fx": {
+        "slowRounds": 1
+       },
+       "parent": "attunement"
+      },
+      {
+       "id": "overwhelm",
+       "name": "Overwhelm",
+       "about": "Element effects 8% likelier.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "elemChance": 0.08
+       },
+       "choice": "arc4",
+       "parent": "searing"
+      },
+      {
+       "id": "spellweaver",
+       "name": "Spellweaver",
+       "about": "+1 max hit with spells a rank.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "magDmg": 1
+       },
+       "choice": "arc4",
+       "parent": "deepfreeze"
+      },
+      {
+       "id": "primalpower",
+       "name": "Primal power",
+       "about": "Spells do 2% more a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "magPct": 0.02
+       }
+      },
+      {
+       "id": "avatar",
+       "name": "Avatar of the elements",
+       "about": "Keystone: +8% spell damage to a creature that's burning, slowed, broken or off balance.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "elemDmg": 0.08
+       },
+       "parent": "primalpower",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "battlemage",
+     "name": "Battlemage",
+     "about": "Fighting up close, and the staff.",
+     "nodes": [
+      {
+       "id": "wardedrobes",
+       "name": "Warded robes",
+       "about": "+2 defence a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "def": 2
+       }
+      },
+      {
+       "id": "blink",
+       "name": "Blink",
+       "about": "+2% dodge a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "dodge": 0.02
+       }
+      },
+      {
+       "id": "arcaneshield",
+       "name": "Arcane shield",
+       "about": "4% less from every blow a rank.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "brace": 0.04
+       },
+       "parent": "wardedrobes"
+      },
+      {
+       "id": "stafftraining",
+       "name": "Staff training",
+       "about": "+1 attack a rank (your bash, and your aim).",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "att": 1
+       },
+       "parent": "blink"
+      },
+      {
+       "id": "hex",
+       "name": "Hex",
+       "about": "A 3% chance a rank the creature loses its turn.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "stun": 0.03
+       },
+       "choice": "arc3",
+       "parent": "arcaneshield"
+      },
+      {
+       "id": "manaskin",
+       "name": "Mana skin",
+       "about": "Each blow you take is 1 less a rank.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "soak": 1
+       },
+       "choice": "arc3",
+       "parent": "stafftraining"
+      },
+      {
+       "id": "steadyhands",
+       "name": "Steady hands",
+       "about": "Dodging creatures dodge you less: true strike +6% a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "trueStrike": 0.06
+       }
+      },
+      {
+       "id": "spellblade",
+       "name": "Spellblade",
+       "about": "Keystone: +30% damage in the first round of every fight.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "openerDmg": 0.3
+       },
+       "parent": "steadyhands",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "arcana",
+     "name": "Arcana",
+     "about": "Runes, power and the surge.",
+     "nodes": [
+      {
+       "id": "runethrift",
+       "name": "Rune thrift",
+       "about": "A 6% chance a rank a cast takes no runes.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "runeSave": 0.06
+       }
+      },
+      {
+       "id": "focus",
+       "name": "Focus",
+       "about": "+1.5% accuracy a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "acc": 0.015
+       }
+      },
+      {
+       "id": "surgemastery",
+       "name": "Surge mastery",
+       "about": "Your special costs 6% less a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "specCost": 0.06
+       },
+       "parent": "runethrift"
+      },
+      {
+       "id": "wellspring",
+       "name": "Wellspring",
+       "about": "+1 special energy a fight a rank.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "specGain": 1
+       },
+       "parent": "focus"
+      },
+      {
+       "id": "potency",
+       "name": "Potency",
+       "about": "+1 spell max hit a rank.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "magDmg": 1
+       },
+       "choice": "arc2",
+       "parent": "surgemastery"
+      },
+      {
+       "id": "fourthsigil",
+       "name": "Fourth sigil",
+       "about": "A 4th spell in your loadout.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "slot": 1
+       },
+       "choice": "arc2",
+       "parent": "wellspring"
+      },
+      {
+       "id": "overload",
+       "name": "Overload",
+       "about": "+4% damage to bosses a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "bossDmg": 0.04
+       }
+      },
+      {
+       "id": "twincast",
+       "name": "Twin cast",
+       "about": "Keystone: a 6% chance of a second cast in the same round.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "double": 0.06
+       },
+       "parent": "overload",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "necromancy",
+     "name": "Necromancy",
+     "needs": "necro",
+     "about": "The Blood Book's magic: the risen, and the spells that keep them. Opens when Sorceress Nyx teaches you (Part 13; V8).",
+     "nodes": [
+      {
+       "id": "gravewhispers",
+       "name": "Grave whispers",
+       "about": "Your risen hit 5% harder a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "risenDmg": 0.05
+       }
+      },
+      {
+       "id": "bonemending",
+       "name": "Bone mending",
+       "about": "Mend the dead heals 10% more a rank.",
+       "ranks": 2,
+       "tier": 0,
+       "fx": {
+        "mendPct": 0.1
+       }
+      },
+      {
+       "id": "secondrisen",
+       "name": "Second risen",
+       "about": "Two risen in a fight at once.",
+       "ranks": 1,
+       "tier": 1,
+       "fx": {
+        "risenSlots": 1
+       },
+       "parent": "gravewhispers"
+      },
+      {
+       "id": "deathless",
+       "name": "Deathless",
+       "about": "Your risen take 8% less a rank.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "risenDr": 0.08
+       },
+       "parent": "bonemending"
+      },
+      {
+       "id": "lingeringcurse",
+       "name": "Lingering curse",
+       "about": "Wither and Grave chill last a round longer a rank.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "curseRounds": 1
+       }
+      },
+      {
+       "id": "thirdrisen",
+       "name": "Third risen",
+       "about": "Three risen at once.",
+       "ranks": 1,
+       "tier": 3,
+       "fx": {
+        "risenSlots": 1
+       },
+       "choice": "nec3",
+       "parent": "secondrisen"
+      },
+      {
+       "id": "sacrifice",
+       "name": "Sacrifice",
+       "about": "Give up a risen place for your own power: your spells hit 15% harder.",
+       "ranks": 1,
+       "tier": 3,
+       "fx": {
+        "risenSlots": -1,
+        "magPct": 0.15
+       },
+       "choice": "nec3",
+       "parent": "secondrisen"
+      },
+      {
+       "id": "eternalservants",
+       "name": "Eternal servants",
+       "about": "Keystone: your first risen rises on its own as a fight opens.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "autoRaise": 1
+       },
+       "keystone": true
+      }
+     ]
+    }
+   ]
+  },
+  "thief": {
+   "branches": [
+    {
+     "id": "venom",
+     "name": "Venom",
+     "about": "Poison: how often, how strong, how long -- and how many at once.",
+     "nodes": [
+      {
+       "id": "toxic",
+       "name": "Toxic",
+       "about": "Your coated hits poison 5% more often a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "poisonChance": 0.05
+       }
+      },
+      {
+       "id": "potent",
+       "name": "Potent",
+       "about": "Your poisons do 1 more a round a rank.",
+       "ranks": 2,
+       "tier": 0,
+       "fx": {
+        "poisonPow": 1
+       }
+      },
+      {
+       "id": "lingering",
+       "name": "Lingering",
+       "about": "Your poisons last a round longer a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "poisonRounds": 1
+       },
+       "parent": "toxic"
+      },
+      {
+       "id": "thickcoat",
+       "name": "Thick coat",
+       "about": "A coating lasts 25% more hits a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "coatLast": 0.25
+       },
+       "parent": "potent"
+      },
+      {
+       "id": "virulence",
+       "name": "Virulence",
+       "about": "Poisons stack: up to three on a creature at once.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "poisonStack": 2
+       },
+       "choice": "th2",
+       "parent": "lingering"
+      },
+      {
+       "id": "numbing",
+       "name": "Numbing",
+       "about": "A hit on a poisoned creature may stun it (5%).",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "poisonStun": 0.05
+       },
+       "choice": "th2",
+       "parent": "thickcoat"
+      },
+      {
+       "id": "rot",
+       "name": "Rot",
+       "about": "+4% damage a rank to a poisoned creature.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "poisonedDmg": 0.04
+       }
+      },
+      {
+       "id": "blackblood",
+       "name": "Black blood",
+       "about": "Keystone: your poisons hit half as hard again.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "poisonMult": 0.5
+       },
+       "parent": "rot",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "shadows",
+     "name": "Shadows",
+     "about": "Not being hit, striking first -- and a little more from every purse.",
+     "nodes": [
+      {
+       "id": "nimble",
+       "name": "Nimble",
+       "about": "+2% dodge a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "dodge": 0.02
+       }
+      },
+      {
+       "id": "lightfingers",
+       "name": "Light fingers",
+       "about": "+5% coins from kills a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "coinPct": 0.05
+       }
+      },
+      {
+       "id": "ambusher",
+       "name": "Ambusher",
+       "about": "+15% damage in the first round of a fight a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "openerDmg": 0.15
+       },
+       "parent": "nimble"
+      },
+      {
+       "id": "thickersmoke",
+       "name": "Thicker smoke",
+       "about": "Your smoke bomb lasts a round longer.",
+       "ranks": 1,
+       "tier": 1,
+       "fx": {
+        "smokeRounds": 1
+       },
+       "parent": "lightfingers"
+      },
+      {
+       "id": "evasion",
+       "name": "Evasion",
+       "about": "+5% dodge.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "dodge": 0.05
+       },
+       "choice": "th3",
+       "parent": "ambusher"
+      },
+      {
+       "id": "opportunist",
+       "name": "Opportunist",
+       "about": "+10% damage to a creature that's caught, stunned or slowed.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "heldDmg": 0.1
+       },
+       "choice": "th3",
+       "parent": "thickersmoke"
+      },
+      {
+       "id": "vanish",
+       "name": "Vanish",
+       "about": "+2 defence a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "def": 2
+       }
+      },
+      {
+       "id": "shadowstep",
+       "name": "Shadowstep",
+       "about": "Keystone: when you dodge a blow, you strike back.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "counter": 1
+       },
+       "parent": "vanish",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "blades",
+     "name": "Blades",
+     "about": "Two daggers, and knives thrown.",
+     "nodes": [
+      {
+       "id": "quickhands",
+       "name": "Quick hands",
+       "about": "+1 attack a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "att": 1
+       }
+      },
+      {
+       "id": "keenedge",
+       "name": "Keen edge",
+       "about": "+1 max hit.",
+       "ranks": 1,
+       "tier": 0,
+       "fx": {
+        "maxHit": 1
+       }
+      },
+      {
+       "id": "twinfangs",
+       "name": "Twin fangs",
+       "about": "Each of your dual-dagger stabs hits 5% harder a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "dualDmg": 0.05
+       },
+       "parent": "quickhands"
+      },
+      {
+       "id": "knifethrower",
+       "name": "Knife thrower",
+       "about": "Your thrown knives hit for 2 more a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "throwDmg": 2
+       },
+       "parent": "keenedge"
+      },
+      {
+       "id": "flurryofsteel",
+       "name": "Flurry of steel",
+       "about": "A 3% chance a rank of an extra blow in a round.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "double": 0.03
+       },
+       "choice": "th4",
+       "parent": "twinfangs"
+      },
+      {
+       "id": "cutthroat",
+       "name": "Cutthroat",
+       "about": "Your special costs 8% less.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "specCost": 0.08
+       },
+       "choice": "th4",
+       "parent": "knifethrower"
+      },
+      {
+       "id": "precision",
+       "name": "Precision",
+       "about": "+2% accuracy a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "acc": 0.02
+       }
+      },
+      {
+       "id": "thousandcuts",
+       "name": "Thousand cuts",
+       "about": "Keystone: every hit has a 10% chance to make it bleed.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "bleedChance": 0.1
+       },
+       "parent": "precision",
+       "keystone": true
+      }
+     ]
+    }
+   ]
+  },
+  "paladin": {
+   "branches": [
+    {
+     "id": "crusade",
+     "name": "Crusade",
+     "about": "The sword: damage, Smite, and two blades.",
+     "nodes": [
+      {
+       "id": "zeal",
+       "name": "Zeal",
+       "about": "+1 attack a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "att": 1
+       }
+      },
+      {
+       "id": "edge",
+       "name": "True edge",
+       "about": "+1 max hit a rank.",
+       "ranks": 2,
+       "tier": 0,
+       "fx": {
+        "maxHit": 1
+       }
+      },
+      {
+       "id": "righteous",
+       "name": "Righteous",
+       "about": "Smite hits 15% harder a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "smiteDmg": 0.15
+       },
+       "parent": "zeal"
+      },
+      {
+       "id": "twinblades",
+       "name": "Twin blades",
+       "about": "With a sword in each hand, each blow hits 5% harder a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "twinDmg": 0.05
+       },
+       "parent": "edge"
+      },
+      {
+       "id": "crusader",
+       "name": "Crusader",
+       "about": "+4% damage to bosses a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "bossDmg": 0.04
+       },
+       "choice": "pal3",
+       "parent": "righteous"
+      },
+      {
+       "id": "judgement",
+       "name": "Judgement",
+       "about": "+10% damage while your devotion is 50 or more.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "devDmg": 0.1
+       },
+       "choice": "pal3",
+       "parent": "twinblades"
+      },
+      {
+       "id": "valor",
+       "name": "Valor",
+       "about": "+12% damage in the first round of a fight a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "openerDmg": 0.12
+       }
+      },
+      {
+       "id": "avenger",
+       "name": "Avenger",
+       "about": "Keystone: after you're hit, your next blows hit 50% harder.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "avenge": 0.5
+       },
+       "parent": "valor",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "bulwark",
+     "name": "Bulwark",
+     "about": "The shield: blocking, armour and the bash.",
+     "nodes": [
+      {
+       "id": "shieldwall",
+       "name": "Shield wall",
+       "about": "You block 2% more a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "block": 0.02
+       }
+      },
+      {
+       "id": "plated",
+       "name": "Plated",
+       "about": "+2 defence a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "def": 2
+       }
+      },
+      {
+       "id": "heavybash",
+       "name": "Heavy bash",
+       "about": "Your shield bash hits 2 harder a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "bashDmg": 2
+       },
+       "parent": "shieldwall"
+      },
+      {
+       "id": "bracing",
+       "name": "Bracing",
+       "about": "4% less from every blow a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "brace": 0.04
+       },
+       "parent": "plated"
+      },
+      {
+       "id": "quickbash",
+       "name": "Quick bash",
+       "about": "Your shield arm is ready a round sooner.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "bashCd": 1
+       },
+       "choice": "pal2",
+       "parent": "heavybash"
+      },
+      {
+       "id": "longstun",
+       "name": "Ringing blow",
+       "about": "Your shield bash stuns a round longer.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "bashStun": 1
+       },
+       "choice": "pal2",
+       "parent": "bracing"
+      },
+      {
+       "id": "steadfast",
+       "name": "Steadfast",
+       "about": "Each blow you take is 1 less a rank.",
+       "ranks": 2,
+       "tier": 3,
+       "fx": {
+        "soak": 1
+       }
+      },
+      {
+       "id": "bastion",
+       "name": "Bastion",
+       "about": "Keystone: every blow you block gives you 3 health.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "blockHeal": 3
+       },
+       "parent": "steadfast",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "grace",
+     "name": "Grace",
+     "about": "Devotion, healing -- and staying on your feet.",
+     "nodes": [
+      {
+       "id": "devout",
+       "name": "Devout",
+       "about": "+10% devotion a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "devGain": 0.1
+       }
+      },
+      {
+       "id": "firstaid",
+       "name": "First aid",
+       "about": "Food heals you 10% more a rank.",
+       "ranks": 2,
+       "tier": 0,
+       "fx": {
+        "foodHeal": 0.1
+       }
+      },
+      {
+       "id": "healinghands",
+       "name": "Healing hands",
+       "about": "Lay on hands heals 5% more of your health a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "layHeal": 0.05
+       },
+       "parent": "devout"
+      },
+      {
+       "id": "faith",
+       "name": "Faith",
+       "about": "Your specials cost 6% less a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "specCost": 0.06
+       },
+       "parent": "firstaid"
+      },
+      {
+       "id": "longaegis",
+       "name": "Long aegis",
+       "about": "Aegis lasts a round longer.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "aegisRounds": 1
+       },
+       "choice": "pal4",
+       "parent": "healinghands"
+      },
+      {
+       "id": "mercy",
+       "name": "Mercy",
+       "about": "Lay on hands doesn't take your turn.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "layFree": 1
+       },
+       "choice": "pal4",
+       "parent": "faith"
+      },
+      {
+       "id": "serenity",
+       "name": "Serenity",
+       "about": "While your devotion is 50 or more, 1 health back a round a rank.",
+       "ranks": 2,
+       "tier": 3,
+       "fx": {
+        "devRegen": 1
+       }
+      },
+      {
+       "id": "sanctuary",
+       "name": "Sanctuary",
+       "about": "Keystone: once a fight, the blow that would fell you is blocked.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "saveOnce": 1
+       },
+       "parent": "serenity",
+       "keystone": true
+      }
+     ]
+    }
+   ]
+  },
+  "beastmaster": {
+   "branches": [
+    {
+     "id": "bond",
+     "name": "Bond",
+     "about": "Your pets' damage and health, and more of them in a fight.",
+     "nodes": [
+      {
+       "id": "fiercebond",
+       "name": "Fierce bond",
+       "about": "Your pets hit 4% harder a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "petDmg": 0.04
+       }
+      },
+      {
+       "id": "bmthickhide",
+       "name": "Thick hide",
+       "about": "Your pets have 5% more health a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "petHp": 0.05
+       }
+      },
+      {
+       "id": "packtactics",
+       "name": "Pack tactics",
+       "about": "Your pets land 3% more often a rank.",
+       "ranks": 3,
+       "tier": 1,
+       "fx": {
+        "petAcc": 0.03
+       },
+       "parent": "fiercebond"
+      },
+      {
+       "id": "secondbeast",
+       "name": "Second beast",
+       "about": "Two pets in every fight.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "packSize": 1
+       },
+       "parent": "packtactics"
+      },
+      {
+       "id": "sharedstrength",
+       "name": "Shared strength",
+       "about": "Your pets hit 5% harder a rank.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "petDmg": 0.05
+       },
+       "choice": "bm2",
+       "parent": "bmthickhide"
+      },
+      {
+       "id": "bmshieldwall",
+       "name": "Shield wall",
+       "about": "Your pets take 5% less a rank.",
+       "ranks": 2,
+       "tier": 2,
+       "fx": {
+        "petDr": 0.05
+       },
+       "choice": "bm2",
+       "parent": "bmthickhide"
+      },
+      {
+       "id": "rallycry",
+       "name": "Rally cry",
+       "about": "+1 special energy a fight a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "specGain": 1
+       }
+      },
+      {
+       "id": "packleader",
+       "name": "Pack leader",
+       "about": "Keystone: three pets in every fight.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "packSize": 1
+       },
+       "parent": "rallycry",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "wild",
+     "name": "Wild",
+     "about": "Moves and type matchups.",
+     "nodes": [
+      {
+       "id": "instinct",
+       "name": "Natural instinct",
+       "about": "A move strong against the creature's type hits 10% harder a rank.",
+       "ranks": 2,
+       "tier": 0,
+       "fx": {
+        "typeDmg": 0.1
+       }
+      },
+      {
+       "id": "quicklearner",
+       "name": "Quick learner",
+       "about": "Your pets earn 10% more battle xp a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "petXp": 0.1
+       }
+      },
+      {
+       "id": "venomous",
+       "name": "Venomous",
+       "about": "Your pets' moves put their effects on 10% more often a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "moveFx": 0.1
+       },
+       "parent": "instinct"
+      },
+      {
+       "id": "deepreserves",
+       "name": "Deep reserves",
+       "about": "Moves used twice a fight can be used once more.",
+       "ranks": 1,
+       "tier": 1,
+       "fx": {
+        "moveUses": 1
+       },
+       "parent": "quicklearner"
+      },
+      {
+       "id": "predator",
+       "name": "Predator",
+       "about": "Your pets hit bosses 5% harder a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "petBoss": 0.05
+       },
+       "choice": "bm3",
+       "parent": "venomous"
+      },
+      {
+       "id": "survivor",
+       "name": "Survivor",
+       "about": "Your pets' heals heal 10% more a rank.",
+       "ranks": 3,
+       "tier": 2,
+       "fx": {
+        "petHeal": 0.1
+       },
+       "choice": "bm3",
+       "parent": "venomous"
+      },
+      {
+       "id": "wildheart",
+       "name": "Wild heart",
+       "about": "Your pets dodge 2% more a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "petDodge": 0.02
+       }
+      },
+      {
+       "id": "apex",
+       "name": "Apex",
+       "about": "Keystone: a move strong against the creature's type hits 25% harder again.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "typeDmg": 0.25
+       },
+       "parent": "wildheart",
+       "keystone": true
+      }
+     ]
+    },
+    {
+     "id": "keeper",
+     "name": "Keeper",
+     "about": "The Pen: training, rest, stalls.",
+     "nodes": [
+      {
+       "id": "goodfeed",
+       "name": "Good feed",
+       "about": "Idle training goes 15% quicker a rank.",
+       "ranks": 2,
+       "tier": 0,
+       "fx": {
+        "trainPct": 0.15
+       }
+      },
+      {
+       "id": "softstraw",
+       "name": "Soft straw",
+       "about": "Fainted pets rest 10% shorter a rank.",
+       "ranks": 3,
+       "tier": 0,
+       "fx": {
+        "restCut": 0.1
+       }
+      },
+      {
+       "id": "tending",
+       "name": "Tending",
+       "about": "Food and potions heal your pets 10% more a rank.",
+       "ranks": 2,
+       "tier": 1,
+       "fx": {
+        "petFood": 0.1
+       },
+       "parent": "softstraw"
+      },
+      {
+       "id": "handling",
+       "name": "Animal handling",
+       "about": "Your companion's help in a fight: +1 max hit.",
+       "ranks": 1,
+       "tier": 1,
+       "fx": {
+        "compHit": 1
+       },
+       "parent": "goodfeed"
+      },
+      {
+       "id": "bigpen",
+       "name": "Big pen",
+       "about": "Three more stalls.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "stalls": 3
+       },
+       "choice": "bm4",
+       "parent": "handling"
+      },
+      {
+       "id": "quickrest",
+       "name": "Quick rest",
+       "about": "Fainted pets rest 15% shorter.",
+       "ranks": 1,
+       "tier": 2,
+       "fx": {
+        "restCut": 0.15
+       },
+       "choice": "bm4",
+       "parent": "tending"
+      },
+      {
+       "id": "fieldrations",
+       "name": "Field rations",
+       "about": "Your pets heal 1% more a minute between fights a rank.",
+       "ranks": 3,
+       "tier": 3,
+       "fx": {
+        "petRegen": 0.01
+       }
+      },
+      {
+       "id": "whisperer",
+       "name": "Beast whisperer",
+       "about": "Keystone: idle training takes pets to battle level 40.",
+       "ranks": 1,
+       "tier": 4,
+       "fx": {
+        "trainCap": 10
+       },
+       "parent": "fieldrations",
+       "keystone": true
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "TALENT_RULES": {
+  "//": "gates: points spent in a branch to open each tier (0..4). pointsEvery: a point every this many class levels (1 every 2: with three branches a class you can't fill them all -- a choice, as in Diablo. Revisited with every class's third branch, after Part 6). Respec: free to freeRespecTo class level, then respecPerLevel coins a class level, x (1 + respecStep x times you've paid for one).",
+  "gates": [
+   0,
+   3,
+   6,
+   9,
+   12
+  ],
+  "pointsEvery": 2,
+  "freeRespecTo": 15,
+  "respecPerLevel": 100,
+  "respecStep": 0.5,
+  "builds": 2,
+  "caps": {
+   "acc": 0.3,
+   "dodge": 0.5,
+   "brace": 0.5,
+   "double": 0.3,
+   "stun": 0.35,
+   "trueStrike": 1,
+   "specCost": 0.5,
+   "ammoSave": 0.5,
+   "runeSave": 0.5,
+   "bossDmg": 0.5,
+   "lowHpDmg": 0.5,
+   "netKeep": 0.45,
+   "block": 0.3,
+   "petDodge": 0.2,
+   "petDr": 0.3,
+   "restCut": 0.5,
+   "risenDr": 0.3
+  }
+ }
+}

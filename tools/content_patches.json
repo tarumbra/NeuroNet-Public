@@ -1,0 +1,10 @@
+{
+  "about": "Parts of ui/pet/core/ that change content an earlier part defined, and why each is a rule rather than data. Adding new things is fine and isn't listed. tools/content_patches.js --check (run by test/test_pet_content.js) fails on any part not here: fold a one-off change into the first definition instead. 2026-10-10, audit H-1.",
+  "parts": {
+    "04-the-isle-without-crafters.js": "A conversion: the crafters' recipe lists become your benches (ore into bars, levels, fees, needles used up) by toBars/mine, so the rule stays readable instead of 300 hand-copied recipes.",
+    "29-the-notice-board.js": "A conversion: every potion moves from the Herb table to the Apothecary (sorted by level); the Herb table identifies herbs.",
+    "40-the-pace-of-gathering.js": "Derived: spot times from level, xp/rare/bait/prices scaled by the pace, crafting needs x5 (2026-10-09).",
+    "40-z-the-economy.js": "Derived: valuables priced by tier, side finds by rarity, common valuables made rarer, recipes never sold at a loss (2026-10-10).",
+    "40-zz-recipe-xp.js": "Derived: every recipe's xp from one rule, its materials' gathering hours (audit M-4, 2026-10-10)."
+  }
+}

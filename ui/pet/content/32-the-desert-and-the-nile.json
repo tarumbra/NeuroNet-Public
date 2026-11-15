@@ -1,0 +1,133 @@
+{
+  "//": [
+    "Content for ui/pet/core/32-the-desert-and-the-nile.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "REGIONS.desert": {
+    "name": "Desert",
+    "x": 88,
+    "y": 64,
+    "level": 44,
+    "needs": {"item": "desertkit", "skills": {"crafting": 40}, "how": "to cross the sands"},
+    "blurb": "Dunes to the edge of the sky, an oasis -- and a pyramid that keeps what goes in."
+  },
+  "REGIONS.nile": {
+    "name": "Nile",
+    "x": 93,
+    "y": 74,
+    "level": 50,
+    "needs": {"item": "desertkit", "skills": {"fishing": 45}, "how": "to follow the river through the sands"},
+    "blurb": "A green ribbon through the desert: reeds, hippos -- and something old and scaled that rules it."
+  },
+  "SECRETS.desert": [
+    {
+      "id": "lostcaravan",
+      "kind": "cache",
+      "name": "A lost caravan",
+      "text": "Half-buried bales, and a carved stone among them",
+      "coins": 2500,
+      "items": {"glyphankh": 1, "ironcrate": 1}
+    },
+    {"id": "sunbaked", "kind": "egg", "name": "In a dune's shadow", "text": "Warm as a hearth stone, pale as milk", "egg": "sunbakedegg"}
+  ],
+  "SECRETS.nile": [
+    {
+      "id": "sunkenbarge",
+      "kind": "cache",
+      "name": "A sunken barge",
+      "text": "Gold in the silt -- and a tablet with a locust on it",
+      "coins": 3000,
+      "items": {"glyphlocust": 1}
+    },
+    {"id": "reedwoven", "kind": "egg", "name": "A basket in the reeds", "text": "Someone hid it well, a long time ago", "egg": "reedwovenegg"}
+  ],
+  "PEOPLE.desert": {
+    "id": "amara",
+    "name": "Nomad Amara",
+    "look": {"skin": 3, "hair": 1, "outfit": 3},
+    "says": "The sand remembers everything. So do I.",
+    "quests": [
+      {
+        "id": "caravan",
+        "name": "Water for the caravan",
+        "text": "\"My camels are thirsty and my people are hungry. Dates, and fish from the oasis.\"",
+        "needs": [{"bring": {"dates": 20, "tilapia": 10}}],
+        "reward": {"coins": 2500, "xp": {"foraging": 1200, "fishing": 1200}}
+      },
+      {
+        "id": "riddle",
+        "name": "The riddle of the Sphinx",
+        "text": "\"She asks a question and eats the wrong answers. Give her yours.\"",
+        "needs": [{"boss": "desert"}],
+        "reward": {"coins": 4000, "items": {"ancientchest": 1}, "xp": {"attack": 2000}}
+      }
+    ]
+  },
+  "PEOPLE.nile": {
+    "id": "kemet",
+    "name": "Kemet the fisher",
+    "look": {"skin": 2, "hair": 3, "outfit": 1},
+    "says": "The river gives. The river takes. Mostly it bites.",
+    "quests": [
+      {
+        "id": "reeds",
+        "name": "Reeds for a boat",
+        "text": "\"My boat's more hole than boat. Papyrus, and a few lotus for luck.\"",
+        "needs": [{"bring": {"papyrus": 25, "lotus": 5}}],
+        "reward": {"coins": 3000, "xp": {"crafting": 1500}}
+      },
+      {
+        "id": "oldking",
+        "name": "The old king",
+        "text": "\"He's taken nets, boats -- my brother's leg. Send him back to the deep.\"",
+        "needs": [{"boss": "nile"}],
+        "reward": {"coins": 5000, "items": {"ancientchest": 1}, "xp": {"defence": 2500}}
+      }
+    ]
+  },
+  "more BOOSTS": {
+    "owl": "enchanting",
+    "scorpion": "attack",
+    "viper": "maxhit",
+    "camelspider": "digging",
+    "camel": "construction",
+    "jackal": "ranged",
+    "alligator": "defence",
+    "flamingo": "fishing",
+    "hippo": "farming",
+    "ibis": "herblore",
+    "mummy": "runecrafting",
+    "locust": "foraging"
+  },
+  "more PET_ATTACKS": {
+    "owl": "pierce",
+    "scorpion": "pierce",
+    "viper": "pierce",
+    "camelspider": "pierce",
+    "camel": "crush",
+    "jackal": "pierce",
+    "alligator": "slash",
+    "flamingo": "pierce",
+    "hippo": "crush",
+    "ibis": "pierce",
+    "mummy": "crush",
+    "locust": "slash"
+  },
+  "AREA_COINS.desert": [6, 12],
+  "AREA_COINS.nile": [8, 15],
+  "BOSS_PURSE.desert": [900, 1600],
+  "BOSS_PURSE.nile": [1100, 1900],
+  "BOSS_UNLOCKS.sphinx": [[10, "cat/sphynx", "desert"]],
+  "BOSS_UNLOCKS.kingnile": [[15, "alligator/king", "nile"]],
+  "WEAPONS.khopesh": ["slash", "adamant"],
+  "GLYPHS": ["glyphsun", "glyphserpent", "glyphscarab", "glyphreed", "glyphankh", "glyphlocust"],
+  "GLYPH_FROM": {
+    "glyphsun": "the Sphinx",
+    "glyphserpent": "the King of the Nile",
+    "glyphscarab": "the Buried tomb (digging)",
+    "glyphreed": "the Nile's riverbank mud (digging)",
+    "glyphankh": "a secret of the Desert",
+    "glyphlocust": "a secret of the Nile"
+  },
+  "RESEARCH.plague": {"name": "The plague tablet", "says": "six glyphs, read together"}
+}

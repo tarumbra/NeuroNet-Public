@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeuroFarm</title>
+<!-- NeuroFarm, the farming game, in its own window (neurofarm.py, 2026-10-07). It sits at the top of ui/ so it
+     can use NeuroPets' pictures (pet/petart.js) as well as its own (farm/). -->
+<link rel="stylesheet" href="farm/farm.css">
+<link rel="stylesheet" href="farm/theme.css">
+</head>
+<body class="nf">
+<div class="nf-app">
+  <nav class="nf-rail" aria-label="NeuroFarm">
+    <div class="nf-logo"><img alt="" id="nf-logo"></div>
+    <div class="nf-nav" id="nf-nav"></div>
+  </nav>
+  <div class="nf-stage">
+    <header class="nf-hud">
+      <div class="nf-title"><b id="nf-farm">NeuroFarm</b><small id="nf-farmer"></small></div>
+      <div class="nf-stats" id="nf-stats"></div>
+    </header>
+    <main class="nf-main" id="nf-main"></main>
+  </div>
+</div>
+<div class="nf-toasts" id="nf-toasts" aria-live="polite"></div>
+<script src="farm/farmcore.js"></script>
+<script src="pet/petart.js"></script>
+<script src="farm/farmart.js"></script>
+<script src="farm/art/manifest.js"></script>
+<script src="farm/farm.js"></script>
+</body>
+</html>

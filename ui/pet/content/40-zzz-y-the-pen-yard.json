@@ -1,0 +1,8 @@
+{
+ "PEN_YARD": {
+  "//": "The Beast Pen's later upgrades (note 06: 'Training dummy and sparring ring (later upgrades): spar two of your own pets ... No faints, little XP'; built after Part 14). Moves have no xp of their own in the game (they come with battle level), so sparring gives a little battle xp: `spar.hours` of the Pen's training rate to each, once every `spar.every` hours a pet, never past the Pen's training cap. The dummy makes idle training `dummy.trainPct` quicker.",
+  "dummy": {"name": "Training dummy", "construction": 25, "coins": 6000, "items": {"plank": 20, "rope": 4}, "trainPct": 0.15},
+  "ring": {"name": "Sparring ring", "construction": 35, "coins": 12000, "items": {"plank": 40, "rope": 10}},
+  "spar": {"hours": 2, "every": 4}
+ }
+}

@@ -1,0 +1,55 @@
+/* ==========================================================================
+   Stuff — see stuff.js. The lists reuse Personal Effects' own classes
+   (home/effects.css: .pe-*, and the board list's .bd-*); these are the parts
+   that are new, or that live in a dialog, outside the page area those
+   classes are scoped to.
+   ========================================================================== */
+.st-back { margin: 0 0 8px; }
+.st-jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px; }
+.st-jump .chip { display: inline-flex; align-items: center; gap: 6px; }
+.st-jump .pe-count, .st-picks .pe-count {
+  font-size: 0.72rem; color: var(--muted, var(--text-faint));
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tick what to print or export -- in the dialog. */
+.st-picks {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px; max-height: 50vh; overflow-y: auto; padding: 2px;
+}
+.st-picks .pe-pick {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px;
+  cursor: pointer; font-size: 0.875rem;
+}
+.st-picks .pe-pick span:first-of-type { flex: 1; min-width: 0; }
+.st-picks .pe-pick:hover { border-color: var(--accent); }
+.st-picks .pe-pick:has(input:checked) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.st-picks .pe-pick input { accent-color: var(--accent); margin: 0; }
+.pe-pick-tools { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.pe-pick-tools .stamp { margin-left: auto; }
+
+/* Media: Covers / List (2026-10-02), in the head of both. */
+.st-view { display: inline-flex; gap: 4px; margin: 2px 0 6px; }
+/* with the other view controls, at the end of the action row (2026-10-06,
+   the audit: it sat between the title and the description) */
+.bd-actions .st-view { margin: 0 0 0 auto; align-self: center; }
+
+/* A cover, in Media's Add / Edit dialog -- chosen from Photos right there
+   (see coverField in shelf.js for why not in a dialog of its own). */
+.sh-pick { display: flex; gap: 14px; align-items: flex-start; margin: 2px 0 6px; }
+.sh-pick .sh-pick-prev { flex: 0 0 auto; width: 88px; max-width: 88px; cursor: default; }
+.sh-pick .sh-pick-prev.sh-snes, .sh-pick .sh-pick-prev.sh-n64 { width: 110px; max-width: 110px; }
+.sh-pick-btns [hidden] { display: none; }
+.sh-pick-prev .sh-plain { padding: 6px 6px 0; }
+.sh-pick-prev .sh-plain i { margin: 0 -6px; padding: 3px 6px; }
+.sh-pick-prev .sh-plain em { font-size: 3.5rem; }
+.sh-pick-prev .sh-plain b { font-size: 0.7rem; }
+.sh-pick-side { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sh-pick-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.sh-pick-note { margin: 0; }
+.sh-pick-lib { margin: 4px 0 8px; }
+.sh-pick-grid { max-height: 240px; overflow-y: auto; margin-top: 8px; }

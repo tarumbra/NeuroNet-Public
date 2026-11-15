@@ -1,0 +1,23 @@
+# Painted pet sheets (2026-10-10): N POSE: species-colour,... (A portraits, B side view facing right, C asleep), 4x4,
+# ~/Pictures/NeuroPets Art Assets/Pets/pet- sheet N.jpeg -- the order matches each note in NeuroPets/Pet Art Sets/.
+1 A: cat-ginger,cat-grey,bunny-pink,bunny-cream,frog-green,frog-lilac,chicken-white,chicken-golden,duck-mallard,pig-pink,fox-red,fox-silver,fox-arctic,cow-spotted,goat-white,goat-mountain
+2 A: sheep-wool,sheep-black,horse-brown,dog-cattle,dog-stray,ram-wool,ram-frost,hare-brown,hare-snow,hedgehog-brown,deer-fawn,deer-white,spider-black,spider-giant,spider-crystal,snake-green
+3 A: snake-anaconda,snake-emerald,elk-brown,boar-brown,wolf-grey,bear-brown,tiger-orange,tiger-white,leopard-spotted,leopard-snow,crab-red,crab-coral,gull-white,seal-grey,seal-selkie,mole-velvet
+4 A: tarantula-redknee,anteater-giant,owl-barn,scorpion-sand,scorpion-golden,viper-sand,camelspider-sand,camel-desert,camel-white,jackal-golden,alligator-nile,flamingo-pink,hippo-river,hippo-pygmy,ibis-sacred,mummy-linen
+5 A: locust-plague,yak-shaggy,yeti-cub,stingray-sea,orca-calf,whale-calf
+6 B: cat-ginger,cat-grey,bunny-pink,bunny-cream,frog-green,frog-lilac,chicken-white,chicken-golden,duck-mallard,pig-pink,fox-red,fox-silver,fox-arctic,cow-spotted,goat-white,goat-mountain
+7 B: sheep-wool,sheep-black,horse-brown,dog-cattle,dog-stray,ram-wool,ram-frost,hare-brown,hare-snow,hedgehog-brown,deer-fawn,deer-white,spider-black,spider-giant,spider-crystal,snake-green
+8 B: snake-anaconda,snake-emerald,elk-brown,boar-brown,wolf-grey,bear-brown,tiger-orange,tiger-white,leopard-spotted,leopard-snow,crab-red,crab-coral,gull-white,seal-grey,seal-selkie,mole-velvet
+9 B: tarantula-redknee,anteater-giant,owl-barn,scorpion-sand,scorpion-golden,viper-sand,camelspider-sand,camel-desert,camel-white,jackal-golden,alligator-nile,flamingo-pink,hippo-river,hippo-pygmy,ibis-sacred,mummy-linen
+10 B: locust-plague,yak-shaggy,yeti-cub,stingray-sea,orca-calf,whale-calf
+11 C: cat-ginger,cat-grey,bunny-pink,bunny-cream,frog-green,frog-lilac,chicken-white,chicken-golden,duck-mallard,pig-pink,fox-red,fox-silver,fox-arctic,cow-spotted,goat-white,goat-mountain
+12 C: sheep-wool,sheep-black,horse-brown,dog-cattle,dog-stray,ram-wool,ram-frost,hare-brown,hare-snow,hedgehog-brown,deer-fawn,deer-white,spider-black,spider-giant,spider-crystal,snake-green
+13 C: snake-anaconda,snake-emerald,elk-brown,boar-brown,wolf-grey,bear-brown,tiger-orange,tiger-white,leopard-spotted,leopard-snow,crab-red,crab-coral,gull-white,seal-grey,seal-selkie,mole-velvet
+14 C: tarantula-redknee,anteater-giant,owl-barn,scorpion-sand,scorpion-golden,viper-sand,camelspider-sand,camel-desert,camel-white,jackal-golden,alligator-nile,flamingo-pink,hippo-river,hippo-pygmy,ibis-sacred,mummy-linen
+15 C: locust-plague,yak-shaggy,yeti-cub,-,stingray-sea,orca-calf,whale-calf   # Cam's sheet left the 4th cell empty
+6 A: cat-golden,bunny-moon,frog-ember,cat-wild,fox-gideon,ram-billy,scorpion-deathstalker,alligator-king,cat-sphynx,wolf-ice,owl-snowy,bear-polar,owl-storm,whale-white
+11 B: cat-golden,bunny-moon,frog-ember,cat-wild,fox-gideon,ram-billy,scorpion-deathstalker,alligator-king,cat-sphynx,wolf-ice,owl-snowy,bear-polar,owl-storm,whale-white
+16 C: cat-golden,bunny-moon,frog-ember,cat-wild,fox-gideon,ram-billy,scorpion-deathstalker,alligator-king,cat-sphynx,wolf-ice,owl-snowy,bear-polar,owl-storm,whale-white
+7 A: quickhare-mercury,quickhare-mercury:side,dawnmoth-venus,dawnmoth-venus:side,globetortoise-terra,-,-,dusthound-mars:side,stormray-jupiter,stormray-jupiter:side,ringowl-saturn,ringowl-saturn:side,tiltseal-uranus,tiltseal-uranus:side,deepserpent-neptune,deepserpent-neptune:side   # !noglow -- the Astral egg's planet pets (V10, 2026-10-18), each portrait then side. cells 6 and 7 came out wrong -- repainted on sheet 8
+17 C: quickhare-mercury,dawnmoth-venus,globetortoise-terra,dusthound-mars,stormray-jupiter,ringowl-saturn,tiltseal-uranus,deepserpent-neptune   # !noglow -- "pet- Sheet 7 - Sleep.jpeg"; cells 9-16 are filler
+8 A: globetortoise-terra:side,dusthound-mars   # !noglow -- repairs for set 7 (PT26 r1/r2, prompt in collab N13): Terra's side view, Mars' portrait -- "pet- Sheet 8.jpeg"

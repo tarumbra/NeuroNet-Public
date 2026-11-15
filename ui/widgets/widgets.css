@@ -1,0 +1,17 @@
+/* Settings → Desktop widgets (widgets.js). The rows are Sections shown's. */
+.dw { max-width: 720px; }
+.dw .label { margin-top: 18px; }
+.dw-note { font-weight: 400; font-size: 0.8rem; color: var(--muted); }
+.dw-saver-pick { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+/* Settings → Appearance → Glowing window borders */
+.glow { max-width: 760px; margin-top: 22px; }
+.glow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin: 10px 0; }
+.glow-th { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border: 1px solid var(--border);
+  border-radius: 8px; font-size: 0.8rem; min-width: 0; }
+.glow-th.is-now { border-color: var(--accent); }
+.glow-sw { flex: 0 0 26px; height: 14px; border-radius: 4px; }
+.glow-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.glow-name i { color: var(--muted); font-style: normal; font-size: 0.7rem; }
+.dw-glass-set { display: flex; align-items: center; gap: 10px; }
+.dw-glass-set input { width: 180px; }
+.dw-glass-set b { min-width: 3em; text-align: right; font-variant-numeric: tabular-nums; }

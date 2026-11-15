@@ -1,0 +1,42 @@
+# NeuroNet as a pacman package, for the NeuroNet ISO (NeuroNet System plan,
+# Stage 5). system/iso/build.sh fills in the version and makes the source
+# tarball (git archive of the repo: code only -- never anyone's data).
+#
+# It puts NeuroNet at /opt/neuronet/NeuroNet and a first-login step in XDG
+# autostart; the step copies NeuroNet to each person's home and runs
+# system/install.sh --offline (neuronet-firstboot). The depends are what
+# integration/deps.txt needs, so the ISO's offline mirror carries them and
+# pacman installs them with the rest of the system -- no network needed.
+pkgname=neuronet
+pkgver=@PKGVER@
+pkgrel=1
+pkgdesc="NeuroNet: the everything app and its Omarchy desktop"
+arch=(any)
+url="https://omarchy.org"
+license=(custom)
+depends=(
+  python python-pywebview python-pyqt6 python-pyqt6-webengine python-qtpy
+  python-pillow python-gobject python-docx python-openpyxl python-pymupdf
+  python-reportlab python-cryptography
+  ffmpeg jq glib2 util-linux pipewire git rsync openssh
+)
+optdepends=(
+  'mpv: films on the Shelf'
+  'python-pptx: PowerPoint export (AUR)'
+)
+source=("neuronet-$pkgver.tar" neuronet-firstboot neuronet-firstboot.desktop)
+sha256sums=(SKIP SKIP SKIP)
+noextract=("neuronet-$pkgver.tar")
+
+package() {
+  install -d "$pkgdir/opt/neuronet/NeuroNet"
+  tar -xf "$srcdir/neuronet-$pkgver.tar" -C "$pkgdir/opt/neuronet/NeuroNet"
+  install -Dm755 neuronet-firstboot "$pkgdir/usr/bin/neuronet-firstboot"
+  install -Dm644 neuronet-firstboot.desktop "$pkgdir/etc/xdg/autostart/neuronet-firstboot.desktop"
+  # updates (Stage 6): the repository, and a READ-ONLY deploy key for it,
+  # when build.sh found them (~/NeuroNet-ISO/secrets -- never in the repo)
+  if [ -f "$srcdir/update.json" ]; then
+    install -Dm644 "$srcdir/update.json" "$pkgdir/opt/neuronet/update.json"
+    [ -f "$srcdir/update_key" ] && install -Dm644 "$srcdir/update_key" "$pkgdir/opt/neuronet/update_key"
+  fi
+}

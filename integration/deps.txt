@@ -1,0 +1,41 @@
+# What NeuroNet and its desktop integration need on a computer.
+#
+# The migration installer (NuNt_migration_desktopintegration/install.sh)
+# checks every line and says how to install what's missing. When a new
+# feature or widget needs something new, ADD IT HERE -- that's how the next
+# migration knows about it.
+#
+# kind: cmd and python are required; optional only warns.
+# kind    name                          how to install it
+cmd       python3                       omarchy pkg add python
+cmd       jq                            omarchy pkg add jq
+cmd       gdbus                         omarchy pkg add glib2
+cmd       flock                         omarchy pkg add util-linux
+cmd       git                           omarchy pkg add git   (updates: neuronet-update)
+cmd       rsync                         omarchy pkg add rsync   (updates: neuronet-update)
+cmd       ssh                           omarchy pkg add openssh   (updates, from the private repository)
+cmd       busctl                        (part of systemd)
+cmd       uwsm-app                      (part of Omarchy)
+cmd       hyprctl                       (part of Omarchy)
+cmd       omarchy                       (part of Omarchy)
+cmd       ffprobe                       omarchy pkg add ffmpeg
+optional  mpv                           omarchy pkg add mpv   (films on the Shelf)
+optional  wl-copy                       omarchy pkg add wl-clipboard   (Copy in the desktop Fleeting viewer)
+python    webview                       omarchy pkg add python-pywebview   (Arch has 6.2.1 -- no pip needed)
+python    PyQt6.QtWebEngineWidgets      omarchy pkg add python-pyqt6 python-pyqt6-webengine
+# qtpy: pywebview's Qt backend imports it. Without it pywebview QUIETLY falls
+# back to GTK, the window is named "neuronet.py", and every shortcut stops
+# working (Manthies' computer, 2026-09-29 -- see system/INVENTORY.md).
+python    qtpy                          omarchy pkg add python-qtpy
+python    PIL                           omarchy pkg add python-pillow
+python    gi                            omarchy pkg add python-gobject
+python    docx                          omarchy pkg add python-docx   (Word exports)
+python    openpyxl                      omarchy pkg add python-openpyxl   (Excel exports)
+python    fitz                          omarchy pkg add python-pymupdf   (PDFs in Notes)
+python    reportlab                     omarchy pkg add python-reportlab   (Kitchen and Training PDFs)
+python    pptx                          omarchy pkg aur add python-pptx   (PowerPoint export; AUR)
+python    cryptography                  omarchy pkg add python-cryptography   (a password on the export)
+cmd       grim                          (part of Omarchy)   (capture into Photos)
+cmd       slurp                         (part of Omarchy)   (capture into Photos)
+optional  pw-play                       omarchy pkg add pipewire   (the class timer's beeps)
+optional  ZXingReader                   omarchy pkg add zxing-cpp   (Media → Scan reads barcodes in photos)

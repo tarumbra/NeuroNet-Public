@@ -1,0 +1,8 @@
+# Painted creature sheets (2026-10-10), facing left, 4x4: ~/Pictures/NeuroPets Art Assets/Creatures/creature- sheet N.jpeg
+1: chicken,duck,pig,fox,cow,goat,sheep,horse,cattledog,bunny,hare,wildcat,straydog,hedgehog,owl,bat
+2: spider,deer,snake,elk,frog,boar,wolf,brownbear,armadillo,tiger,leopard,anaconda,giantspider,crab,gull,seal
+3: viper,sandscorpion,deathstalker,camelspider,camel,jackal,alligator,hippo,flamingo,ibis,cobra,snowleopard,arcticfox,mountaingoat,yak,icewolf
+4: gideon,billy,jack,bambi,grizz,basilisk,snapjaw,sphinx,kingnile,yeti,pharaoh,tombguardian,snowyowl,-,-,-
+5 [file 6]: apprenticemage,adeptmage,magusmage,sorceressmage,archmagemage@0.1.2.2   # Cam saved it as sheet 6; Vale fills four cells
+# 7 (painted by Cam, 16 October; Battle Re-work Part 13): the Hollow Crypt
+7: skeleton,ghoul,cryptbat,wraith,wisp,morvane

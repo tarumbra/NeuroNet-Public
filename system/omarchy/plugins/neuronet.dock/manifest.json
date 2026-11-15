@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "neuronet.dock",
+  "name": "NeuroNet Dock",
+  "version": "1.0.0",
+  "author": "Cam",
+  "description": "NeuroNet's dock, on every workspace: pinned and running apps strung along an axon, each running app a lit synapse. Follows the light/dark theme, background opacity of your choosing, and three ways to hide -- never, auto-hide, or tucked away behind a small neuron you click to call it up.",
+  "kinds": ["service"],
+  "entryPoints": {
+    "service": "Dock.qml"
+  }
+}

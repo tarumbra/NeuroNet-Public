@@ -1,0 +1,656 @@
+{
+ "MARKET": {
+  "//": "The Marketplace and Larceny (2026-10-17; V4 carried 8-1, Cam's answers in Q4). A market street off the Village: everyone buys and sells there; Thieves (and anyone with the Pickpocketing technique) pick pockets and steal from the stalls. Larceny is a skill like Cooking -- yours for good, whatever your class -- and includes lockpicking (locked crates Thieves find while hunting). Getting caught: a fine and a short stun, that keeper watches you for a while, caught often -- the guard throws you out for an hour. Never hurt. Balance (the Mathematician and the Economist): pickpocketing pays coins and is the trade's money; stalls give their own goods from a stock that refills slowly (the stall is the cap, not your patience); idle tries come slower than played ones; idle at a target at your level is about 0.6-0.9x the best gathering coins an hour. Prices: every store's rule (storeFloor, 04: 2.5x the materials, never under 2x value -- Collaboration N6); a discount never goes under 2.5x materials or 1.6x value, and pays Marlow's price plus a class's trade bonus.",
+  "name": "The Marketplace",
+  "guard": {
+   "name": "Captain Hale",
+   "title": "of the market watch",
+   "look": {
+    "skin": 1,
+    "hair": 1,
+    "outfit": 2,
+    "pic": "hale"
+   },
+   "says": "Buy what you like. Pay for it. I've eyes on every stall."
+  },
+  "rules": {
+   "//": "tryMs: a played try's wait; idleMs: an idle try (fewer an hour). chance = base + perLevel x (your Larceny - the target's level), between min and max; a technique-borrower (not a Thief) loses offClass. A failed try is caught caughtShare of the time (at your own level that's about 7 catches an hour idle -- risky; ten levels above a target, about 2 -- safe: so idling means picking easier marks). watch/stun/ban in ms; banAfter catches inside banWindow. Stalls: stockCap goods, one back every restockMs. lockChance: a locked crate per hunting win, for those who can steal. expeditionLock: a locked crate on a cleared expedition, for those with the Keen Eye (who can steal).",
+   "tryMs": 3000,
+   "idleMs": 6000,
+   "base": 0.6,
+   "perLevel": 0.03,
+   "min": 0.15,
+   "max": 0.95,
+   "offClass": 0.1,
+   "caughtShare": 0.03,
+   "stunMs": 15000,
+   "watchMs": 300000,
+   "banAfter": 3,
+   "banWindow": 900000,
+   "banMs": 3600000,
+   "stockCap": 25,
+   "restockMs": 90000,
+   "floorMult": 1.6,
+   "lockChance": 0.005,
+   "expeditionLock": 0.2
+  },
+  "perks": {
+   "//": "Cam (Q4): Hunters get extra for raw meat and fish; Berserkers a discount on weapons and armour; Arcanes sell potions at a profit at the apothecary; everyone sells cut gems to the jeweller at a good price; Paladins a discount at every store; Beast Masters and Thieves nothing.",
+   "paladin": {
+    "buy": 0.1,
+    "why": "a Paladin's word is good"
+   },
+   "berserker": {
+    "buy": 0.2,
+    "at": [
+     "weaponsmith"
+    ],
+    "why": "Dorn likes a Berserker"
+   },
+   "hunter": {
+    "sell": 0.25,
+    "at": [
+     "fishmonger"
+    ],
+    "why": "fresh from a Hunter"
+   },
+   "arcane": {
+    "sell": 0.25,
+    "at": [
+     "apothecary"
+    ],
+    "why": "an Arcane's brewing"
+   },
+   "all": {
+    "sell": 0.3,
+    "at": [
+     "jeweller"
+    ],
+    "why": "Perla pays well for cut stones"
+   }
+  },
+  "stores": [
+   {
+    "id": "fruit",
+    "name": "Fruit stall",
+    "keeper": "Old Bess",
+    "look": {
+     "skin": 0,
+     "hair": 1,
+     "outfit": 2,
+     "pic": "bess"
+    },
+    "says": "Fresh this morning! Mostly.",
+    "sells": [
+     "apple",
+     "pear",
+     "banana",
+     "strawberry",
+     "melon",
+     "berry"
+    ],
+    "buys": "",
+    "level": 1,
+    "xp": 3,
+    "fine": 5,
+    "loot": [
+     [
+      "apple",
+      30
+     ],
+     [
+      "pear",
+      25
+     ],
+     [
+      "banana",
+      20
+     ],
+     [
+      "berry",
+      20
+     ],
+     [
+      "strawberry",
+      5
+     ]
+    ]
+   },
+   {
+    "id": "baker",
+    "name": "Baker",
+    "keeper": "Mabel",
+    "look": {
+     "skin": 1,
+     "hair": 3,
+     "outfit": 0,
+     "pic": "mabel"
+    },
+    "says": "Bread's still warm. Hands where I can see them.",
+    "sells": [
+     "bread",
+     "flour",
+     "berrytart",
+     "honeycake",
+     "pumpkinpie"
+    ],
+    "buys": "",
+    "level": 5,
+    "xp": 4,
+    "fine": 10,
+    "loot": [
+     [
+      "bread",
+      40
+     ],
+     [
+      "flour",
+      30
+     ],
+     [
+      "berrytart",
+      20
+     ],
+     [
+      "honeycake",
+      10
+     ]
+    ]
+   },
+   {
+    "id": "fishmonger",
+    "name": "Fishmonger",
+    "keeper": "Gil",
+    "look": {
+     "skin": 2,
+     "hair": 0,
+     "outfit": 1,
+     "pic": "gil"
+    },
+    "says": "Caught it yourself? I'll take it -- raw, mind.",
+    "sells": [
+     "shrimps",
+     "herring",
+     "sardine",
+     "grilledtrout",
+     "tuna"
+    ],
+    "buys": "raw",
+    "level": 10,
+    "xp": 6,
+    "fine": 15,
+    "loot": [
+     [
+      "rawsardine",
+      30
+     ],
+     [
+      "rawherring",
+      30
+     ],
+     [
+      "trout",
+      20
+     ],
+     [
+      "salmon",
+      15
+     ],
+     [
+      "rawtuna",
+      5
+     ]
+    ]
+   },
+   {
+    "id": "cloth",
+    "name": "Cloth merchant",
+    "keeper": "Madame Vey",
+    "look": {
+     "skin": 0,
+     "hair": 2,
+     "outfit": 2,
+     "pic": "vey"
+    },
+    "says": "Silk from the far isles. Don't touch unless you're buying.",
+    "sells": [
+     "cloth",
+     "thread",
+     "leather",
+     "rope",
+     "needle",
+     "wool",
+     "silk"
+    ],
+    "buys": "",
+    "level": 18,
+    "xp": 8,
+    "fine": 25,
+    "loot": [
+     [
+      "thread",
+      35
+     ],
+     [
+      "wool",
+      30
+     ],
+     [
+      "cloth",
+      20
+     ],
+     [
+      "rope",
+      15
+     ]
+    ]
+   },
+   {
+    "id": "apothecary",
+    "name": "Apothecary's stall",
+    "keeper": "Hester",
+    "look": {
+     "skin": 1,
+     "hair": 1,
+     "outfit": 1,
+     "pic": "hester"
+    },
+    "says": "Tonics, salves, and nothing that'll hurt you. Probably.",
+    "sells": [
+     "minorhealing",
+     "salve",
+     "poultice",
+     "tonic",
+     "bandage",
+     "feverfew",
+     "lavender"
+    ],
+    "buys": "potions",
+    "level": 26,
+    "xp": 10,
+    "fine": 40,
+    "loot": [
+     [
+      "poultice",
+      35
+     ],
+     [
+      "tonic",
+      30
+     ],
+     [
+      "bandage",
+      25
+     ],
+     [
+      "salve",
+      10
+     ]
+    ]
+   },
+   {
+    "id": "curio",
+    "name": "Curio dealer",
+    "keeper": "Mr Quill",
+    "look": {
+     "skin": 0,
+     "hair": 0,
+     "outfit": 0,
+     "pic": "quill"
+    },
+    "says": "Every piece has a story. Some of them are even true.",
+    "sells": [
+     "candle",
+     "lantern",
+     "fossil",
+     "oldcoin",
+     "rug"
+    ],
+    "buys": "curios",
+    "level": 34,
+    "xp": 12,
+    "fine": 60,
+    "loot": [
+     [
+      "oldcoin",
+      45
+     ],
+     [
+      "candle",
+      30
+     ],
+     [
+      "fossil",
+      20
+     ],
+     [
+      "relic",
+      5
+     ]
+    ]
+   },
+   {
+    "id": "weaponsmith",
+    "name": "Weaponsmith",
+    "keeper": "Dorn",
+    "look": {
+     "skin": 2,
+     "hair": 3,
+     "outfit": 1,
+     "pic": "dorn"
+    },
+    "says": "Swords, daggers, bows. Pay first, swing later.",
+    "sells": [
+     "bronzesword",
+     "ironsword",
+     "bronzedagger",
+     "bronzemace",
+     "shortbow",
+     "bronzearrow",
+     "ironarrow",
+     "bronzehelm",
+     "ironhelm",
+     "bronzeplate",
+     "woodenbuckler"
+    ],
+    "buys": "",
+    "level": 42,
+    "xp": 14,
+    "fine": 90,
+    "loot": [
+     [
+      "bronzearrow",
+      45
+     ],
+     [
+      "ironarrow",
+      35
+     ],
+     [
+      "bronzedagger",
+      15
+     ],
+     [
+      "bronzehelm",
+      5
+     ]
+    ]
+   },
+   {
+    "id": "jeweller",
+    "name": "Jeweller",
+    "keeper": "Perla",
+    "look": {
+     "skin": 1,
+     "hair": 2,
+     "outfit": 2,
+     "pic": "perla"
+    },
+    "says": "Cut stones, rings, necklaces. I buy too -- the best prices on the island.",
+    "sells": [
+     "copperring",
+     "quartzring",
+     "opalring"
+    ],
+    "buys": "gems",
+    "level": 50,
+    "xp": 16,
+    "fine": 150,
+    "loot": [
+     [
+      "quartz",
+      40
+     ],
+     [
+      "roughgem",
+      30
+     ],
+     [
+      "copperring",
+      20
+     ],
+     [
+      "opal",
+      10
+     ]
+    ]
+   }
+  ],
+  "marks": [
+   {
+    "id": "farmhand",
+    "name": "A farmhand",
+    "level": 1,
+    "xp": 1.5,
+    "coins": [
+     0,
+     2
+    ],
+    "fine": 5,
+    "rare": [
+     "twigs",
+     0.05
+    ]
+   },
+   {
+    "id": "shopper",
+    "name": "A shopper",
+    "level": 8,
+    "xp": 2.5,
+    "coins": [
+     1,
+     2
+    ],
+    "fine": 15,
+    "rare": [
+     "bread",
+     0.05
+    ]
+   },
+   {
+    "id": "merchant",
+    "name": "A travelling merchant",
+    "level": 18,
+    "xp": 3.5,
+    "coins": [
+     1,
+     3
+    ],
+    "fine": 35,
+    "rare": [
+     "oldcoin",
+     0.04
+    ]
+   },
+   {
+    "id": "noble",
+    "name": "A noble",
+    "level": 30,
+    "xp": 4.5,
+    "coins": [
+     2,
+     5
+    ],
+    "fine": 70,
+    "rare": [
+     "copperring",
+     0.03
+    ]
+   },
+   {
+    "id": "guard",
+    "name": "A market guard",
+    "level": 40,
+    "xp": 5.5,
+    "coins": [
+     3,
+     7
+    ],
+    "fine": 120,
+    "rare": [
+     "relic",
+     0.005
+    ]
+   }
+  ],
+  "curios": [
+   "relic",
+   "fossil",
+   "oldcoin",
+   "seashell",
+   "ambergris",
+   "mammothivory",
+   "scarab",
+   "pearl"
+  ],
+  "notFish": [
+   "pondweed",
+   "boot",
+   "seaweed",
+   "fishingessence",
+   "ambergris",
+   "orcablubber",
+   "whaleblubber",
+   "minnow"
+  ],
+  "fence": {
+   "//": "Cam (2026-10-17): 'balance the thieving with having to sell goods to a fence who take a cut, So we lose a fair bit of the value (the fence is the thief tutor). The main goal for the marketplace pickpocketing and store stealing is to level up larceny so we can lockpick chests'. Everything stolen -- a stall's goods, a purse's coins -- goes in your swag sack (not your bag); only Nell buys it, in her back room off the market (she ships it out through the smugglers' cove), and keeps `cut` of its worth (Marlow's price; a purse's coins at face value).",
+   "name": "Nell the Fence",
+   "where": "Nell's back room",
+   "look": {
+    "skin": 0,
+    "hair": 2,
+    "outfit": 0,
+    "pic": "nell"
+   },
+   "cut": 0.6,
+   "says": "Hot, is it? I'll take it off your hands. My cut's my cut -- you're paying for the boat, the cove and my silence."
+  }
+ },
+ "LOCKED_CRATES": {
+  "//": "Cam (Q4 q9): 'thiefs can find locked crates while hunting as well, which recquire a certain larcency level.' A Thief (or a technique-borrower) finds one now and then on a hunting win (MARKET.rules.lockChance): the ground's level picks which. Opening it is picking its lock: it needs that Larceny level and gives Larceny xp and some coins.",
+  "lockbox": {
+   "name": "Locked box",
+   "ground": 0,
+   "lock": 5,
+   "xp": 15,
+   "coins": [
+    10,
+    40
+   ],
+   "rolls": 2,
+   "loot": [
+    [
+     "oldcoin",
+     30
+    ],
+    [
+     "copperring",
+     15
+    ],
+    [
+     "weakpoison",
+     20
+    ],
+    [
+     "bandage",
+     20
+    ],
+    [
+     "quartz",
+     15
+    ]
+   ]
+  },
+  "lockedchest": {
+   "name": "Locked chest",
+   "ground": 15,
+   "lock": 25,
+   "xp": 45,
+   "coins": [
+    40,
+    150
+   ],
+   "rolls": 3,
+   "loot": [
+    [
+     "silverbar",
+     25
+    ],
+    [
+     "goldnugget",
+     25
+    ],
+    [
+     "strongpoison",
+     15
+    ],
+    [
+     "venomsac",
+     15
+    ],
+    [
+     "opal",
+     10
+    ],
+    [
+     "opalring",
+     10
+    ]
+   ]
+  },
+  "strongbox": {
+   "name": "Iron strongbox",
+   "ground": 35,
+   "lock": 45,
+   "xp": 90,
+   "coins": [
+    120,
+    400
+   ],
+   "rolls": 4,
+   "loot": [
+    [
+     "goldbar",
+     30
+    ],
+    [
+     "deadlypoison",
+     20
+    ],
+    [
+     "sapphire",
+     20
+    ],
+    [
+     "emerald",
+     15
+    ],
+    [
+     "ruby",
+     10
+    ],
+    [
+     "relic",
+     4
+    ],
+    [
+     "diamond",
+     1
+    ]
+   ]
+  }
+ },
+ "PYR_CRYPT": {
+  "//": "Cam (2026-10-17): 'Maybe the pyrimid challenges can even include locked crypts and stuff, that only thieves can spot because of their Keen Eye.' Each day one of the first four chambers hides a sealed crypt; only someone who can steal sees it (the Keen Eye), once they've reached that chamber. Picking it needs Larceny `req`; the chance is the Pyramid's own (its traps' sum). Picked: `picks` of the Pyramid's treasure and coins, and Larceny xp. Fumbled: a dart trap (hurt of your health) and it seals for the day.",
+  "req": 40,
+  "xp": 120,
+  "coins": [
+   300,
+   700
+  ],
+  "picks": 2,
+  "hurt": 0.15,
+  "chambers": 4
+ }
+}

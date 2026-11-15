@@ -1,0 +1,83 @@
+{
+  "//": [
+    "Content for ui/pet/core/34-the-open-sea-islands-stage.js: each key is a CONTENT(\"key\") there. tools/build_petcore.py puts it into petcore.js;",
+    "\"//\" keys are notes and are left out. Times are in milliseconds (a minute 60000, an hour 3600000, a day 86400000)."
+  ],
+  "REGIONS.opensea": {
+    "name": "Open Sea",
+    "x": 50,
+    "y": 96,
+    "level": 40,
+    "sea": true,
+    "needs": {"ship": 2, "how": "to fish out past the harbour"},
+    "blurb": "Out past the harbour: shoals, sharks -- and, far out, the whales."
+  },
+  "more ITEMS": {
+    "rawstingray": {"name": "Raw stingray", "gem": 6, "food": {"full": 50, "happy": 2, "clean": 0}},
+    "rawhammerhead": {"name": "Raw hammerhead", "gem": 7, "food": {"full": 58, "happy": 2, "clean": 0}},
+    "rawgreatwhite": {"name": "Raw great white", "gem": 8, "food": {"full": 62, "happy": 2, "clean": 0}},
+    "grilledstingray": {"name": "Grilled stingray", "gem": 6, "food": {"full": 66, "happy": 6, "clean": 0}, "heal": 20},
+    "hammerheadsteak": {"name": "Hammerhead steak", "gem": 7, "food": {"full": 70, "happy": 6, "clean": 0}, "heal": 21},
+    "greatwhitesteak": {"name": "Great white steak", "gem": 8, "food": {"full": 78, "happy": 6, "clean": 0}, "heal": 23},
+    "orcablubber": {"name": "Orca blubber", "gem": 6},
+    "whaleblubber": {"name": "Whale blubber", "gem": 7},
+    "ambergris": {"name": "Ambergris", "gem": 10, "price": 900},
+    "shoalegg": {"name": "Shoal egg", "gem": 8, "egg": "shoal"},
+    "orcaegg": {"name": "Orca egg", "gem": 9, "egg": "orca"},
+    "whaleegg": {"name": "Whale egg", "gem": 10, "egg": "whale"},
+    "pearlescentegg": {"name": "Pearlescent egg", "gem": 10, "egg": "pearlescent"}
+  },
+  "more SPECIES": {
+    "stingray": {"name": "Stingray", "colours": ["sea"]},
+    "orca": {"name": "Orca", "colours": ["calf"]},
+    "whale": {"name": "Whale", "colours": ["calf"]}
+  },
+  "more PETS": {
+    "stingray/sea": {"name": "Baby Stingray", "rarity": "Rare"},
+    "orca/calf": {"name": "Orca Calf", "rarity": "Legendary"},
+    "whale/calf": {"name": "Whale Calf", "rarity": "Legendary"},
+    "whale/white": {"name": "White Whale", "rarity": "Special"}
+  },
+  "more EGGS": {
+    "shoal": {"name": "Shoal egg", "hatch": 7200000, "found": "the Stingray shoals, now and then", "pool": [["stingray/sea", 1]]},
+    "orca": {"name": "Orca egg", "hatch": 10800000, "found": "the Orca waters, once in a long while", "pool": [["orca/calf", 1]]},
+    "whale": {"name": "Whale egg", "hatch": 14400000, "found": "the Whale road, once in a long while", "pool": [["whale/calf", 1]]},
+    "pearlescent": {"name": "Pearlescent egg", "hatch": 10800000, "found": "hidden on the Open Sea", "pool": [["whale/white", 1]]}
+  },
+  "more FIGHT_STYLE": {"stingray": {"agi": 3, "att": 1}, "orca": {"att": 3, "hp": 1.3}, "whale": {"hp": 1.6}},
+  "more BOOSTS": {"stingray": "fishing", "orca": "attack", "whale": "defence"},
+  "more PET_ATTACKS": {"stingray": "pierce", "orca": "slash", "whale": "crush"},
+  "SECRETS.opensea": [
+    {
+      "id": "driftcrate",
+      "kind": "cache",
+      "name": "A drifting crate",
+      "text": "Bobbing on the swell, still sealed",
+      "coins": 3000,
+      "items": {"ironcrate": 1, "rope": 10}
+    },
+    {"id": "pearlescent", "kind": "egg", "name": "In a whale's wake", "text": "It shimmers like the inside of a shell", "egg": "pearlescentegg"}
+  ],
+  "PEOPLE.opensea": {
+    "id": "wren",
+    "name": "Old Mariner Wren",
+    "look": {"skin": 2, "hair": 3, "outfit": 0},
+    "says": "Forty years at sea and I still can't swim.",
+    "quests": [
+      {
+        "id": "shoals",
+        "name": "The shoals",
+        "text": "\"Stingrays for my supper -- and for the market. Mind the barbs.\"",
+        "needs": [{"bring": {"rawstingray": 15}}],
+        "reward": {"coins": 3000, "xp": {"fishing": 2000}}
+      },
+      {
+        "id": "bigfish",
+        "name": "Bigger fish",
+        "text": "\"Bring me a great white and I'll believe you're a real sailor.\"",
+        "needs": [{"bring": {"rawgreatwhite": 5, "rawhammerhead": 5}}],
+        "reward": {"coins": 5000, "items": {"ancientchest": 1}}
+      }
+    ]
+  }
+}
