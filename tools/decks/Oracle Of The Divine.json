@@ -1,0 +1,368 @@
+{
+ "name": "Oracle Of The Divine",
+ "kind": "oracle",
+ "folder": "Oracle Of The Divine",
+ "cover": "The World Tree.jpg",
+ "cards": [
+  {
+   "id": "abandonment",
+   "name": "Abandonment",
+   "suit": "",
+   "file": "Abandonment.jpg"
+  },
+  {
+   "id": "abundance",
+   "name": "Abundance",
+   "suit": "",
+   "file": "Abundance.jpg"
+  },
+  {
+   "id": "ambition",
+   "name": "Ambition",
+   "suit": "",
+   "file": "Ambition.jpg"
+  },
+  {
+   "id": "betrayal",
+   "name": "Betrayal",
+   "suit": "",
+   "file": "Betrayal.jpg"
+  },
+  {
+   "id": "betwixt",
+   "name": "Betwixt",
+   "suit": "",
+   "file": "Betwixt.jpg"
+  },
+  {
+   "id": "celebration",
+   "name": "Celebration",
+   "suit": "",
+   "file": "Celebration.jpg"
+  },
+  {
+   "id": "contemplation",
+   "name": "Contemplation",
+   "suit": "",
+   "file": "Contemplation.jpg"
+  },
+  {
+   "id": "crossroads",
+   "name": "Crossroads",
+   "suit": "",
+   "file": "Crossroads.jpg"
+  },
+  {
+   "id": "cynicism",
+   "name": "Cynicism",
+   "suit": "",
+   "file": "Cynicism.jpg"
+  },
+  {
+   "id": "deception",
+   "name": "Deception",
+   "suit": "",
+   "file": "Deception.jpg"
+  },
+  {
+   "id": "delusions",
+   "name": "Delusions",
+   "suit": "",
+   "file": "Delusions.jpg"
+  },
+  {
+   "id": "discretion",
+   "name": "Discretion",
+   "suit": "",
+   "file": "Discretion.jpg"
+  },
+  {
+   "id": "duty",
+   "name": "Duty",
+   "suit": "",
+   "file": "Duty.jpg"
+  },
+  {
+   "id": "endurance",
+   "name": "Endurance",
+   "suit": "",
+   "file": "Endurance.jpg"
+  },
+  {
+   "id": "envy",
+   "name": "Envy",
+   "suit": "",
+   "file": "Envy.jpg"
+  },
+  {
+   "id": "fecundity",
+   "name": "Fecundity",
+   "suit": "",
+   "file": "Fecundity.jpg"
+  },
+  {
+   "id": "fluidity",
+   "name": "Fluidity",
+   "suit": "",
+   "file": "Fluidity.jpg"
+  },
+  {
+   "id": "fulfillment",
+   "name": "Fulfillment",
+   "suit": "",
+   "file": "Fulfillment.jpg"
+  },
+  {
+   "id": "generosity",
+   "name": "Generosity",
+   "suit": "",
+   "file": "Generosity.jpg"
+  },
+  {
+   "id": "gluttony",
+   "name": "Gluttony",
+   "suit": "",
+   "file": "Gluttony.jpg"
+  },
+  {
+   "id": "gossip",
+   "name": "Gossip",
+   "suit": "",
+   "file": "Gossip.jpg"
+  },
+  {
+   "id": "greed",
+   "name": "Greed",
+   "suit": "",
+   "file": "Greed.jpg"
+  },
+  {
+   "id": "hyperfocus",
+   "name": "Hyperfocus",
+   "suit": "",
+   "file": "Hyperfocus.jpg"
+  },
+  {
+   "id": "idealism",
+   "name": "Idealism",
+   "suit": "",
+   "file": "Idealism.jpg"
+  },
+  {
+   "id": "impulsive",
+   "name": "Impulsive",
+   "suit": "",
+   "file": "Impulsive.jpg"
+  },
+  {
+   "id": "industrious",
+   "name": "Industrious",
+   "suit": "",
+   "file": "Industrious.jpg"
+  },
+  {
+   "id": "innovator",
+   "name": "Innovator",
+   "suit": "",
+   "file": "Innovator.jpg"
+  },
+  {
+   "id": "insight",
+   "name": "Insight",
+   "suit": "",
+   "file": "Insight.jpg"
+  },
+  {
+   "id": "integrity",
+   "name": "Integrity",
+   "suit": "",
+   "file": "Integrity.jpg"
+  },
+  {
+   "id": "loyalty",
+   "name": "Loyalty",
+   "suit": "",
+   "file": "Loyalty.jpg"
+  },
+  {
+   "id": "obstacles",
+   "name": "Obstacles",
+   "suit": "",
+   "file": "Obstacles.jpg"
+  },
+  {
+   "id": "order",
+   "name": "Order",
+   "suit": "",
+   "file": "Order.jpg"
+  },
+  {
+   "id": "potential",
+   "name": "Potential",
+   "suit": "",
+   "file": "Potential.jpg"
+  },
+  {
+   "id": "power",
+   "name": "Power",
+   "suit": "",
+   "file": "Power.jpg"
+  },
+  {
+   "id": "pride",
+   "name": "Pride",
+   "suit": "",
+   "file": "Pride.jpg"
+  },
+  {
+   "id": "receptive",
+   "name": "Receptive",
+   "suit": "",
+   "file": "Receptive.jpg"
+  },
+  {
+   "id": "reckoning",
+   "name": "Reckoning",
+   "suit": "",
+   "file": "Reckoning.jpg"
+  },
+  {
+   "id": "recovery",
+   "name": "Recovery",
+   "suit": "",
+   "file": "Recovery.jpg"
+  },
+  {
+   "id": "recovery-2",
+   "name": "Recovery (2)",
+   "suit": "",
+   "file": "Recovery (2).jpg"
+  },
+  {
+   "id": "sacrifice",
+   "name": "Sacrifice",
+   "suit": "",
+   "file": "Sacrifice.jpg"
+  },
+  {
+   "id": "selfish",
+   "name": "Selfish",
+   "suit": "",
+   "file": "Selfish.jpg"
+  },
+  {
+   "id": "spite",
+   "name": "Spite",
+   "suit": "",
+   "file": "Spite.jpg"
+  },
+  {
+   "id": "stability",
+   "name": "Stability",
+   "suit": "",
+   "file": "Stability.jpg"
+  },
+  {
+   "id": "temptation",
+   "name": "Temptation",
+   "suit": "",
+   "file": "Temptation.jpg"
+  },
+  {
+   "id": "the-apocalypse",
+   "name": "The Apocalypse",
+   "suit": "",
+   "file": "The Apocalypse.jpg"
+  },
+  {
+   "id": "the-divine-fruit",
+   "name": "The Divine Fruit",
+   "suit": "",
+   "file": "The Divine Fruit.jpg"
+  },
+  {
+   "id": "the-flood",
+   "name": "The Flood",
+   "suit": "",
+   "file": "The Flood.jpg"
+  },
+  {
+   "id": "the-forbidden",
+   "name": "The Forbidden",
+   "suit": "",
+   "file": "The Forbidden.jpg"
+  },
+  {
+   "id": "the-instrument",
+   "name": "The Instrument",
+   "suit": "",
+   "file": "The Instrument.jpg"
+  },
+  {
+   "id": "the-magic-skin",
+   "name": "The Magic Skin",
+   "suit": "",
+   "file": "The Magic Skin.jpg"
+  },
+  {
+   "id": "the-mirror",
+   "name": "The Mirror",
+   "suit": "",
+   "file": "The Mirror.jpg"
+  },
+  {
+   "id": "the-monster-marriage",
+   "name": "The Monster Marriage",
+   "suit": "",
+   "file": "The Monster Marriage.jpg"
+  },
+  {
+   "id": "the-primordial-chaos",
+   "name": "The Primordial Chaos",
+   "suit": "",
+   "file": "The Primordial Chaos.jpg"
+  },
+  {
+   "id": "the-reaped-god",
+   "name": "The Reaped God",
+   "suit": "",
+   "file": "The Reaped God.jpg"
+  },
+  {
+   "id": "the-sacred-sword",
+   "name": "The Sacred Sword",
+   "suit": "",
+   "file": "The Sacred Sword.jpg"
+  },
+  {
+   "id": "the-world-tree",
+   "name": "The World Tree",
+   "suit": "",
+   "file": "The World Tree.jpg"
+  },
+  {
+   "id": "trickster",
+   "name": "Trickster",
+   "suit": "",
+   "file": "Trickster.jpg"
+  },
+  {
+   "id": "vanity",
+   "name": "Vanity",
+   "suit": "",
+   "file": "Vanity.jpg"
+  },
+  {
+   "id": "vitality",
+   "name": "Vitality",
+   "suit": "",
+   "file": "Vitality.jpg"
+  },
+  {
+   "id": "wrath",
+   "name": "Wrath",
+   "suit": "",
+   "file": "Wrath.jpg"
+  }
+ ]
+}

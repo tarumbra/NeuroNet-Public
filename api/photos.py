@@ -292,6 +292,32 @@ class PhotosApi:
                 return self.get_photo_data(stored_name)
         return _picture("photo-frames", frame)
 
+    def photo_rotate(self, stored_name, direction):
+        """Turn a library photo a quarter turn in its own file (Photos'
+        right-click Rotate Left / Right, 15 Nov 2026). photo_rotate.py does
+        the turning, the same code as the file manager's right-click; the
+        thumbnail and frame copy are remade so their addresses change."""
+        import photo_rotate
+        name = os.path.basename(str(stored_name or ""))
+        if not name:
+            return {"error": "Which photo?"}
+        res = photo_rotate.rotate(os.path.join(photos_dir(), name), direction)
+        if res.get("error"):
+            return res
+        for path in (os.path.join(thumbs_dir(), _thumb_name(name)),
+                     os.path.join(frames_dir(), _frame_name(name))):
+            try:
+                if os.path.isfile(path):
+                    os.remove(path)
+            except OSError:
+                pass
+        try:
+            _make_thumbnail(os.path.join(photos_dir(), name),
+                            os.path.join(thumbs_dir(), _thumb_name(name)))
+        except Exception:
+            pass
+        return {"ok": True}
+
     def photo_delete(self, stored_name):
         for folder, name in ((photos_dir(), stored_name),
                              (thumbs_dir(), _thumb_name(stored_name)),

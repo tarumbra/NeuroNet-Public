@@ -1,0 +1,476 @@
+{
+ "name": "Seasons Of The Witch - Autumn Tarot",
+ "kind": "tarot",
+ "folder": "Seasons Of The Witch - Autum Tarot",
+ "cover": "The Autumn Fool.jpg",
+ "cards": [
+  {
+   "id": "fool",
+   "name": "The Autumn Fool",
+   "suit": "Major",
+   "file": "The Autumn Fool.jpg"
+  },
+  {
+   "id": "magician",
+   "name": "The Autumn Witch",
+   "suit": "Major",
+   "file": "The Autumn Witch.jpg"
+  },
+  {
+   "id": "high_priestess",
+   "name": "The Autumn High Priestess",
+   "suit": "Major",
+   "file": "The Autumn High Priestess.jpg"
+  },
+  {
+   "id": "empress",
+   "name": "The Autumn Empress",
+   "suit": "Major",
+   "file": "The Autumn Empress.jpg"
+  },
+  {
+   "id": "emperor",
+   "name": "The Autumn Emperor",
+   "suit": "Major",
+   "file": "The Autumn Emperor.jpg"
+  },
+  {
+   "id": "hierophant",
+   "name": "The Autumn High Priest",
+   "suit": "Major",
+   "file": "The Autumn High Priest.jpg"
+  },
+  {
+   "id": "lovers",
+   "name": "The Autumn Lovers",
+   "suit": "Major",
+   "file": "The Autumn Lovers.jpg"
+  },
+  {
+   "id": "chariot",
+   "name": "The Autumn Chariot",
+   "suit": "Major",
+   "file": "The Autumn Chariot.jpg"
+  },
+  {
+   "id": "strength",
+   "name": "Autumn Strength",
+   "suit": "Major",
+   "file": "Autumn Strength.jpg"
+  },
+  {
+   "id": "hermit",
+   "name": "The Autumn Hermit",
+   "suit": "Major",
+   "file": "The Autumn Hermit.jpg"
+  },
+  {
+   "id": "wheel",
+   "name": "The Autumn Wheel",
+   "suit": "Major",
+   "file": "The Autumn Wheel.jpg"
+  },
+  {
+   "id": "justice",
+   "name": "Autumn Consequences",
+   "suit": "Major",
+   "file": "Autumn Consequences.jpg"
+  },
+  {
+   "id": "hanged_man",
+   "name": "The Autumn Hanged One",
+   "suit": "Major",
+   "file": "The Autumn Hanged One.jpg"
+  },
+  {
+   "id": "death",
+   "name": "Autumn Death",
+   "suit": "Major",
+   "file": "Autumn Death.jpg"
+  },
+  {
+   "id": "temperance",
+   "name": "Autumn Temperance",
+   "suit": "Major",
+   "file": "Autumn Temperance.jpg"
+  },
+  {
+   "id": "devil",
+   "name": "The Autumn Devil",
+   "suit": "Major",
+   "file": "The Autumn Devil.jpg"
+  },
+  {
+   "id": "tower",
+   "name": "The Autumn Tower",
+   "suit": "Major",
+   "file": "The Autumn Tower.jpg"
+  },
+  {
+   "id": "star",
+   "name": "The Autumn Star",
+   "suit": "Major",
+   "file": "The Autumn Star.jpg"
+  },
+  {
+   "id": "moon",
+   "name": "Waning Moon",
+   "suit": "Major",
+   "file": "Waning Moon.jpg"
+  },
+  {
+   "id": "sun",
+   "name": "Sunset",
+   "suit": "Major",
+   "file": "Sunset.jpg"
+  },
+  {
+   "id": "judgement",
+   "name": "Reckoning",
+   "suit": "Major",
+   "file": "Reckoning.jpg"
+  },
+  {
+   "id": "world",
+   "name": "Descending to Winter",
+   "suit": "Major",
+   "file": "Descending to Winter.jpg"
+  },
+  {
+   "id": "ace_wands",
+   "name": "Ace of Autumn Wands",
+   "suit": "Wands",
+   "file": "Ace of Autumn Wands.jpg"
+  },
+  {
+   "id": "2_wands",
+   "name": "Two of Autumn Wands",
+   "suit": "Wands",
+   "file": "Two of Autumn Wands.jpg"
+  },
+  {
+   "id": "3_wands",
+   "name": "Three of Autumn Wands",
+   "suit": "Wands",
+   "file": "Three of Autumn Wands.jpg"
+  },
+  {
+   "id": "4_wands",
+   "name": "Four of Autumn Wands",
+   "suit": "Wands",
+   "file": "Four of Autumn Wands.jpg"
+  },
+  {
+   "id": "5_wands",
+   "name": "Five of Autumn Wands",
+   "suit": "Wands",
+   "file": "Five of Autumn Wands.jpg"
+  },
+  {
+   "id": "6_wands",
+   "name": "Six of Autumn Wands",
+   "suit": "Wands",
+   "file": "Six of Autumn Wands.jpg"
+  },
+  {
+   "id": "7_wands",
+   "name": "Seven of Autumn Wands",
+   "suit": "Wands",
+   "file": "Seven of Autumn Wands.jpg"
+  },
+  {
+   "id": "8_wands",
+   "name": "Eight of Autumn Wands",
+   "suit": "Wands",
+   "file": "Eight of Autumn Wands.jpg"
+  },
+  {
+   "id": "9_wands",
+   "name": "Nine of Autumn Wands",
+   "suit": "Wands",
+   "file": "Nine of Autumn Wands.jpg"
+  },
+  {
+   "id": "10_wands",
+   "name": "Ten of Autumn Wands",
+   "suit": "Wands",
+   "file": "Ten of Autumn Wands.jpg"
+  },
+  {
+   "id": "page_wands",
+   "name": "Initiate of Autumn Wands",
+   "suit": "Wands",
+   "file": "Initiate of Autumn Wands.jpg"
+  },
+  {
+   "id": "knight_wands",
+   "name": "Seeker of Autumn Wands",
+   "suit": "Wands",
+   "file": "Seeker of Autumn Wands.jpg"
+  },
+  {
+   "id": "queen_wands",
+   "name": "Shepherd of Autumn Wands",
+   "suit": "Wands",
+   "file": "Shepherd of Autumn Wands.jpg"
+  },
+  {
+   "id": "king_wands",
+   "name": "Keeper of Autumn Wands",
+   "suit": "Wands",
+   "file": "Keeper of Autumn Wands.jpg"
+  },
+  {
+   "id": "ace_cups",
+   "name": "Ace of Autumn Cups",
+   "suit": "Cups",
+   "file": "Ace of Autumn Cups.jpg"
+  },
+  {
+   "id": "2_cups",
+   "name": "Two of Autumn Cups",
+   "suit": "Cups",
+   "file": "Two of Autumn Cups.jpg"
+  },
+  {
+   "id": "3_cups",
+   "name": "Three of Autumn Cups",
+   "suit": "Cups",
+   "file": "Three of Autumn Cups.jpg"
+  },
+  {
+   "id": "4_cups",
+   "name": "Four of Autumn Cups",
+   "suit": "Cups",
+   "file": "Four of Autumn Cups.jpg"
+  },
+  {
+   "id": "5_cups",
+   "name": "Five of Autumn Cups",
+   "suit": "Cups",
+   "file": "Five of Autumn Cups.jpg"
+  },
+  {
+   "id": "6_cups",
+   "name": "Six of Autumn Cups",
+   "suit": "Cups",
+   "file": "Six of Autumn Cups.jpg"
+  },
+  {
+   "id": "7_cups",
+   "name": "Seven of Autumn Cups",
+   "suit": "Cups",
+   "file": "Seven of Autumn Cups.jpg"
+  },
+  {
+   "id": "8_cups",
+   "name": "Eight of Autumn Cups",
+   "suit": "Cups",
+   "file": "Eight of Autumn Cups.jpg"
+  },
+  {
+   "id": "9_cups",
+   "name": "Nine of Autumn Cups",
+   "suit": "Cups",
+   "file": "Nine of Autumn Cups.jpg"
+  },
+  {
+   "id": "10_cups",
+   "name": "Ten of Autumn Cups",
+   "suit": "Cups",
+   "file": "Ten of Autumn Cups.jpg"
+  },
+  {
+   "id": "page_cups",
+   "name": "Initiate of Autumn Cups",
+   "suit": "Cups",
+   "file": "Initiate of Autumn Cups.jpg"
+  },
+  {
+   "id": "knight_cups",
+   "name": "Seeker of Autumn Cups",
+   "suit": "Cups",
+   "file": "Seeker of Autumn Cups.jpg"
+  },
+  {
+   "id": "queen_cups",
+   "name": "Shepherd of Autumn Cups",
+   "suit": "Cups",
+   "file": "Shepherd of Autumn Cups.jpg"
+  },
+  {
+   "id": "king_cups",
+   "name": "Keeper of Autumn Cups",
+   "suit": "Cups",
+   "file": "Keeper of Autumn Cups.jpg"
+  },
+  {
+   "id": "ace_swords",
+   "name": "Ace of Autumn Swords",
+   "suit": "Swords",
+   "file": "Ace of Autumn Swords.jpg"
+  },
+  {
+   "id": "2_swords",
+   "name": "Two of Autumn Swords",
+   "suit": "Swords",
+   "file": "Two of Autumn Swords.jpg"
+  },
+  {
+   "id": "3_swords",
+   "name": "Three of Autumn Swords",
+   "suit": "Swords",
+   "file": "Three of Autumn Swords.jpg"
+  },
+  {
+   "id": "4_swords",
+   "name": "Four of Autumn Swords",
+   "suit": "Swords",
+   "file": "Four of Autumn Swords.jpg"
+  },
+  {
+   "id": "5_swords",
+   "name": "Five of Autumn Swords",
+   "suit": "Swords",
+   "file": "Five of Autumn Swords.jpg"
+  },
+  {
+   "id": "6_swords",
+   "name": "Six of Autumn Swords",
+   "suit": "Swords",
+   "file": "Six of Autumn Swords.jpg"
+  },
+  {
+   "id": "7_swords",
+   "name": "Seven of Autumn Swords",
+   "suit": "Swords",
+   "file": "Seven of Autumn Swords.jpg"
+  },
+  {
+   "id": "8_swords",
+   "name": "Eight of Autumn Swords",
+   "suit": "Swords",
+   "file": "Eight of Autumn Swords.jpg"
+  },
+  {
+   "id": "9_swords",
+   "name": "Nine of Autumn Swords",
+   "suit": "Swords",
+   "file": "Nine of Autumn Swords.jpg"
+  },
+  {
+   "id": "10_swords",
+   "name": "Ten of Autumn Swords",
+   "suit": "Swords",
+   "file": "Ten of Autumn Swords.jpg"
+  },
+  {
+   "id": "page_swords",
+   "name": "Initiate of Autumn Swords",
+   "suit": "Swords",
+   "file": "Initiate of Autumn Swords.jpg"
+  },
+  {
+   "id": "knight_swords",
+   "name": "Seeker of Autumn Swords",
+   "suit": "Swords",
+   "file": "Seeker of Autumn Swords.jpg"
+  },
+  {
+   "id": "queen_swords",
+   "name": "Shepherd of Autumn Swords",
+   "suit": "Swords",
+   "file": "Shepherd of Autumn Swords.jpg"
+  },
+  {
+   "id": "king_swords",
+   "name": "Keeper of Autumn Swords",
+   "suit": "Swords",
+   "file": "Keeper of Autumn Swords.jpg"
+  },
+  {
+   "id": "ace_pentacles",
+   "name": "Ace of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Ace of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "2_pentacles",
+   "name": "Two of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Two of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "3_pentacles",
+   "name": "Three of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Three of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "4_pentacles",
+   "name": "Four of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Four of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "5_pentacles",
+   "name": "Five of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Five of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "6_pentacles",
+   "name": "Six of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Six of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "7_pentacles",
+   "name": "Seven of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Seven of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "8_pentacles",
+   "name": "Eight of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Eight of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "9_pentacles",
+   "name": "Nine of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Nine of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "10_pentacles",
+   "name": "Ten of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Ten of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "page_pentacles",
+   "name": "Initiate of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Initiate of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "knight_pentacles",
+   "name": "Seeker of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Seeker of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "queen_pentacles",
+   "name": "Shepherd of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Shepherd of Autumn Pentacles.jpg"
+  },
+  {
+   "id": "king_pentacles",
+   "name": "Keeper of Autumn Pentacles",
+   "suit": "Pentacles",
+   "file": "Keeper of Autumn Pentacles.jpg"
+  }
+ ]
+}

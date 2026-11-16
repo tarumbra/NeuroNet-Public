@@ -1,0 +1,224 @@
+{
+ "name": "Roots And Runes Oracle",
+ "kind": "oracle",
+ "folder": "Roots And Runes Oracle",
+ "cover": "Othala - Juniper.jpg",
+ "cards": [
+  {
+   "id": "ancestors-datura",
+   "name": "Ancestors - Datura",
+   "suit": "",
+   "file": "Ancestors - Datura.jpg"
+  },
+  {
+   "id": "ansuz-yarrow",
+   "name": "Ansuz - Yarrow",
+   "suit": "",
+   "file": "Ansuz - Yarrow.jpg"
+  },
+  {
+   "id": "beauty-rose",
+   "name": "Beauty - Rose",
+   "suit": "",
+   "file": "Beauty - Rose.jpg"
+  },
+  {
+   "id": "berkana-motherwort",
+   "name": "Berkana - Motherwort",
+   "suit": "",
+   "file": "Berkana - Motherwort.jpg"
+  },
+  {
+   "id": "blot-myrrh",
+   "name": "Blot - Myrrh",
+   "suit": "",
+   "file": "Blot - Myrrh.jpg"
+  },
+  {
+   "id": "cleanse-hyssop",
+   "name": "Cleanse - Hyssop",
+   "suit": "",
+   "file": "Cleanse - Hyssop.jpg"
+  },
+  {
+   "id": "dagaz-morning-glory",
+   "name": "Dagaz - Morning Glory",
+   "suit": "",
+   "file": "Dagaz - Morning Glory.jpg"
+  },
+  {
+   "id": "ehwaz-skullcap",
+   "name": "Ehwaz - Skullcap",
+   "suit": "",
+   "file": "Ehwaz - Skullcap.jpg"
+  },
+  {
+   "id": "eihwaz-yew",
+   "name": "Eihwaz - Yew",
+   "suit": "",
+   "file": "Eihwaz - Yew.jpg"
+  },
+  {
+   "id": "elhaz-angelica",
+   "name": "Elhaz - Angelica",
+   "suit": "",
+   "file": "Elhaz - Angelica.jpg"
+  },
+  {
+   "id": "fehu-bayberry",
+   "name": "Fehu - Bayberry",
+   "suit": "",
+   "file": "Fehu - Bayberry.jpg"
+  },
+  {
+   "id": "gebo-orchid",
+   "name": "Gebo - Orchid",
+   "suit": "",
+   "file": "Gebo - Orchid.jpg"
+  },
+  {
+   "id": "hagalaz-deadly-nightshade",
+   "name": "Hagalaz - Deadly Nightshade",
+   "suit": "",
+   "file": "Hagalaz - Deadly Nightshade.jpg"
+  },
+  {
+   "id": "ingwaz-acorn",
+   "name": "Ingwaz - Acorn",
+   "suit": "",
+   "file": "Ingwaz - Acorn.jpg"
+  },
+  {
+   "id": "initiation-amanita",
+   "name": "Initiation - Amanita",
+   "suit": "",
+   "file": "Initiation - Amanita.jpg"
+  },
+  {
+   "id": "isa-hellebore",
+   "name": "Isa - Hellebore",
+   "suit": "",
+   "file": "Isa - Hellebore.jpg"
+  },
+  {
+   "id": "jera-honeysuckle",
+   "name": "Jera - Honeysuckle",
+   "suit": "",
+   "file": "Jera - Honeysuckle.jpg"
+  },
+  {
+   "id": "kenaz-horny-goat-weed",
+   "name": "Kenaz - Horny Goat Weed",
+   "suit": "",
+   "file": "Kenaz - Horny Goat Weed.jpg"
+  },
+  {
+   "id": "laguz-willow-tree",
+   "name": "Laguz - Willow Tree",
+   "suit": "",
+   "file": "Laguz - Willow Tree.jpg"
+  },
+  {
+   "id": "manifest-vervain",
+   "name": "Manifest - Vervain",
+   "suit": "",
+   "file": "Manifest - Vervain.jpg"
+  },
+  {
+   "id": "mannaz-rosemary",
+   "name": "Mannaz - Rosemary",
+   "suit": "",
+   "file": "Mannaz - Rosemary.jpg"
+  },
+  {
+   "id": "midgard-apple-tree",
+   "name": "Midgard - Apple Tree",
+   "suit": "",
+   "file": "Midgard - Apple Tree.jpg"
+  },
+  {
+   "id": "nauthiz-ivy",
+   "name": "Nauthiz - Ivy",
+   "suit": "",
+   "file": "Nauthiz - Ivy.jpg"
+  },
+  {
+   "id": "othala-juniper",
+   "name": "Othala - Juniper",
+   "suit": "",
+   "file": "Othala - Juniper.jpg"
+  },
+  {
+   "id": "perthro-uva-ursi",
+   "name": "Perthro - Uva Ursi",
+   "suit": "",
+   "file": "Perthro - Uva Ursi.jpg"
+  },
+  {
+   "id": "poison-aconite",
+   "name": "Poison - Aconite",
+   "suit": "",
+   "file": "Poison - Aconite.jpg"
+  },
+  {
+   "id": "raidho-comfrey",
+   "name": "Raidho - Comfrey",
+   "suit": "",
+   "file": "Raidho - Comfrey.jpg"
+  },
+  {
+   "id": "rebel-dandelion",
+   "name": "Rebel - Dandelion",
+   "suit": "",
+   "file": "Rebel - Dandelion.jpg"
+  },
+  {
+   "id": "sabbat-mullein",
+   "name": "Sabbat - Mullein",
+   "suit": "",
+   "file": "Sabbat - Mullein.jpg"
+  },
+  {
+   "id": "shadow-henbane",
+   "name": "Shadow - Henbane",
+   "suit": "",
+   "file": "Shadow - Henbane.jpg"
+  },
+  {
+   "id": "sowilo-st-johns-wort",
+   "name": "Sowilo - St. John's Wort",
+   "suit": "",
+   "file": "Sowilo - St. John's Wort.jpg"
+  },
+  {
+   "id": "teiwaz-fig-tree",
+   "name": "Teiwaz - Fig Tree",
+   "suit": "",
+   "file": "Teiwaz - Fig Tree.jpg"
+  },
+  {
+   "id": "thurisaz-blackberry",
+   "name": "Thurisaz - Blackberry",
+   "suit": "",
+   "file": "Thurisaz - Blackberry.jpg"
+  },
+  {
+   "id": "uruz-self-heal",
+   "name": "Uruz - Self-Heal",
+   "suit": "",
+   "file": "Uruz - Self-Heal.jpg"
+  },
+  {
+   "id": "v-lva-mugwort",
+   "name": "Völva - Mugwort",
+   "suit": "",
+   "file": "Völva - Mugwort.jpg"
+  },
+  {
+   "id": "wunjo-lavender",
+   "name": "Wunjo - Lavender",
+   "suit": "",
+   "file": "Wunjo - Lavender.jpg"
+  }
+ ]
+}

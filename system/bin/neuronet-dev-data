@@ -55,16 +55,38 @@ def areas(app):
     if not mem:
         key = "".join(c if c.isalnum() else "-" for c in os.path.realpath(os.path.expanduser("~/Work")))
         mem = os.path.expanduser(f"~/.claude/projects/{key}/memory")
-    return {"collab": os.path.join(data, "collab"), "notes": os.path.join(data, "notes"), "ebooks": os.path.join(data, "ebooks"), "claude-memory": mem}
+    out = {"collab": os.path.join(data, "collab"), "notes": os.path.join(data, "notes"), "ebooks": os.path.join(data, "ebooks"), "claude-memory": mem}
+    # NeuroTrain's library and programs (16 Nov, Cam: "This will be needed as i do work on both PC's"): its data folder,
+    # the one run from ~/Work (NeuroTrain-dev) or an installed one, less its browser engine and its own backups (AREA_SKIP)
+    share = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
+    for n in ("NeuroTrain-dev", "NeuroTrain"):
+        if os.path.isfile(os.path.join(share, n, "neurotrain.json")):
+            out["neurotrain"] = os.path.join(share, n)
+            break
+    return out
 
 
-def walk(top):
-    """{relative path: full path} of the files under top worth keeping in step."""
+# what an area's top level keeps to itself (rebuilt on each computer, or this computer's own safety copies)
+AREA_SKIP = {"neurotrain": {"engine", "backups"}}
+
+
+def app_open(folder):
+    """NeuroTrain is open on this computer: Electron's lock in its engine folder points at a live process."""
+    try:
+        pid = int(os.readlink(os.path.join(folder, "engine", "SingletonLock")).rsplit("-", 1)[1])
+        os.kill(pid, 0)
+        return True
+    except (OSError, ValueError, IndexError):
+        return False
+
+
+def walk(top, skip=()):
+    """{relative path: full path} of the files under top worth keeping in step (skip: top-level folders left out)."""
     out = {}
     for root, dirs, files in os.walk(top):
-        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        dirs[:] = [d for d in dirs if not d.startswith(".") and not (root == top and d in skip)]
         for n in files:
-            if n.startswith(".") or n in SKIP or n.endswith("~"):
+            if n.startswith(".") or n in SKIP or n.endswith("~") or n.endswith(".bak"):
                 continue
             p = os.path.join(root, n)
             if os.path.isfile(p) and not os.path.islink(p):
@@ -141,7 +163,13 @@ def main():
 
     newbase, got, sent, gone_here, gone_there, clashes, big = {}, 0, 0, 0, 0, [], []
     for name, folder in areas(app).items():
-        local = walk(folder)
+        if name == "neurotrain" and app_open(folder):
+            print("notes: NeuroTrain is open here, so its programs and library were left alone this time (close it, then run neuronet-dev data)")
+            for k, v in base.items():
+                if k.startswith(name + "/"):
+                    newbase[k] = v
+            continue
+        local = walk(folder, AREA_SKIP.get(name, ()))
         branch = walk(os.path.join(shared, name))
         for rel in sorted(set(local) | set(branch)):
             key = f"{name}/{rel}"

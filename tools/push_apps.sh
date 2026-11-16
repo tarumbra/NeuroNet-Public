@@ -15,7 +15,7 @@
 # Linux build (npm run build:linux, electron-builder's dir) as <App>-<version>-linux-x64.tar.gz, its notes the
 # version's section of CHANGELOG.md ("## <version>, ...").
 set -u
-APPS=(NeuroCafe NeuroCode NeuroArcana NeuroTrain)
+APPS=(NeuroCafe NeuroCode NeuroArcana NeuroTrain NeuroTV)
 RELEASES=(NeuroCode)            # the ones published as builds; NeuroCafe joins at its first standalone release (I22)
 root="${NEURO_APPS_DIR:-$HOME/Work}"
 dry=""; [ "${1:-}" = "--dry-run" ] && dry=1

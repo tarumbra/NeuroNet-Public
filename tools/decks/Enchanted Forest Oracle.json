@@ -1,0 +1,272 @@
+{
+ "name": "Enchanted Forest Oracle",
+ "kind": "oracle",
+ "folder": "Enchanted Forest Oracle",
+ "cover": "Fairy Ring.jpg",
+ "cards": [
+  {
+   "id": "brownie",
+   "name": "Brownie",
+   "suit": "",
+   "file": "Brownie.jpg"
+  },
+  {
+   "id": "bubble-of-protection",
+   "name": "Bubble of Protection",
+   "suit": "",
+   "file": "Bubble of Protection.jpg"
+  },
+  {
+   "id": "centaur",
+   "name": "Centaur",
+   "suit": "",
+   "file": "Centaur.jpg"
+  },
+  {
+   "id": "cobweb-fairy",
+   "name": "Cobweb Fairy",
+   "suit": "",
+   "file": "Cobweb Fairy.jpg"
+  },
+  {
+   "id": "crystal-fairies",
+   "name": "Crystal Fairies",
+   "suit": "",
+   "file": "Crystal Fairies.jpg"
+  },
+  {
+   "id": "dark-elf",
+   "name": "Dark Elf",
+   "suit": "",
+   "file": "Dark Elf.jpg"
+  },
+  {
+   "id": "dragon",
+   "name": "Dragon",
+   "suit": "",
+   "file": "Dragon.jpg"
+  },
+  {
+   "id": "dryad",
+   "name": "Dryad",
+   "suit": "",
+   "file": "Dryad.jpg"
+  },
+  {
+   "id": "fae-angel",
+   "name": "Fae Angel",
+   "suit": "",
+   "file": "Fae Angel.jpg"
+  },
+  {
+   "id": "fairy-ring",
+   "name": "Fairy Ring",
+   "suit": "",
+   "file": "Fairy Ring.jpg"
+  },
+  {
+   "id": "fairy-whispering",
+   "name": "Fairy Whispering",
+   "suit": "",
+   "file": "Fairy Whispering.jpg"
+  },
+  {
+   "id": "fairy-wishes",
+   "name": "Fairy Wishes",
+   "suit": "",
+   "file": "Fairy Wishes.jpg"
+  },
+  {
+   "id": "fawn-fairy",
+   "name": "Fawn Fairy",
+   "suit": "",
+   "file": "Fawn Fairy.jpg"
+  },
+  {
+   "id": "flower-fairies",
+   "name": "Flower Fairies",
+   "suit": "",
+   "file": "Flower Fairies.jpg"
+  },
+  {
+   "id": "ghillie-dhu",
+   "name": "Ghillie Dhu",
+   "suit": "",
+   "file": "Ghillie Dhu.jpg"
+  },
+  {
+   "id": "glimmer",
+   "name": "Glimmer",
+   "suit": "",
+   "file": "Glimmer.jpg"
+  },
+  {
+   "id": "gnomes",
+   "name": "Gnomes",
+   "suit": "",
+   "file": "Gnomes.jpg"
+  },
+  {
+   "id": "goblins",
+   "name": "Goblins",
+   "suit": "",
+   "file": "Goblins.jpg"
+  },
+  {
+   "id": "golden-key",
+   "name": "Golden Key",
+   "suit": "",
+   "file": "Golden Key.jpg"
+  },
+  {
+   "id": "happily-ever-after",
+   "name": "Happily Ever After",
+   "suit": "",
+   "file": "Happily Ever After.jpg"
+  },
+  {
+   "id": "healing-fairy",
+   "name": "Healing Fairy",
+   "suit": "",
+   "file": "Healing Fairy.jpg"
+  },
+  {
+   "id": "hidden-beings",
+   "name": "Hidden Beings",
+   "suit": "",
+   "file": "Hidden Beings.jpg"
+  },
+  {
+   "id": "labyrinth",
+   "name": "Labyrinth",
+   "suit": "",
+   "file": "Labyrinth.jpg"
+  },
+  {
+   "id": "leprechaun",
+   "name": "Leprechaun",
+   "suit": "",
+   "file": "Leprechaun.jpg"
+  },
+  {
+   "id": "light-elf",
+   "name": "Light Elf",
+   "suit": "",
+   "file": "Light Elf.jpg"
+  },
+  {
+   "id": "magic-mirror",
+   "name": "Magic Mirror",
+   "suit": "",
+   "file": "Magic Mirror.jpg"
+  },
+  {
+   "id": "magical-meeting",
+   "name": "Magical Meeting",
+   "suit": "",
+   "file": "Magical Meeting.jpg"
+  },
+  {
+   "id": "mer-fairies",
+   "name": "Mer-Fairies",
+   "suit": "",
+   "file": "Mer-Fairies.jpg"
+  },
+  {
+   "id": "mermaid",
+   "name": "Mermaid",
+   "suit": "",
+   "file": "Mermaid.jpg"
+  },
+  {
+   "id": "mischief-maker",
+   "name": "Mischief-Maker",
+   "suit": "",
+   "file": "Mischief-Maker.jpg"
+  },
+  {
+   "id": "naiads",
+   "name": "Naiads",
+   "suit": "",
+   "file": "Naiads.jpg"
+  },
+  {
+   "id": "pegasus",
+   "name": "Pegasus",
+   "suit": "",
+   "file": "Pegasus.jpg"
+  },
+  {
+   "id": "pixie-led",
+   "name": "Pixie-Led",
+   "suit": "",
+   "file": "Pixie-Led.jpg"
+  },
+  {
+   "id": "pixies",
+   "name": "Pixies",
+   "suit": "",
+   "file": "Pixies.jpg"
+  },
+  {
+   "id": "portal",
+   "name": "Portal",
+   "suit": "",
+   "file": "Portal.jpg"
+  },
+  {
+   "id": "sanctuary",
+   "name": "Sanctuary",
+   "suit": "",
+   "file": "Sanctuary.jpg"
+  },
+  {
+   "id": "selkie",
+   "name": "Selkie",
+   "suit": "",
+   "file": "Selkie.jpg"
+  },
+  {
+   "id": "shapeshifting",
+   "name": "Shapeshifting",
+   "suit": "",
+   "file": "Shapeshifting.jpg"
+  },
+  {
+   "id": "snow-fairy",
+   "name": "Snow Fairy",
+   "suit": "",
+   "file": "Snow Fairy.jpg"
+  },
+  {
+   "id": "troll",
+   "name": "Troll",
+   "suit": "",
+   "file": "Troll.jpg"
+  },
+  {
+   "id": "unicorn",
+   "name": "Unicorn",
+   "suit": "",
+   "file": "Unicorn.jpg"
+  },
+  {
+   "id": "wand",
+   "name": "Wand",
+   "suit": "",
+   "file": "Wand.jpg"
+  },
+  {
+   "id": "water-fairies",
+   "name": "Water Fairies",
+   "suit": "",
+   "file": "Water Fairies.jpg"
+  },
+  {
+   "id": "white-stag",
+   "name": "White Stag",
+   "suit": "",
+   "file": "White Stag.jpg"
+  }
+ ]
+}

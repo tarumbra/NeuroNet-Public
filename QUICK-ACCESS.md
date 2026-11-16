@@ -18,6 +18,7 @@ and your unsaved work carry on while it's hidden.
 | **Super + Alt + R** | Kitchen (R for recipes; Super + Alt + K is Omarchy's) |
 | **Super + Alt + M** | M&T on its music pages: Library, Albums, Playlists |
 | **Super + Alt + T** | NeuroTrain, the training planner; again to tuck it away (NeuroNet Training where it isn't installed) |
+| **Super + Alt + W** | NeuroTV, the IPTV player (live TV, films, shows, NeuroNet's films); again to tuck it away |
 | **Super + Alt + H** | Home (the dashboard) |
 | **Super + Alt + N** | Scribe (Notes, Cells, Fleeting, notebooks, ebooks) |
 | **Super + Alt + B** | Creative (Scrapbook, Boards, Paper creator, Assets) |

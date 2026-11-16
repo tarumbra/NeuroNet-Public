@@ -1135,6 +1135,8 @@ console.log("\nThe farm: plots dug with the plow, Farmer Giles's seeds, cooking 
     const fp = A(fr, "usePotion", {kind: "fresh", plot: P[0]}, t + 2 * grow + S);
     ok("a Fresh potion on a plot gone over: ripe again, with its whole time to be picked", fp.ok && fp.state.inv.fresh === 0 && (() => { const pl = C.view(fp.state, t + 2 * grow + S).field.plots[0]; return pl.ready && !pl.spoiled && pl.spoilsIn === grow; })(), fp.error);
     ok("  not on a plot still growing or ripe", !A(fr, "usePotion", {kind: "fresh", plot: P[0]}, t + S).ok && !A(fr, "usePotion", {kind: "fresh", plot: P[0]}, t + grow).ok);
+    ok("  the page: a potion stays in hand after each use until Esc or the last one (16 Nov)", /function potionUsed\(r\) \{[^]*?state\.inv\[potionMode\][^]*?if \(left > 0\) return toast[^]*?potionMode = null/.test(fs.readFileSync(path.join(APP, "ui", "cafe", "cafe.js"), "utf8"))
+       && (fs.readFileSync(path.join(APP, "ui", "cafe", "cafe.js"), "utf8").match(/act\("usePotion", \{ kind: potionMode[^\n]*\n[^\n]*potionUsed\(r\)/g) || []).length === 2);
     ok("  the page: clicking a plot with a potion in hand uses it there", /potionMode && !build\) \{[^]*?act\("usePotion", \{ kind: potionMode, plot:/.test(fs.readFileSync(path.join(APP, "ui", "cafe", "cafe.js"), "utf8")));
     ok("  a crop that was ripe before the rule gets a full window from now (once)", (() => { const g = C.advance(old, t + 10 * grow); const pl = C.view(g, t + 10 * grow).field.plots[0]; return pl.ready && pl.spoilsIn === grow && g.cropKeep; })());
   }

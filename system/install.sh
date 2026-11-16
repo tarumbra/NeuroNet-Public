@@ -209,10 +209,11 @@ PY
   done
   # hook, services, launcher, commands, paths.json
   gone=( "$HOOKS/theme-set.d/neuronet-theme"
+         "${XDG_DATA_HOME:-$HOME/.local/share}/nautilus-python/extensions/neuronet-rotate.py"
          "$HOME/.config/systemd/user/neuronet-menu.path" "$HOME/.config/systemd/user/neuronet-menu.service"
          "$HOME/.local/share/applications/NeuroNet.desktop" "$HOME/.local/share/applications/NeuroPets.desktop" "$HOME/.local/share/applications/NeuroFarm.desktop" "$HOME/.local/share/applications/NeuroCafe.desktop" "$HOME/.local/share/applications/NeuroArcana.desktop" "$HOME/.local/share/applications/NeuroTrain.desktop" "$HOME/.local/bin/neuronet-path"
          "$HOME/.config/neuronet/paths.json" )
-  for c in neuronet-quick neuronet-call neuronet-music neuronet-menu neuronet-capture neuronet-snip neuronet-media-art neuronet-open neuronet-shell neuronet-desk-edit neuropets neuropets-call neurofarm neurofarm-call neurocafe neuroarcana neurotrain claude-dock; do   # the -call ones: retired 2026-10-15, still taken out
+  for c in neuronet-quick neuronet-call neuronet-music neuronet-menu neuronet-capture neuronet-snip neuronet-media-art neuronet-rotate neuronet-open neuronet-shell neuronet-desk-edit neuropets neuropets-call neurofarm neurofarm-call neurocafe neuroarcana neurotrain claude-dock; do   # the -call ones: retired 2026-10-15, still taken out
     gone+=("$HOME/.local/bin/$c")
   done
   if [ -z "$CHECK" ]; then systemctl --user disable --now neuronet-menu.path >/dev/null 2>&1 || true; fi
@@ -567,6 +568,17 @@ for f in "$SYS"/omarchy/hooks/theme-set.d/*; do
   if [ -n "$CHECK" ]; then would "install hook $(basename "$f")"; continue; fi
   [ -e "$dst" ] && cp -a "$dst" "$dst.bak.$STAMP"
   install -m 755 "$f" "$dst"; say "Installed hook $(basename "$f")"
+done
+# The file manager's right-click Rotate Left / Right on pictures (15 Nov 2026):
+# a nautilus-python extension; Nautilus reads it when it next starts.
+NAUT_EXT="${XDG_DATA_HOME:-$HOME/.local/share}/nautilus-python/extensions"
+for f in "$SYS"/nautilus/*.py; do
+  [ -f "$f" ] || continue
+  dst="$NAUT_EXT/$(basename "$f")"
+  cmp -s "$f" "$dst" && { say "In place: file manager $(basename "$f")"; continue; }
+  if [ -n "$CHECK" ]; then would "add the file manager's $(basename "$f" .py) right-click"; continue; fi
+  mkdir -p "$NAUT_EXT"; [ -e "$dst" ] && cp -a "$dst" "$dst.bak.$STAMP"
+  install -m 644 "$f" "$dst"; say "Added the file manager's right-click: $(basename "$f" .py) (opens with Nautilus' next start)"
 done
 
 # ------------------------------------------------------------ 6. Hyprland --

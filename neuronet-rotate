@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""neuronet-rotate -- turn pictures a quarter turn, in place (15 November 2026).
+
+    neuronet-rotate left  FILE [FILE ...]
+    neuronet-rotate right FILE [FILE ...]
+
+What the file manager's right-click "Rotate Left" / "Rotate Right" runs (the
+Nautilus extension system/nautilus/neuronet-rotate.py). The work is in
+photo_rotate.py, the same code NeuroNet's Photos uses. Anything that couldn't
+be turned is said in a notification, so a right-click never fails silently.
+"""
+import os
+import shutil
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, HERE)
+import photo_rotate  # noqa: E402
+
+
+def main(argv):
+    if len(argv) < 2 or argv[0] not in ("left", "right"):
+        print(__doc__.strip().splitlines()[2], file=sys.stderr)
+        print(__doc__.strip().splitlines()[3], file=sys.stderr)
+        return 2
+    failed = []
+    for path in argv[1:]:
+        r = photo_rotate.rotate(path, argv[0])
+        if r.get("error"):
+            failed.append("%s: %s" % (os.path.basename(path), r["error"]))
+    if failed:
+        print("\n".join(failed), file=sys.stderr)
+        if shutil.which("notify-send") and not sys.stdout.isatty():
+            subprocess.run(["notify-send", "-a", "NeuroNet", "Couldn't rotate",
+                            "\n".join(failed[:5])], check=False)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

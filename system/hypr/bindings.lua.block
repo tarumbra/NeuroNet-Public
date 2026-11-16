@@ -4,6 +4,8 @@ o.bind("SUPER + ALT + N", "NeuroNet Scribe", "neuronet-quick notes")
 o.bind("SUPER + ALT + B", "NeuroNet Creative", "neuronet-quick creative")
 -- Super+Alt+T opens NeuroTrain, the training planner in its own window (10 Nov 2026); NeuroNet Training where it isn't installed
 o.bind("SUPER + ALT + T", "NeuroTrain (training planner; again to tuck it away)", "neurotrain toggle")
+-- Super+Alt+W opens NeuroTV, the IPTV player in its own window (15 Nov 2026)
+o.bind("SUPER + ALT + W", "NeuroTV (IPTV and NeuroNet films; again to tuck it away)", "neurotv toggle")
 o.bind("SUPER + ALT + P", "NeuroNet Photos", "neuronet-quick photos")
 o.bind("SUPER + ALT + M", "NeuroNet M&T: music", "neuronet-quick music")
 o.bind("SUPER + ALT + C", "NeuroNet Cashbox (Money)", "neuronet-quick money")

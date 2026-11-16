@@ -1,0 +1,36 @@
+#!/bin/bash
+# neurotv: open NeuroTV, the IPTV player (Xtream Codes or M3U; live TV, films, shows, plus NeuroNet's films). Super+Alt+W.
+#
+#     neurotv            open it, or bring the open one here
+#     neurotv toggle     the same, but if it's already on this workspace, tuck it away (special:neurotv)
+#
+# It runs the installed package (/usr/bin/neurotv) if there is one, otherwise the build in ~/Work/NeuroTV.
+set -u
+DEV="${NEUROTV_DIR:-$HOME/Work/NeuroTV}"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/neurotv.log"
+mkdir -p "$(dirname "$LOG")"
+BIN=""
+if [ -x /usr/bin/neurotv ]; then BIN=/usr/bin/neurotv
+elif [ -x "$DEV/build/neurotv" ]; then BIN="$DEV/build/neurotv"; fi
+if [ -z "$BIN" ]; then
+  command -v notify-send >/dev/null 2>&1 && notify-send "NeuroTV" "NeuroTV isn't built on this computer yet: run bin/build in ~/Work/NeuroTV."
+  exit 1
+fi
+
+if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+  j=$(hyprctl clients -j 2>/dev/null | jq -c '[.[] | select(.class == "neurotv")][0] // empty')
+  if [ -n "$j" ]; then
+    win="address:$(jq -r .address <<<"$j")"; ws=$(jq -r .workspace.name <<<"$j")
+    target=$(hyprctl activeworkspace -j | jq -r .name)
+    if [ "${1:-}" = toggle ] && [ "$ws" = "$target" ]; then
+      hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"special:neurotv\", follow = false })" >/dev/null 2>&1
+      exit 0
+    fi
+    [ "$ws" != "$target" ] && hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\" })" >/dev/null 2>&1
+    hyprctl dispatch "hl.dsp.focus({ window = \"$win\" })" >/dev/null 2>&1
+    exit 0
+  fi
+fi
+run=("$BIN")
+if command -v uwsm-app >/dev/null 2>&1; then run=(uwsm-app -- "${run[@]}"); fi
+exec setsid -f "${run[@]}" >"$LOG" 2>&1

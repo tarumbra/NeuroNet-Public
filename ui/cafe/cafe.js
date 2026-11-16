@@ -48,6 +48,14 @@
   let hoverW = null, buyTab = "dining", buyCat = {};
   // V23: a potion picked in the Bag, waiting for a stove or counter to be clicked
   let potionMode = null;
+  /* 16 Nov (Cam: "have it consistent until esc is pressed ... without having the bag keep opening"): a potion used on a
+     stove, counter or plot stays in hand for the next one, until Esc or the last of them is used. */
+  function potionUsed(r) {
+    const left = state && state.inv ? state.inv[potionMode] || 0 : 0;
+    if (left > 0) return toast(`${r.msg} (${left} left: click the next one, Esc to stop)`);
+    toast(`${r.msg} That was the last one.`);
+    potionMode = null; document.body.classList.remove("nc-potion");
+  }
   // 2026-10-22: the day Aunty's box was last announced (one toast a box)
   let auntySeen = null, cartSeen = null, feastSeen = null;
   // 2026-10-24: free placement outside (Cam: "the cheat for sims"), remembered on this computer; Outside's category; a
@@ -1707,7 +1715,7 @@
       if (potionMode && !build) {                                    // (2026-11-07) the Fresh potion works on a plot that's gone over
         e.stopPropagation();
         const r = act("usePotion", { kind: potionMode, plot: +b.dataset.plot });
-        if (r && r.ok) { toast(r.msg); potionMode = null; document.body.classList.remove("nc-potion"); }
+        if (r && r.ok) potionUsed(r);
         return;
       }
       if (!build) { e.stopPropagation(); return plotSwept ? undefined : plotTap(+b.dataset.plot, e); }
@@ -1970,7 +1978,7 @@
     if (build) { if (build.street) return; build = { on: true, pick: uid }; draw(); return; }
     if (potionMode) {                                               // V23: a potion from the Inventory, on this
       const r = act("usePotion", { kind: potionMode, uid });
-      if (r && r.ok) { toast(r.msg); potionMode = null; document.body.classList.remove("nc-potion"); }
+      if (r && r.ok) potionUsed(r);
       return;
     }
     if (C.cooks(it)) {

@@ -31,7 +31,11 @@ APP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Never in a public release: Cam's own data, and the tools that make it.
 PRIVATE = (
     "system/starter/starter.json",       # recipes, Training, decks, notes, Collaboration, Media
+    "tools/public.json",                 # the private side's own note
 )
+
+# A public install clones and updates from the public repository, never the private one.
+POINT = {"system/install-neuronet.sh": ("git@github.com:tarumbra/NeuroNet.git",)}
 
 
 def git(*args, cwd, check=True):
@@ -85,6 +89,13 @@ def main(argv, app=APP):
         p = os.path.join(tree, rel)
         if os.path.lexists(p):
             os.remove(p)
+    for rel, olds in POINT.items():
+        p = os.path.join(tree, rel)
+        if repo and os.path.exists(p):
+            text = open(p, encoding="utf-8").read()
+            for old in olds:
+                text = text.replace(old, repo)
+            open(p, "w", encoding="utf-8").write(text)
     left = [rel for rel in PRIVATE if os.path.lexists(os.path.join(tree, rel))]
     if left:
         print("make_public: refusing, these are still there: " + ", ".join(left), file=sys.stderr)

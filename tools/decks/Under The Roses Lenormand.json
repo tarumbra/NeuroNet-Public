@@ -1,0 +1,224 @@
+{
+ "name": "Under The Roses Lenormand",
+ "kind": "lenormand",
+ "folder": "Under The Roses Lenormand",
+ "cover": "The Rider.jpg",
+ "cards": [
+  {
+   "id": "1",
+   "name": "The Rider",
+   "suit": "",
+   "file": "The Rider.jpg"
+  },
+  {
+   "id": "2",
+   "name": "The Clover",
+   "suit": "",
+   "file": "The Clover.jpg"
+  },
+  {
+   "id": "3",
+   "name": "The Ship",
+   "suit": "",
+   "file": "The Ship.jpg"
+  },
+  {
+   "id": "4",
+   "name": "The House",
+   "suit": "",
+   "file": "The House.jpg"
+  },
+  {
+   "id": "5",
+   "name": "The Tree",
+   "suit": "",
+   "file": "The Tree.jpg"
+  },
+  {
+   "id": "6",
+   "name": "The Clouds",
+   "suit": "",
+   "file": "The Clouds.jpg"
+  },
+  {
+   "id": "7",
+   "name": "The Snake",
+   "suit": "",
+   "file": "The Snake.jpg"
+  },
+  {
+   "id": "8",
+   "name": "The Grave",
+   "suit": "",
+   "file": "The Grave.jpg"
+  },
+  {
+   "id": "9",
+   "name": "The Bouquet",
+   "suit": "",
+   "file": "The Bouquet.jpg"
+  },
+  {
+   "id": "10",
+   "name": "The Sickle",
+   "suit": "",
+   "file": "The Sickle.jpg"
+  },
+  {
+   "id": "11",
+   "name": "The Whip",
+   "suit": "",
+   "file": "The Whip.jpg"
+  },
+  {
+   "id": "12",
+   "name": "The Owls",
+   "suit": "",
+   "file": "The Owls.jpg"
+  },
+  {
+   "id": "13",
+   "name": "The Child",
+   "suit": "",
+   "file": "The Child.jpg"
+  },
+  {
+   "id": "14",
+   "name": "The Fox",
+   "suit": "",
+   "file": "The Fox.jpg"
+  },
+  {
+   "id": "15",
+   "name": "The Bear",
+   "suit": "",
+   "file": "The Bear.jpg"
+  },
+  {
+   "id": "16",
+   "name": "The Stars",
+   "suit": "",
+   "file": "The Stars.jpg"
+  },
+  {
+   "id": "17",
+   "name": "The Stork",
+   "suit": "",
+   "file": "The Stork.jpg"
+  },
+  {
+   "id": "18",
+   "name": "The Dog",
+   "suit": "",
+   "file": "The Dog.jpg"
+  },
+  {
+   "id": "19",
+   "name": "The Clock Tower",
+   "suit": "",
+   "file": "The Clock Tower.jpg"
+  },
+  {
+   "id": "20",
+   "name": "The Garden",
+   "suit": "",
+   "file": "The Garden.jpg"
+  },
+  {
+   "id": "21",
+   "name": "The Mountain",
+   "suit": "",
+   "file": "The Mountain.jpg"
+  },
+  {
+   "id": "22",
+   "name": "The Crossroads",
+   "suit": "",
+   "file": "The Crossroads.jpg"
+  },
+  {
+   "id": "23",
+   "name": "The Mice",
+   "suit": "",
+   "file": "The Mice.jpg"
+  },
+  {
+   "id": "24",
+   "name": "The Locket",
+   "suit": "",
+   "file": "The Locket.jpg"
+  },
+  {
+   "id": "25",
+   "name": "The Ring",
+   "suit": "",
+   "file": "The Ring.jpg"
+  },
+  {
+   "id": "26",
+   "name": "The Journal",
+   "suit": "",
+   "file": "The Journal.jpg"
+  },
+  {
+   "id": "27",
+   "name": "The Letter",
+   "suit": "",
+   "file": "The Letter.jpg"
+  },
+  {
+   "id": "28",
+   "name": "The Gentleman",
+   "suit": "",
+   "file": "The Gentleman.jpg"
+  },
+  {
+   "id": "29",
+   "name": "The Lady",
+   "suit": "",
+   "file": "The Lady.jpg"
+  },
+  {
+   "id": "30",
+   "name": "The Lilies",
+   "suit": "",
+   "file": "The Lilies.jpg"
+  },
+  {
+   "id": "31",
+   "name": "The Sun",
+   "suit": "",
+   "file": "The Sun.jpg"
+  },
+  {
+   "id": "32",
+   "name": "The Moon",
+   "suit": "",
+   "file": "The Moon.jpg"
+  },
+  {
+   "id": "33",
+   "name": "The Key",
+   "suit": "",
+   "file": "The Key.jpg"
+  },
+  {
+   "id": "34",
+   "name": "The Fish",
+   "suit": "",
+   "file": "The Fish.jpg"
+  },
+  {
+   "id": "35",
+   "name": "The Anchor",
+   "suit": "",
+   "file": "The Anchor.jpg"
+  },
+  {
+   "id": "36",
+   "name": "The Cross",
+   "suit": "",
+   "file": "The Cross.jpg"
+  }
+ ]
+}

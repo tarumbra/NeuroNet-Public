@@ -1,0 +1,337 @@
+{
+ "name": "Mayan Oracle",
+ "kind": "oracle",
+ "folder": "Mayan Oracle",
+ "cover": "25 Ajaw-Ahau.jpg",
+ "cards": [
+  {
+   "id": "1",
+   "name": "Imox",
+   "suit": "",
+   "synopsis": "Water, Crocodile, Water Lily",
+   "file": "01 Imox.jpg"
+  },
+  {
+   "id": "2",
+   "name": "Iq'",
+   "suit": "",
+   "synopsis": "Wind, Hummingbird",
+   "file": "02 Iq'.jpg"
+  },
+  {
+   "id": "3",
+   "name": "Aq'ab'al",
+   "suit": "",
+   "synopsis": "Night, Bat, Twilight",
+   "file": "03 Aq'ab'al.jpg"
+  },
+  {
+   "id": "4",
+   "name": "K'at",
+   "suit": "",
+   "synopsis": "Net, Spider",
+   "file": "04 K'at.jpg"
+  },
+  {
+   "id": "5",
+   "name": "Kan",
+   "suit": "",
+   "synopsis": "Snake",
+   "file": "05 Kan.jpg"
+  },
+  {
+   "id": "6",
+   "name": "Kame",
+   "suit": "",
+   "synopsis": "Death, Rebirth",
+   "file": "06 Kame.jpg"
+  },
+  {
+   "id": "7",
+   "name": "Kej",
+   "suit": "",
+   "synopsis": "Deer",
+   "file": "07 Kej.jpg"
+  },
+  {
+   "id": "8",
+   "name": "Q'anil",
+   "suit": "",
+   "synopsis": "Seed, Corn, Rabbit, Frog",
+   "file": "08 Q'anil.jpg"
+  },
+  {
+   "id": "9",
+   "name": "Toj",
+   "suit": "",
+   "synopsis": "Offering, Reciprocity",
+   "file": "09 Toj.jpg"
+  },
+  {
+   "id": "10",
+   "name": "Tz'i",
+   "suit": "",
+   "synopsis": "Dog",
+   "file": "10 Tz'i.jpg"
+  },
+  {
+   "id": "11",
+   "name": "B'atz'",
+   "suit": "",
+   "synopsis": "Monkey",
+   "file": "11 B'atz'.jpg"
+  },
+  {
+   "id": "12",
+   "name": "E'",
+   "suit": "",
+   "synopsis": "Road, Wildcat",
+   "file": "12 E'.jpg"
+  },
+  {
+   "id": "13",
+   "name": "Aj",
+   "suit": "",
+   "synopsis": "Cornstalk",
+   "file": "13 Aj.jpg"
+  },
+  {
+   "id": "14",
+   "name": "Ix",
+   "suit": "",
+   "synopsis": "Jaguar",
+   "file": "14 Ix.jpg"
+  },
+  {
+   "id": "15",
+   "name": "Tz'ikin",
+   "suit": "",
+   "synopsis": "Eagle, Quetzal",
+   "file": "15 Tz'ikin.jpg"
+  },
+  {
+   "id": "16",
+   "name": "Ajmak",
+   "suit": "",
+   "synopsis": "Forgiveness, Owl",
+   "file": "16 Ajmak.jpg"
+  },
+  {
+   "id": "17",
+   "name": "No'j",
+   "suit": "",
+   "synopsis": "Mind, Woodpecker",
+   "file": "17 No'j.jpg"
+  },
+  {
+   "id": "18",
+   "name": "Tijax",
+   "suit": "",
+   "synopsis": "Knife",
+   "file": "18 Tijax.jpg"
+  },
+  {
+   "id": "19",
+   "name": "Kawok",
+   "suit": "",
+   "synopsis": "Storm, Turtle",
+   "file": "19 Kawok.jpg"
+  },
+  {
+   "id": "20",
+   "name": "Ajpu",
+   "suit": "",
+   "synopsis": "Sun",
+   "file": "20 Ajpu.jpg"
+  },
+  {
+   "id": "21",
+   "name": "Ixchel",
+   "suit": "",
+   "synopsis": "Goddess of Fertility and Medicine",
+   "file": "21 Ixchel.jpg"
+  },
+  {
+   "id": "22",
+   "name": "Itzamna",
+   "suit": "",
+   "synopsis": "God of Creation",
+   "file": "22 Itzamna.jpg"
+  },
+  {
+   "id": "23",
+   "name": "Q'uq'umatz",
+   "suit": "",
+   "synopsis": "The Feathered Serpent",
+   "file": "23 Q'uq'umatz.jpg"
+  },
+  {
+   "id": "24",
+   "name": "Chaac",
+   "suit": "",
+   "synopsis": "God of Rain",
+   "file": "24 Chaac.jpg"
+  },
+  {
+   "id": "25",
+   "name": "Ajaw-Ahau",
+   "suit": "",
+   "synopsis": "The Divinity That Manifests in Everything",
+   "file": "25 Ajaw-Ahau.jpg"
+  },
+  {
+   "id": "26",
+   "name": "Awilix",
+   "suit": "",
+   "synopsis": "Moon Goddess",
+   "file": "26 Awilix.jpg"
+  },
+  {
+   "id": "27",
+   "name": "Hunahpu and Xbalanque",
+   "suit": "",
+   "synopsis": "Hero Twins",
+   "file": "27 Hunahpu and Xbalanque.jpg"
+  },
+  {
+   "id": "28",
+   "name": "Kakaw (Cacao)",
+   "suit": "",
+   "synopsis": "Food of the Gods",
+   "file": "28 Kakaw (Cacao).jpg"
+  },
+  {
+   "id": "29",
+   "name": "Yaxche (Ceiba)",
+   "suit": "",
+   "synopsis": "Tree of Life",
+   "file": "29 Yaxche (Ceiba).jpg"
+  },
+  {
+   "id": "30",
+   "name": "K'uk' (Quetzal)",
+   "suit": "",
+   "synopsis": "Spirit of Sky and Freedom",
+   "file": "30 K'uk' (Quetzal).jpg"
+  },
+  {
+   "id": "31",
+   "name": "Tz'unun (Hummingbird)",
+   "suit": "",
+   "synopsis": "Divine Messenger of Joy and Resilience",
+   "file": "31 Tz'unun (Hummingbird).jpg"
+  },
+  {
+   "id": "32",
+   "name": "Itz (Obsidian)",
+   "suit": "",
+   "synopsis": "Protection",
+   "file": "32 Itz (Obsidian).jpg"
+  },
+  {
+   "id": "33",
+   "name": "Yax Tun (Jade)",
+   "suit": "",
+   "synopsis": "Totem of All Mayan Culture",
+   "file": "33 Yax Tun (Jade).jpg"
+  },
+  {
+   "id": "34",
+   "name": "Pom (Copal)",
+   "suit": "",
+   "synopsis": "Sacred Incense",
+   "file": "34 Pom (Copal).jpg"
+  },
+  {
+   "id": "35",
+   "name": "Jun",
+   "suit": "",
+   "synopsis": "First Cycle",
+   "file": "35 Jun.jpg"
+  },
+  {
+   "id": "36",
+   "name": "Keb",
+   "suit": "",
+   "synopsis": "Second Cycle",
+   "file": "36 Keb.jpg"
+  },
+  {
+   "id": "37",
+   "name": "Oxib'",
+   "suit": "",
+   "synopsis": "Third Cycle",
+   "file": "37 Oxib'.jpg"
+  },
+  {
+   "id": "38",
+   "name": "Kahib'",
+   "suit": "",
+   "synopsis": "Fourth Cycle",
+   "file": "38 Kahib'.jpg"
+  },
+  {
+   "id": "39",
+   "name": "Job'",
+   "suit": "",
+   "synopsis": "Fifth Cycle",
+   "file": "39 Job'.jpg"
+  },
+  {
+   "id": "40",
+   "name": "Wakib'",
+   "suit": "",
+   "synopsis": "Sixth Cycle",
+   "file": "40 Wakib'.jpg"
+  },
+  {
+   "id": "41",
+   "name": "Wukub'",
+   "suit": "",
+   "synopsis": "Seventh Cycle",
+   "file": "41 Wukub'.jpg"
+  },
+  {
+   "id": "42",
+   "name": "Wajxaqib'",
+   "suit": "",
+   "synopsis": "Eighth Cycle",
+   "file": "42 Wajxaqib'.jpg"
+  },
+  {
+   "id": "43",
+   "name": "B'elejeb'",
+   "suit": "",
+   "synopsis": "Ninth Cycle",
+   "file": "43 B'elejeb'.jpg"
+  },
+  {
+   "id": "44",
+   "name": "Lajuj",
+   "suit": "",
+   "synopsis": "Tenth Cycle",
+   "file": "44 Lajuj.jpg"
+  },
+  {
+   "id": "45",
+   "name": "Junlajuj",
+   "suit": "",
+   "synopsis": "Eleventh Cycle",
+   "file": "45 Junlajuj.jpg"
+  },
+  {
+   "id": "46",
+   "name": "Kablajuj",
+   "suit": "",
+   "synopsis": "Twelfth Cycle",
+   "file": "46 Kablajuj.jpg"
+  },
+  {
+   "id": "47",
+   "name": "Oxlajuj",
+   "suit": "",
+   "synopsis": "Thirteenth Cycle",
+   "file": "47 Oxlajuj.jpg"
+  }
+ ]
+}

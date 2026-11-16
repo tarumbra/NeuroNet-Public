@@ -6,6 +6,21 @@ the updater take the version from `VERSION`; a release is a git tag
 `v<version>` on the NeuroNet repository. Before tagging, run
 `python3 tools/make_starter.py` (the starter data below, 1.0.39) and push the
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
+NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
+
+## 1.0.185 — NeuroTV, NeuroTrain's library, potions stay in hand, nine new decks (16 November 2026)
+
+- **NeuroTV.** Super+Alt+W opens NeuroTV, the IPTV player: live channels with a guide, films and shows, and favourites, from an Xtream Codes sign in or an M3U playlist, plus NeuroNet's own films and shows under My Media. It has its own entry in the app menu.
+
+- **NeuroTrain's starter library.** NeuroTrain 0.5.0 comes with the whole exercise library, the session and circuit templates and the rep schemes (never the programs). It only ever adds to yours.
+
+- **NeuroTrain travels between your computers.** `neuronet-dev pull` (and `neuronet-dev data`) now keeps NeuroTrain's programs, library and PDFs in step between the PC and the laptop, like the notes and Collaboration. It leaves NeuroTrain alone while NeuroTrain is open, and says so.
+
+- **NeuroCafe: potions stay in hand.** Pick a Quick, Sell or Fresh potion in the Bag and it stays in your hand after each use, so you can go stove to stove without opening the Bag again. Esc puts it away; it puts itself away after the last one.
+
+- **Rotate Left / Rotate Right on a right-click.** In the file manager (Nautilus), right-click a picture (or a whole selection of them) and choose **Rotate Left** or **Rotate Right**: the picture turns in its own file, with no need to open it. The same right-click is in NeuroNet's **Photos** grid (on a ticked photo in Select mode it turns every ticked one). Ordinary JPEGs turn losslessly; the file manager picks it up the next time it opens.
+
+- **Nine new decks.** **Necronomicon**, **Seasons Of The Witch - Autumn Tarot** and **Seasons Of The Witch - Winter Tarot** (tarot), **Under The Roses Lenormand**, and **This Might Help Oracle**, **Oracle Of The Divine**, **Enchanted Forest Oracle**, **Roots And Runes Oracle** and **Mayan Oracle** (whose cards carry their printed meaning) are in Divination, with their meanings left empty for the guidebooks, and in NeuroArcana, where Lenormand decks now play as oracle cards (so Lenormand Of Enchantment joins too). New scanned decks can go in the same way: `tools/add_scanned_deck.py` with a deck list in `tools/decks/`.
 
 ## 1.0.184 — Paste a cover, Media travels, a public release (15 November 2026)
 

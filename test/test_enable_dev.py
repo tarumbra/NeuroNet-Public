@@ -103,7 +103,8 @@ def data_test():
             app = os.path.join(home, "NeuroNet")
             sh(["git", "init", "-q", "-b", "main", app], env0)
             sh(["git", "remote", "add", "origin", gh], env0, app)
-            d = {"collab": os.path.join(home, "data", "collab"), "notes": os.path.join(home, "data", "notes"), "claude-memory": os.path.join(home, "mem")}
+            d = {"collab": os.path.join(home, "data", "collab"), "notes": os.path.join(home, "data", "notes"), "claude-memory": os.path.join(home, "mem"),
+                 "neurotrain": os.path.join(home, "share", "NeuroTrain-dev")}
             env = dict(env0, HOME=home, XDG_STATE_HOME=os.path.join(home, ".state"), NEURONET_DEVDATA_AREAS=":".join(f"{k}={v}" for k, v in d.items()))
             pcs[name] = (app, d, env)
         papp, pd, penv = pcs["pc"]
@@ -148,6 +149,28 @@ def data_test():
         sh(["python3", tool, papp], penv)
         r = sh(["python3", tool, papp], penv)
         ok("  and on the PC too; then nothing more to do", rd(p_plan) == "laptop edit (newer)" and "0 from the other computer, 0 sent" in r.stdout, r.stdout + r.stderr)
+        # NeuroTrain's library and programs (16 Nov): its json and PDFs travel, its browser engine and backups don't
+        lnt, pnt = ld["neurotrain"], pd["neurotrain"]
+        write(os.path.join(lnt, "neurotrain.json"), '{"programs": ["A3"]}')
+        write(os.path.join(lnt, "neurotrain.json.bak"), "the one before")
+        write(os.path.join(lnt, "pdfs", "A3.pdf"), "%PDF")
+        write(os.path.join(lnt, "engine", "Cookies"), "chromium's")
+        write(os.path.join(lnt, "backups", "before-import.json"), "a safety copy")
+        r = sh(["python3", tool, lapp], lenv)
+        r2 = sh(["python3", tool, papp], penv)
+        ok("NeuroTrain: its programs and PDFs reach the other computer; its engine, backups and .bak stay home",
+           r.returncode == 0 and rd(os.path.join(pnt, "neurotrain.json")) == '{"programs": ["A3"]}' and rd(os.path.join(pnt, "pdfs", "A3.pdf")) == "%PDF"
+           and not os.path.exists(os.path.join(pnt, "engine")) and not os.path.exists(os.path.join(pnt, "backups"))
+           and not os.path.exists(os.path.join(pnt, "neurotrain.json.bak")), r.stdout + r2.stdout + r2.stderr)
+        # open on the PC (Electron's lock points at a live process): left alone, nothing sent or replaced
+        write(os.path.join(pnt, "neurotrain.json"), '{"programs": ["A3", "being edited"]}')
+        os.symlink("host-%d" % os.getpid(), os.path.join(pnt, "engine", "SingletonLock")) if os.path.isdir(os.path.join(pnt, "engine")) else (os.makedirs(os.path.join(pnt, "engine")), os.symlink("host-%d" % os.getpid(), os.path.join(pnt, "engine", "SingletonLock")))
+        r = sh(["python3", tool, papp], penv)
+        ok("  NeuroTrain open: left alone and said so", r.returncode == 0 and "NeuroTrain is open" in r.stdout and "0 sent" in r.stdout, r.stdout + r.stderr)
+        os.remove(os.path.join(pnt, "engine", "SingletonLock"))
+        r = sh(["python3", tool, papp], penv)
+        r2 = sh(["python3", tool, lapp], lenv)
+        ok("  closed: the PC's edit goes across", "1 sent" in r.stdout and rd(os.path.join(lnt, "neurotrain.json")) == '{"programs": ["A3", "being edited"]}', r.stdout + r2.stdout)
         dev = open(os.path.join(APP, "system", "bin", "neuronet-dev")).read()
         ok("neuronet-dev pull runs it (also when it won't pull the code), and `neuronet-dev data` on its own", dev.count("data_sync") >= 4 and "  data) data_sync ;;" in dev)
     finally:

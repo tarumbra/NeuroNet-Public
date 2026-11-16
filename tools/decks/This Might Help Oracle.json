@@ -1,0 +1,476 @@
+{
+ "name": "This Might Help Oracle",
+ "kind": "oracle",
+ "folder": "This Might Help Oracle",
+ "cover": "The Dog.jpg",
+ "cards": [
+  {
+   "id": "m0",
+   "name": "The Dog",
+   "suit": "",
+   "file": "The Dog.jpg"
+  },
+  {
+   "id": "m1",
+   "name": "The Magician's Wand",
+   "suit": "",
+   "file": "The Magician's Wand.jpg"
+  },
+  {
+   "id": "m2",
+   "name": "The Veil",
+   "suit": "",
+   "file": "The Veil.jpg"
+  },
+  {
+   "id": "m3",
+   "name": "The 12-Star Crown",
+   "suit": "",
+   "file": "The 12-Star Crown.jpg"
+  },
+  {
+   "id": "m4",
+   "name": "The Ram",
+   "suit": "",
+   "file": "The Ram.jpg"
+  },
+  {
+   "id": "m5",
+   "name": "The Crossed Keys",
+   "suit": "",
+   "file": "The Crossed Keys.jpg"
+  },
+  {
+   "id": "m6",
+   "name": "The Bow of Eros",
+   "suit": "",
+   "file": "The Bow of Eros.jpg"
+  },
+  {
+   "id": "m7",
+   "name": "The Steed",
+   "suit": "",
+   "file": "The Steed.jpg"
+  },
+  {
+   "id": "m8",
+   "name": "The Garland",
+   "suit": "",
+   "file": "The Garland.jpg"
+  },
+  {
+   "id": "m9",
+   "name": "The Lantern",
+   "suit": "",
+   "file": "The Lantern.jpg"
+  },
+  {
+   "id": "m10",
+   "name": "The Snake",
+   "suit": "",
+   "file": "The Snake.jpg"
+  },
+  {
+   "id": "m11",
+   "name": "The Battered Sword",
+   "suit": "",
+   "file": "The Battered Sword.jpg"
+  },
+  {
+   "id": "m12",
+   "name": "The Rope",
+   "suit": "",
+   "file": "The Rope.jpg"
+  },
+  {
+   "id": "m13",
+   "name": "The Banner of Death",
+   "suit": "",
+   "file": "The Banner of Death.jpg"
+  },
+  {
+   "id": "m14",
+   "name": "The Middle Path",
+   "suit": "",
+   "file": "The Middle Path.jpg"
+  },
+  {
+   "id": "m15",
+   "name": "The Shackles",
+   "suit": "",
+   "file": "The Shackles.jpg"
+  },
+  {
+   "id": "m16",
+   "name": "The Lightning Bolt",
+   "suit": "",
+   "file": "The Lightning Bolt.jpg"
+  },
+  {
+   "id": "m17",
+   "name": "The Ibises",
+   "suit": "",
+   "file": "The Ibises.jpg"
+  },
+  {
+   "id": "m18",
+   "name": "The Mask",
+   "suit": "",
+   "file": "The Mask.jpg"
+  },
+  {
+   "id": "m19",
+   "name": "The Sunflower",
+   "suit": "",
+   "file": "The Sunflower.jpg"
+  },
+  {
+   "id": "m20",
+   "name": "The Feather of Truth",
+   "suit": "",
+   "file": "The Feather of Truth.jpg"
+  },
+  {
+   "id": "m21",
+   "name": "The Ouroboros",
+   "suit": "",
+   "file": "The Ouroboros.jpg"
+  },
+  {
+   "id": "o-bird-in-flight",
+   "name": "The Bird in Flight",
+   "suit": "",
+   "file": "The Bird in Flight.jpg"
+  },
+  {
+   "id": "o-blindfold",
+   "name": "The Blindfold",
+   "suit": "",
+   "file": "The Blindfold.jpg"
+  },
+  {
+   "id": "o-bobbing-boats",
+   "name": "The Bobbing Boats",
+   "suit": "",
+   "file": "The Bobbing Boats.jpg"
+  },
+  {
+   "id": "o-bonfire",
+   "name": "The Bonfire",
+   "suit": "",
+   "file": "The Bonfire.jpg"
+  },
+  {
+   "id": "o-broken-cup",
+   "name": "The Broken Cup",
+   "suit": "",
+   "file": "The Broken Cup.jpg"
+  },
+  {
+   "id": "o-cat",
+   "name": "The Cat",
+   "suit": "",
+   "file": "The Cat.jpg"
+  },
+  {
+   "id": "o-chewed-pencils",
+   "name": "The Chewed Pencils",
+   "suit": "",
+   "file": "The Chewed Pencils.jpg"
+  },
+  {
+   "id": "o-city",
+   "name": "The City",
+   "suit": "",
+   "file": "The City.jpg"
+  },
+  {
+   "id": "o-clouds",
+   "name": "The Clouds",
+   "suit": "",
+   "file": "The Clouds.jpg"
+  },
+  {
+   "id": "o-coins",
+   "name": "The Coins",
+   "suit": "",
+   "file": "The Coins.jpg"
+  },
+  {
+   "id": "o-cold-cliffs",
+   "name": "The Cold Cliffs",
+   "suit": "",
+   "file": "The Cold Cliffs.jpg"
+  },
+  {
+   "id": "o-deep-water",
+   "name": "The Deep Water",
+   "suit": "",
+   "file": "The Deep Water.jpg"
+  },
+  {
+   "id": "o-double-edged-sword",
+   "name": "The Double-Edged Sword",
+   "suit": "",
+   "file": "The Double-Edged Sword.jpg"
+  },
+  {
+   "id": "o-fertile-earth",
+   "name": "The Fertile Earth",
+   "suit": "",
+   "file": "The Fertile Earth.jpg"
+  },
+  {
+   "id": "o-fish",
+   "name": "The Fish",
+   "suit": "",
+   "file": "The Fish.jpg"
+  },
+  {
+   "id": "o-flowering-field",
+   "name": "The Flowering Field",
+   "suit": "",
+   "file": "The Flowering Field.jpg"
+  },
+  {
+   "id": "o-following-eel",
+   "name": "The Following Eel",
+   "suit": "",
+   "file": "The Following Eel.jpg"
+  },
+  {
+   "id": "o-fruits-of-labor",
+   "name": "The Fruits of Labor",
+   "suit": "",
+   "file": "The Fruits of Labor.jpg"
+  },
+  {
+   "id": "o-garden",
+   "name": "The Garden",
+   "suit": "",
+   "file": "The Garden.jpg"
+  },
+  {
+   "id": "o-good-view",
+   "name": "The Good View",
+   "suit": "",
+   "file": "The Good View.jpg"
+  },
+  {
+   "id": "o-grapes",
+   "name": "The Grapes",
+   "suit": "",
+   "file": "The Grapes.jpg"
+  },
+  {
+   "id": "o-hammer-and-chisel",
+   "name": "The Hammer & Chisel",
+   "suit": "",
+   "file": "The Hammer & Chisel.jpg"
+  },
+  {
+   "id": "o-helping-hand",
+   "name": "The Helping Hand",
+   "suit": "",
+   "file": "The Helping Hand.jpg"
+  },
+  {
+   "id": "o-hooded-falcon",
+   "name": "The Hooded Falcon",
+   "suit": "",
+   "file": "The Hooded Falcon.jpg"
+  },
+  {
+   "id": "o-hot-drink",
+   "name": "The Hot Drink",
+   "suit": "",
+   "file": "The Hot Drink.jpg"
+  },
+  {
+   "id": "o-huppah",
+   "name": "The Huppah",
+   "suit": "",
+   "file": "The Huppah.jpg"
+  },
+  {
+   "id": "o-ill-gotten-swords",
+   "name": "The Ill-Gotten Swords",
+   "suit": "",
+   "file": "The Ill-Gotten Swords.jpg"
+  },
+  {
+   "id": "o-instrument",
+   "name": "The Instrument",
+   "suit": "",
+   "file": "The Instrument.jpg"
+  },
+  {
+   "id": "o-jackalope",
+   "name": "The Jackalope",
+   "suit": "",
+   "file": "The Jackalope.jpg"
+  },
+  {
+   "id": "o-loosed-arrow",
+   "name": "The Loosed Arrow",
+   "suit": "",
+   "file": "The Loosed Arrow.jpg"
+  },
+  {
+   "id": "o-map",
+   "name": "The Map",
+   "suit": "",
+   "file": "The Map.jpg"
+  },
+  {
+   "id": "o-nest",
+   "name": "The Nest",
+   "suit": "",
+   "file": "The Nest.jpg"
+  },
+  {
+   "id": "o-nightmare",
+   "name": "The Nightmare",
+   "suit": "",
+   "file": "The Nightmare.jpg"
+  },
+  {
+   "id": "o-paper-lanterns",
+   "name": "The Paper Lanterns",
+   "suit": "",
+   "file": "The Paper Lanterns.jpg"
+  },
+  {
+   "id": "o-pierced-heart",
+   "name": "The Pierced Heart",
+   "suit": "",
+   "file": "The Pierced Heart.jpg"
+  },
+  {
+   "id": "o-potted-plant",
+   "name": "The Potted Plant",
+   "suit": "",
+   "file": "The Potted Plant.jpg"
+  },
+  {
+   "id": "o-potters-cup",
+   "name": "The Potter's Cup",
+   "suit": "",
+   "file": "The Potter's Cup.jpg"
+  },
+  {
+   "id": "o-raised-cups",
+   "name": "The Raised Cups",
+   "suit": "",
+   "file": "The Raised Cups.jpg"
+  },
+  {
+   "id": "o-restraints",
+   "name": "The Restraints",
+   "suit": "",
+   "file": "The Restraints.jpg"
+  },
+  {
+   "id": "o-salamander",
+   "name": "The Salamander",
+   "suit": "",
+   "file": "The Salamander.jpg"
+  },
+  {
+   "id": "o-scales",
+   "name": "The Scales",
+   "suit": "",
+   "file": "The Scales.jpg"
+  },
+  {
+   "id": "o-set-aside-sword",
+   "name": "The Set-Aside Sword",
+   "suit": "",
+   "file": "The Set-Aside Sword.jpg"
+  },
+  {
+   "id": "o-shadow-in-the-window",
+   "name": "The Shadow in the Window",
+   "suit": "",
+   "file": "The Shadow in the Window.jpg"
+  },
+  {
+   "id": "o-sharpened-spear",
+   "name": "The Sharpened Spear",
+   "suit": "",
+   "file": "The Sharpened Spear.jpg"
+  },
+  {
+   "id": "o-snarling-dog",
+   "name": "The Snarling Dog",
+   "suit": "",
+   "file": "The Snarling Dog.jpg"
+  },
+  {
+   "id": "o-spilt-cup",
+   "name": "The Spilt Cup",
+   "suit": "",
+   "file": "The Spilt Cup.jpg"
+  },
+  {
+   "id": "o-stormy-sea",
+   "name": "The Stormy Sea",
+   "suit": "",
+   "file": "The Stormy Sea.jpg"
+  },
+  {
+   "id": "o-sunrise",
+   "name": "The Sunrise",
+   "suit": "",
+   "file": "The Sunrise.jpg"
+  },
+  {
+   "id": "o-uncarved-pentacle",
+   "name": "The Uncarved Pentacle",
+   "suit": "",
+   "file": "The Uncarved Pentacle.jpg"
+  },
+  {
+   "id": "o-victory-wreath",
+   "name": "The Victory Wreath",
+   "suit": "",
+   "file": "The Victory Wreath.jpg"
+  },
+  {
+   "id": "o-water-lilies",
+   "name": "The Water Lilies",
+   "suit": "",
+   "file": "The Water Lilies.jpg"
+  },
+  {
+   "id": "o-weight",
+   "name": "The Weight",
+   "suit": "",
+   "file": "The Weight.jpg"
+  },
+  {
+   "id": "o-wheelchair",
+   "name": "The Wheelchair",
+   "suit": "",
+   "file": "The Wheelchair.jpg"
+  },
+  {
+   "id": "o-winged-helmet",
+   "name": "The Winged Helmet",
+   "suit": "",
+   "file": "The Winged Helmet.jpg"
+  },
+  {
+   "id": "o-winged-lion",
+   "name": "The Winged Lion",
+   "suit": "",
+   "file": "The Winged Lion.jpg"
+  },
+  {
+   "id": "o-winter-storm",
+   "name": "The Winter Storm",
+   "suit": "",
+   "file": "The Winter Storm.jpg"
+  }
+ ]
+}

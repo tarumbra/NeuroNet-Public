@@ -79,6 +79,28 @@ try:
     r = subprocess.run([sys.executable, os.path.join(priv, "tools", "make_public.py"), "--tree", tree, "--version", "9.9.9", "--no-push"],
                        capture_output=True, text=True, cwd=priv)
     ok("a version that isn't released yet is refused", r.returncode == 1 and "no v9.9.9" in r.stderr)
+    # a public install clones the public repository, and the private note stays home
+    priv2 = os.path.join(tmp, "private2")
+    os.makedirs(os.path.join(priv2, "tools"))
+    shutil.copy(os.path.join(APP, "tools", "make_public.py"), os.path.join(priv2, "tools", "make_public.py"))
+    sh("git", "init", "-q", "-b", "main", cwd=priv2)
+    write(priv2, "VERSION", "1.0.3\n")
+    write(priv2, "system/install-neuronet.sh", 'REPO="${NEURONET_REPO:-git@github.com:tarumbra/NeuroNet.git}"\n')
+    write(priv2, "tools/public.json", json.dumps({"about": "Cam and Manthies", "repo": "x"}))
+    sh("git", "add", "-A", cwd=priv2)
+    sh("git", "commit", "-qm", "1.0.3", cwd=priv2)
+    sh("git", "tag", "-a", "v1.0.3", "-m", "1.0.3", cwd=priv2)
+    bare = os.path.join(tmp, "public.git")
+    sh("git", "init", "-q", "--bare", "-b", "main", bare, cwd=tmp)
+    tree2 = os.path.join(tmp, "public2")
+    r = subprocess.run([sys.executable, os.path.join(priv2, "tools", "make_public.py"), "--tree", tree2, "--repo", bare],
+                       capture_output=True, text=True, cwd=priv2)
+    inst = open(os.path.join(tree2, "system", "install-neuronet.sh")).read() if r.returncode == 0 else ""
+    ok("a public install clones the public repository, not the private one",
+       bare in inst and "tarumbra/NeuroNet.git" not in inst, r.stdout + r.stderr + inst)
+    ok("  tools/public.json (the private side's note) stays out",
+       not os.path.exists(os.path.join(tree2, "tools", "public.json")))
+    ok("  and it's pushed there", "v1.0.3" in sh("git", "tag", cwd=bare).stdout.split())
     src = open(os.path.join(APP, "tools", "make_public.py"), encoding="utf-8").read()
     ok("the real tool leaves out the starter", '"system/starter/starter.json"' in src.split("PRIVATE = (")[1].split(")")[0])
     upd = open(os.path.join(APP, "system", "bin", "neuronet-update"), encoding="utf-8").read()

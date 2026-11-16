@@ -27,7 +27,7 @@ to its source and the other copies.
 | What | Where | Notes |
 |---|---|---|
 | NeuroNet | this repo: `neuronet.py`, `*.py`, `crux/`, `ui/`, `icons/` | ~18 MB without data |
-| Helper commands | `neuronet-quick`, `neuronet-call`, `neuronet-music`, `neuronet-menu`, `neuronet-capture`, `neuronet-snip`, `neuronet-media-art`, `neuronet-open` | |
+| Helper commands | `neuronet-quick`, `neuronet-call`, `neuronet-music`, `neuronet-menu`, `neuronet-capture`, `neuronet-snip`, `neuronet-media-art`, `neuronet-rotate`, `neuronet-open` | |
 | Launcher | `~/.local/share/applications/NeuroNet.desktop` | made from `system/templates/NeuroNet.desktop.in` by `neuronet-setup` |
 | Tests | `test/` | JS tests need `jsdom`, the visualizer test needs Playwright — neither installed here |
 

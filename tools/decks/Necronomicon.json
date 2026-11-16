@@ -1,0 +1,476 @@
+{
+ "name": "Necronomicon",
+ "kind": "tarot",
+ "folder": "Necronomicon",
+ "cover": "The Fool.jpg",
+ "cards": [
+  {
+   "id": "fool",
+   "name": "The Fool",
+   "suit": "Major",
+   "file": "The Fool.jpg"
+  },
+  {
+   "id": "magician",
+   "name": "Manipulation",
+   "suit": "Major",
+   "file": "Manipulation.jpg"
+  },
+  {
+   "id": "high_priestess",
+   "name": "Imagination",
+   "suit": "Major",
+   "file": "Imagination.jpg"
+  },
+  {
+   "id": "empress",
+   "name": "Growth",
+   "suit": "Major",
+   "file": "Growth.jpg"
+  },
+  {
+   "id": "emperor",
+   "name": "Authority",
+   "suit": "Major",
+   "file": "Authority.jpg"
+  },
+  {
+   "id": "hierophant",
+   "name": "Knowledge",
+   "suit": "Major",
+   "file": "Knowledge.jpg"
+  },
+  {
+   "id": "lovers",
+   "name": "Aliens",
+   "suit": "Major",
+   "file": "Aliens.jpg"
+  },
+  {
+   "id": "chariot",
+   "name": "Violence",
+   "suit": "Major",
+   "file": "Violence.jpg"
+  },
+  {
+   "id": "strength",
+   "name": "Desire",
+   "suit": "Major",
+   "file": "Desire.jpg"
+  },
+  {
+   "id": "hermit",
+   "name": "Solitude",
+   "suit": "Major",
+   "file": "Solitude.jpg"
+  },
+  {
+   "id": "wheel",
+   "name": "Change",
+   "suit": "Major",
+   "file": "Change.jpg"
+  },
+  {
+   "id": "justice",
+   "name": "Guilt/Truth",
+   "suit": "Major",
+   "file": "Guilt-Truth.jpg"
+  },
+  {
+   "id": "hanged_man",
+   "name": "Sacrifice",
+   "suit": "Major",
+   "file": "Sacrifice.jpg"
+  },
+  {
+   "id": "death",
+   "name": "Death",
+   "suit": "Major",
+   "file": "Death.jpg"
+  },
+  {
+   "id": "temperance",
+   "name": "Contamination",
+   "suit": "Major",
+   "file": "Contamination.jpg"
+  },
+  {
+   "id": "devil",
+   "name": "Corruption",
+   "suit": "Major",
+   "file": "Corruption.jpg"
+  },
+  {
+   "id": "tower",
+   "name": "Sins of the Ancestors",
+   "suit": "Major",
+   "file": "Sins of the Ancestors.jpg"
+  },
+  {
+   "id": "star",
+   "name": "Science",
+   "suit": "Major",
+   "file": "Science.jpg"
+  },
+  {
+   "id": "moon",
+   "name": "Madness",
+   "suit": "Major",
+   "file": "Madness.jpg"
+  },
+  {
+   "id": "sun",
+   "name": "Shame and Decay",
+   "suit": "Major",
+   "file": "Shame and Decay.jpg"
+  },
+  {
+   "id": "judgement",
+   "name": "Chaos",
+   "suit": "Major",
+   "file": "Chaos.jpg"
+  },
+  {
+   "id": "world",
+   "name": "The Void",
+   "suit": "Major",
+   "file": "The Void.jpg"
+  },
+  {
+   "id": "ace_wands",
+   "name": "Ace of Torches",
+   "suit": "Wands",
+   "file": "Ace of Torches.jpg"
+  },
+  {
+   "id": "2_wands",
+   "name": "Two of Torches",
+   "suit": "Wands",
+   "file": "Two of Torches.jpg"
+  },
+  {
+   "id": "3_wands",
+   "name": "Three of Torches",
+   "suit": "Wands",
+   "file": "Three of Torches.jpg"
+  },
+  {
+   "id": "4_wands",
+   "name": "Four of Torches",
+   "suit": "Wands",
+   "file": "Four of Torches.jpg"
+  },
+  {
+   "id": "5_wands",
+   "name": "Five of Torches",
+   "suit": "Wands",
+   "file": "Five of Torches.jpg"
+  },
+  {
+   "id": "6_wands",
+   "name": "Six of Torches",
+   "suit": "Wands",
+   "file": "Six of Torches.jpg"
+  },
+  {
+   "id": "7_wands",
+   "name": "Seven of Torches",
+   "suit": "Wands",
+   "file": "Seven of Torches.jpg"
+  },
+  {
+   "id": "8_wands",
+   "name": "Eight of Torches",
+   "suit": "Wands",
+   "file": "Eight of Torches.jpg"
+  },
+  {
+   "id": "9_wands",
+   "name": "Nine of Torches",
+   "suit": "Wands",
+   "file": "Nine of Torches.jpg"
+  },
+  {
+   "id": "10_wands",
+   "name": "Ten of Torches",
+   "suit": "Wands",
+   "file": "Ten of Torches.jpg"
+  },
+  {
+   "id": "page_wands",
+   "name": "Page of Torches",
+   "suit": "Wands",
+   "file": "Page of Torches.jpg"
+  },
+  {
+   "id": "knight_wands",
+   "name": "Knight of Torches",
+   "suit": "Wands",
+   "file": "Knight of Torches.jpg"
+  },
+  {
+   "id": "queen_wands",
+   "name": "Queen of Torches",
+   "suit": "Wands",
+   "file": "Queen of Torches.jpg"
+  },
+  {
+   "id": "king_wands",
+   "name": "King of Torches",
+   "suit": "Wands",
+   "file": "King of Torches.jpg"
+  },
+  {
+   "id": "ace_cups",
+   "name": "Ace of Beakers",
+   "suit": "Cups",
+   "file": "Ace of Beakers.jpg"
+  },
+  {
+   "id": "2_cups",
+   "name": "Two of Beakers",
+   "suit": "Cups",
+   "file": "Two of Beakers.jpg"
+  },
+  {
+   "id": "3_cups",
+   "name": "Three of Beakers",
+   "suit": "Cups",
+   "file": "Three of Beakers.jpg"
+  },
+  {
+   "id": "4_cups",
+   "name": "Four of Beakers",
+   "suit": "Cups",
+   "file": "Four of Beakers.jpg"
+  },
+  {
+   "id": "5_cups",
+   "name": "Five of Beakers",
+   "suit": "Cups",
+   "file": "Five of Beakers.jpg"
+  },
+  {
+   "id": "6_cups",
+   "name": "Six of Beakers",
+   "suit": "Cups",
+   "file": "Six of Beakers.jpg"
+  },
+  {
+   "id": "7_cups",
+   "name": "Seven of Beakers",
+   "suit": "Cups",
+   "file": "Seven of Beakers.jpg"
+  },
+  {
+   "id": "8_cups",
+   "name": "Eight of Beakers",
+   "suit": "Cups",
+   "file": "Eight of Beakers.jpg"
+  },
+  {
+   "id": "9_cups",
+   "name": "Nine of Beakers",
+   "suit": "Cups",
+   "file": "Nine of Beakers.jpg"
+  },
+  {
+   "id": "10_cups",
+   "name": "Ten of Beakers",
+   "suit": "Cups",
+   "file": "Ten of Beakers.jpg"
+  },
+  {
+   "id": "page_cups",
+   "name": "Page of Beakers",
+   "suit": "Cups",
+   "file": "Page of Beakers.jpg"
+  },
+  {
+   "id": "knight_cups",
+   "name": "Knight of Beakers",
+   "suit": "Cups",
+   "file": "Knight of Beakers.jpg"
+  },
+  {
+   "id": "queen_cups",
+   "name": "Queen of Beakers",
+   "suit": "Cups",
+   "file": "Queen of Beakers.jpg"
+  },
+  {
+   "id": "king_cups",
+   "name": "King of Beakers",
+   "suit": "Cups",
+   "file": "King of Beakers.jpg"
+  },
+  {
+   "id": "ace_swords",
+   "name": "Ace of Books",
+   "suit": "Swords",
+   "file": "Ace of Books.jpg"
+  },
+  {
+   "id": "2_swords",
+   "name": "Two of Books",
+   "suit": "Swords",
+   "file": "Two of Books.jpg"
+  },
+  {
+   "id": "3_swords",
+   "name": "Three of Books",
+   "suit": "Swords",
+   "file": "Three of Books.jpg"
+  },
+  {
+   "id": "4_swords",
+   "name": "Four of Books",
+   "suit": "Swords",
+   "file": "Four of Books.jpg"
+  },
+  {
+   "id": "5_swords",
+   "name": "Five of Books",
+   "suit": "Swords",
+   "file": "Five of Books.jpg"
+  },
+  {
+   "id": "6_swords",
+   "name": "Six of Books",
+   "suit": "Swords",
+   "file": "Six of Books.jpg"
+  },
+  {
+   "id": "7_swords",
+   "name": "Seven of Books",
+   "suit": "Swords",
+   "file": "Seven of Books.jpg"
+  },
+  {
+   "id": "8_swords",
+   "name": "Eight of Books",
+   "suit": "Swords",
+   "file": "Eight of Books.jpg"
+  },
+  {
+   "id": "9_swords",
+   "name": "Nine of Books",
+   "suit": "Swords",
+   "file": "Nine of Books.jpg"
+  },
+  {
+   "id": "10_swords",
+   "name": "Ten of Books",
+   "suit": "Swords",
+   "file": "Ten of Books.jpg"
+  },
+  {
+   "id": "page_swords",
+   "name": "Page of Books",
+   "suit": "Swords",
+   "file": "Page of Books.jpg"
+  },
+  {
+   "id": "knight_swords",
+   "name": "Knight of Books",
+   "suit": "Swords",
+   "file": "Knight of Books.jpg"
+  },
+  {
+   "id": "queen_swords",
+   "name": "Queen of Books",
+   "suit": "Swords",
+   "file": "Queen of Books.jpg"
+  },
+  {
+   "id": "king_swords",
+   "name": "King of Books",
+   "suit": "Swords",
+   "file": "King of Books.jpg"
+  },
+  {
+   "id": "ace_pentacles",
+   "name": "Ace of Pentacles",
+   "suit": "Pentacles",
+   "file": "Ace of Pentacles.jpg"
+  },
+  {
+   "id": "2_pentacles",
+   "name": "Two of Pentacles",
+   "suit": "Pentacles",
+   "file": "Two of Pentacles.jpg"
+  },
+  {
+   "id": "3_pentacles",
+   "name": "Three of Pentacles",
+   "suit": "Pentacles",
+   "file": "Three of Pentacles.jpg"
+  },
+  {
+   "id": "4_pentacles",
+   "name": "Four of Pentacles",
+   "suit": "Pentacles",
+   "file": "Four of Pentacles.jpg"
+  },
+  {
+   "id": "5_pentacles",
+   "name": "Five of Pentacles",
+   "suit": "Pentacles",
+   "file": "Five of Pentacles.jpg"
+  },
+  {
+   "id": "6_pentacles",
+   "name": "Six of Pentacles",
+   "suit": "Pentacles",
+   "file": "Six of Pentacles.jpg"
+  },
+  {
+   "id": "7_pentacles",
+   "name": "Seven of Pentacles",
+   "suit": "Pentacles",
+   "file": "Seven of Pentacles.jpg"
+  },
+  {
+   "id": "8_pentacles",
+   "name": "Eight of Pentacles",
+   "suit": "Pentacles",
+   "file": "Eight of Pentacles.jpg"
+  },
+  {
+   "id": "9_pentacles",
+   "name": "Nine of Pentacles",
+   "suit": "Pentacles",
+   "file": "Nine of Pentacles.jpg"
+  },
+  {
+   "id": "10_pentacles",
+   "name": "Ten of Pentacles",
+   "suit": "Pentacles",
+   "file": "Ten of Pentacles.jpg"
+  },
+  {
+   "id": "page_pentacles",
+   "name": "Page of Pentacles",
+   "suit": "Pentacles",
+   "file": "Page of Pentacles.jpg"
+  },
+  {
+   "id": "knight_pentacles",
+   "name": "Knight of Pentacles",
+   "suit": "Pentacles",
+   "file": "Knight of Pentacles.jpg"
+  },
+  {
+   "id": "queen_pentacles",
+   "name": "Queen of Pentacles",
+   "suit": "Pentacles",
+   "file": "Queen of Pentacles.jpg"
+  },
+  {
+   "id": "king_pentacles",
+   "name": "King of Pentacles",
+   "suit": "Pentacles",
+   "file": "King of Pentacles.jpg"
+  }
+ ]
+}

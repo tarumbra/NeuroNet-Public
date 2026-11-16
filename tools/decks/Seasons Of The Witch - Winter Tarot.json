@@ -1,0 +1,476 @@
+{
+ "name": "Seasons Of The Witch - Winter Tarot",
+ "kind": "tarot",
+ "folder": "Seasons Of The Witch - Winter Tarot",
+ "cover": "The Winter Fool.jpg",
+ "cards": [
+  {
+   "id": "fool",
+   "name": "The Winter Fool",
+   "suit": "Major",
+   "file": "The Winter Fool.jpg"
+  },
+  {
+   "id": "magician",
+   "name": "The Winter Witch",
+   "suit": "Major",
+   "file": "The Winter Witch.jpg"
+  },
+  {
+   "id": "high_priestess",
+   "name": "The Winter High Priestess",
+   "suit": "Major",
+   "file": "The Winter High Priestess.jpg"
+  },
+  {
+   "id": "empress",
+   "name": "The Winter Empress",
+   "suit": "Major",
+   "file": "The Winter Empress.jpg"
+  },
+  {
+   "id": "emperor",
+   "name": "The Winter Emperor",
+   "suit": "Major",
+   "file": "The Winter Emperor.jpg"
+  },
+  {
+   "id": "hierophant",
+   "name": "The Winter Hierophant",
+   "suit": "Major",
+   "file": "The Winter Hierophant.jpg"
+  },
+  {
+   "id": "lovers",
+   "name": "The Winter Lovers",
+   "suit": "Major",
+   "file": "The Winter Lovers.jpg"
+  },
+  {
+   "id": "chariot",
+   "name": "The Winter Chariot",
+   "suit": "Major",
+   "file": "The Winter Chariot.jpg"
+  },
+  {
+   "id": "strength",
+   "name": "Winter Strength",
+   "suit": "Major",
+   "file": "Winter Strength.jpg"
+  },
+  {
+   "id": "hermit",
+   "name": "The Winter Hermit",
+   "suit": "Major",
+   "file": "The Winter Hermit.jpg"
+  },
+  {
+   "id": "wheel",
+   "name": "The Winter Wheel",
+   "suit": "Major",
+   "file": "The Winter Wheel.jpg"
+  },
+  {
+   "id": "justice",
+   "name": "Winter Consequences",
+   "suit": "Major",
+   "file": "Winter Consequences.jpg"
+  },
+  {
+   "id": "hanged_man",
+   "name": "The Winter Hanged Man",
+   "suit": "Major",
+   "file": "The Winter Hanged Man.jpg"
+  },
+  {
+   "id": "death",
+   "name": "Winter Death",
+   "suit": "Major",
+   "file": "Winter Death.jpg"
+  },
+  {
+   "id": "temperance",
+   "name": "Winter Temperance",
+   "suit": "Major",
+   "file": "Winter Temperance.jpg"
+  },
+  {
+   "id": "devil",
+   "name": "The Winter Devil",
+   "suit": "Major",
+   "file": "The Winter Devil.jpg"
+  },
+  {
+   "id": "tower",
+   "name": "The Winter Tower",
+   "suit": "Major",
+   "file": "The Winter Tower.jpg"
+  },
+  {
+   "id": "star",
+   "name": "The Winter Star",
+   "suit": "Major",
+   "file": "The Winter Star.jpg"
+  },
+  {
+   "id": "moon",
+   "name": "New Moon",
+   "suit": "Major",
+   "file": "New Moon.jpg"
+  },
+  {
+   "id": "sun",
+   "name": "Midnight",
+   "suit": "Major",
+   "file": "Midnight.jpg"
+  },
+  {
+   "id": "judgement",
+   "name": "Self-reflection",
+   "suit": "Major",
+   "file": "Self-reflection.jpg"
+  },
+  {
+   "id": "world",
+   "name": "Ascending to Spring",
+   "suit": "Major",
+   "file": "Ascending to Spring.jpg"
+  },
+  {
+   "id": "ace_wands",
+   "name": "Ace of Winter Wands",
+   "suit": "Wands",
+   "file": "Ace of Winter Wands.jpg"
+  },
+  {
+   "id": "2_wands",
+   "name": "Two of Winter Wands",
+   "suit": "Wands",
+   "file": "Two of Winter Wands.jpg"
+  },
+  {
+   "id": "3_wands",
+   "name": "Three of Winter Wands",
+   "suit": "Wands",
+   "file": "Three of Winter Wands.jpg"
+  },
+  {
+   "id": "4_wands",
+   "name": "Four of Winter Wands",
+   "suit": "Wands",
+   "file": "Four of Winter Wands.jpg"
+  },
+  {
+   "id": "5_wands",
+   "name": "Five of Winter Wands",
+   "suit": "Wands",
+   "file": "Five of Winter Wands.jpg"
+  },
+  {
+   "id": "6_wands",
+   "name": "Six of Winter Wands",
+   "suit": "Wands",
+   "file": "Six of Winter Wands.jpg"
+  },
+  {
+   "id": "7_wands",
+   "name": "Seven of Winter Wands",
+   "suit": "Wands",
+   "file": "Seven of Winter Wands.jpg"
+  },
+  {
+   "id": "8_wands",
+   "name": "Eight of Winter Wands",
+   "suit": "Wands",
+   "file": "Eight of Winter Wands.jpg"
+  },
+  {
+   "id": "9_wands",
+   "name": "Nine of Winter Wands",
+   "suit": "Wands",
+   "file": "Nine of Winter Wands.jpg"
+  },
+  {
+   "id": "10_wands",
+   "name": "Ten of Winter Wands",
+   "suit": "Wands",
+   "file": "Ten of Winter Wands.jpg"
+  },
+  {
+   "id": "page_wands",
+   "name": "Initiate of Winter Wands",
+   "suit": "Wands",
+   "file": "Initiate of Winter Wands.jpg"
+  },
+  {
+   "id": "knight_wands",
+   "name": "Apprentice of Winter Wands",
+   "suit": "Wands",
+   "file": "Apprentice of Winter Wands.jpg"
+  },
+  {
+   "id": "queen_wands",
+   "name": "Artisan of Winter Wands",
+   "suit": "Wands",
+   "file": "Artisan of Winter Wands.jpg"
+  },
+  {
+   "id": "king_wands",
+   "name": "Master of Winter Wands",
+   "suit": "Wands",
+   "file": "Master of Winter Wands.jpg"
+  },
+  {
+   "id": "ace_cups",
+   "name": "Ace of Winter Cups",
+   "suit": "Cups",
+   "file": "Ace of Winter Cups.jpg"
+  },
+  {
+   "id": "2_cups",
+   "name": "Two of Winter Cups",
+   "suit": "Cups",
+   "file": "Two of Winter Cups.jpg"
+  },
+  {
+   "id": "3_cups",
+   "name": "Three of Winter Cups",
+   "suit": "Cups",
+   "file": "Three of Winter Cups.jpg"
+  },
+  {
+   "id": "4_cups",
+   "name": "Four of Winter Cups",
+   "suit": "Cups",
+   "file": "Four of Winter Cups.jpg"
+  },
+  {
+   "id": "5_cups",
+   "name": "Five of Winter Cups",
+   "suit": "Cups",
+   "file": "Five of Winter Cups.jpg"
+  },
+  {
+   "id": "6_cups",
+   "name": "Six of Winter Cups",
+   "suit": "Cups",
+   "file": "Six of Winter Cups.jpg"
+  },
+  {
+   "id": "7_cups",
+   "name": "Seven of Winter Cups",
+   "suit": "Cups",
+   "file": "Seven of Winter Cups.jpg"
+  },
+  {
+   "id": "8_cups",
+   "name": "Eight of Winter Cups",
+   "suit": "Cups",
+   "file": "Eight of Winter Cups.jpg"
+  },
+  {
+   "id": "9_cups",
+   "name": "Nine of Winter Cups",
+   "suit": "Cups",
+   "file": "Nine of Winter Cups.jpg"
+  },
+  {
+   "id": "10_cups",
+   "name": "Ten of Winter Cups",
+   "suit": "Cups",
+   "file": "Ten of Winter Cups.jpg"
+  },
+  {
+   "id": "page_cups",
+   "name": "Initiate of Winter Cups",
+   "suit": "Cups",
+   "file": "Initiate of Winter Cups.jpg"
+  },
+  {
+   "id": "knight_cups",
+   "name": "Apprentice of Winter Cups",
+   "suit": "Cups",
+   "file": "Apprentice of Winter Cups.jpg"
+  },
+  {
+   "id": "queen_cups",
+   "name": "Artisan of Winter Cups",
+   "suit": "Cups",
+   "file": "Artisan of Winter Cups.jpg"
+  },
+  {
+   "id": "king_cups",
+   "name": "Master of Winter Cups",
+   "suit": "Cups",
+   "file": "Master of Winter Cups.jpg"
+  },
+  {
+   "id": "ace_swords",
+   "name": "Ace of Winter Swords",
+   "suit": "Swords",
+   "file": "Ace of Winter Swords.jpg"
+  },
+  {
+   "id": "2_swords",
+   "name": "Two of Winter Swords",
+   "suit": "Swords",
+   "file": "Two of Winter Swords.jpg"
+  },
+  {
+   "id": "3_swords",
+   "name": "Three of Winter Swords",
+   "suit": "Swords",
+   "file": "Three of Winter Swords.jpg"
+  },
+  {
+   "id": "4_swords",
+   "name": "Four of Winter Swords",
+   "suit": "Swords",
+   "file": "Four of Winter Swords.jpg"
+  },
+  {
+   "id": "5_swords",
+   "name": "Five of Winter Swords",
+   "suit": "Swords",
+   "file": "Five of Winter Swords.jpg"
+  },
+  {
+   "id": "6_swords",
+   "name": "Six of Winter Swords",
+   "suit": "Swords",
+   "file": "Six of Winter Swords.jpg"
+  },
+  {
+   "id": "7_swords",
+   "name": "Seven of Winter Swords",
+   "suit": "Swords",
+   "file": "Seven of Winter Swords.jpg"
+  },
+  {
+   "id": "8_swords",
+   "name": "Eight of Winter Swords",
+   "suit": "Swords",
+   "file": "Eight of Winter Swords.jpg"
+  },
+  {
+   "id": "9_swords",
+   "name": "Nine of Winter Swords",
+   "suit": "Swords",
+   "file": "Nine of Winter Swords.jpg"
+  },
+  {
+   "id": "10_swords",
+   "name": "Ten of Winter Swords",
+   "suit": "Swords",
+   "file": "Ten of Winter Swords.jpg"
+  },
+  {
+   "id": "page_swords",
+   "name": "Initiate of Winter Swords",
+   "suit": "Swords",
+   "file": "Initiate of Winter Swords.jpg"
+  },
+  {
+   "id": "knight_swords",
+   "name": "Apprentice of Winter Swords",
+   "suit": "Swords",
+   "file": "Apprentice of Winter Swords.jpg"
+  },
+  {
+   "id": "queen_swords",
+   "name": "Artisan of Winter Swords",
+   "suit": "Swords",
+   "file": "Artisan of Winter Swords.jpg"
+  },
+  {
+   "id": "king_swords",
+   "name": "Master of Winter Swords",
+   "suit": "Swords",
+   "file": "Master of Winter Swords.jpg"
+  },
+  {
+   "id": "ace_pentacles",
+   "name": "Ace of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Ace of Winter Pentacles.jpg"
+  },
+  {
+   "id": "2_pentacles",
+   "name": "Two of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Two of Winter Pentacles.jpg"
+  },
+  {
+   "id": "3_pentacles",
+   "name": "Three of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Three of Winter Pentacles.jpg"
+  },
+  {
+   "id": "4_pentacles",
+   "name": "Four of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Four of Winter Pentacles.jpg"
+  },
+  {
+   "id": "5_pentacles",
+   "name": "Five of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Five of Winter Pentacles.jpg"
+  },
+  {
+   "id": "6_pentacles",
+   "name": "Six of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Six of Winter Pentacles.jpg"
+  },
+  {
+   "id": "7_pentacles",
+   "name": "Seven of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Seven of Winter Pentacles.jpg"
+  },
+  {
+   "id": "8_pentacles",
+   "name": "Eight of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Eight of Winter Pentacles.jpg"
+  },
+  {
+   "id": "9_pentacles",
+   "name": "Nine of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Nine of Winter Pentacles.jpg"
+  },
+  {
+   "id": "10_pentacles",
+   "name": "Ten of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Ten of Winter Pentacles.jpg"
+  },
+  {
+   "id": "page_pentacles",
+   "name": "Initiate of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Initiate of Winter Pentacles.jpg"
+  },
+  {
+   "id": "knight_pentacles",
+   "name": "Apprentice of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Apprentice of Winter Pentacles.jpg"
+  },
+  {
+   "id": "queen_pentacles",
+   "name": "Artisan of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Artisan of Winter Pentacles.jpg"
+  },
+  {
+   "id": "king_pentacles",
+   "name": "Master of Winter Pentacles",
+   "suit": "Pentacles",
+   "file": "Master of Winter Pentacles.jpg"
+  }
+ ]
+}

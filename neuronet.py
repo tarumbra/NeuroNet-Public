@@ -1247,7 +1247,7 @@ def picture_url(kind, path):
     if not ensure_media_server():
         return None
     url = media_url_for(kind, os.path.basename(path))
-    return "%s?v=%d-%d" % (url, int(st.st_mtime), st.st_size) if url else None
+    return "%s?v=%d-%d" % (url, st.st_mtime_ns, st.st_size) if url else None
 
 
 def _picture(kind, path):

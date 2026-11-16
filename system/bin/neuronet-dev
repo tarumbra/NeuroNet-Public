@@ -40,7 +40,7 @@ data_sync() {
 # (8 Nov 2026, Cam: "so i cant use neuronet-dev pull ... for neurocode?": the standalone games live in their own repos in
 #  ~/Work, so pull brings each one up to date too. Not there or no GitHub repo: skipped. Changes not committed, or its own
 #  commits not on GitHub: left alone and said so. Same list as tools/push_apps.sh)
-APPS=(NeuroCafe NeuroCode NeuroArcana NeuroTrain)
+APPS=(NeuroCafe NeuroCode NeuroArcana NeuroTrain NeuroTV)
 apps_sync() {
   local root="${NEURO_APPS_DIR:-$HOME/Work}" a d br lock
   for a in "${APPS[@]}"; do

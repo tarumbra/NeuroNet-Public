@@ -2123,6 +2123,30 @@ its part (`scopeCss`; their `.totals` differ). Print kind `money-book`.
 Tests: `test_reader.js`, `test_bookshelf.py`, `test_bookshelf_card.py`,
 `test_money_books.js`, `test_money_books.py`.
 
+## Rotate Left / Right on a right-click (2026-11-15)
+
+Cam: *"Can you add a right click option for when i right click photos in the
+file manager for rotate left and right so i dont need to open the photo to do
+it please. I mean on omarchy as well not just neuronet."* One piece of code,
+`photo_rotate.py`, turns the pixels themselves and sets the EXIF orientation
+back to upright (so every viewer, and NeuroNet's thumbnails, agree): jpegtran
+for an ordinary JPEG (lossless, EXIF kept), Pillow for anything else (PNG,
+WebP, a sideways-tagged JPEG, a size jpegtran can't turn exactly). Moving
+GIFs are left alone. Two ways in:
+
+- **Omarchy's file manager:** `system/nautilus/neuronet-rotate.py`, a
+  nautilus-python extension that `install.sh` copies into
+  `~/.local/share/nautilus-python/extensions/`; it runs the `neuronet-rotate
+  left|right FILE...` command (installed by `neuronet-setup`), which says
+  in a notification if anything couldn't be turned.
+- **Photos:** right-click a tile in the grid (`photoMenu` in `ui/app.js`,
+  styled like the Snip button's menu); the backend's `photo_rotate` turns the
+  library file and remakes its thumbnail. Picture addresses now carry the
+  file's mtime in nanoseconds, so a square photo turned twice in one second
+  still gets a new address.
+
+Guarded by `test/test_photo_rotate.py`.
+
 ## Photo files named like the photos (2026-10-02)
 
 Cam: *"when naming a photo or if it has been named within Neuronet application

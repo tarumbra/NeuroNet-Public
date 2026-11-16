@@ -124,6 +124,12 @@ SS.Store = (() => {
     async thumb(n) { await ready; return desktop() ? api.photo_thumb(n) : nope("Loading"); },
     async full(n) { await ready; return desktop() ? api.photo_full(n) : nope("Loading"); },
     async del(n) { await ready; return desktop() ? api.photo_delete(n) : nope("Deleting"); },
+    async rotate(n, dir) {
+      await ready;
+      if (!desktop()) return nope("Rotating");
+      if (typeof api.photo_rotate !== "function") return {error: "Rotating needs a newer build."};
+      return api.photo_rotate(n, dir);
+    },
     async exportOne(n, o) { await ready; return desktop() ? api.photo_export(n, o) : nope("Exporting"); },
     async exportMany(items) { await ready; return desktop() ? api.photo_export_many(items) : nope("Exporting"); },
     async exportText(name, text) {
@@ -3130,9 +3136,67 @@ function renderLibrary(main) {
       }
       openViewer(id, photos.map((p) => p.id));
     });
+  /* Cam (15 Nov 2026): "a right click option ... for rotate left and right
+     so i dont need to open the photo to do it". On a ticked photo it turns
+     every ticked one; otherwise just the one under the pointer. */
+  if (galleryEl) galleryEl.addEventListener("contextmenu", (e) => {
+    const el = e.target.closest("[data-photo]");
+    if (!el || !galleryEl.contains(el)) return;
+    e.preventDefault();
+    const id = el.dataset.photo;
+    const ids = (selecting && selection.has(id)) ? [...selection] : [id];
+    photoMenu(e.clientX, e.clientY, ids);
+  });
 
   paintSelectionBar(main);
   paintThumbs(main, photos);
+}
+
+/** The photo grid's right-click: Rotate Left / Right, in the same style as
+    the Snip button's menu (.snip-menu). */
+function photoMenu(x, y, ids) {
+  document.querySelector(".snip-menu")?.remove();
+  const n = ids.length;
+  const m = document.createElement("div");
+  m.className = "snip-menu";
+  m.setAttribute("role", "menu");
+  m.innerHTML = `<button type="button" role="menuitem" data-rot="left">&#8634; Rotate left${n > 1 ? ` (${n})` : ""}</button>
+    <button type="button" role="menuitem" data-rot="right">&#8635; Rotate right${n > 1 ? ` (${n})` : ""}</button>`;
+  m.style.left = `${Math.round(x)}px`;
+  m.style.top = `${Math.round(y)}px`;
+  document.body.appendChild(m);
+  const r = m.getBoundingClientRect();     // keep it on screen near the edges
+  if (r.right > window.innerWidth - 8) m.style.left = `${Math.max(8, Math.round(x - r.width))}px`;
+  if (r.bottom > window.innerHeight - 8) m.style.top = `${Math.max(8, Math.round(y - r.height))}px`;
+  const close = (e) => {
+    if (e && e.type === "pointerdown" && m.contains(e.target)) return;
+    if (e && e.type === "keydown" && e.key !== "Escape") return;
+    m.remove();
+    document.removeEventListener("pointerdown", close, true);
+    document.removeEventListener("keydown", close, true);
+  };
+  setTimeout(() => {
+    document.addEventListener("pointerdown", close, true);
+    document.addEventListener("keydown", close, true);
+  }, 0);
+  m.querySelectorAll("[data-rot]").forEach((b) => b.onclick = () => {
+    close();
+    rotatePhotos(ids, b.dataset.rot);
+  });
+}
+
+async function rotatePhotos(ids, dir) {
+  const byId = new Map(data.photos.map((p) => [p.id, p]));
+  let failed = "";
+  for (const id of ids) {
+    const p = byId.get(id);
+    if (!p || !p.storedName) continue;
+    const res = await SS.Store.rotate(p.storedName, dir);
+    if (res && res.error) { failed = res.error; continue; }
+    invalidateThumb(p.storedName);
+  }
+  if (failed) toast(failed, "error");
+  render();
 }
 
 /** Draws the selection bar on its own, so ticking a photo updates the
