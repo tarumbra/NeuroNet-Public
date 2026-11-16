@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "neuronet.snap",
+  "name": "Window snap outline",
+  "version": "1.0.0",
+  "author": "Cam",
+  "description": "Shows where a dragged window will snap (half, quarter or whole screen) while its pointer touches the screen edge. The snapping itself is ~/.config/hypr/windowsnap.lua.",
+  "kinds": ["service"],
+  "entryPoints": { "service": "Service.qml" }
+}

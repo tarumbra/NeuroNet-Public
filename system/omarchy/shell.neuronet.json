@@ -6,6 +6,9 @@
     },
     {
       "id": "neuronet.claudedock"
+    },
+    {
+      "id": "neuronet.snap"
     }
   ],
   "replaces": [

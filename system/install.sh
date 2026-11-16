@@ -591,6 +591,14 @@ taken=$(omarchy menu keybindings --print 2>/dev/null | grep -vE "→ *(Neuro[A-Z
 # Omarchy's own defaults: a key the block unbinds first may replace one of
 # THESE (never one of Cam's own bindings)
 defaults=$(cat "${OMARCHY_PATH:-/usr/share/omarchy}"/default/hypr/bindings/*.lua 2>/dev/null || true)
+# Window snap (16 Nov 2026): its code is a whole file, loaded from the hyprland.lua block
+if [ -f "$SYS/hypr/windowsnap.lua" ]; then
+  snap="$HYPR/neuronet-windowsnap.lua"
+  if ! cmp -s "$SYS/hypr/windowsnap.lua" "$snap"; then
+    if [ -n "$CHECK" ]; then would "put window snap in $snap"
+    else install -m 644 "$SYS/hypr/windowsnap.lua" "$snap" && say "Window snap: $snap"; fi
+  fi
+fi
 HYPR_BAK=()
 for blk in "$SYS"/hypr/*.block; do
   file=$(basename "$blk" .block); target="$HYPR/$file"

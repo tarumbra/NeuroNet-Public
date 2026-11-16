@@ -28,6 +28,9 @@
 #      nothing deleted
 #   9. copies Claude's memory of the project (claude-memory/) to ~/.claude/projects/<the folder>/memory,
 #      merged (a file that differs here is kept beside it), with a note of this computer's folders
+#      (workstation_laptop.md, or workstation_<machine>.md when dev.json names the machine)
+#  10. puts the standalone apps (apps/<App>) in ~/Work when they aren't there yet (never over one that is),
+#      and builds NeuroTV (qmake6); neuronet-dev pull installs their node packages
 # After that: `neuronet-dev pull` before you start, commit and `git push` when you're done -- on either
 # computer. Releases (tools/make_starter.py, the tags) can be made from here too.
 set -uo pipefail
@@ -192,14 +195,21 @@ if [ -d "$HERE/claude-memory" ]; then
       if [ -f "$MEM/$n" ] && ! cmp -s "$f" "$MEM/$n"; then cp -p "$MEM/$n" "$MEM/$n.laptop-$stamp"; fi
       cp -p "$f" "$MEM/$n"
     done
-    cat > "$MEM/workstation_laptop.md" <<MD
+    MACHINE=$(jget .machine "$HERE/dev.json")
+    if [ -n "$MACHINE" ]; then
+      slug=$(printf '%s' "$MACHINE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]\+/-/g; s/^-//; s/-$//')
+      NOTE="workstation_${slug//-/_}.md" NOTENAME="workstation-$slug" WHO="$MACHINE"
+    else
+      NOTE="workstation_laptop.md" NOTENAME="workstation-laptop" WHO="the laptop"
+    fi
+    cat > "$MEM/$NOTE" <<MD
 ---
-name: workstation-laptop
-description: this is Cam's SECOND workstation (the laptop) -- where NeuroNet, its data and the art are here, vs the PC's paths in the other notes
+name: $NOTENAME
+description: this is Cam's workstation '$WHO' (set up from a dev kit) -- where NeuroNet, its data and the art are here, vs the PC's paths in the other notes
 metadata:
   type: project
 ---
-Set up by system/enable-dev.sh on $(date +%Y-%m-%d). The other memory notes were written on the PC, whose paths differ:
+Set up by system/enable-dev.sh on $(date +%Y-%m-%d) (this computer: $WHO; host $(hostname 2>/dev/null || cat /etc/hostname)). The other memory notes were written on the PC, whose paths differ:
 - NeuroNet (a git checkout of main, pushes with ~/.ssh/neuronet_dev): **$APP** (on the PC: /mnt/Cams_Collective/NeuroNet)
 - its data: **$DATA** (on the PC: /mnt/Cams_Collective/NeuroNet/neuronet_data)
 - the games' art (NeuroCafe/NeuroFarm/NeuroPets Art Assets...): **$HOME/Pictures/** (on the PC: /home/cam/Pictures/)
@@ -207,9 +217,28 @@ Set up by system/enable-dev.sh on $(date +%Y-%m-%d). The other memory notes were
 
 **Why:** Cam works on both computers. **How to apply:** \`neuronet-dev pull\` before starting; commit and push when done, so the other computer can pull. Releases can be made here too, but the starter data is built from THIS computer's data -- release from whichever computer has the newest Collaboration notes, recipes and training. Never \`git push --force\`. See [[project-neuronet]], [[project-neurocafe]].
 MD
-    grep -q "workstation_laptop.md" "$MEM/MEMORY.md" 2>/dev/null || printf '%s\n' "- [Laptop workstation](workstation_laptop.md) — this computer is Cam's second workstation: its NeuroNet/data/art paths vs the PC's" >> "$MEM/MEMORY.md"
+    grep -q "$NOTE" "$MEM/MEMORY.md" 2>/dev/null || printf '%s\n' "- [Workstation: $WHO]($NOTE) — the computer '$WHO': its NeuroNet/data/art paths vs the PC's" >> "$MEM/MEMORY.md"
     ok "merged into $MEM (start Claude Code in $CLAUDE_DIR)"
   fi
+fi
+
+# ---- 10. the standalone apps ---------------------------------------------------------------------------
+if [ -d "$HERE/apps" ]; then
+  say "The standalone apps"
+  WORKDIR="${NEURO_APPS_DIR:-$HOME/Work}"
+  for f in "$HERE/apps/"*/; do
+    [ -d "$f/.git" ] || continue
+    n=$(basename "$f"); dest="$WORKDIR/$n"
+    if [ -e "$dest" ]; then ok "$n: already in $WORKDIR (left as it is)"; continue; fi
+    would "copy apps/$n to $dest" && continue
+    mkdir -p "$WORKDIR" && cp -a "$f" "$dest" && ok "$n -> $dest"
+    if [ "$n" = NeuroTV ] && [ -x "$dest/bin/build" ]; then
+      if command -v qmake6 >/dev/null; then
+        (cd "$dest" && sh bin/build >/dev/null 2>&1) && ok "NeuroTV built (Super+Alt+W)" || warn "NeuroTV didn't build: run bin/build in $dest"
+      else warn "NeuroTV needs qt6-base, qt6-declarative and mpv to build: then run bin/build in $dest"; fi
+    fi
+  done
+  command -v gh >/dev/null && gh auth status >/dev/null 2>&1 || warn "the apps' GitHub repositories are private: run  gh auth login  once, so neuronet-dev pull can update them"
 fi
 
 echo

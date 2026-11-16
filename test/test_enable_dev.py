@@ -228,6 +228,13 @@ def main():
         write(os.path.join(kit, "art", "NeuroPets Art Assets", "Pets", "pet- Sheet 1.jpeg"), "pets")
         write(os.path.join(kit, "claude-memory", "MEMORY.md"), "- [NeuroCafe](project_neurocafe.md) — the cafe\n")
         write(os.path.join(kit, "claude-memory", "project_neurocafe.md"), "from the PC\n")
+        # an app in the kit (a git repo), and one already in ~/Work that must be left alone (16 Nov 2026)
+        akit = os.path.join(kit, "apps", "NeuroArcana")
+        write(os.path.join(akit, "README.md"), "arcana\n")
+        sh(["git", "init", "-q", "-b", "main", akit], env); sh(["git", "add", "-A"], env, akit); sh(["git", "commit", "-qm", "a"], env, akit)
+        write(os.path.join(kit, "apps", "NeuroTrain", "README.md"), "from the kit\n")
+        sh(["git", "init", "-q", "-b", "master", os.path.join(kit, "apps", "NeuroTrain")], env)
+        write(os.path.join(home, "Work", "NeuroTrain", "mine.txt"), "already here\n")
         mem = os.path.join(home, ".claude", "projects", "-" + os.path.join(home, "Work").strip("/").replace("/", "-").replace(".", "-").replace("_", "-"), "memory")
         write(os.path.join(mem, "project_neurocafe.md"), "the laptop's own\n")
 
@@ -256,9 +263,21 @@ def main():
         ok("Claude's memory is merged (a differing note kept beside), with a note of this computer's folders", open(os.path.join(mem, "project_neurocafe.md")).read() == "from the PC\n"
            and len(backups) == 1 and app in open(os.path.join(mem, "workstation_laptop.md")).read() and "workstation_laptop.md" in open(os.path.join(mem, "MEMORY.md")).read(), os.listdir(mem))
 
+        ok("the kit's apps go into ~/Work, never over one already there", os.path.exists(os.path.join(home, "Work", "NeuroArcana", ".git"))
+           and open(os.path.join(home, "Work", "NeuroArcana", "README.md")).read() == "arcana\n"
+           and not os.path.exists(os.path.join(home, "Work", "NeuroTrain", "README.md")) and "already in" in r.stdout, r.stdout)
+
         r2 = sh(["bash", os.path.join(kit, "enable-dev.sh"), "--yes", "--claude-dir", os.path.join(home, "Work")], env)
         ok("a second run: fine, the checkout left as it is", r2.returncode == 0 and "git checkout already" in r2.stdout
            and sh(["git", "rev-parse", "HEAD"], env, app).stdout.strip() == tip and open(os.path.join(mem, "MEMORY.md")).read().count("workstation_laptop.md") == 1, r2.stdout + r2.stderr)
+
+        # a kit for a named computer: its own memory note, so two workstations' notes never overwrite each other
+        dj = json.load(open(os.path.join(kit, "dev.json"))); dj["machine"] = "Test Pad"
+        write(os.path.join(kit, "dev.json"), json.dumps(dj))
+        r3 = sh(["bash", os.path.join(kit, "enable-dev.sh"), "--yes", "--claude-dir", os.path.join(home, "Work")], env)
+        ok("a named machine gets workstation_<name>.md, listed once in MEMORY.md", r3.returncode == 0 and "Test Pad" in open(os.path.join(mem, "workstation_test_pad.md")).read()
+           and open(os.path.join(mem, "MEMORY.md")).read().count("workstation_test_pad.md") == 1, r3.stdout + r3.stderr + str(os.listdir(mem)))
+        del dj["machine"]; write(os.path.join(kit, "dev.json"), json.dumps(dj))
 
         # the other computer pushes 1.0.3; neuronet-dev pull here takes it
         write(os.path.join(src, "VERSION"), "1.0.3\n")
@@ -314,12 +333,18 @@ def main():
         # the kit maker, without touching GitHub
         out = os.path.join(tmp, "kit2")
         kenv = dict(env, NEURONET_CLAUDE_MEMORY=os.path.join(kit, "claude-memory"), NEURONET_ART=os.path.join(kit, "art"))   # (art/ stands in for ~/Pictures)
-        r = sh(["bash", os.path.join(APP, "tools", "make_dev_kit.sh"), out, "--no-github"], kenv)
+        sh(["git", "remote", "add", "origin", "https://github.com/someone/NeuroArcana.git"], env, os.path.join(home, "Work", "NeuroArcana"))
+        kenv = dict(kenv, NEURO_APPS_DIR=os.path.join(home, "Work"))
+        r = sh(["bash", os.path.join(APP, "tools", "make_dev_kit.sh"), out, "--no-github", "--name", "Test Pad"], kenv)
         d = json.load(open(os.path.join(out, "dev.json"))) if os.path.exists(os.path.join(out, "dev.json")) else {}
         ok("make_dev_kit.sh: the script, dev.json (ssh), a new key (600), the art, Claude's memory, a README", r.returncode == 0 and d.get("repo", "").startswith("git@github.com:")
            and oct(os.stat(os.path.join(out, "dev_key")).st_mode & 0o777) == "0o600" and os.path.exists(os.path.join(out, "dev_key.pub"))
            and os.path.exists(os.path.join(out, "art", "NeuroCafe Art Assets", "Icons", "sheet.jpeg")) and os.path.exists(os.path.join(out, "art", "NeuroPets Art Assets", "Pets", "pet- Sheet 1.jpeg")) and os.path.exists(os.path.join(out, "claude-memory", "MEMORY.md"))
            and os.path.exists(os.path.join(out, "README.txt")) and os.path.exists(os.path.join(out, "neuronet-dev")) and "--no-github" in r.stdout, r.stdout + r.stderr)
+        ok("  --name: the key and README name the computer, dev.json keeps it", d.get("machine") == "Test Pad" and "Test Pad" in open(os.path.join(out, "dev_key.pub")).read()
+           and "workstation (Test Pad)" in open(os.path.join(out, "README.txt")).read(), open(os.path.join(out, "dev_key.pub")).read())
+        ok("  the apps: clones pointing at GitHub (not at this computer's folder)", sh(["git", "remote", "get-url", "origin"], env, os.path.join(out, "apps", "NeuroArcana")).stdout.strip()
+           == "https://github.com/someone/NeuroArcana.git", r.stdout)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     print(f"\n  {passed} passed, {failed} failed")

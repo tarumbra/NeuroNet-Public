@@ -24,8 +24,11 @@ import sys
 root = sys.argv[1] if len(sys.argv) > 1 else "."
 
 
-def edit(rel, pairs, regex=False):
+def edit(rel, pairs, regex=False, optional=False):
     path = os.path.join(root, rel)
+    if optional and not os.path.exists(path):
+        print("  (no", rel, "in this builder -- skipped)")
+        return
     with open(path, encoding="utf-8") as f:
         text = f.read()
     for old, new in pairs:
@@ -55,12 +58,16 @@ edit("bin/omarchy-iso-make", [(
 # 2. ... and puts it in the offline mirror --------------------------------------------
 edit("builder/build-iso.sh", [
     # not downloaded: it's nowhere online
-    ('mkdir -p /tmp/offlinedb\ndownload_offline_packages() {',
-     '# NeuroNet: built locally (system/iso/build.sh), so never downloaded.\n'
-     'mapfile -t all_packages < <(printf \'%s\\n\' "${all_packages[@]}" | grep -Fxv neuronet || true)\n\n'
-     'mkdir -p /tmp/offlinedb\ndownload_offline_packages() {'),
+    # (2026-11-16: Omarchy's builder now DROPS names no repository offers, and strips them from the
+    # install too -- so neuronet leaves both lists before that step; the root image still gets it
+    # from the shipped omarchy-base.packages copy, step 3b)
+    ('mkdir -p /tmp/offlinedb\n# A package name the lists carry',
+     '# NeuroNet: built locally (system/iso/build.sh), so never downloaded or resolved online.\n'
+     'mapfile -t all_packages < <(printf \'%s\\n\' "${all_packages[@]}" | grep -Fxv neuronet || true)\n'
+     'mapfile -t target_packages < <(printf \'%s\\n\' "${target_packages[@]}" | grep -Fxv neuronet || true)\n\n'
+     'mkdir -p /tmp/offlinedb\n# A package name the lists carry'),
     # copied in, and kept when the mirror is pruned
-    ('printf \'%s\\n\' "${required_package_files[@]}" |\n  bash /builder/prune-offline-mirror.sh',
+    ('printf \'%s\\n\' "${required_package_files[@]}" |\n  bash /builder/prune-offline-mirror.sh "$offline_mirror_dir"',
      '# NeuroNet: the package itself, into the mirror and the keep-set.\n'
      'if compgen -G "/neuronet-pkgs/neuronet-*.pkg.tar.zst" >/dev/null; then\n'
      '  for neuronet_pkg in /neuronet-pkgs/neuronet-*.pkg.tar.zst; do\n'
@@ -71,18 +78,27 @@ edit("builder/build-iso.sh", [
      '  echo "ERROR: no neuronet package in /neuronet-pkgs (NEURONET_PKG_DIR)" >&2\n'
      '  exit 1\n'
      'fi\n\n'
-     'printf \'%s\\n\' "${required_package_files[@]}" |\n  bash /builder/prune-offline-mirror.sh'),
+     'printf \'%s\\n\' "${required_package_files[@]}" |\n  bash /builder/prune-offline-mirror.sh "$offline_mirror_dir"'),
 ])
 
-# 2b. packages renamed upstream that Omarchy's published lists still name -----------
-# (the same fix Omarchy's builder makes for broadcom-wl). 2026-09-30: the
-# arch-mact2 repo renamed apple-bcm-firmware to apple-bcm-firmware-fetcher
-# (conflicts=apple-bcm-firmware), and every build -- Omarchy's own too -- failed
-# with "target not found: apple-bcm-firmware". Only T2 Macs use it.
-edit("builder/build-iso.sh", [(
-    "sed 's/^broadcom-wl$/broadcom-wl-dkms/'",
-    "sed -e 's/^broadcom-wl$/broadcom-wl-dkms/' -e 's/^apple-bcm-firmware$/apple-bcm-firmware-fetcher/'"),
+# 2b. (apple-bcm-firmware's rename: Omarchy's builder follows it itself since Nov 2026 -- our edit removed)
+
+
+# 1b. after the build, omarchy-iso-make looks for the ISO by name: ours is neuronet-*.iso (2026-11-16)
+edit("bin/omarchy-iso-make", [(
+    'iso_name=omarchy\n[[ ${OMARCHY_OEM_INSTALL:-} == "1" ]] && iso_name=omarchy-oem\n',
+    'iso_name=neuronet\n[[ ${OMARCHY_OEM_INSTALL:-} == "1" ]] && iso_name=omarchy-oem\n'),
 ])
+
+
+# 1c. the build container may be NEWER than Omarchy's mirror (2026-11-16: a fresh archlinux:latest had
+# OpenSSL 4.1 while Omarchy stable was on 3.6.5, and -Syu refused to install anything). -Syuu lets
+# the container step back to the mirror's versions, so it matches what the ISO is built from.
+edit("builder/build-iso.sh", [(
+    'pacman --noconfirm -Syu archiso git sudo base-devel',
+    'pacman --noconfirm -Syuu archiso git sudo base-devel'),
+])
+
 
 # 3. the installer installs it, and the mirror carries its depends ----------------
 # The depends are listed too, not left to pacman: the mirror is filled from
@@ -119,7 +135,7 @@ edit("configs/profiledef.sh", [
 ])
 edit("configs/syslinux/archiso_head.cfg", [("MENU TITLE Omarchy", "MENU TITLE NeuroNet")])
 edit("configs/syslinux/archiso_sys-linux.cfg", [("Omarchy", "NeuroNet")])
-edit("configs/efiboot/loader/entries/01-archiso-x86_64-linux.conf", [("title    Omarchy", "title    NeuroNet")])
+edit("configs/efiboot/loader/entries/01-archiso-x86_64-linux.conf", [("title    Omarchy", "title    NeuroNet")], optional=True)  # gone Nov 2026: GRUB boots EFI too
 edit("configs/grub/grub.cfg", [('menuentry "Omarchy', 'menuentry "NeuroNet')])
 edit("configs/grub/loopback.cfg", [('menuentry "Omarchy', 'menuentry "NeuroNet')])
 print("customize.py: done")

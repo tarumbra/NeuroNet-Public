@@ -8,6 +8,14 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.186 — Window snap, a ThinkPad workstation, a new ISO (16 November 2026)
+
+- **Window snap, like Windows.** Drag a floating window (by its title bar on a floating workspace, or with Super + drag) until the pointer touches the edge of the screen: an outline shows where it will go, and when you let go it fills that space. Left or right edge: that half. A corner: that quarter. Up into the top bar: the whole screen. The bottom edge: the bottom half. Drag a snapped window away and it gets its old size back. Hyprland's own magnet snapping is unchanged, and tiled windows aren't touched.
+
+- **More computers can be workstations.** The developer kit can now be made for a named computer (`tools/make_dev_kit.sh <folder> --name ThinkPad`): its own key on GitHub, its own note for Claude, and the standalone apps (NeuroCafe, NeuroCode, NeuroArcana, NeuroTrain, NeuroTV) come in the kit, so `enable-dev.sh` puts them in ~/Work and builds NeuroTV.
+
+- **The ISO builds again.** Omarchy's ISO builder changed a lot since October (it now installs a ready-made system image); NeuroNet's ISO follows it, so a new computer installs the latest Omarchy and kernel with NeuroNet already in.
+
 ## 1.0.185 — NeuroTV, NeuroTrain's library, potions stay in hand, nine new decks (16 November 2026)
 
 - **NeuroTV.** Super+Alt+W opens NeuroTV, the IPTV player: live channels with a guide, films and shows, and favourites, from an Xtream Codes sign in or an M3U playlist, plus NeuroNet's own films and shows under My Media. It has its own entry in the app menu.
