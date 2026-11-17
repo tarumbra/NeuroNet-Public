@@ -4,6 +4,4 @@
 o.window({ class = "^(NeuroNet|neuronet[.]py)$", title = "^NeuroNet$" }, { workspace = "special:neuronet silent", float = true })
 -- Glowing window borders in every theme, when NeuroNet's Settings -> Appearance has them on (window_glow.py).
 do local f = os.getenv("HOME") .. "/.local/state/neuronet/glow.lua"; local h = io.open(f, "r"); if h then h:close(); dofile(f) end end -- NeuroNet glow
--- Window snap: drag a floating window to an edge or corner (windowsnap.lua; the outline is the neuronet.snap plugin).
-do local f = os.getenv("HOME") .. "/.config/hypr/neuronet-windowsnap.lua"; local h = io.open(f, "r"); if h then h:close(); local ok, err = pcall(dofile, f); if not ok then print("NeuroNet window snap: " .. tostring(err)) end end end -- NeuroNet window snap
 -- <<< NeuroNet desktop integration (install.sh)

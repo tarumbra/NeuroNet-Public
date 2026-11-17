@@ -11,7 +11,7 @@
 #                          brought across both ways (neuronet-dev-data; pull does this too)
 #   neuronet-dev apps      just the standalone games in ~/Work (NeuroCafe, NeuroCode, NeuroArcana): each one's
 #                          newest from GitHub, and its packages installed again when they changed (pull does this too)
-#   neuronet-dev mirror    setup|check|copy [user@pc]: this computer's data made a copy of the main PC's, straight over
+#   neuronet-dev mirror    setup|check|copy [user@pc] | leave [FOLDER...|--none]: this computer's data made a copy of the main PC's, straight over
 #                          the home network -- NeuroNet's whole data folder and the games' saves (neuronet-dev-mirror)
 #   neuronet-dev status    what's here: the branch, anything not committed or not pushed
 #

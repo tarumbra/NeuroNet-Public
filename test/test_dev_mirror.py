@@ -112,6 +112,20 @@ def main():
         ok("a second check: only the file whose folder names were changed differs", r.returncode == 0
            and "NeuroNet's data: would bring 1 files" in r.stdout and "NeuroArcana-dev: would bring 0 files" in r.stdout, r.stdout)
 
+        # a small computer leaves the music out (16 Nov 2026, the ThinkPad): never copied, never taken out
+        write(os.path.join(pc_data, "chords", "library", "song.mp3"), "MUSIC" * 1000, 0o644)
+        write(os.path.join(my_data, "chords", "mine.json"), "{}", 0o644)
+        r = run("leave", "chords")
+        ok("leave chords: remembered", r.returncode == 0 and "left out of the copy here: chords" in r.stdout
+           and json.load(open(os.path.join(me, ".config", "neuronet", "mirror.json")))["leave"] == ["chords"], r.stdout + r.stderr)
+        r = run("leave", "../x")
+        ok("  only a folder's own name", r.returncode == 2, r.stdout)
+        r = run("copy")
+        ok("  the copy leaves it out, and this computer's own copy of it stays", r.returncode == 0 and "left out here: chords" in r.stdout
+           and not os.path.exists(os.path.join(my_data, "chords", "library")) and os.path.exists(os.path.join(my_data, "chords", "mine.json")), r.stdout + r.stderr)
+        r = run("leave", "--none")
+        ok("  --none: everything comes again", r.returncode == 0 and "nothing left out" in r.stdout and "left out here" not in run("check").stdout, r.stdout)
+
         r = run("check", "cam@pc", extra={"NEURONET_MIRROR_RSH": "false"})
         ok("the PC can't be reached: said, with the first-time step", r.returncode == 1 and "can't reach the main PC" in r.stdout
            and "mirror setup" in r.stdout, r.stdout)

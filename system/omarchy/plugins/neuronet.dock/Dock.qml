@@ -71,6 +71,52 @@ Item {
     return best
   }
 
+  // ---- floating workspaces (17 Nov 2026) --------------------------------------
+  // Cam: "When using floating window layout please hide the neuronet dock because it wont be needed and
+  // gets in the way. It should still be availible for scrolling and tiling mode." Omarchy's own dock
+  // shows on floating workspaces, so this one steps aside there.
+  // Hyprland reports only the tiled layout, so the mode is read the way omarchy-hyprland-workspace-
+  // layout-current reads it: the workspace's own file in workspace-layouts/ (written by Super+L), and
+  // without a mode of its own, the default (default.lua). Two watched files, no process and no timer:
+  // the toggle writes or deletes the file, and the watch sees both. A watch needs the folder to be there
+  // (it isn't until Super+L is first pressed), so the dock makes it, empty, once, and watches after that.
+  property bool layoutsReady: false
+  Process {
+    running: true
+    command: ["mkdir", "-p", root.layoutsDir]
+    onExited: root.layoutsReady = true
+  }
+  readonly property var dockMonitor: targetScreen ? Hyprland.monitorFor(targetScreen) : null
+  readonly property int dockWorkspace: dockMonitor && dockMonitor.activeWorkspace ? dockMonitor.activeWorkspace.id : -1
+  readonly property string layoutsDir: (Quickshell.env("XDG_STATE_HOME") || Quickshell.env("HOME") + "/.local/state") + "/omarchy/workspace-layouts"
+  property string workspaceMode: ""       // the mode the workspace's own file names ("" = none)
+  property string defaultMode: ""         // the mode default.lua names ("" = none)
+  readonly property bool floatingHere: dockWorkspace >= 1
+      && (workspaceMode === "floating" || (workspaceMode === "" && defaultMode === "floating"))
+  function modeIn(text, key) {
+    var m = String(text || "").match(new RegExp(key + '\\s*=\\s*"([a-z]+)"'))
+    return m ? m[1] : ""
+  }
+  FileView {
+    path: root.layoutsReady && root.dockWorkspace >= 1 ? root.layoutsDir + "/" + root.dockWorkspace + ".lua" : ""
+    watchChanges: true
+    printErrors: false
+    onFileChanged: reload()
+    onLoaded: root.workspaceMode = root.modeIn(text(), "mode")
+    onLoadFailed: root.workspaceMode = ""
+    onPathChanged: if (!path) root.workspaceMode = ""
+  }
+  FileView {
+    path: root.layoutsReady ? root.layoutsDir + "/default.lua" : ""
+    watchChanges: true
+    printErrors: false
+    onFileChanged: reload()
+    onLoaded: root.defaultMode = root.modeIn(text(), "default")
+    onLoadFailed: root.defaultMode = ""
+  }
+  // onto a floating workspace the dock's pop-ups close with it; off one it comes back as it was
+  onFloatingHereChanged: if (floatingHere) { menuOpen = false; settingsOpen = false; shown = false; peek = false }
+
   // ---- state file -------------------------------------------------------------
   readonly property string stateDir: Quickshell.env("HOME") + "/.local/state/omarchy"
   property bool loaded: false
@@ -299,7 +345,7 @@ Item {
   PanelWindow {
     id: win
     screen: root.targetScreen
-    visible: root.loaded
+    visible: root.loaded && !root.floatingHere
     color: "transparent"
     WlrLayershell.namespace: "neuronet.dock"
     WlrLayershell.layer: WlrLayer.Top

@@ -115,7 +115,7 @@ else
   warn "no dev_key in the kit: this computer's own GitHub login will be used"
 fi
 if [ -z "$CHECK" ]; then
-  tip=$(GIT_SSH_COMMAND="${SSHC:-ssh}" git ls-remote "$REPO" refs/heads/main 2>&1 | awk '{print $1}' | head -1)
+  tip=$(GIT_SSH_COMMAND="${SSHC:-ssh}" git ls-remote "$REPO" refs/heads/main 2>&1 | awk '$1 ~ /^[0-9a-f]{40}$/ {print $1}' | head -1)
   [[ "$tip" =~ ^[0-9a-f]{40}$ ]] || die "GitHub didn't answer with the key ($REPO): $tip"
   ok "GitHub answers: main is at ${tip:0:7}"
 fi

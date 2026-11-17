@@ -8,6 +8,16 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.187 — The dock steps aside on floating workspaces, window snap taken out, NeuroTV stops crashing the desktop (17 November 2026)
+
+- **The NeuroNet dock hides on floating workspaces.** Omarchy shows its own dock there, so NeuroNet's no longer sits in the way: switch a workspace to floating (Super+L) and the NeuroNet dock goes; switch to tiling or scrolling, or to another workspace that isn't floating, and it's back as it was. It reads the layout from Omarchy's own saved layout files, so it costs nothing while you work.
+
+- **NeuroTV no longer takes the desktop down.** NeuroTV 0.1.1 decodes video on the processor instead of the graphics card, which on the laptop's Intel chip hung the GPU and crashed Hyprland. Every computer's NeuroTV is rebuilt with it.
+
+- **All four computers are workstations.** Manthie's PC joins the PC, the laptop and the ThinkPad as a computer NeuroNet is developed on (`neuronet-dev pull`), and the computers have names of their own: TUF Fluff, Fluff's PC, Manthie's PC and ThinkPad.
+
+- **Window snap is gone again.** After 1.0.186 Hyprland was crashing and acting strangely, so dragging a window to an edge no longer snaps it and the outline is gone. An update takes it out by itself (the file is set aside in ~/.config/omarchy/plugins-removed-neuronet-…). Hyprland's own magnet snapping is as it was. (The crashes on the laptop turned out to be NeuroTV hanging the Intel graphics chip; NeuroTV 0.1.1 fixes that.)
+
 ## 1.0.186 — Window snap, a ThinkPad workstation, a new ISO (16 November 2026)
 
 - **Window snap, like Windows.** Drag a floating window (by its title bar on a floating workspace, or with Super + drag) until the pointer touches the edge of the screen: an outline shows where it will go, and when you let go it fills that space. Left or right edge: that half. A corner: that quarter. Up into the top bar: the whole screen. The bottom edge: the bottom half. Drag a snapped window away and it gets its old size back. Hyprland's own magnet snapping is unchanged, and tiled windows aren't touched.

@@ -6,9 +6,6 @@
     },
     {
       "id": "neuronet.claudedock"
-    },
-    {
-      "id": "neuronet.snap"
     }
   ],
   "replaces": [
@@ -20,7 +17,8 @@
     "neuronet.training",
     "neuronet.board",
     "neuronet.frame",
-    "neuronet.home"
+    "neuronet.home",
+    "neuronet.snap"
   ],
   "takes_over": [
     "cam.claudedock"

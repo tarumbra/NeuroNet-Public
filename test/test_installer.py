@@ -167,8 +167,23 @@ try:
     json.dump({"model": "opus", "hooks": {"Stop": [{"hooks": [MY_HOOK]},
               {"hooks": [{"type": "command", "command": "python3 ~/.config/omarchy/plugins/cam.claudedock/claudedock.py replied"}]}]}},
               open(CS, "w"))
+    # a 1.0.186 computer had window snap (taken out again 17 Nov 2026): its Lua file, loaded from
+    # NeuroNet's block in hyprland.lua, and the neuronet.snap outline plugin switched on
+    SNAP_LINE = 'do local f = os.getenv("HOME") .. "/.config/hypr/neuronet-windowsnap.lua"; local h = io.open(f, "r"); if h then h:close(); dofile(f) end end -- NeuroNet window snap'
+    open(os.path.join(hypr, "neuronet-windowsnap.lua"), "w").write("-- old snap\n")
+    open(os.path.join(hypr, "hyprland.lua"), "a").write(
+        "-- >>> NeuroNet desktop integration (install.sh)\n" + SNAP_LINE + "\n-- <<< NeuroNet desktop integration (install.sh)\n")
+    os.makedirs(os.path.join(home, ".config", "omarchy", "plugins", "neuronet.snap"))
+    s1 = sj(); s1["plugins"].append({"id": "neuronet.snap"})
+    json.dump(s1, open(os.path.join(home, ".config", "omarchy", "shell.json"), "w"), indent=2)
     code, out = run("--yes", "--no-start", "--data", data)
     ok("the install runs to the end", code == 0 and "Done." in out, out)
+    ok("window snap is taken out: the Lua file set aside, the block no longer loads it, the outline plugin retired",
+       not os.path.exists(os.path.join(hypr, "neuronet-windowsnap.lua"))
+       and "windowsnap" not in read(os.path.join(hypr, "hyprland.lua"))
+       and "neuronet.snap" not in [p["id"] for p in sj()["plugins"]]
+       and not os.path.exists(os.path.join(home, ".config", "omarchy", "plugins", "neuronet.snap"))
+       and "Window snap taken out" in out and "Retired neuronet.snap" in out, out[-900:])
     on0, right0 = [p["id"] for p in sj()["plugins"]], [e["id"] for e in sj()["bar"]["layout"]["right"]]
     ok("the Claude dock: NeuroNet's is on and first on the right; the hand-made one is off, off the bar and set aside",
        "neuronet.claudedock" in on0 and right0[0] == "neuronet.claudedock" and "cam.claudedock" not in on0 + right0

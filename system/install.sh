@@ -591,12 +591,15 @@ taken=$(omarchy menu keybindings --print 2>/dev/null | grep -vE "→ *(Neuro[A-Z
 # Omarchy's own defaults: a key the block unbinds first may replace one of
 # THESE (never one of Cam's own bindings)
 defaults=$(cat "${OMARCHY_PATH:-/usr/share/omarchy}"/default/hypr/bindings/*.lua 2>/dev/null || true)
-# Window snap (16 Nov 2026): its code is a whole file, loaded from the hyprland.lua block
-if [ -f "$SYS/hypr/windowsnap.lua" ]; then
-  snap="$HYPR/neuronet-windowsnap.lua"
-  if ! cmp -s "$SYS/hypr/windowsnap.lua" "$snap"; then
-    if [ -n "$CHECK" ]; then would "put window snap in $snap"
-    else install -m 644 "$SYS/hypr/windowsnap.lua" "$snap" && say "Window snap: $snap"; fi
+# Window snap is gone (17 Nov 2026, Cam: "revert those changes"): 1.0.186 put it in
+# ~/.config/hypr/neuronet-windowsnap.lua and Hyprland was crashing and acting weird
+# after it. The block no longer loads it; the file is set aside, never deleted.
+snap="$HYPR/neuronet-windowsnap.lua"
+if [ -f "$snap" ]; then
+  if [ -n "$CHECK" ]; then would "take window snap out ($snap)"
+  else
+    mkdir -p "$HOME/.config/omarchy/plugins-removed-neuronet-$STAMP"
+    mv -- "$snap" "$HOME/.config/omarchy/plugins-removed-neuronet-$STAMP/" && say "Window snap taken out (set aside in ~/.config/omarchy/plugins-removed-neuronet-$STAMP)"
   fi
 fi
 HYPR_BAK=()

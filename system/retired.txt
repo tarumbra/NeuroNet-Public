@@ -100,3 +100,8 @@ test/test_clock.py
 test/test_visualizers.py
 test/test_desktop_board.js
 test/test_training_desktop.js
+
+# 1.0.187 (2026-11-17): window snap taken out again (Cam: Hyprland crashing and acting weird after 1.0.186)
+system/hypr/windowsnap.lua
+system/omarchy/plugins/neuronet.snap/Service.qml
+system/omarchy/plugins/neuronet.snap/manifest.json

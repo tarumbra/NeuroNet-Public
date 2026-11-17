@@ -20,6 +20,10 @@ its old copy over the new one.
     neuronet-dev-mirror <checkout> setup [user@pc]   the key, put on the PC (asks the PC's password once), and a test
     neuronet-dev-mirror <checkout> check [user@pc]   what a copy would bring, and how much
     neuronet-dev-mirror <checkout> copy  [user@pc]   the copy
+    neuronet-dev-mirror <checkout> leave [FOLDER...|--none]   data folders this computer never takes (16 Nov 2026,
+                                     the ThinkPad: "wont have music or movies ... doesnt have much space"): e.g.
+                                     `leave chords` (the music library); remembered; alone it says what's left out.
+                                     A folder left out is never deleted here either.
 
 The PC's address is remembered in ~/.config/neuronet/mirror.json after the first time. NEURONET_MIRROR_RSH (a command
 that takes the host and then the command, like ssh), NEURONET_MIRROR_CONF and NEURONET_MIRROR_OPEN (what counts as
@@ -86,9 +90,9 @@ def where_here():
     return {"app": p("app"), "data": p("data"), "home": HOME}
 
 
-def pairs(there, here):
+def pairs(there, here, leave_more=()):
     """(name, the PC's folder, this computer's folder, folders left out) for everything copied."""
-    out = [("NeuroNet's data", there["data"], here["data"], LEFT_TO_PULL)]
+    out = [("NeuroNet's data", there["data"], here["data"], tuple(LEFT_TO_PULL) + tuple(leave_more))]
     share = os.environ.get("XDG_DATA_HOME") or os.path.join(HOME, ".local", "share")
     for g in there["games"]:
         out.append((g, f"{there['home']}/.local/share/{g}", os.path.join(share, g), ()))
@@ -194,9 +198,25 @@ def main():
         conf = json.load(open(cf))
     except (OSError, ValueError):
         conf = {}
+    if what == "leave" and app:
+        names = sys.argv[3:]
+        if names:
+            if names == ["--none"]:
+                names = []
+            bad = [n for n in names if not re.fullmatch(r"[A-Za-z0-9._-]+", n) or n in (".", "..")]
+            if bad:
+                print(f"a data folder's own name, like chords: not {', '.join(bad)}")
+                return 2
+            conf["leave"] = sorted(set(names))
+            os.makedirs(os.path.dirname(cf), exist_ok=True)
+            with open(cf, "w") as f:
+                json.dump(conf, f, indent=1)
+        left = conf.get("leave") or []
+        print(("left out of the copy here: " + ", ".join(left)) if left else "nothing left out: the whole data folder comes (but the notes, which neuronet-dev pull brings)")
+        return 0
     host = sys.argv[3] if len(sys.argv) > 3 else conf.get("main")
     if what not in ("setup", "check", "copy") or not app:
-        print("neuronet-dev mirror setup|check|copy [user@pc]")
+        print("neuronet-dev mirror setup|check|copy [user@pc]   or   leave [FOLDER...|--none]")
         return 2
     if not host:
         print("which computer is the main PC? e.g.  neuronet-dev mirror setup cam@192.168.1.150")
@@ -230,7 +250,10 @@ def main():
     stamp = time.strftime("%Y-%m-%d_%H%M%S")
     keep = os.path.join(state, "mirror-replaced", stamp)
     total, bad = 0, 0
-    for name, src, dst, leave in pairs(there, here):
+    left = [n for n in (conf.get("leave") or []) if re.fullmatch(r"[A-Za-z0-9._-]+", n)]
+    if left:
+        print(f"left out here: {', '.join(left)} (neuronet-dev mirror leave --none to take everything)")
+    for name, src, dst, leave in pairs(there, here, left):
         rc, st, e = rsync(host, src, dst, what == "check", os.path.join(keep, name.replace("'", "").replace(" ", "-")) if what == "copy" else None, leave)
         n, gone, b = st.get("Number of regular files transferred", 0), st.get("Number of deleted files", 0), st.get("Total transferred file size", 0)
         total += b

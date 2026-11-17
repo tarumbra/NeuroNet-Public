@@ -111,12 +111,6 @@ for f in "$H"/.config/hypr/*.lua; do
   fi
 done
 
-# window snap: the whole file (install.sh puts it there; the block loads it)
-if [ -f "$H/.config/hypr/neuronet-windowsnap.lua" ]; then
-  cp "$H/.config/hypr/neuronet-windowsnap.lua" "$SYS/hypr/windowsnap.lua"
-  say "hypr     neuronet-windowsnap.lua -> windowsnap.lua"
-fi
-
 # ---- user services, launcher: NOT collected (2026-09-29) --------------------
 # They're made for each computer from system/templates/ by neuronet-setup.
 # Copies of this computer's rendered ones carried its folders into the repo
