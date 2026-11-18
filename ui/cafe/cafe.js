@@ -320,6 +320,7 @@
                     apples: 62, fortune: 54, claw: 52, hauntedhouse: 60,
                     bbq: 70, pizzaoven: 72, tandoor: 62, spit: 96, smoker: 82,
                     shakevend: 58, energyvend: 58, popcorn: 50, shakebar: 80, sushibar: 84, shakeshelf: 80, sushishelf: 84,   // (V26; the plain counters the same size)
+                    coffeebar: 80, coffeeshelf: 80,   // (2026-11-18, PT59 c9: the barista and coffee serving counters)
                     table_low: 76, table_lowround: 70, cushion: 46, pouf: 44, pot_lavender: 46, pot_flowers: 48, pot_ferns: 48, table_lowhw: 76, cushion_hw: 46, crystalball: 64, tarotreader: 68,
                     table_hwpumpkin: 72, table_hwweb: 62, table_hwslime: 74, table_hwskull: 84, chair_web: 42, chair_skull: 44, armchair_hw: 60,
                     stool_hwbat: 36, stool_hw: 34, pot_hwtree: 54, lamp_hw: 40, bookshelf_hw: 62, coatstand_hw: 44 };   // (V25)   // (V24 step 2, the patio's appliances)   // (Halloween's)
@@ -327,6 +328,7 @@
   // along the middle of the bare top, from the back end to the front
   // (the sushi counter's along its front ledge, in front of the case of fish)
   const SHELF_AT = { shakeshelf: { l: [[0.29, 0.30], [0.50, 0.40], [0.72, 0.51]], bl: [[0.28, 0.23], [0.50, 0.34], [0.73, 0.45]] },
+                     coffeeshelf: { l: [[0.29, 0.30], [0.50, 0.40], [0.72, 0.51]], bl: [[0.28, 0.23], [0.50, 0.34], [0.73, 0.45]] },   // (the same counter, in coffee brown)
                      sushishelf: { l: [[0.44, 0.69], [0.60, 0.62], [0.76, 0.55]], bl: [[0.40, 0.60], [0.58, 0.53], [0.76, 0.46]] } };
   /** The prep counter that makes what a plain counter holds (the milkshake counter for the plain milkshake counter). */
   const makerOf = (kind) => C.BARS.find((k) => C.THINGS[k].menu === C.THINGS[kind].shelf);
@@ -1104,6 +1106,7 @@
     // (2026-11-08, Cam: "swatches for the stoves, milkshake makers and counters"): the milkshake counters' mint and the
     // milkshake machine's pink, turned from their own colour to each of these
     mint: TURNED(138, "#8fd8b0"), pink: TURNED(343, "#e88aa8"),
+    coffee: TURNED(28, "#8a5a3a"),                                 // (2026-11-18: the coffee counters' brown panels)
     dark: [NATURAL("#2e2a2c"), ["Bronze", "#8a6a3a", 0, 2, 1.6], ["Emerald", "#2e6a46", 100, 3, 1.6], ["Teal", "#2e6a6a", 150, 3, 1.6], ["Blue", "#2e4a7a", 200, 3, 1.6],
            ["Plum", "#5a3a6a", 260, 3, 1.6], ["Red", "#7a2e2e", 330, 3.5, 1.6], ["Sage", "#5a6a4a", 70, 2, 1.8], ["Cream", "#e6d8b8", 0, 1.5, 3.2]],
   };
@@ -1278,8 +1281,7 @@
         return `<img class="nc-plate at" alt="" src="${art("dish-" + pl.dish.id)}" style="left:${(x * 100).toFixed(1)}%;top:${(P[i][1] * 100).toFixed(1)}%;width:${Math.round((it.kind === "sushishelf" ? 26 : 32) * dishK(pl.dish.id))}%"><span class="nc-count at sm" style="left:${(x * 100 + (it.kind === "sushishelf" ? 3 : 8)).toFixed(1)}%;top:${(P[i][1] * 100 + (it.kind === "sushishelf" ? -11 : 3)).toFixed(1)}%">${pl.n}</span>`;
       }).join("");
     }
-    // V26 q5: the espresso machine on its counter (behind the dish), and q1: an empty sign on whatever's run dry
-    if (it.espresso) over = `<img class="nc-espresso${it.dir % 2 ? " flip" : ""}" alt="" src="${art("espresso-l")}">` + over;
+    // V26 q1: an empty sign on whatever's run dry
     if (it.dry) over += `<span class="nc-bub empty" title="Run dry -- click to refill">${EMPTY_IC}</span>`;
     // 2026-10-24 (Cam: "it needs an overlay for lighting up"): a lamp's shade glows in the evening and at night -- when
     // it's on (Cam: "when i click the draw string it will turn on or off"); by day, on, a faint glow round the shade
@@ -1309,7 +1311,7 @@
       : it.kind === "buffet" ? "Buffet counter" + ((it.plates || []).some((p) => p.dish) ? ": " + it.plates.filter((p) => p.dish).map((p) => `${p.dish.name} ${p.n}`).join(", ") : "") + coldNote(it)
       : `Cash register${v.till ? `: ${v.till} coins` : ""}`;
     if (lamp && !build) label += it.off ? " (off) -- click to switch it on" : " -- click to switch it off";
-    if (it.dry) label = `${it.kind === "counter" ? "Espresso machine" : C.THINGS[it.kind].name}: run dry -- click to refill (${C.REFILL.cut * 100}% of the coins in it, at least ${C.REFILL.least})`;
+    if (it.dry) label = `${C.THINGS[it.kind].name}: run dry -- click to refill (${C.REFILL.cut * 100}% of the coins in it, at least ${C.REFILL.least})`;
     if (C.isBar(it) && it.plates && it.plates[0].dish && st && st.status !== "ready") label += ` -- ${it.plates[0].dish.name}: ${it.plates[0].n} left`;
     const sel = build && build.pick === it.uid ? " picked" : "";
     return `<button class="nc-thing ${it.kind}${joined ? " joined" : ""}${lit ? " lit" : ""}${lamp ? (it.off ? " off" : " on") : ""}${f.standin ? " standin" : ""}${extra ? " " + extra : ""}${sel}${st ? " " + st.status : ""}" data-uid="${it.uid}" data-kind="${it.kind}" title="${esc(label)}" aria-label="${esc(label)}"
@@ -2010,7 +2012,7 @@
     if (it.kind === "counter" || it.kind === "buffet" || C.isShelf(it)) return counterSheet(uid);
   }
 
-  /** V26 q1: refill a machine, a counter's espresso beans, a cart or the cinema -- its coins out, less the cut. */
+  /** V26 q1: refill a machine, a cart or the cinema -- its coins out, less the cut. */
   function refill(o) { const r = act("refill", o); if (r && r.ok) toast(r.msg); }
   /** A cart or the cinema clicked: refill it when it's dry, else take its coins. */
   function stallTap(uid) {
@@ -2449,10 +2451,15 @@
   const onFocus = (f) => { const was = focused; focused = !!f; if (focused !== was) { applyFx(); if (focused && state && state.made) { sig = ""; tick(); } } };
   window.addEventListener("focus", () => onFocus(true)); window.addEventListener("blur", () => onFocus(false));
   window.NCFocus = (f) => onFocus(f);                       // (from the shell, when the window itself gains or loses focus)
+  /* Lite mode (NeuroNet's lite.py, 17 Nov 2026: a smaller computer, or a laptop on battery): Balanced runs as Light.
+     Full or Light chosen here still stands. html[data-lite] comes as the page loads, with an "nn-lite" event. */
+  const lite = () => document.documentElement.hasAttribute("data-lite");
+  const fxNow = () => { const fx = state ? C.prefs(state).fx : "balanced"; return fx === "balanced" && lite() ? "light" : fx; };
+  document.addEventListener("nn-lite", () => { if (state) applyFx(); });
   /** Resting: the motion stops (Light always; Balanced while the café isn't the window in use). */
-  function resting() { const fx = state ? C.prefs(state).fx : "balanced"; return fx === "light" || (fx === "balanced" && !focused); }
+  function resting() { const fx = fxNow(); return fx === "light" || (fx === "balanced" && !focused); }
   function applyFx() {
-    const fx = state ? C.prefs(state).fx : "balanced";
+    const fx = fxNow();
     document.body.dataset.fx = fx;
     document.body.classList.toggle("nc-rest", resting());
     if (resting()) document.querySelectorAll(".nc-up, .nc-sway").forEach((e) => e.classList.remove("nc-up", "nc-sway"));
@@ -2469,7 +2476,7 @@
       <div class="nc-set"><b>Happenings</b><label class="nc-check"><input type="checkbox" data-happen ${p.happen ? "checked" : ""}> Now and then something happens at the café, good or bad (it goes in your diary)</label></div>
       <div class="nc-set"><b>Graphics</b>
         <div class="nc-row nc-fx">${FX_CHOICES.map(([k, name]) => `<button class="nc-btn sm${p.fx === k ? "" : " ghost"}" data-fx="${k}" aria-pressed="${p.fx === k}">${name}</button>`).join("")}</div>
-        <p class="nc-hint">${esc((FX_CHOICES.find((x) => x[0] === p.fx) || FX_CHOICES[1])[2])}</p></div>
+        <p class="nc-hint">${esc((FX_CHOICES.find((x) => x[0] === p.fx) || FX_CHOICES[1])[2])}${p.fx === "balanced" && lite() ? " NeuroNet's Lite mode is on, so it runs as Light." : ""}</p></div>
       <div class="nc-set"><b>Sandbox</b><p>${v.sandbox ? "You're in the sandbox: nothing here touches your café." : "A copy of your café to try things in, with dev tools to set your level and coins, cook instantly and skip time. Your café stays exactly as it is."}</p>
         <button class="nc-btn" data-slot>${v.sandbox ? "Back to your café" : "Open the sandbox"}</button>
         ${v.sandbox ? `<button class="nc-btn ghost" data-devt>${devOpen ? "Hide the dev tools" : "Show the dev tools"}</button>` : ""}</div>
@@ -2696,7 +2703,7 @@
   // corner turns to the next (or last) piece in the section; the Contents tab on the side goes back to the start.
   let bookAt = { sec: null, i: 0 };
   const BOOK_ART = (kind) => kind === "counter" ? "counter-l" : kind === "buffet" ? "buffet-l" : shopPic(kind);
-  const MATERIAL_NAME = { blue: "Upholstered fabric", leather: "Leather", wood: "Wood", darkwood: "Dark wood", pot: "Terracotta pot", shade: "Fabric shade", linen: "Linen", light: "White paint", dark: "Black iron", enamel: "Enamel", mint: "Painted panels", pink: "Painted metal" };
+  const MATERIAL_NAME = { blue: "Upholstered fabric", leather: "Leather", wood: "Wood", darkwood: "Dark wood", pot: "Terracotta pot", shade: "Fabric shade", linen: "Linen", light: "White paint", dark: "Black iron", enamel: "Enamel", mint: "Painted panels", pink: "Painted metal", coffee: "Painted panels" };
   /** The catalogue's sections: the Buy menu's categories with recolourable furniture in them, counters first; then the mixer. */
   function bookSections(v) {
     const out = [];
@@ -3089,7 +3096,7 @@
     { id: "kitchen", name: "Kitchen", cats: [
       { id: "stoves", name: "Stoves", pic: "stove-l", thing: (k) => k === "stove" },
       { id: "counters", name: "Counters", pic: "counter-l", thing: (k) => C.COUNTERS.indexOf(k) >= 0 },
-      { id: "bars", name: "Milkshakes & sushi", pic: "shakebar-l", thing: (k, T) => T.bar || T.shelf },          // (V26 q6)
+      { id: "bars", name: "Coffee, shakes & sushi", pic: "shakebar-l", thing: (k, T) => T.bar || T.shelf },          // (V26 q6)
       { id: "outdoor", name: "Outdoor cooking", pic: "bbq-l", thing: (k, T) => T.cooker && !T.bar },
       { id: "safety", name: "Fire safety", pic: "firekit", kits: true }] },
     { id: "dining", name: "Dining", cats: [

@@ -2532,7 +2532,7 @@ def already_running():
 # -- not imported -- so they use this file's helpers by the same names, with
 # the same live values, and nothing about them changed but where they're
 # written. The page sees one Api, as before (pywebview reads inherited calls).
-API_PARTS = [("photos", "PhotosApi"), ("creative", "CreativeApi"), ("effects", "EffectsApi"), ("system", "SystemApi"), ("media", "MediaApi"), ("kitchen", "KitchenApi"), ("desktop", "DesktopApi"), ("training", "TrainingApi"), ("mind", "MindApi"), ("music", "MusicApi"), ("printing", "PrintingApi"), ("collab", "CollabApi")]
+API_PARTS = [("photos", "PhotosApi"), ("creative", "CreativeApi"), ("effects", "EffectsApi"), ("system", "SystemApi"), ("media", "MediaApi"), ("kitchen", "KitchenApi"), ("desktop", "DesktopApi"), ("training", "TrainingApi"), ("mind", "MindApi"), ("music", "MusicApi"), ("printing", "PrintingApi"), ("collab", "CollabApi"), ("lite", "LiteApi")]
 
 
 def load_api_parts():
@@ -2996,6 +2996,14 @@ def main():
         _run_quick("show")
         sys.stderr.write("NeuroNet is already open; bringing it forward.\n")
         return
+
+    # Lite mode (lite.py): Chromium asked for reduced motion before Qt WebEngine starts
+    try:
+        import lite
+        if lite.apply_flags():
+            sys.stderr.write("NeuroNet: lite mode (Settings > Lite mode)\n")
+    except Exception as e:
+        sys.stderr.write(f"NeuroNet: lite mode not read: {e}\n")
 
     try:
         import webview

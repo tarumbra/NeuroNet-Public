@@ -8,6 +8,65 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.188 — Lite mode, TV in Media, NeuroTV's guide, recordings and picture in picture (19 November 2026)
+
+Cam, on the ThinkPad T470s: "We will be using this as the benchmark for creating neuronet for less powerful compute,
+so we can still enjoy the full neuronet experience ... make sure battery life and consumption is also a factor ...
+build this lighter version as an option in neuronet settings that can be toggled."
+
+- **Settings > Lite mode: Auto, On or Off**, kept on each computer (`~/.config/neuronet/lite.json`), so the PC can
+  stay full while the ThinkPad is lite. Auto is on for a smaller computer (4 threads or fewer, or 8 GB of memory or
+  less) and for any laptop running on its battery; it looks again each time NeuroNet comes back into view, with no
+  timer running in between. The page shows what this computer is and why Lite is on or off.
+- **What it changes:** no blur behind panels (frosted ones get a solid background); animations and fades finish at
+  once instead of redrawing the screen while they run; no permanent graphics layers; the top bar's clock to the
+  minute (one redraw a minute, not sixty); the music visualizer at 15 frames a second instead of 60; Chromium asked
+  for reduced motion, so every page's own calmer styles apply. Everything still works the same.
+- **Shared across the ecosystem:** NeuroPets, NeuroFarm, NeuroCafe and NeuroArcana get the same stylesheet as they
+  open, NeuroCafe's "Balanced" graphics run as "Light" (a choice of Full or Light there still stands), and NeuroTrain
+  reads the same setting (its 0.5.1).
+- **Measured on the ThinkPad** (i5-6300U, 2 cores and 4 threads, 8 GB, Intel HD 520), each game's opening screen
+  drawn off-screen for 20 seconds: NeuroArcana 118% of a core and 297 wake-ups a second without Lite, nothing with it;
+  NeuroPets 146% and 440, under 1% and 11 with it. NeuroNet's own sections already open in 30 to 80 ms here.
+- Tests: `test/test_lite.py` (41: the rule on made-up computers, the flag, every window wired, and NeuroTrain's
+  `shell/lite.js` giving the same answer as `lite.py`).
+
+- **NeuroTV's downloaded films fill themselves into Media.** When NeuroTV 0.2.1 finishes downloading a film, it's
+  added to Media as a film tagged **Digital**, linked to the file (so it plays from Media), with the poster as its
+  cover. One you own already (a DVD of it) gains Digital and the link instead of a second item, keeping your notes.
+  NeuroNet's own `tools/media_add_digital.py` does it; Media's page re-reads before it saves, so an open page keeps it.
+- **NeuroTV 0.6.1**: out of sight (tucked away, minimised or on another workspace) whatever's playing carries on
+  silently with no picture drawn, back with sound when you look again; recordings carry on, and the popped-out player
+  keeps its sound. 0.6.0 keeps the computer awake while it records or downloads; 0.5.1 lets recordings go back to back.
+- **NeuroTV 0.5.0**: picture in picture, small in NeuroTV's corner while you browse (I), or popped out as a small
+  player pinned in the screen's corner over everything (O).
+- **NeuroTV 0.4.0**: a TV guide with catch-up and recording from it (a Recordings section), downloads that wait while
+  you watch and can be kept to overnight, Follow a show (new episodes download themselves), hiding categories and
+  channels, back to the last channel and a sleep timer (the team's ideas I40 to I47).
+- **TV in Media.** Media has a **TV** kind beside Film (formats as films: DVD, Blu-ray, 4K UHD, VHS, Digital). A show
+  is one item with the episodes you have, listed by season on its page; each plays from there, and ▶ Play plays them in
+  order. Episodes NeuroTV downloads go in by themselves, tagged Digital (`tools/media_add_digital.py --kind episode`).
+- **NeuroPets: the grid game is gone for now.** The Grid world prototype (Prototypes in the sidebar) and the Show
+  prototypes setting are taken out of NeuroVale, to come back later as a small project built up a feature at a time.
+  It's kept whole in git as the tag `grid-game-prototype`.
+- **Delete a project in Collaboration.** Pick the project, then **Delete** beside Rename. If it has documents, you
+  choose: **Move to General**, or **delete them too** (into Collaboration's deleted folder, `collab/deleted`, never gone
+  for good, like a single deleted document). Archived documents count, so the project can't come back by one still naming
+  it. General can't be deleted.
+- **NeuroCafe: a barista counter and a coffee serving counter.** Coffee works like the milkshakes now (Cam, PT59):
+  **Buy > Kitchen > Coffee, shakes & sushi** has a **Barista counter** (level 7, 2,200) that makes the eight coffees
+  from its own book (espresso at 7 up to affogato at 21, 30 seconds to 5 minutes, never burnt, never dirty) and a
+  **Coffee serving counter** (level 7, 1,200) that holds three kinds side by side; the barista counter serves onto it
+  first. The espresso machine is no longer fitted to serving counters: one you had fitted, or kept as a spare, was
+  taken back for its 1,500 coins (the diary says so), and any coffee already on a counter stays till it sells. Both
+  counters take swatches. Their pictures are stand-ins (the plain milkshake counter in coffee brown, the espresso
+  machine on top) until their own sheet is painted.
+- **NeuroCafe: no pink in the cup handles.** The template's pink was left inside the coffee cups' handles, seen through
+  empty glasses and in some steam; it's gone from all eight coffees (made, cooking and burnt) and the chamomile and
+  mint teas' mugs (`tools/fix_cafe_lightpink.py`). The chocolate cone's stray painted label is gone too.
+- **NeuroCafe: the milkshake machine is solid.** Its pink sides and back were partly see-through, showing the floor
+  behind; they're filled in on all four sides (`tools/fix_cafe_holes.py`), and its swatches cover them too.
+
 ## 1.0.187 — The dock steps aside on floating workspaces, window snap taken out, NeuroTV stops crashing the desktop (17 November 2026)
 
 - **The NeuroNet dock hides on floating workspaces.** Omarchy shows its own dock there, so NeuroNet's no longer sits in the way: switch a workspace to floating (Super+L) and the NeuroNet dock goes; switch to tiling or scrolling, or to another workspace that isn't floating, and it's back as it was. It reads the layout from Omarchy's own saved layout files, so it costs nothing while you work.

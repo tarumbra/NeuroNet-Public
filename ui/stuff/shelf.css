@@ -309,3 +309,9 @@
 .sc-modal .st-formats { display: flex; flex-wrap: wrap; gap: 6px; }
 .sh-pick-prev.drop { outline: 2px solid var(--accent); outline-offset: 3px; }
 .sh-pick-extra { display: contents; }
+
+/* a TV show's episodes, by season (18 Nov 2026) */
+.sh-eps { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.sh-ep { text-decoration: none; padding: 2px 0; }
+.sh-ep:hover { text-decoration: underline; }
+.sh-ep.off { opacity: .5; pointer-events: none; }

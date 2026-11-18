@@ -11,6 +11,7 @@ AAStore.call(name, args), comes here (Api.call) instead of to Electron. The save
 import os
 import sys
 
+import lite               # Lite mode: lighter on a small computer or on battery
 import neuronet as nn      # the app folders and the Qt hardening
 import arcana_store as store
 import arcana_lan
@@ -101,6 +102,7 @@ def main():
         elif arg.startswith("--gui="):
             gui = arg.split("=", 1)[1]
     nn.prefer_integrated_gpu()
+    lite.apply_flags()         # Lite mode (lite.py): reduced motion asked for before Qt WebEngine starts
     try:
         import webview
     except ImportError:
@@ -108,7 +110,8 @@ def main():
     index = os.path.join(page_dir(), "neuroarcana.html")
     if not os.path.isfile(index):
         nn.fatal(f"NeuroArcana can't find its game. Expected:\n  {index}")
-    webview.create_window(APP_NAME, index, js_api=Api(), width=1360, height=880, min_size=(360, 520), background_color="#0b0820")
+    window = webview.create_window(APP_NAME, index, js_api=Api(), width=1360, height=880, min_size=(360, 520), background_color="#0b0820")
+    lite.attach(window)        # and its stylesheet put in as the page loads
     if gui == "qt":
         nn.fix_qt_permissions()
         nn.lock_qt_navigation(page_dir())

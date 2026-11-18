@@ -26,7 +26,7 @@ const counter = (s) => { const c = s.items.find((i) => i.kind === "counter" || i
 
 console.log("\nThe dishes\n");
 {
-  const order = C.DISHES.filter((d) => !d.secret && C.cookerOf(d) === "stove" && !d.brew).slice().sort((a, b) => a.level - b.level).map((d) => d.secs);
+  const order = C.DISHES.filter((d) => !d.secret && C.cookerOf(d) === "stove").slice().sort((a, b) => a.level - b.level).map((d) => d.secs);
   ok("the first eight dishes, by level: 10 s, 2 min, 90 s, 2 h, 10 min, 5 min, 6 h (Cam, 25 Oct: the cabbage soup), 45 s -- not in time order (V19 q5)", order.slice(0, 8).join() === "10,120,90,7200,600,300,21600,45", order.join());
   // 2026-10-23 (Cam): from level 4 a mix of times -- every ten levels from 4 has something quick, short, middling, long and overnight
   const band = (s) => s <= 60 ? 0 : s <= 600 ? 1 : s < 3600 ? 2 : s < 6 * 3600 ? 3 : 4;
@@ -35,7 +35,7 @@ console.log("\nThe dishes\n");
      && C.DISHES.filter((d) => !d.secret && d.level <= 7).some((d) => d.secs >= 6 * 3600));
   const first = (m) => Math.min(...C.DISHES.filter((d) => (d.menu || "breakfast") === m).map((d) => d.level));
   ok("  every menu starts early (2026-10-22): breakfast at 1, lunch 3, bakery & teas 5, dinner 7", first("breakfast") === 1 && first("lunch") === 3 && first("bakery") === 5 && first("dinner") === 7);
-  ok("  a new dish at every level to 30, and each menu keeps opening dishes after", Array.from({length: 30}, (_, i) => i + 1).every((l) => C.DISHES.filter((d) => d.level === l && !d.secret && !d.brew && C.cookerOf(d) === "stove").length === 1)
+  ok("  a new dish at every level to 30, and each menu keeps opening dishes after", Array.from({length: 30}, (_, i) => i + 1).every((l) => C.DISHES.filter((d) => d.level === l && !d.secret && C.cookerOf(d) === "stove").length === 1)
      && C.MENUS.filter((m) => m.id !== "aunty" && m.id !== "halloween" && !m.bar).every((m) => C.DISHES.some((d) => (d.menu || "breakfast") === m.id && d.level > 30)));
   ok("  a serving's price follows its level: 4 at 1, 13 at 30, about 22 at 100", C.DISH.pancakes.price === 4 && C.DISH.starfruitpie.price === 13 && C.DISHES.every((d) => d.price >= 4 && d.price <= 24));
   ok("  Lunch: eight dishes on their own menu (V22 q6)", C.DISHES.filter((d) => d.menu === "lunch").length === 8 && C.MENUS.some((m) => m.id === "lunch"));
@@ -44,8 +44,8 @@ console.log("\nThe dishes\n");
   ok("servings follow the curve (about 10 x minutes^0.55): longer makes more, the 10 second dish very few",
      C.DISH.pancakes.servings === 4 && C.DISH.caesarsalad.servings === 10 && C.DISH.honeycake.servings === 95 && C.DISH.florentine.servings === 65);
   ok("  but slower than time: an hour's dish isn't 360 times a 10 second one", C.DISH.honeycake.servings / C.DISH.pancakes.servings < 30);
-  ok("every dish makes a profit, and costs less than its servings sell for", C.DISHES.filter((d) => !d.brew).every((d) => d.cost > 0 && d.cost < d.servings * d.price));
-  ok("XP rises with the time (up to level 30; past it, higher dishes give more as well)", C.DISHES.filter((d) => d.level <= 30 && !d.brew).sort((a, b) => a.secs - b.secs).every((d, i, a) => !i || d.xp >= a[i - 1].xp));
+  ok("every dish makes a profit, and costs less than its servings sell for", C.DISHES.every((d) => d.cost > 0 && d.cost < d.servings * d.price));
+  ok("XP rises with the time (up to level 30; past it, higher dishes give more as well)", C.DISHES.filter((d) => d.level <= 30).sort((a, b) => a.secs - b.secs).every((d, i, a) => !i || d.xp >= a[i - 1].xp));
 }
 
 console.log("\nA new café\n");
@@ -548,10 +548,10 @@ console.log("\nSwatches: recolouring furniture (2026-10-24; in the café from th
   ok("every piece of furniture can be recoloured, each by its material", Object.keys(mats).every((m) => mats[m].every((k) => C.THINGS[k].tint === m))
      && Object.keys(C.THINGS).filter((k) => C.THINGS[k].furniture && !C.THINGS[k].event).every((k) => C.THINGS[k].tint));   // (Halloween's are seasonal: no swatches)
   ok("  (Cam, 8 Nov) the stove, the milkshake counters and machine and the sushi counters take swatches too, each picture with its layer", (() => {
-    const want = {stove: "enamel", shakebar: "mint", shakeshelf: "mint", shakevend: "pink", sushibar: "wood", sushishelf: "wood"}, art = path.join(APP, "ui", "cafe", "art");
+    const want = {stove: "enamel", shakebar: "mint", shakeshelf: "mint", shakevend: "pink", sushibar: "wood", sushishelf: "wood", coffeebar: "coffee", coffeeshelf: "coffee"}, art = path.join(APP, "ui", "cafe", "art");
     const st = red.state.items.find((i) => i.kind === "stove"), r2 = A(red.state, "tint", {uid: st.uid, h: 200, s: 1, b: 1}, t);
     return Object.keys(want).every((k) => C.THINGS[k].tint === want[k]) && r2.ok && r2.state.items.find((i) => i.uid === st.uid).tint.h === 200
-      && ["stove-l", "stove-r", "stove-dirty-l", "stove-dirty-r"].concat(...["shakebar", "shakeshelf", "shakevend", "sushibar", "sushishelf"].map((k) => ["l", "r", "bl", "br"].map((s) => `${k}-${s}`)))
+      && ["stove-l", "stove-r", "stove-dirty-l", "stove-dirty-r"].concat(...["shakebar", "shakeshelf", "shakevend", "sushibar", "sushishelf", "coffeebar", "coffeeshelf"].map((k) => ["l", "r", "bl", "br"].map((s) => `${k}-${s}`)))
         .every((p) => fs.existsSync(path.join(art, p + "-fab.webp")));
   })());
   ok("  back to as painted: no tint kept", !A(red.state, "tint", {uid: lamp().uid, h: 0, s: 1, b: 1}, t).state.items.find((i) => i.kind === "lamp_blue").tint);
@@ -2085,15 +2085,29 @@ console.log("\nV26: refills, carts, the cinema, drinks machines, the bars and th
   ok("  every 10 minutes the stalls' coins go into the till", stall(h2, "icecart").coins < 20 && h2.till >= 80);
   let h3 = C.advance(r.state, L(17));
   ok("  and it never refills: a dry cart stays dry", C.view(h3, L(17)).decor.find((o) => o.id === "icecart").stall.dry && !stall(C.advance(h3, L(18)), "icecart").coins);
-  // q5: the espresso machine
-  let e = base(); e.items.find((i) => i.kind === "counter").dish = null;
-  r = A(e, "upgrade", {uid: thing(e, "counter").uid, part: "espresso"}, t);
-  let e2 = C.advance(r.state, t + 60 * S), ec = thing(e2, "counter");
-  ok("an espresso machine on a counter brews 6 coffees onto its empty top (q5)", r.ok && C.DISH[ec.dish] && C.DISH[ec.dish].brew && ec.n === 6, r.error);
-  ec.dish = null; ec.n = 0;
-  ok("  not again before 15 minutes", !thing(C.advance(e2, t + 5 * 60 * S), "counter").dish && !!thing(C.advance(e2, t + 16 * 60 * S), "counter").dish);
-  ok("  coffees aren't cooked or in the cookbook's menus", !C.canCook(e, C.DISH.latte, 99) && !C.MENUS.some((m) => m.id === "coffee"));
-  ok("  its beans last 3 hours of opening", C.view(C.advance(e2, t + 3.2 * 3600 * S), t + 3.2 * 3600 * S).items.find((i) => i.kind === "counter").dry);
+  // 2026-11-18 (Cam, PT59 c9): the espresso machine is a counter of its own -- the barista counter makes the coffees
+  // from its own book and serves them onto the coffee serving counter, like the milkshake counters
+  ok("no espresso machine to fit to a serving counter any more", !C.UPGRADES.espresso && !A(base(), "upgrade", {uid: thing(base(), "counter").uid, part: "espresso"}, t).ok);
+  ok("  the coffees are the barista counter's own book, opening from level 7", C.MENUS.some((m) => m.id === "coffee" && m.cooker === "coffeebar")
+     && C.DISHES.filter((x) => x.menu === "coffee").length === 8 && C.DISHES.filter((x) => x.menu === "coffee").every((x) => C.cookerOf(x) === "coffeebar" && x.cost > 0 && x.xp > 0 && x.level >= 7)
+     && C.THINGS.coffeebar.level === 7 && C.THINGS.coffeeshelf.level === 7 && C.THINGS.coffeeshelf.slots === 3);
+  {
+    let k = put(put(put(base(), "coffeebar", 5, 5, 0), "coffeeshelf", 5, 3, 0), "shakeshelf", 3, 5, 0); const u = thing(k, "coffeebar").uid, d = C.DISH.espresso;
+    ok("  the barista counter makes coffees only, and a stove can't", A(k, "cook", {uid: u, dish: "espresso"}, t).ok && !A(k, "cook", {uid: u, dish: "pancakes"}, t).ok
+       && !A(k, "cook", {uid: thing(k, "stove").uid, dish: "latte"}, t).ok);
+    k = A(k, "cook", {uid: u, dish: d.id}, t).state;
+    ok("  it never burns", C.view(k, t + 3600 * S).items.find((i) => i.kind === "coffeebar").stove.status === "ready");
+    const z = A(k, "serve", {uid: u}, t + (d.secs + 1) * S);
+    ok("  served onto the coffee serving counter, never a plain milkshake counter; never dirty", z.ok && !thing(z.state, "coffeebar").plates && thing(z.state, "coffeeshelf").plates[0].dish === "espresso"
+       && thing(z.state, "shakeshelf").plates.every((x) => !x.dish) && !thing(z.state, "coffeebar").dirty, z.error);
+    ok("  people buy coffee from the coffee serving counter", C.food(z.state).some((o) => o.it.kind === "coffeeshelf" && o.pl.dish === "espresso"));
+  }
+  ok("  an old save's espresso machines go back for 1,500 coins each, the coffee on the counter stays, and the diary says so", (() => {
+    const q = base(), c = thing(q, "counter"); c.espresso = true; c.used = 99; c.brewAt = 5; c.dish = "latte"; c.n = 4; q.parts = {espresso: 1, fridge: 1};
+    const was = q.coins, n = C.normal(q), c2 = thing(n, "counter");
+    return !c2.espresso && c2.used == null && c2.dish === "latte" && c2.n === 4 && !n.parts.espresso && n.parts.fridge === 1 && n.coins === was + 3000
+      && n.diary.some((e) => /espresso machines went back/.test(e.title) && e.gains[0].n === 3000) && C.normal(n).coins === n.coins;
+  })());
   // q6: the bars
   let b = put(base(), "shakebar", 5, 5, 0);
   r = A(b, "cook", {uid: thing(b, "shakebar").uid, dish: "strawshake"}, t);
@@ -2136,8 +2150,8 @@ console.log("\nV26: refills, carts, the cinema, drinks machines, the bars and th
   ok("ponds and garden features outside, all in sizes (q8)", garden.every((id) => C.DECO[id] && C.DECO[id].nature === "garden" && C.DECO[id].grow));
   ok("  every new thing painted", garden.concat(["icecart", "coffeecart", "popcart", "cinema"]).every((id) => fs.existsSync(path.join(APP, "ui", "cafe", "art", "prop-" + id + ".webp")))
      && ["icecart-shut", "coffeecart-shut", "popcart-shut", "cinema-on"].every((id) => fs.existsSync(path.join(APP, "ui", "cafe", "art", "prop-" + id + ".webp")))
-     && ["shakevend", "energyvend", "popcorn", "shakebar", "sushibar", "espresso"].every((k) => fs.existsSync(path.join(APP, "ui", "cafe", "art", k + "-l.webp")))
-     && C.DISHES.filter((x) => x.menu === "shakes" || x.menu === "sushi" || x.brew).every((x) => ["dish", "cook", "burnt"].every((p) => fs.existsSync(path.join(APP, "ui", "cafe", "art", p + "-" + x.id + ".webp")))));
+     && ["shakevend", "energyvend", "popcorn", "shakebar", "sushibar", "coffeebar", "coffeeshelf"].every((k) => fs.existsSync(path.join(APP, "ui", "cafe", "art", k + "-l.webp")))
+     && C.DISHES.filter((x) => x.menu === "shakes" || x.menu === "sushi" || x.menu === "coffee").every((x) => ["dish", "cook", "burnt"].every((p) => fs.existsSync(path.join(APP, "ui", "cafe", "art", p + "-" + x.id + ".webp")))));
 }
 
 console.log("\nThe shovel, the level and water (Cam, 25 Oct)\n");

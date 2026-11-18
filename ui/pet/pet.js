@@ -545,7 +545,6 @@
     if (SS.petRendered) SS.petRendered(page);
     if (page === "dev:tools") return slot === "dev" ? renderDev(host) : renderHome(host);
     if (page === "dev:places") return slot === "dev" ? renderPlaces(host) : renderHome(host);
-    if (page === "proto:grid") return renderGridProto(host);            // the grid game's prototype (its own page and save)
     { const c = current(), pv = Core.playerView(c.s, c.now);
       if (pv.dead && page !== "pet:saves" && page !== "pet:modder") return renderGameOver(host, pv); }         // the game is over: nothing else until you start again
     // the Character sheet (2026-10-15): Equipment is its Gear tab; arriving from elsewhere opens You (or Gear)
@@ -3735,7 +3734,6 @@
   // ---- settings (2026-10-08, Cam: "Settings can hide the modder and new game button etc.") -- kept by pet.py
   const SETTING_ROWS = [
     ["sidebar", "Show the sidebar", "Hide it for a cleaner screen -- the ☰ button in the top bar brings it back, and Home and Map stay up there"],
-    ["prototypes", "Show prototypes", "Ideas being tried out (the Grid world), in the sidebar under Prototypes -- each has its own save"],
     ["dailySaves", "Show the save slots on the first start of the day", "When NeuroPets has been fully closed: pick a game, or carry on"],
     ["newGame", "Show New game buttons", "On the Save slots page (and Clear)"],
     ["modder", "Show the Modder", "Making mod packs, in the sidebar"],
@@ -3743,7 +3741,7 @@
     ["@Accessibility"],
     ["dayNight", "Day and night on the pictures", "The outdoor pictures dim and warm with your clock in the evening and at night (fireflies come out); off: always daylight"],
     ["deepNight", "Deeper night", "A darker, duskier evening and night on the pictures (the original light); off: a gentle dusk"]];
-  const SETTING_OFF = {deepNight: true, kit: true, prototypes: true};                               // switches that start off
+  const SETTING_OFF = {deepNight: true, kit: true};                               // switches that start off
   function renderSettings(host) {
     const st = (window.NP && NP.settings) || {};
     // PT32 x1 (Cam: "the layout of the new UI works really good ... implement this whereever a similar UI is located"): one
@@ -6321,7 +6319,7 @@
   function kitRender() {
     const el = document.getElementById("np-kit");
     if (!el) return;
-    const on = kitOpen() && view !== "proto:grid";                        // (the grid prototype has its own bag)
+    const on = kitOpen();
     if (document.body.classList.contains("np-kit-on") !== on) document.body.classList.toggle("np-kit-on", on);   // (only changes: OPT-A)
     const tg = document.getElementById("np-kit-toggle"); if (tg && tg.getAttribute("aria-pressed") !== String(on)) { tg.setAttribute("aria-pressed", on); tg.classList.toggle("on", on); }
     if (!on) { if (!el.hidden) el.hidden = true; if (el.innerHTML) el.innerHTML = ""; kitSig = ""; return; }
@@ -6469,12 +6467,6 @@
   }
   everySecond("kit", () => { kitRender(); return true; });                 // a trip filling the bag shows as it happens
   window.addEventListener("resize", () => { let v = null; try { v = localStorage.getItem("np:kit"); } catch (e) { /* fine */ } if (v === null) { kitSig = ""; kitRender(); } });
-  // ---- the grid game's prototype (Collaboration project "Grid game", 2026-10-18): its own page in a frame, its own save ----
-  function renderGridProto(host) {
-    if (host.querySelector(".pp-grid-frame")) return;                    // already running: don't restart it on every redraw
-    host.innerHTML = `<div class="pp-grid-wrap"><iframe class="pp-grid-frame" src="grid/index.html" title="Grid world (prototype)" allow="autoplay"></iframe></div>`;
-    const f = host.querySelector(".pp-grid-frame"); f.addEventListener("load", () => { try { f.contentWindow.focus(); } catch (e) { /* fine */ } });
-  }
   // ---- someone explains something, in their own words (PT20, 2026-10-18; the words are Core.TALKS) ----------------------
   /** Show a talk; mark it seen so it doesn't come by itself again. auto: only if it hasn't been seen. */
   async function talkPopup(key, auto) {
@@ -7167,7 +7159,7 @@
       if (host.querySelectorAll("[data-ngpet]:checked").length > 3) { c.checked = false; toast("Three pets at most.", true); } }));
   }
 
-  const VIEWS = ["proto:grid", "pet:pyramid", "pet:islandestate", "pet:shipyard", "pet:settings", "pet:estate", "pet:house", "pet:library", "pet:storeroom", "pet:nursery", "pet:guild", "pet:market", "pet:pen", "pet:workshop", "pet:outskirts", "pet:home", "pet:skills", "pet:foraging", "pet:fishing", "pet:mining", "pet:lumbering", "pet:digging", "pet:village",
+  const VIEWS = ["pet:pyramid", "pet:islandestate", "pet:shipyard", "pet:settings", "pet:estate", "pet:house", "pet:library", "pet:storeroom", "pet:nursery", "pet:guild", "pet:market", "pet:pen", "pet:workshop", "pet:outskirts", "pet:home", "pet:skills", "pet:foraging", "pet:fishing", "pet:mining", "pet:lumbering", "pet:digging", "pet:village",
                  "pet:gear", "pet:expeditions", "pet:hunt", "pet:farm", "pet:pets", "pet:hatchery", "pet:breed", "pet:dex", "pet:graveyard", "pet:ranch", "pet:camp", "pet:bestiary", "pet:herbarium", "pet:world", "pet:dash", "pet:runecrafting", "pet:spellbook", "pet:enchants", "pet:saves", "pet:modder", "dev:tools", "dev:places"];
   SS.Pet = {
     VIEWS,

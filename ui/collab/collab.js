@@ -26,6 +26,7 @@
     projects: () => SS.Store.call("collab_projects", [], "The projects"),
     newProject: (name) => SS.Store.call("collab_project_new", [name], "Starting a project"),
     renameProject: (old, name) => SS.Store.call("collab_project_rename", [old, name], "Renaming the project"),
+    deleteProject: (name, docs) => SS.Store.call("collab_project_delete", [name, docs], "Deleting the project"),
     useProject: (name) => SS.Store.call("collab_project_use", [name], "Opening the project"),
     save: (doc) => SS.Store.call("collab_save", [doc], "Saving"),
     addPic: (ref, item, url) => SS.Store.call("collab_picture_add", [ref, item, url], "Keeping the picture"),
@@ -189,7 +190,8 @@
               <option value="" ${state.project ? "" : "selected"}>Every project</option>
               ${state.projects.map((p) => `<option value="${esc(p.name)}" ${p.name === state.project ? "selected" : ""}>${esc(p.name)}${p.waiting ? ` (${p.waiting} waiting)` : ""}${p.fresh ? ` · ${p.fresh} new` : ""}</option>`).join("")}</select>
               <button class="btn btn-sm btn-quiet" id="cb-proj-new" title="Start a project">+ Project</button>
-              ${state.project && state.project !== GENERAL ? `<button class="btn btn-sm btn-quiet" id="cb-proj-ren" title="Rename this project">Rename</button>` : ""}</div>
+              ${state.project && state.project !== GENERAL ? `<button class="btn btn-sm btn-quiet" id="cb-proj-ren" title="Rename this project">Rename</button>
+                <button class="btn btn-sm btn-quiet" id="cb-proj-del" title="Delete this project">Delete</button>` : ""}</div>
           </div>
           <div class="cb-new">
             <button class="btn btn-sm" data-new="bug">+ Bug</button><button class="btn btn-sm" data-new="idea">+ Idea</button>
@@ -273,6 +275,29 @@
       const r = await store.renameProject(state.project, name);
       if (r && r.error) { SS.shared.toast(r.error, "error"); return; }
       setProjects(r); state.list = (await store.list()) || []; if (state.doc) state.doc = await store.get(state.doc.ref); render(host);
+    });
+    // (2026-11-18, Cam: "a way to delete projects"): its documents to General, or deleted with it (collab/deleted)
+    const pdl = host.querySelector("#cb-proj-del");
+    if (pdl) pdl.addEventListener("click", async () => {
+      const name = state.project, n = state.list.filter((x) => projOf(x) === name).length;
+      const gone = async (docs) => {
+        const r = await store.deleteProject(name, docs);
+        if (r && r.error) { SS.shared.toast(r.error, "error"); return; }
+        setProjects(r); state.project = ""; state.list = (await store.list()) || [];
+        if (state.doc && !state.list.some((x) => x.ref === state.doc.ref)) { state.doc = null; state.sel = ""; }
+        else if (state.doc) state.doc = await store.get(state.doc.ref);
+        SS.shared.toast(!n ? `“${name}” is deleted.` : docs === "delete" ? `“${name}” and its ${n === 1 ? "document are" : n + " documents are"} deleted (in collab/deleted).` : `“${name}” is deleted; its ${n === 1 ? "document is" : n + " documents are"} in General now.`);
+        render(host);
+      };
+      if (!n) {
+        if (await SS.shared.confirm({title: `Delete “${name}”?`, body: "It has no documents.", yes: "Delete"})) gone("move");
+        return;
+      }
+      const dlg = SS.shared.openDlg(`Delete “${name}”?`, `<p class="stamp" style="margin:0 0 4px;line-height:1.6">It has ${n === 1 ? "one document" : n + " documents"} (archived ones count too). What happens to ${n === 1 ? "it" : "them"}?</p>
+        <p class="stamp" style="margin:0;line-height:1.6;color:var(--faint)">Deleted documents go to the deleted folder (collab/deleted), not gone for good.</p>`);
+      dlg.btn("Cancel", "btn-quiet", () => dlg.close());
+      dlg.btn("Move to General", "btn-primary", () => { dlg.close(); gone("move"); });
+      dlg.btn(n === 1 ? "Delete it too" : "Delete them too", "btn-danger", () => { dlg.close(); gone("delete"); });
     });
     const d = state.doc;
     if (!d) return;

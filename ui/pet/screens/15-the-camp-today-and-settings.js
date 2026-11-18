@@ -154,7 +154,6 @@
   // ---- settings (2026-10-08, Cam: "Settings can hide the modder and new game button etc.") -- kept by pet.py
   const SETTING_ROWS = [
     ["sidebar", "Show the sidebar", "Hide it for a cleaner screen -- the ☰ button in the top bar brings it back, and Home and Map stay up there"],
-    ["prototypes", "Show prototypes", "Ideas being tried out (the Grid world), in the sidebar under Prototypes -- each has its own save"],
     ["dailySaves", "Show the save slots on the first start of the day", "When NeuroPets has been fully closed: pick a game, or carry on"],
     ["newGame", "Show New game buttons", "On the Save slots page (and Clear)"],
     ["modder", "Show the Modder", "Making mod packs, in the sidebar"],
@@ -162,7 +161,7 @@
     ["@Accessibility"],
     ["dayNight", "Day and night on the pictures", "The outdoor pictures dim and warm with your clock in the evening and at night (fireflies come out); off: always daylight"],
     ["deepNight", "Deeper night", "A darker, duskier evening and night on the pictures (the original light); off: a gentle dusk"]];
-  const SETTING_OFF = {deepNight: true, kit: true, prototypes: true};                               // switches that start off
+  const SETTING_OFF = {deepNight: true, kit: true};                               // switches that start off
   function renderSettings(host) {
     const st = (window.NP && NP.settings) || {};
     // PT32 x1 (Cam: "the layout of the new UI works really good ... implement this whereever a similar UI is located"): one

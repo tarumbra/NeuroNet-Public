@@ -463,7 +463,7 @@ OLD_TYPES = {
     "switch": ("game", "Switch"), "switch2": ("game", "Switch 2"), "gameboy": ("game", "Game Boy"),
     "gba": ("game", "Game Boy Advance"), "nds": ("game", "Nintendo DS"), "n3ds": ("game", "Nintendo 3DS"),
 }
-KINDS = ("film", "music", "book", "game", "other")
+KINDS = ("film", "tv", "music", "book", "game", "other")   # (tv: 18 Nov 2026, Cam: "add TV to media and things")
 
 
 def media_v2(doc, data_dir, links=None):
@@ -517,6 +517,94 @@ def media_v2(doc, data_dir, links=None):
     doc["types"] = [t for t in doc.get("types") or [] if isinstance(t, dict) and t.get("id") in KINDS]
     doc["mediaVersion"] = 2
     return {"converted": converted, "merged": merged, "links": links}
+
+
+def split_year(title, year=""):
+    """"Copper Sky (2024)" -> ("Copper Sky", "2024"); a year given wins."""
+    t = re.sub(r"\s+", " ", str(title or "")).strip()
+    m = re.match(r"^(.*?)\s*[\(\[]((?:19|20)\d\d)[\)\]]\s*$", t)
+    if m and m.group(1):
+        return m.group(1).strip(), str(year or m.group(2)).strip()
+    return t, str(year or "").strip()
+
+
+def add_digital(doc, title, year, path, link, cover, new_id, now):
+    """Cam (18 Nov 2026): a film NeuroTV has downloaded "autofill into Neuronet
+    under media and things as digital". It becomes a Media film tagged Digital
+    and linked to its file -- or, owned already (a DVD of it, say), that item
+    gets Digital and the link, and keeps everything else. link(item_id, path)
+    and cover(item_id) are the caller's; cover is only asked for an item with
+    no cover yet. Returns {"id", "added": bool, "title"}."""
+    title, year = split_year(title, year)
+    if not title:
+        raise ValueError("The film has no title.")
+    films = [it for it in doc.get("items") or [] if isinstance(it, dict) and it.get("type") == "film"]
+    it = next((x for x in films if norm(x.get("title")) == norm(title) and str(x.get("year") or "") == year), None)
+    if it is None and year:
+        it = next((x for x in films if norm(x.get("title")) == norm(title) and not str(x.get("year") or "")), None)
+    added = it is None
+    if added:
+        it = {"id": new_id(), "type": "film", "formats": ["Digital"], "title": title, "creator": "", "year": year,
+              "notes": "", "added": now}
+        doc.setdefault("items", []).append(it)
+    else:
+        if "Digital" not in (it.get("formats") or []):
+            it["formats"] = list(it.get("formats") or []) + ["Digital"]
+        if year and not it.get("year"):
+            it["year"] = year
+        it["updated"] = now
+    link(it["id"], path)
+    if not it.get("cover"):
+        try:
+            if cover(it["id"]):
+                it["cover"] = now
+        except Exception:                                        # noqa: BLE001
+            pass
+    return {"id": it["id"], "added": added, "title": title}
+
+
+def episode_key(season, episode):
+    return "s%02de%02d" % (int(season or 0), int(episode or 0))
+
+
+def add_digital_episode(doc, show, year, season, episode, name, path, link, cover, new_id, now):
+    """Cam (18 Nov 2026): "add TV to media and things ... my TV Series, for
+    example at the moment i have one episode of scorpion". A show is ONE Media
+    item of type tv, tagged Digital, with the episodes you have in
+    it["episodes"] ([{key, season, episode, name}], in order); each episode's
+    file is linked as "<item id>-<key>" (cinema.link), so it plays from Media.
+    A show already there (a DVD box set, say) gains Digital and the episode.
+    Returns {"id", "added": bool, "title", "episode": key}."""
+    title, year = split_year(show, year)
+    if not title:
+        raise ValueError("The show has no title.")
+    shows = [it for it in doc.get("items") or [] if isinstance(it, dict) and it.get("type") == "tv"]
+    it = next((x for x in shows if norm(x.get("title")) == norm(title) and str(x.get("year") or "") == year), None)
+    if it is None:
+        it = next((x for x in shows if norm(x.get("title")) == norm(title) and (not year or not str(x.get("year") or ""))), None)
+    added = it is None
+    if added:
+        it = {"id": new_id(), "type": "tv", "formats": ["Digital"], "title": title, "creator": "", "year": year,
+              "notes": "", "added": now, "episodes": []}
+        doc.setdefault("items", []).append(it)
+    else:
+        if "Digital" not in (it.get("formats") or []):
+            it["formats"] = list(it.get("formats") or []) + ["Digital"]
+        if year and not it.get("year"):
+            it["year"] = year
+        it["updated"] = now
+    key = episode_key(season, episode)
+    eps = [e for e in it.get("episodes") or [] if isinstance(e, dict) and e.get("key") != key]
+    eps.append({"key": key, "season": int(season or 0), "episode": int(episode or 0), "name": str(name or "").strip()})
+    it["episodes"] = sorted(eps, key=lambda e: (e.get("season", 0), e.get("episode", 0)))
+    link(it["id"] + "-" + key, path)
+    if not it.get("cover"):
+        try:
+            if cover(it["id"]):
+                it["cover"] = now
+        except Exception:                                        # noqa: BLE001
+            pass
+    return {"id": it["id"], "added": added, "title": title, "episode": key}
 
 
 def adopt_movies(doc, films, root, link, cover, new_id, now):

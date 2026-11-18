@@ -268,9 +268,9 @@ async function run() {
     sheet && sheet.grid.fmt.A1 && sheet.grid.fmt.A1.b && sheet.grid.freeze === 1);
 
   /* ---- types ---------------------------------------------------------------- */
-  ok("Media's types are what a thing is", w.SS.Stuff.MEDIA_KINDS.map((t) => t.name).join() === "Film,Music,Book,Game,Other");
+  ok("Media's types are what a thing is", w.SS.Stuff.MEDIA_KINDS.map((t) => t.name).join() === "Film,TV,Music,Book,Game,Other");
   ok("  and its formats are tags per type", w.SS.Stuff.MEDIA_FORMATS.music.join() === "Cassette,Vinyl,CD,MP3,FLAC"
-    && w.SS.Stuff.MEDIA_FORMATS.film.includes("Digital") && w.SS.Stuff.MEDIA_FORMATS.game.includes("Switch"));
+    && w.SS.Stuff.MEDIA_FORMATS.film.includes("Digital") && w.SS.Stuff.MEDIA_FORMATS.game.includes("Switch") && w.SS.Stuff.MEDIA_FORMATS.tv.includes("Digital"));
   $('[data-st="types"]').click(); await wait(200);
   $("#st-newtype").value = "Board games"; $("#st-addtype").click(); await wait(400);
   ok("a type Cam adds is kept", effects.types.some((t) => t.name === "Board games"));

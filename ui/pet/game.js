@@ -76,7 +76,6 @@
     "pet:bestiary": {name: "Bestiary", accent: "#9a6ad8", icon: "batwing", hint: "Every creature you and your pets have met -- and what you know of it"},
     "dev:tools": {name: "Dev tools", accent: "#f2c43c", icon: "fairystone", hint: "The sandbox's tools: time, levels, items"},
     "dev:places": {name: "Place editor", accent: "#f2c43c", icon: "obj_map", hint: "Where each place is painted on its scene: drag the scrolls, then Save"},
-    "proto:grid": {name: "Grid world", accent: "#7fae58", icon: "obj_map", hint: "A prototype of the grid game: the main island as tiles to walk -- the Hunter and the Berserker (its own save)"},
   };
   // Cam (2026-10-07, "happy with your plan lets do it"): the Map is how you get about -- gathering, hunting
   // and the village are in its regions now, so the sidebar keeps only what isn't a place
@@ -87,11 +86,11 @@
     ["", ["pet:house", "pet:world"]],
     ["Game", ["pet:saves", "pet:modder", "pet:settings"]],
     ["Sandbox", ["dev:tools", "dev:places"]],
-    ["Prototypes", ["proto:grid"]],                                  // (Collaboration project "Grid game", 2026-10-18)
   ];
   // the game's settings (pet.py settings.json -- the window is private, so localStorage doesn't last)
-  NP.settings = {sidebar: true, modder: true, newGame: true, sandbox: true, dailySaves: true, dayNight: true, deepNight: false, kit: false, prototypes: false};
-  const shown = (k) => (k !== "pet:modder" || NP.settings.modder !== false) && (!k.startsWith("proto:") || NP.settings.prototypes === true);   // (prototypes: off unless switched on, 2026-10-18)
+  NP.settings = {sidebar: true, modder: true, newGame: true, sandbox: true, dailySaves: true, dayNight: true, deepNight: false, kit: false};
+  const shown = (k) => k !== "pet:modder" || NP.settings.modder !== false;
+  // (the grid game's prototype, Prototypes > Grid world, was taken out 2026-11-18 at Cam's ask: git tag grid-game-prototype)
   function applySettings() {
     document.body.classList.toggle("np-noside", NP.settings.sidebar === false);
     const sw = document.querySelector(".np-side-foot");
@@ -165,7 +164,6 @@
     const sig = JSON.stringify([current, sandbox, busy, NP.settings.modder, GROUPS.map(([, keys]) => keys.map((k) => rightOf(k, g))), g.v.species, g.v.stage, g.pv.look, sky, cls]);
     if (sig === navSig) return;
     navSig = sig;
-    if (current.startsWith("proto:") && NP.settings.prototypes !== true) { go("pet:home"); return; }   // switched off while open
     $("np-nav").innerHTML = GROUPS.filter(([name, keys]) => (name !== "Sandbox" || sandbox) && keys.some(shown)).map(([name, keys]) => `
       <div class="np-group">${name ? `<h6>${esc(name)}</h6>` : ""}
         ${keys.filter(shown).map((k) => {

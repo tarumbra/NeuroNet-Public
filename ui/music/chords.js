@@ -347,7 +347,8 @@ async function boot() {
      paint at all (2026-10-05, the audit's timers fix). */
   setInterval(() => {
     if (document.hidden) return;
-    const focused = document.hasFocus(), minute = Math.floor(Date.now() / 60000);
+    /* Lite mode (lite.py, 17 Nov 2026): to the minute even in front -- one redraw a minute, not sixty */
+    const focused = document.hasFocus() && !(window.NNLite && NNLite.on), minute = Math.floor(Date.now() / 60000);
     if (!focused && !clockFocused && minute === clockMinute) return;       // (behind: once a minute)
     clockFocused = focused; clockMinute = minute;
     requestAnimationFrame(paintClock);
@@ -1425,6 +1426,7 @@ CH.Visualizer = (() => {
     }
     rafId = requestAnimationFrame(paintFrame);
     if (!CH.Player.playing && tNow - lastDrawn < 250) return;   // idle: 4 fps
+    if (CH.Player.playing && window.NNLite && NNLite.on && tNow - lastDrawn < 66) return;   // Lite mode: 15 fps (lite.py)
     lastDrawn = tNow;
     ctx2d.clearRect(0, 0, w, h);
     NNViz.draw(ctx2d, style, bandsNow(tNow), tNow / 1000, w, h, paletteNow(tNow), vizCache);

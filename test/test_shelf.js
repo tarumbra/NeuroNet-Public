@@ -39,6 +39,8 @@ let media = {types: [], mediaVersion: 2, items: [
   {id: "b", title: "Send Help", year: "2026", type: "film", formats: ["DVD"], notes: ""},
   {id: "c", title: "Aliens", year: "1986", type: "film", formats: ["VHS"], notes: ""},
   {id: "d", title: "Harry Potter 2", year: "", type: "film", formats: ["DVD"], notes: ""},
+  {id: "t", title: "Scorpion", year: "2014", type: "tv", formats: ["Digital"], notes: "",
+   episodes: [{key: "s03e12", season: 3, episode: 12, name: "Ice Ca-Cabes"}, {key: "s03e13", season: 3, episode: 13, name: "Gone"}]},
   {id: "e", title: "Abbey Road", year: "1969", type: "music", formats: ["CD"], creator: "The Beatles", notes: ""},
 ]};
 const FILMS = {folder: "/nn/Movies", players: ["mpv"], films: [
@@ -105,7 +107,8 @@ async function run() {
     cinema_position: async () => ({ok: true}), cinema_stop: async () => ({ok: true}),
     // Aliens is only on VHS, with a video linked to it (Cam, 15 Nov 2026: "Films that are
     // only tagged VHS should still have the ability for me to link a video")
-    media_links: async () => ({c: {ok: true, name: "Aliens.1986.mkv", folder: "/films"}}),
+    media_links: async () => ({c: {ok: true, name: "Aliens.1986.mkv", folder: "/films"},
+      "t-s03e12": {ok: true, name: "Scorpion - S03E12.mkv", folder: "/tv"}, "t-s03e13": {ok: false, name: "Scorpion - S03E13.mkv", folder: "/gone"}}),
     /* Scan (15 Nov 2026): stand-ins for barcodes.py */
     media_scan_lookup: async (code) => { scanAsked.push(code); code = code.replace(/^0(?=\d{12}$)/, ""); return SCAN[code] || {ok: true, code, found: false,
       type: "", title: "", creator: "", year: "", format: "", cover: "", preview: "", source: ""}; },
@@ -164,7 +167,7 @@ async function run() {
   /* ---- the shelf -------------------------------------------------------------- */
   const chips = $$("[data-type]").map((b) => b.dataset.type);
   ok("the types with something in them, films first, then Everything",
-    chips.join() === "film,music,*", chips.join());
+    chips.join() === "film,tv,music,*", chips.join());
   ok("  it starts on Film, every film once, alphabetical",
     $$(".sh-case .sh-cap").map((c) => c.textContent).join("|") === "Aliens|Harry Potter 2|Send Help|The Ninth Gate",
     $$(".sh-case .sh-cap").map((c) => c.textContent).join("|"));
@@ -181,7 +184,7 @@ async function run() {
   ok("choosing Blu-ray shows its covers, in a Blu-ray case",
     $$(".sh-case").length === 1 && !!$('[data-open="a"] .sh-cover.sh-bluray img[src="data:image/jpeg;base64,COVER"]'));
   $('[data-type="*"]').click(); await wait(400);
-  ok("  Everything shows every type", $$(".sh-case").length === 5, $$(".sh-case").length);
+  ok("  Everything shows every type", $$(".sh-case").length === 6, $$(".sh-case").length);
   ok("  and something without a cover gets its title on a plain one",
     /Aliens/.test(($('[data-open="c"] .sh-plain') || {}).textContent || ""));
   const q = $("#sh-q");
@@ -413,6 +416,23 @@ async function run() {
       !!big && !big.querySelector(".sh-cover-hint") && !big.hasAttribute("tabindex") && !/Change cover/.test(big.textContent));
     big.click(); await wait(200);
     ok("  pressing it opens nothing", !veilEl().classList.contains("open"));
+    if ($("#sh-back")) { $("#sh-back").click(); await wait(600); }
+
+    // TV (18 Nov 2026, Cam: "add TV to media and things ... one episode of scorpion")
+    SS.Shelf.openEntry("t"); await wait(700);
+    const line = ($("#sh-film") || {}).textContent || "";
+    ok("a TV show's page lists its episodes by season, the ones that are there playable",
+       /1 episode/.test(line) && /Season 3/.test(line) && /S03 E12 · Ice Ca-Cabes/.test(line) && /1 not found/.test(line)
+       && !$('[data-ep="s03e12"]').classList.contains("off") && $('[data-ep="s03e13"]').classList.contains("off"), line);
+    ok("  and ▶ Play is on", $("#sh-play") && !$("#sh-play").disabled);
+    const opened = [], realPlayer = SS.CinemaPlayer;
+    SS.CinemaPlayer = {open: (h, o) => opened.push(o)};
+    $('[data-ep="s03e12"]').click(); await wait(100);
+    $("#sh-play").click(); await wait(100);
+    SS.CinemaPlayer = realPlayer;
+    ok("  an episode plays its own file; Play plays the ones there in order",
+       opened.length === 2 && opened[0].items.length === 1 && opened[0].items[0].path === "link:t-s03e12"
+       && /Scorpion S03 E12/.test(opened[0].items[0].label) && opened[1].items.map((x) => x.path).join() === "link:t-s03e12", JSON.stringify(opened));
     if ($("#sh-back")) { $("#sh-back").click(); await wait(600); }
   }
 

@@ -145,7 +145,6 @@
     if (SS.petRendered) SS.petRendered(page);
     if (page === "dev:tools") return slot === "dev" ? renderDev(host) : renderHome(host);
     if (page === "dev:places") return slot === "dev" ? renderPlaces(host) : renderHome(host);
-    if (page === "proto:grid") return renderGridProto(host);            // the grid game's prototype (its own page and save)
     { const c = current(), pv = Core.playerView(c.s, c.now);
       if (pv.dead && page !== "pet:saves" && page !== "pet:modder") return renderGameOver(host, pv); }         // the game is over: nothing else until you start again
     // the Character sheet (2026-10-15): Equipment is its Gear tab; arriving from elsewhere opens You (or Gear)

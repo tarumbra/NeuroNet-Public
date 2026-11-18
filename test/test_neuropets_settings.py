@@ -21,7 +21,8 @@ def ok(name, cond, detail=""):
 
 d = tempfile.mkdtemp(prefix="np-settings-")
 pet.DATA_DIR_PROVIDER = lambda: d
-ok("a new game shows everything (but the Kit and the prototypes, off until switched on)", pet.settings() == {"sidebar": True, "modder": True, "newGame": True, "sandbox": True, "dailySaves": True, "dayNight": True, "deepNight": False, "kit": False, "prototypes": False, "lastStart": ""}, pet.settings())
+ok("a new game shows everything (but the Kit, off until switched on)", pet.settings() == {"sidebar": True, "modder": True, "newGame": True, "sandbox": True, "dailySaves": True, "dayNight": True, "deepNight": False, "kit": False, "lastStart": ""}, pet.settings())
+ok("  an old settings.json's \"prototypes\" switch (the grid game's, taken out 2026-11-18) is left out", "prototypes" not in pet.save_settings({"prototypes": True}))
 s = pet.save_settings({"modder": False, "sidebar": 0, "junk": "x", "lastStart": "2099-01-01"})
 ok("  switches are kept as True/False, and nothing else", s["modder"] is False and s["sidebar"] is False and "junk" not in s and s["lastStart"] == "", s)
 ok("  they last (settings.json beside the saves)", os.path.exists(os.path.join(pet.root(), "settings.json")) and pet.settings()["modder"] is False)

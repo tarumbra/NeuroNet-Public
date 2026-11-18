@@ -176,7 +176,7 @@ def _read(p):
 # ---- the game's own settings (2026-10-08): the window runs in private mode, so the page can't keep them -----------
 # settings.json: what Cam hides (sidebar, modder, new game buttons, sandbox switch, the daily save slots screen)
 # and the day NeuroPets last started, so the save slots show on the first start of a day.
-SETTINGS = {"sidebar": True, "modder": True, "newGame": True, "sandbox": True, "dailySaves": True, "dayNight": True, "deepNight": False, "kit": False, "prototypes": False}
+SETTINGS = {"sidebar": True, "modder": True, "newGame": True, "sandbox": True, "dailySaves": True, "dayNight": True, "deepNight": False, "kit": False}
 
 
 def _settings_path():

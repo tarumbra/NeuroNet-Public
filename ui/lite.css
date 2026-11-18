@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Lite mode (lite.py, 17 Nov 2026): NeuroNet lighter to draw, for a small
+   computer or a laptop on battery. Everything still looks the same at rest;
+   what goes is the work done EVERY FRAME on a small graphics chip:
+
+   * blur behind panels: Chromium blurs what is under a frosted panel again
+     each time anything under it moves (scrolling, the music bar), the most
+     costly effect on the ThinkPad's HD 520. Frosted panels get a solid
+     background of their own colour instead.
+   * animations and fades run to their end at once (a fade still ends faded
+     in; an endless pulse or glow stands still). Events like animationend
+     still fire, so nothing waiting on them is stuck.
+   * will-change: a permanent GPU layer per element, held in memory for good.
+
+   Loaded by index.html (html[data-lite] is set by lite.js before the page
+   draws) and put into the four game windows by lite.py's attach().
+   ========================================================================== */
+html[data-lite] *,
+html[data-lite] *::before,
+html[data-lite] *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  animation-duration: 0.001ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+  will-change: auto !important;
+}
+
+/* the frosted panels: their own colour, solid (they were ~72% see-through
+   with the blur making that readable) */
+html[data-lite] .cc-queue-pop,
+html[data-lite] #ss-topbar .cc-queue-pop {
+  background: var(--warm-white, var(--panel, #222)) !important;
+}
+html[data-lite] .wel-veil { background: var(--bg, #111) !important; }
+html[data-lite] .df-veil { background: rgba(0, 0, 0, 0.88) !important; }
+html[data-lite] .rk-facts span { background: rgba(0, 0, 0, 0.55) !important; }
+html[data-lite] .nf-sheet { background: rgba(60, 40, 20, 0.55) !important; }   /* NeuroFarm: its blur was most of the dimming */

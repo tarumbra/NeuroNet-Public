@@ -66,13 +66,15 @@
      ups". One Practical Magic, owned on DVD and VHS -- not two. The old
      per-format types (above) are still how a cover is shaped, and how the
      backend turned old items into these (api/effects.py, media v2). */
-  const MEDIA_KINDS = [["film", "Film"], ["music", "Music"], ["book", "Book"], ["game", "Game"], ["other", "Other"]]
+  // (tv: 18 Nov 2026, Cam: "add TV to medica and things ... my TV Series") -- a show, with the episodes you have
+  const MEDIA_KINDS = [["film", "Film"], ["tv", "TV"], ["music", "Music"], ["book", "Book"], ["game", "Game"], ["other", "Other"]]
     .map(([id, name]) => ({id, name, builtIn: true}));
   const GAME_PLATFORMS = ["PS1", "PS2", "PS3", "PS4", "PS5", "PSP", "PS Vita", "Xbox", "Xbox 360", "Xbox One",
     "SNES", "Nintendo 64", "GameCube", "Wii", "Switch", "Switch 2", "Game Boy", "Game Boy Advance",
     "Nintendo DS", "Nintendo 3DS", "PC", "Digital"];
   const MEDIA_FORMATS = {
     film: ["DVD", "Blu-ray", "4K UHD", "VHS", "Digital"],
+    tv: ["DVD", "Blu-ray", "4K UHD", "VHS", "Digital"],
     music: ["Cassette", "Vinyl", "CD", "MP3", "FLAC"],
     book: ["Hardcover", "Paperback", "eBook", "Audiobook"],
     game: GAME_PLATFORMS,
@@ -83,7 +85,7 @@
     const has = (x) => f.includes(x);
     switch (it.type) {
       case "music": return has("Vinyl") ? "vinyl" : has("Cassette") && !has("CD") ? "cassette" : "cd";
-      case "film": return has("Blu-ray") || has("4K UHD") ? "bluray" : f.length && f.every((x) => x === "VHS") ? "vhs" : "dvd";
+      case "film": case "tv": return has("Blu-ray") || has("4K UHD") ? "bluray" : f.length && f.every((x) => x === "VHS") ? "vhs" : "dvd";
       case "book": return "books";
       case "game": {
         const t = MEDIA_TYPES.find((x) => f.includes(x.name));

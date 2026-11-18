@@ -56,7 +56,7 @@
      else that has something in it. */
   /* Media v2 (14 Nov 2026): a film is a film whatever it's owned on (VHS
      only included), so it can always link a video. Formats are its tags. */
-  const KIND_ORDER = ["film", "music", "book", "game", "other"];
+  const KIND_ORDER = ["film", "tv", "music", "book", "game", "other"];
   const isFilm = (it) => it.type === "film";
   const shapeOf = (it) => (SS.Stuff && SS.Stuff.coverShape ? SS.Stuff.coverShape(it) : "dvd");
   let fmt = "";                  // one format within the type ("" = all of them)
@@ -122,11 +122,25 @@
   /* The video behind an item: its own link (anywhere on the computer), else
      its film in the Movies folder. null when there's none. */
   function videoFor(it) {
+    if (it.type === "tv") {                       // a show: its first episode you have (Play plays them all)
+      const e = episodesOf(it)[0];
+      return e ? {path: e.path, name: e.file, where: e.folder, linked: true, episodes: true} : null;
+    }
     const l = links[it.id];
     if (l && l.ok) return {path: "link:" + it.id, name: l.name, where: l.folder, linked: true};
     const f = filmFor(it);
     return f ? {path: f.path, name: f.name, where: (films && films.folder) || "Movies", linked: false} : null;
   }
+
+  /* A TV show's episodes you have (18 Nov 2026): it.episodes [{key, season, episode, name}],
+     each linked as "<item id>-<key>"; only the ones whose file is there. */
+  function episodesOf(it) {
+    return (it.episodes || []).map((e) => {
+      const l = links[it.id + "-" + e.key];
+      return l && l.ok ? Object.assign({}, e, {path: "link:" + it.id + "-" + e.key, file: l.name, folder: l.folder}) : null;
+    }).filter(Boolean);
+  }
+  const epTag = (e) => "S" + String(e.season).padStart(2, "0") + " E" + String(e.episode).padStart(2, "0");
 
   function filmFor(it) {
     const list = (films && films.films) || [];
@@ -460,6 +474,16 @@
      The video can stay wherever it's kept: "Link a video…" opens the system's
      file picker; the Movies folder still works as before. */
   function filmLine(it, video) {
+    if (it.type === "tv") {
+      const have = episodesOf(it), all = (it.episodes || []).length;
+      if (!all) return "No episodes on this computer yet. Episodes downloaded in NeuroTV come in here.";
+      const bySeason = {};
+      for (const e of it.episodes) (bySeason[e.season] = bySeason[e.season] || []).push(e);
+      return `<b>${have.length === 1 ? "1 episode" : have.length + " episodes"}</b>${all > have.length ? ` (${all - have.length} not found: moved, or its drive isn't plugged in)` : ""}
+        ${Object.keys(bySeason).sort((a, b) => a - b).map((s) => `<div class="sh-eps"><span class="stamp">${+s ? "Season " + s : "Specials"}</span>
+          ${bySeason[s].map((e) => { const ok = have.find((h) => h.key === e.key);
+            return `<a href="#" class="sh-ep${ok ? "" : " off"}" data-ep="${esc(e.key)}" title="${esc(ok ? ok.file : "Not found")}">▶ ${esc(epTag(e))}${e.name ? " · " + esc(e.name) : ""}</a>`; }).join("")}</div>`).join("")}`;
+    }
     const broken = links[it.id] && !links[it.id].ok;
     if (video) {
       return `Video: <span title="${esc(video.where)}">${esc(video.name)}</span>
@@ -470,6 +494,7 @@
       <br><a href="#" data-film="link">Link a video…</a>${isFilm(it) ? ` · <a href="#" data-film="pick">From the Movies folder…</a>` : ""}`;
   }
   function wireFilmLine(page, it) {
+    page.querySelectorAll("[data-ep]").forEach((a) => a.onclick = (e) => { e.preventDefault(); playEntry(it, a.dataset.ep); });
     page.querySelectorAll("[data-film]").forEach((a) => a.onclick = async (e) => {
       e.preventDefault();
       const what = a.dataset.film;
@@ -495,7 +520,15 @@
   }
 
   /* ▶ Play opens the video in Cinema's own player, right here (14 Nov 2026) */
-  function playEntry(it) {
+  function playEntry(it, onlyKey) {
+    if (it.type === "tv") {                       // a show: its episodes in order (or the one picked)
+      const eps = episodesOf(it).filter((e) => !onlyKey || e.key === onlyKey);
+      if (!eps.length) { toast("No episodes of this on the computer.", "warn"); return; }
+      if (!SS.CinemaPlayer) { toast("The player isn't loaded.", "error"); return; }
+      SS.CinemaPlayer.open(host, {items: eps.map((e) => ({path: e.path, label: `${it.title} ${epTag(e)}${e.name ? " · " + e.name : ""}`})),
+        onClose: () => mount(host)});
+      return;
+    }
     const video = videoFor(it);
     if (!video) { toast("Link a video to this first.", "warn"); return; }
     if (!SS.CinemaPlayer) { toast("The player isn't loaded.", "error"); return; }

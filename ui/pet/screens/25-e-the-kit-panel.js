@@ -306,7 +306,7 @@
   function kitRender() {
     const el = document.getElementById("np-kit");
     if (!el) return;
-    const on = kitOpen() && view !== "proto:grid";                        // (the grid prototype has its own bag)
+    const on = kitOpen();
     if (document.body.classList.contains("np-kit-on") !== on) document.body.classList.toggle("np-kit-on", on);   // (only changes: OPT-A)
     const tg = document.getElementById("np-kit-toggle"); if (tg && tg.getAttribute("aria-pressed") !== String(on)) { tg.setAttribute("aria-pressed", on); tg.classList.toggle("on", on); }
     if (!on) { if (!el.hidden) el.hidden = true; if (el.innerHTML) el.innerHTML = ""; kitSig = ""; return; }
@@ -454,12 +454,6 @@
   }
   everySecond("kit", () => { kitRender(); return true; });                 // a trip filling the bag shows as it happens
   window.addEventListener("resize", () => { let v = null; try { v = localStorage.getItem("np:kit"); } catch (e) { /* fine */ } if (v === null) { kitSig = ""; kitRender(); } });
-  // ---- the grid game's prototype (Collaboration project "Grid game", 2026-10-18): its own page in a frame, its own save ----
-  function renderGridProto(host) {
-    if (host.querySelector(".pp-grid-frame")) return;                    // already running: don't restart it on every redraw
-    host.innerHTML = `<div class="pp-grid-wrap"><iframe class="pp-grid-frame" src="grid/index.html" title="Grid world (prototype)" allow="autoplay"></iframe></div>`;
-    const f = host.querySelector(".pp-grid-frame"); f.addEventListener("load", () => { try { f.contentWindow.focus(); } catch (e) { /* fine */ } });
-  }
   // ---- someone explains something, in their own words (PT20, 2026-10-18; the words are Core.TALKS) ----------------------
   /** Show a talk; mark it seen so it doesn't come by itself again. auto: only if it hasn't been seen. */
   async function talkPopup(key, auto) {

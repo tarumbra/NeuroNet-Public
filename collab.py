@@ -519,6 +519,33 @@ def rename_project(old, new_name):
     return projects()
 
 
+def delete_project(name, docs="move"):
+    """A project gone (2026-11-18, Cam: "I need a way to delete projects in collaboration"). Its documents either move to
+    General (docs="move") or go with it (docs="delete": into collab/deleted, like one deleted on its own, never gone at
+    once). Archived ones too, so the project can't come back by a document still naming it. General stays."""
+    n = _clean_project(name)
+    if not n or n == GENERAL:
+        raise ValueError("General can't be deleted.")
+    if docs not in ("move", "delete"):
+        raise ValueError("Move its documents to General, or delete them with it.")
+    if n not in [x["name"] for x in projects()["projects"]]:
+        raise ValueError("There's no project called that.")
+    for d in listing():
+        if d["project"] == n:
+            if docs == "delete":
+                remove(d["ref"])
+            else:
+                doc = _read(_path(d["ref"]))
+                doc["project"] = ""
+                _write(doc)
+    p = _read_projects()
+    p["projects"] = [x for x in p["projects"] if x["name"] != n]
+    if p["active"] == n:
+        p["active"] = ""
+    _write_projects(p)
+    return projects()
+
+
 def set_active_project(name):
     """The project the desk is showing ("" = every project)."""
     p = _read_projects()

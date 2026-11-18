@@ -106,13 +106,30 @@ try:
     ok("  General keeps its name", bad(collab.rename_project, "General", "Other"))
     ok("  looking at every project again", collab.set_active_project("")["active"] == "")
     ok("  projects.json is the desk's own file, never a document", all(x["ref"] != "projects" for x in collab.listing()))
+    # (2026-11-18, Cam: "a way to delete projects"): its documents to General, or deleted with it
+    collab.new_project("Gone soon"); g1 = collab.new("note", "One", "Gone soon", "claude", None)
+    g2 = collab.new("note", "Two (archived)", "Gone soon", "claude", None); g2d = collab.get(g2["ref"]); g2d["archived"] = True; collab.save(g2d)
+    ok("  deleting one: refused for General, a project that isn't there, or a bad choice",
+       bad(collab.delete_project, "General") and bad(collab.delete_project, "Nowhere") and bad(collab.delete_project, "Gone soon", "shred"))
+    pj = collab.delete_project("Gone soon", "move")
+    ok("  deleted, documents moved: they're in General (archived ones too), the project's gone and not looked at",
+       collab.get(g1["ref"])["project"] == "" and collab.get(g2["ref"])["project"] == ""
+       and not any(x["name"] == "Gone soon" for x in pj["projects"]) and pj["active"] == "")
+    collab.new_project("Gone too"); g3 = collab.new("note", "Three", "Gone too", "claude", None)
+    pj = collab.delete_project("Gone too", "delete")
+    ok("  deleted with its documents: they're in collab/deleted, not gone for good",
+       not any(x["name"] == "Gone too" for x in pj["projects"]) and collab.get(g3["ref"]).get("error")
+       and any(n.startswith(g3["ref"] + "-") for n in os.listdir(os.path.join(collab.root(), "deleted"))))
+    collab.new_project("Empty one")
+    ok("  an empty project deletes too", not any(x["name"] == "Empty one" for x in collab.delete_project("Empty one")["projects"]))
     import neuronet  # noqa: E402  -- the Api part, on the same scratch folder
     neuronet.collab.DATA_DIR_PROVIDER = lambda: tmp
     api = neuronet.Api()
     ok("the app's Api: projects -- list, new (with a document started in it), rename, use",
        "projects" in api.collab_projects() and "error" in api.collab_project_new("") and api.collab_project_new("Story")["active"] == "Story"
        and api.collab_new("note", "", "Story")["project"] == "Story" and api.collab_project_rename("Story", "Story re-work")["active"] == "Story re-work"
-       and api.collab_project_use("")["active"] == "")
+       and api.collab_project_use("")["active"] == ""
+       and "error" in api.collab_project_delete("General") and not any(x["name"] == "Story re-work" for x in api.collab_project_delete("Story re-work", "move")["projects"]))
     ok("the app's Api: collab_list, _get, _new, _save, _delete", api.collab_new("idea")["ref"] == "I2" and api.collab_get("I2")["type"] == "idea"
        and "error" in api.collab_save({"ref": "nope"}) and api.collab_delete("I2") == {"ok": True} and isinstance(api.collab_list(), list))
     # pictures (2026-10-21, PT49): pasted or picked, checked, kept in collab/pictures, listed on the item

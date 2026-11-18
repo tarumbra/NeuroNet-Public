@@ -23,6 +23,7 @@ import sys
 import threading
 import time
 
+import lite               # Lite mode: lighter on a small computer or on battery
 import neuronet as nn      # the data folder (cafe.DATA_DIR_PROVIDER) and the Qt hardening
 import cafe
 
@@ -426,6 +427,7 @@ def main():
             poke()
         return
     nn.prefer_integrated_gpu()
+    lite.apply_flags()         # Lite mode (lite.py): reduced motion asked for before Qt WebEngine starts
     small_js_heap()
     try:
         import webview
@@ -437,6 +439,7 @@ def main():
     api = Api()
     window = webview.create_window(APP_NAME, index, js_api=api, width=1360, height=880,
                                    min_size=(360, 480), hidden=hidden, background_color="#45281a")
+    lite.attach(window)        # and its stylesheet put in as the page loads
 
     # shown and hidden by the game itself where there's no Hyprland scratchpad (KDE)
     shown = nn.ShownWindow(window, hidden)

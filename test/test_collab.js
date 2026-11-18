@@ -16,6 +16,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 60));
       {id: "q1", kind: "choice", text: "Keep it?", options: [{id: "a", label: "Yes", rec: true}, {id: "b", label: "No", rec: false}], answer: null, note: ""},
       {id: "t1", kind: "text", text: "Anything else?", answer: ""}]}]}};
   const saves = [];
+  const gone = [];
   const sum = (d) => ({by: d.by || "", ref: d.ref, type: d.type, title: d.title, project: d.project, from: d.from, status: d.status, updated: d.updated, created: d.created, items: 3, done: 0, fails: 0});
   let n = 0;
   const known = {
@@ -28,6 +29,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 60));
     collab_projects: async () => projectsNow(),
     collab_project_use: async (name) => { activeProject = name || ""; return projectsNow(); },
     collab_project_new: async (name) => { made.push(name); activeProject = name; return projectsNow(); },
+    collab_project_delete: async (name, how) => { gone.push([name, how]); Object.values(docs).forEach((d) => { if (d.project === name) { if (how === "delete") delete docs[d.ref]; else d.project = ""; } });
+      made.splice(0, made.length, ...made.filter((m) => m !== name)); activeProject = ""; return projectsNow(); },
     collab_new: async (typ, title, project) => { const ref = {bug: "B", idea: "I"}[typ] + (typ === "bug" && docs.B1 ? "2" : "1"); docs[ref] = {ref, type: typ, title: "A bug", project: project || "", from: "cam", status: "open",
       created: "x", updated: "x", intro: "", sections: [{title: "The bug", items: [{id: "t1", kind: "text", text: "Steps", answer: ""}]}]}; return docs[ref]; },
     collab_delete: async (ref) => { delete docs[ref]; return {ok: true}; },
@@ -103,6 +106,16 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 60));
   const move = $("#cb-proj-move"); move.value = "General"; move.dispatchEvent(new w.Event("change")); await wait(900);
   ok("  a document's Project picker moves it (out of this project's list)", docs.B2.project === "" && !$$(".cb-row").some((r) => r.dataset.ref === "B2"), JSON.stringify(docs.B2.project));
   ok("  + Project starts a new one", !!$("#cb-proj-new"));
+  // (2026-11-18, Cam: "a way to delete projects in collaboration")
+  { const sp = $("#cb-proj"); sp.value = "General"; sp.dispatchEvent(new w.Event("change")); await wait(400); }
+  ok("  General can't be deleted (no Delete beside it)", !$("#cb-proj-del"));
+  { const sp = $("#cb-proj"); sp.value = "Market/Thief"; sp.dispatchEvent(new w.Event("change")); await wait(400); }
+  $("#cb-proj-del").click(); await wait(300);
+  const btns = $$("#modal-veil button").map((b) => b.textContent.trim());
+  ok("  Delete on a project with documents asks: Cancel, Move to General, or delete them too", btns.includes("Cancel") && btns.includes("Move to General") && btns.includes("Delete it too"), btns.join("|"));
+  $$("#modal-veil button").find((b) => b.textContent.trim() === "Move to General").click(); await wait(700);
+  ok("  moved: the project's gone from the picker, its document is in General, and the desk shows every project",
+     gone.length === 1 && gone[0][1] === "move" && docs.PT2.project === "" && ![...$("#cb-proj").options].some((o) => o.value === "Market/Thief") && $("#cb-proj").value === "", JSON.stringify(gone));
   const sel2 = $("#cb-proj"); sel2.value = ""; sel2.dispatchEvent(new w.Event("change")); await wait(500);
   ok("  back to every project", $$(".cb-row").length >= 5 && activeProject === "");
   ok("no errors on the page", !errors.length, errors.join(" | "));

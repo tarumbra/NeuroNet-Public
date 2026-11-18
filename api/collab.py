@@ -88,6 +88,12 @@ class CollabApi:
         except (ValueError, OSError) as e:
             return {"error": str(e)}
 
+    def collab_project_delete(self, name, docs="move"):
+        try:
+            return collab.delete_project(str(name or ""), str(docs or "move"))
+        except (ValueError, OSError) as e:
+            return {"error": str(e)}
+
     def collab_project_use(self, name):
         try:
             return collab.set_active_project(str(name or ""))

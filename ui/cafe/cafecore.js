@@ -19,8 +19,6 @@
 var CafeCore = (function () {
   "use strict";
   var SEC = 1000, MIN = 60 * SEC;
-  // V26 q5: the espresso machine brews this many coffees onto its counter, this often while the top's empty
-  var BREW = { every: 15 * MIN, cups: 6 };
 
   // ---- the dishes ------------------------------------------------------------------------------
   // 2026-10-22 (Cam): every menu starts early and opens a dish at a time -- breakfast from level 1, lunch from 3, the
@@ -182,15 +180,17 @@ var CafeCore = (function () {
     { id: "sashimi", menu: "sushi", name: "Sashimi platter", level: 34, secs: 720, price: 18 },
     { id: "pokebowl", menu: "sushi", name: "Salmon poke bowl", level: 37, secs: 1020, price: 18 },
     { id: "bento", menu: "sushi", name: "Bento box", level: 40, secs: 1200, price: 20 },
-    // V26 q5 (Counter Sheet 2): what the espresso machine brews onto its counter -- never cooked, never in the cookbook
-    { id: "espresso", menu: "coffee", brew: true, name: "Espresso", level: 7, secs: 900, price: 5 },
-    { id: "cappuccino", menu: "coffee", brew: true, name: "Cappuccino", level: 7, secs: 900, price: 5 },
-    { id: "flatwhite", menu: "coffee", brew: true, name: "Flat white", level: 7, secs: 900, price: 5 },
-    { id: "latte", menu: "coffee", brew: true, name: "Latte", level: 7, secs: 900, price: 5 },
-    { id: "mocha", menu: "coffee", brew: true, name: "Mocha", level: 7, secs: 900, price: 5 },
-    { id: "icedcoffee", menu: "coffee", brew: true, name: "Iced coffee", level: 7, secs: 900, price: 5 },
-    { id: "macchiato", menu: "coffee", brew: true, name: "Caramel macchiato", level: 7, secs: 900, price: 5 },
-    { id: "affogato", menu: "coffee", brew: true, name: "Affogato", level: 7, secs: 900, price: 5 }
+    // (Counter Sheet 2's coffees) 2026-11-18 (Cam, PT59 c9: "I want the esspresso machine to be a standalone counter,
+    // think barista couter ... like the standalone milkshake counter"): made at the barista counter from its own book,
+    // like the shakes -- they used to be brewed by an espresso machine fitted to a serving counter
+    { id: "espresso", menu: "coffee", name: "Espresso", level: 7, secs: 30, price: 5 },
+    { id: "flatwhite", menu: "coffee", name: "Flat white", level: 8, secs: 60, price: 5 },
+    { id: "cappuccino", menu: "coffee", name: "Cappuccino", level: 9, secs: 90, price: 6 },
+    { id: "latte", menu: "coffee", name: "Latte", level: 11, secs: 120, price: 6 },
+    { id: "mocha", menu: "coffee", name: "Mocha", level: 13, secs: 150, price: 7 },
+    { id: "icedcoffee", menu: "coffee", name: "Iced coffee", level: 15, secs: 180, price: 7 },
+    { id: "macchiato", menu: "coffee", name: "Caramel macchiato", level: 18, secs: 240, price: 8 },
+    { id: "affogato", menu: "coffee", name: "Affogato", level: 21, secs: 300, price: 9 }
   ];
   /** The cookbook's tabs: each dish is on one menu (breakfast unless it says). */
   var MENUS = [{ id: "breakfast", name: "Breakfast", pic: "pancakes" }, { id: "lunch", name: "Lunch", pic: "cheeseburger" },
@@ -201,14 +201,14 @@ var CafeCore = (function () {
                { id: "tandoor", name: "Tandoor", pic: "naan", cooker: "tandoor" }, { id: "spit", name: "Rotisserie spit", pic: "rotisserie", cooker: "spit" },
                { id: "smoker", name: "Smoker", pic: "brisket", cooker: "smoker" },
                // V26 q6: the two counters that cook their own book, indoors
-               { id: "shakes", name: "Milkshake counter", pic: "strawshake", cooker: "shakebar", bar: true }, { id: "sushi", name: "Sushi bar", pic: "salmonnigiri", cooker: "sushibar", bar: true }];
+               { id: "shakes", name: "Milkshake counter", pic: "strawshake", cooker: "shakebar", bar: true },
+               { id: "coffee", name: "Barista counter", pic: "cappuccino", cooker: "coffeebar", bar: true }, { id: "sushi", name: "Sushi bar", pic: "salmonnigiri", cooker: "sushibar", bar: true }];
   var DISH = {};
   DISHES.forEach(function (d) {
     var m = d.secs / 60;
     d.servings = Math.max(4, Math.round(10 * Math.pow(m, 0.55)));
     d.cost = Math.round(d.servings * d.price * 0.4);
     d.xp = Math.round((2 + 4 * Math.pow(m, 0.6)) * (d.level > 30 ? 1 + (d.level - 30) / 15 : 1));   // (V23: more past 30)
-    if (d.brew) { d.servings = BREW.cups; d.cost = 0; d.xp = 0; }
     DISH[d.id] = d;
   });
 
@@ -235,7 +235,7 @@ var CafeCore = (function () {
   }
   function priceOf(s, id) { return mastered(s, id).price; }
   /** Whether you can cook a dish: by level, or -- Aunty's secrets -- once she's sent you the recipe. */
-  function canCook(s, d, lv) { if (d.brew) return false; return d.secret ? (s.secrets || []).indexOf(d.id) >= 0 : lv >= d.level; }
+  function canCook(s, d, lv) { return d.secret ? (s.secrets || []).indexOf(d.id) >= 0 : lv >= d.level; }
 
   // ---- the field across the street (2026-10-22, Cam: "farm plots across the street ... harvest the ingredients and use
   // them in cooking recipes ... If we grow and harvest all the relevant ingredients it costs nothing to cook and sells for
@@ -388,6 +388,11 @@ var CafeCore = (function () {
     shakeshelf: { name: "Plain milkshake counter", price: 1500, level: 9, shelf: "shakes", slots: 3, turns: 4 },
     // (later the same day, Cam: "lets make the sushi work the same way as the milkshake one") -- the sushi bar's own
     sushishelf: { name: "Plain sushi counter", price: 3500, level: 22, shelf: "sushi", slots: 3, turns: 4 },
+    // 2026-11-18 (Cam, PT59 c9: "Have a barista counter and a coffee serving counter that works like the milkshake
+    // counters and system ... remove clutter on the serving counters"): the barista counter makes the coffees (prep),
+    // the coffee serving counter holds three kinds side by side
+    coffeebar: { name: "Barista counter", price: 2200, level: 7, cooker: true, bar: true, prep: true, menu: "coffee", turns: 4 },
+    coffeeshelf: { name: "Coffee serving counter", price: 1200, level: 7, shelf: "coffee", slots: 3, turns: 4 },
     // V22 q4: coin machines (Sheet 15, painted four ways) -- see MACHINES for how each one earns
     jukebox: { name: "Jukebox", price: 900, level: 6, machine: true, turns: 4 },
     arcade: { name: "Arcade machine", price: 1500, level: 9, machine: true, turns: 4 },
@@ -727,9 +732,7 @@ var CafeCore = (function () {
               says: "Keeps a dish cold under the counter -- one under a serving counter, two under a buffet -- and puts it on top when the top sells out." },
     selfclean: { id: "selfclean", name: "Self-cleaning", on: ["stove"].concat(APPLIANCES), price: 400, level: 2,
                  says: "The stove cleans itself after every dish (you still get the cleaning XP)." },
-    // V26 q5: brews coffees onto its serving counter while the top's empty; its beans need a refill (REFILL)
-    espresso: { id: "espresso", name: "Espresso machine", on: ["counter"], price: 1500, level: 7,
-                says: "While the counter's top is empty it brews 6 coffees onto it every 15 minutes, 5 coins each. Its beans last 3 hours of opening -- then click the counter to refill them." },
+    // (V26 q5's espresso machine for a serving counter went 2026-11-18: the barista counter makes the coffees now)
     // V26 q7: the till's -- brings the coins in from the stalls outside and the popcorn machines every 10 minutes
     cashier: { id: "cashier", name: "Head cashier", on: ["till"], price: 250000, level: 40,
                says: "Every 10 minutes brings the coins from your carts, popcorn machines and the cinema into the till. It doesn't refill them -- a stall that's run dry waits for you." }
@@ -768,7 +771,8 @@ var CafeCore = (function () {
                    halfwall: "white", lattice: "white", halfbrick: "wood", screen: "wood", vipropes: "velvet", planterwall: "wood", standmirror: "wood", barrier: "shade",   // (N48 dividers)
                    counter: "wood", buffet: "wood", till: "wood",
                    // (2026-11-08, Cam: "swatches for the stoves, milkshake makers and counters")
-                   stove: "enamel", shakebar: "mint", shakeshelf: "mint", shakevend: "pink", sushibar: "wood", sushishelf: "wood" };   // (PT56: the till's cabinet; its register the brass below)   // (Cam: counters by swatch -- counter styles go, the sandbox first)
+                   stove: "enamel", shakebar: "mint", shakeshelf: "mint", shakevend: "pink", sushibar: "wood", sushishelf: "wood",
+                   coffeebar: "coffee", coffeeshelf: "coffee" };   // (2026-11-18: the coffee counters' brown panels)   // (PT56: the till's cabinet; its register the brass below)   // (Cam: counters by swatch -- counter styles go, the sandbox first)
   Object.keys(MATERIAL).forEach(function (k) { if (THINGS[k]) THINGS[k].tint = MATERIAL[k]; });
   // PT56 (Cam: "change color of the wood top as well for this and other 2 tone items ... the black divider with a red
   // top"): a second part with its own material and paint -- its layer <pic>-fab2, its colour the thing's tint2.
@@ -904,8 +908,8 @@ var CafeCore = (function () {
   var RUN_BASE = null;                                            // (advance(): when its stretch of time began)
   function isVend(it) { return !!(it && THINGS[it.kind] && THINGS[it.kind].vend); }
   function isStall(o) { return !!(o && (CARTS[o.id] || o.id === "cinema")); }
-  /** Whether this takes refills: a vending or coin machine, an espresso counter, a cart or the cinema. */
-  function refills(o) { return !!o && (isVend(o) || !!MACHINES[o.kind] || (o.kind === "counter" && !!o.espresso) || isStall(o)); }
+  /** Whether this takes refills: a vending or coin machine, a cart or the cinema. */
+  function refills(o) { return !!o && (isVend(o) || !!MACHINES[o.kind] || isStall(o)); }
   /** Whether it's run dry (at time t, inside advance(): counting the time since it began while the café's open). */
   function dryAt(s, o, t) {
     if (o.id === "cinema") return (o.shows || 0) >= CINEMA.reel;
@@ -930,7 +934,7 @@ var CafeCore = (function () {
     return n * (CINEMA.per + (corn ? CINEMA.corn : 0));
   }
   /** The stretch a to b while the café's open: machines use up their run, vending machines and carts fill, films show,
-      espresso counters brew, the Head cashier makes his rounds. */
+      the Head cashier makes his rounds. */
   function stallsRun(s, a, b) {
     if (b > a && !s.closed) {
       s.items.forEach(function (it) {
@@ -969,12 +973,6 @@ var CafeCore = (function () {
         }
       });
     }
-    // espresso (q5): a dry or full counter waits; an empty one gets six coffees, at most every 15 minutes
-    s.items.forEach(function (it) {
-      if (it.kind !== "counter" || !it.espresso || it.dish || (it.used || 0) >= REFILL.run || b < (it.brewAt || 0) + BREW.every) return;
-      var cups = DISHES.filter(function (d) { return d.brew; });
-      it.dish = cups[Math.floor(rnd(s) * cups.length)].id; it.n = BREW.cups; it.res = 0; it.since = b; it.farm = 0; it.fres = 0; it.brewAt = b;
-    });
     // the Head cashier (q7): the stalls' coins into the till every 10 minutes -- never a refill
     var till = s.items.filter(function (it) { return it.kind === "till"; })[0];
     if (till && till.cashier && b >= (s.cashAt || 0) + CASHIER_EVERY) {
@@ -1973,6 +1971,19 @@ var CafeCore = (function () {
       else if (s.extraCounters && s.ware.buffet > 0) { s.ware.buffet--; if (!s.ware.buffet) delete s.ware.buffet; s.ware.counter = (s.ware.counter || 0) + 1; }
     }
     s.parts = s.parts && typeof s.parts === "object" ? s.parts : {};      // upgrades taken out of stored/sold things
+    // 2026-11-18 (PT59 c9): the espresso machine is no longer fitted to serving counters -- the barista counter makes
+    // the coffees. Each one fitted or kept as a spare part is taken back for what it cost (1,500 coins); the coffees on
+    // a counter stay till they sell.
+    var beans = s.items.filter(function (it) { return it.espresso; }).length + (s.parts.espresso | 0);
+    s.items.forEach(function (it) { if (it.espresso) { delete it.espresso; delete it.used; delete it.brewAt; } });
+    delete s.parts.espresso;
+    if (beans) {
+      s.coins = (s.coins || 0) + beans * 1500;
+      diary(s, s.at || 0, { kind: "news", who: "espresso", icon: "☕", title: "The espresso machine" + (beans > 1 ? "s" : "") + " went back",
+                            says: "Coffee has its own barista counter now (Buy > Kitchen > Coffee, shakes & sushi), and a coffee serving counter to go with it. " +
+                                  (beans > 1 ? "Your " + beans + " espresso machines were" : "Your espresso machine was") + " taken back for what " + (beans > 1 ? "they" : "it") + " cost.",
+                            gains: [{ kind: "coins", n: beans * 1500 }] });
+    }
     s.items.forEach(function (it) { if (it.kind === "buffet" && !Array.isArray(it.plates)) it.plates = [{ dish: null, n: 0 }, { dish: null, n: 0 }]; });
     // (2026-10-25) a long thing put across the patio's side wall before that was stopped: turned along the wall, inside,
     // where it fits; else into the warehouse
@@ -2998,7 +3009,6 @@ var CafeCore = (function () {
       if (!cooks(st)) return no(s, "That isn't a stove.");
       if (!d) return no(s, "There's no such dish.");
       // V24 q8: an outdoor dish only on its appliance, and an appliance cooks only its own book
-      if (d.brew) return no(s, d.name + " comes from an espresso machine on a counter.");
       if (cookerOf(d) !== st.kind) return no(s, cookerOf(d) === "stove" ? d.name + " is cooked on a stove, inside." : THINGS[cookerOf(d)].bar ? d.name + " is made at the " + THINGS[cookerOf(d)].name.toLowerCase() + "." : d.name + " is cooked on the " + THINGS[cookerOf(d)].name.toLowerCase() + ", out on the patio.");
       if (stoveOf(st, now).status !== "free") return no(s, "That stove's busy.");
       if (!canCook(s, d, lv)) return no(s, d.event ? d.name + " is unlocked with Halloween candy at the haunted house." : d.secret ? d.name + " is one of Aunty's secret recipes -- she hasn't sent it to you yet." : d.name + " comes at level " + d.level + ".");
@@ -3388,7 +3398,7 @@ var CafeCore = (function () {
     if (action === "upgrade") {                                     // 2026-10-21 (Cam): fit an upgrade to a stove or counter
       var ug = byUid(s, opts.uid), U = UPGRADES[opts.part];
       if (!U) return no(s, "There's no such upgrade.");
-      if (!ug || U.on.indexOf(ug.kind) < 0) return no(s, "The " + U.name.toLowerCase() + " goes on a " + (U.on[0] === "stove" ? "stove or an outdoor appliance." : U.on[0] === "till" ? "cash register." : U.id === "espresso" ? "serving counter." : "counter."));
+      if (!ug || U.on.indexOf(ug.kind) < 0) return no(s, "The " + U.name.toLowerCase() + " goes on a " + (U.on[0] === "stove" ? "stove or an outdoor appliance." : U.on[0] === "till" ? "cash register." : "counter."));
       if (ug[U.id]) return no(s, "That has one already.");
       if (lv < U.level) return no(s, "The " + U.name.toLowerCase() + " comes at level " + U.level + ".");
       if (s.parts[U.id] > 0) { s.parts[U.id]--; if (!s.parts[U.id]) delete s.parts[U.id]; }
@@ -3396,8 +3406,6 @@ var CafeCore = (function () {
       ug[U.id] = true;
       if (U.id === "fridge") ug.under = ug.under || [];
       if (U.id === "selfclean" && ug.dirty) { ug.dirty = false; }
-      if (U.id === "espresso") { ug.used = 0; ug.brewAt = 0; }
-      if (U.id === "espresso") return done("Espresso machine fitted -- coffees go on this counter whenever its top is empty.");
       if (U.id === "cashier") return done("Your Head cashier starts work: every 10 minutes the stalls' coins come into the till.");
       return done(U.id === "fridge" ? "Fridge fitted -- " + (underCap(ug) === 2 ? "two dishes" : "a dish") + " can wait under it." : "The stove cleans itself now.");
     }
@@ -3512,11 +3520,11 @@ var CafeCore = (function () {
       ev.push({ kind: "coins", n: got2, uid: vm.uid });
       return done("The " + THINGS[vm.kind].name.toLowerCase() + " had " + got2 + " coins in it.");
     }
-    // ---- V26: refill a machine, a counter's espresso beans, a cart or the cinema's reel (q1) ----
+    // ---- V26: refill a machine, a cart or the cinema's reel (q1) ----
     if (action === "refill") {
       var rf = opts.decor != null ? (s.decor || []).filter(function (o) { return o.uid === opts.decor; })[0] : byUid(s, opts.uid);
       if (!refills(rf)) return no(s, "That doesn't take refills.");
-      var rname = rf.id ? DECO[rf.id].name.toLowerCase() : rf.kind === "counter" ? "espresso machine" : THINGS[rf.kind].name.toLowerCase();
+      var rname = rf.id ? DECO[rf.id].name.toLowerCase() : THINGS[rf.kind].name.toLowerCase();
       if (!dryAt(s, rf)) return no(s, "The " + rname + " isn't empty yet.");
       var rin = takingsOf(rf), net = rin - refillCut(rin);
       if (net < 0 && s.coins < -net) return no(s, "Refilling the " + rname + " costs " + (-net) + " coins; you have " + s.coins + ".");
@@ -3525,7 +3533,7 @@ var CafeCore = (function () {
       s.coins += net; if (net > 0) s.stats.earned += net;
       s.stats.refills = (s.stats.refills || 0) + 1;
       if (net) ev.push({ kind: "coins", n: net, uid: rf.id ? 0 : rf.uid, decor: rf.id ? rf.uid : 0 });
-      var what = rf.id === "cinema" ? "A new film reel in" : rf.kind === "counter" ? "Fresh beans in the" : CARTS[rf.id] ? "Restocked the" : "Refilled the";
+      var what = rf.id === "cinema" ? "A new film reel in" : CARTS[rf.id] ? "Restocked the" : "Refilled the";
       return done(what + " " + rname + (net > 0 ? " -- " + net + " coins out (" + (rin - net) + " for the refill)." : net < 0 ? " for " + (-net) + " coins." : "."));
     }
     if (action === "stallCollect") {                               // a cart's or the cinema's coins, before it runs dry
@@ -4053,7 +4061,6 @@ var CafeCore = (function () {
         if (isVend(it)) o.vend = vendTakings(it);
         if (MACHINES[it.kind]) o.coins = it.coins || 0;
         if (refills(it)) { o.dry = dryAt(s, it); o.runLeft = Math.max(0, REFILL.run - (it.used || 0)); }
-        if (it.espresso) o.espresso = true;
         if (it.cashier) o.cashier = true;
         if (ownTop(it)) o.plates = it.plates.map(function (pl) { return { dish: pl.dish ? DISH[pl.dish] : null, n: pl.n || 0 }; });
         if (isShelf(it)) o.plates = it.plates.map(function (pl) { return { dish: pl.dish && pl.n > 0 ? DISH[pl.dish] : null, n: pl.n || 0 }; });
@@ -4125,7 +4132,7 @@ var CafeCore = (function () {
   }
 
   return {
-    empty: empty, fresh: fresh, sandbox: sandbox, popularity: popularity, WALLPAPERS: WALLPAPERS, COUNTER_STYLES: COUNTER_STYLES, isSeat: isSeat, isTable: isTable, places: places, VEND_: null, FLOORS: FLOORS, FLOOR: FLOOR, FACE: FACE, seats: seats, seatTable: seatTable, tableCell: tableCell, inside: inside, inPatio: inPatio, cafeW: cafeW, walled: walled, RAILS: RAILS, RAIL: RAIL, PATIOS: PATIOS, nextPatio: nextPatio, PATIO_TIP: PATIO_TIP, setSize: setSize, areaPick: areaPick, areaSays: areaSays, VEND: VEND, VENDS: VENDS, REFILL: REFILL, CARTS: CARTS, CINEMA: CINEMA, STALL_MAX: STALL_MAX, BREW: BREW, BARS: BARS, VENDINGS: VENDINGS, isBar: isBar, ownTop: ownTop, isShelf: isShelf, shelfTakes: shelfTakes, isVend: isVend, machines: machines, food: food, refills: refills, refillCut: refillCut, EAT: EAT, DINE_TIP: DINE_TIP, TIP_CHANCE: TIP_CHANCE, CLEAN_XP: CLEAN_XP, COUNTERS: COUNTERS, MENUS: MENUS, POTIONS: POTIONS, KITS: KITS, HAPPENINGS: HAPPENINGS, HAPPENING: HAPPENING, HAPPEN: HAPPEN, DIARY: DIARY, rewardFor: rewardFor, prefs: prefs, MACHINES: MACHINES, PAINTINGS: PAINTINGS, WALL_THINGS: WALL_THINGS, PAINTING: PAINTING, EVENT: EVENT, EVENT_ITEMS: EVENT_ITEMS, HW_PAINTINGS: HW_PAINTINGS, PHOTO_FRAMES: PHOTO_FRAMES, eventOn: eventOn, mansionTime: mansionTime, HAUNT: HAUNT, hauntArrive: hauntArrive, hauntOn: hauntOn, WEAPONS: WEAPONS, PAINTS: PAINTS, PAINT_OF: PAINT_OF, MIXER: MIXER, hasPaint: hasPaint, EXPANSIONS: EXPANSIONS, panelPrice: panelPrice, DECOR: DECOR, DECO: DECO, decorProblem: decorProblem, fenceAt: fenceAt, HALF_WALL: HALF_WALL, HALF_WALLS: HALF_WALLS, hwSides: hwSides, hwEdgeProblem: hwEdgeProblem, hwBetween: hwBetween, hwMid: hwMid, HALF_WALL_OF: HALF_WALL_OF, STARTER_DECOR: STARTER_DECOR, UPGRADES: UPGRADES, underCap: underCap, autoFace: autoFace, RUSHES: RUSHES, RUSH_X: RUSH_X, rushAt: rushAt, nextRush: nextRush, baseRate: baseRate, GROUPS: GROUPS, GROUP_GAP: GROUP_GAP, normal: normal, advance: advance, act: act, view: view, levelOf: levelOf, unlocksAt: unlocksAt, CALENDAR: CALENDAR, calendar: calendar, easter: easter, FOOT: FOOT, buildingAt: buildingAt, OUT_FLOOR: OUT_FLOOR, outFloorProblem: outFloorProblem, canHang: canHang, CEILING: CEILING, CEIL: CEIL, canCeil: canCeil, houseTime: houseTime, GROW: GROW, growOf: growOf, growMax: growMax, thingGrowMax: thingGrowMax,
+    empty: empty, fresh: fresh, sandbox: sandbox, popularity: popularity, WALLPAPERS: WALLPAPERS, COUNTER_STYLES: COUNTER_STYLES, isSeat: isSeat, isTable: isTable, places: places, VEND_: null, FLOORS: FLOORS, FLOOR: FLOOR, FACE: FACE, seats: seats, seatTable: seatTable, tableCell: tableCell, inside: inside, inPatio: inPatio, cafeW: cafeW, walled: walled, RAILS: RAILS, RAIL: RAIL, PATIOS: PATIOS, nextPatio: nextPatio, PATIO_TIP: PATIO_TIP, setSize: setSize, areaPick: areaPick, areaSays: areaSays, VEND: VEND, VENDS: VENDS, REFILL: REFILL, CARTS: CARTS, CINEMA: CINEMA, STALL_MAX: STALL_MAX, BARS: BARS, VENDINGS: VENDINGS, isBar: isBar, ownTop: ownTop, isShelf: isShelf, shelfTakes: shelfTakes, isVend: isVend, machines: machines, food: food, refills: refills, refillCut: refillCut, EAT: EAT, DINE_TIP: DINE_TIP, TIP_CHANCE: TIP_CHANCE, CLEAN_XP: CLEAN_XP, COUNTERS: COUNTERS, MENUS: MENUS, POTIONS: POTIONS, KITS: KITS, HAPPENINGS: HAPPENINGS, HAPPENING: HAPPENING, HAPPEN: HAPPEN, DIARY: DIARY, rewardFor: rewardFor, prefs: prefs, MACHINES: MACHINES, PAINTINGS: PAINTINGS, WALL_THINGS: WALL_THINGS, PAINTING: PAINTING, EVENT: EVENT, EVENT_ITEMS: EVENT_ITEMS, HW_PAINTINGS: HW_PAINTINGS, PHOTO_FRAMES: PHOTO_FRAMES, eventOn: eventOn, mansionTime: mansionTime, HAUNT: HAUNT, hauntArrive: hauntArrive, hauntOn: hauntOn, WEAPONS: WEAPONS, PAINTS: PAINTS, PAINT_OF: PAINT_OF, MIXER: MIXER, hasPaint: hasPaint, EXPANSIONS: EXPANSIONS, panelPrice: panelPrice, DECOR: DECOR, DECO: DECO, decorProblem: decorProblem, fenceAt: fenceAt, HALF_WALL: HALF_WALL, HALF_WALLS: HALF_WALLS, hwSides: hwSides, hwEdgeProblem: hwEdgeProblem, hwBetween: hwBetween, hwMid: hwMid, HALF_WALL_OF: HALF_WALL_OF, STARTER_DECOR: STARTER_DECOR, UPGRADES: UPGRADES, underCap: underCap, autoFace: autoFace, RUSHES: RUSHES, RUSH_X: RUSH_X, rushAt: rushAt, nextRush: nextRush, baseRate: baseRate, GROUPS: GROUPS, GROUP_GAP: GROUP_GAP, normal: normal, advance: advance, act: act, view: view, levelOf: levelOf, unlocksAt: unlocksAt, CALENDAR: CALENDAR, calendar: calendar, easter: easter, FOOT: FOOT, buildingAt: buildingAt, OUT_FLOOR: OUT_FLOOR, outFloorProblem: outFloorProblem, canHang: canHang, CEILING: CEILING, CEIL: CEIL, canCeil: canCeil, houseTime: houseTime, GROW: GROW, growOf: growOf, growMax: growMax, thingGrowMax: thingGrowMax,
     stoveOf: stoveOf, cooks: cooks, cookerOf: cookerOf, hasCooker: hasCooker, APPLIANCES: APPLIANCES, path: path, spotFor: spotFor, layoutProblem: layoutProblem, fitProblem: fitProblem, cells: cells, covers: covers, plates: plates, alongX: alongX, STREET: STREET, streetRoute: streetRoute, lengthOf: lengthOf, rate: rate, allowed: allowed, entry: entry,
     DISHES: DISHES, DISH: DISH, MASTERY: MASTERY, AUNTY: AUNTY, canCook: canCook, CART: CART, TUTORS: TUTORS, tutorFor: tutorFor, CROPS: CROPS, CROP: CROP, FIELD: FIELD, keepOf: keepOf, GOODS: GOODS, goodName: goodName, COOP: COOP, coopOf: coopOf, coopsAllowed: coopsAllowed, FARM_X: FARM_X, plotsAllowed: plotsAllowed, plotPrice: plotPrice, plotProblem: plotProblem, onPlot: onPlot, farmPrice: farmPrice, INGREDIENTS: INGREDIENTS, placeFood: placeFood, masteryNeed: masteryNeed, mastered: mastered, starsOf: starsOf, XP: XP, MAX_LEVEL: MAX_LEVEL, THINGS: THINGS, EXPAND: EXPAND, START: START, TUTORIAL: TUTORIAL,
     RATE: RATE, COMFORT: COMFORT, TERRAINS: TERRAINS, TERRAIN: TERRAIN, HOME: HOME, HOME_FOOT: HOME_FOOT, BENCH: BENCH, benchPlaces: benchPlaces, benchIn: benchIn, REACH: REACH, GUESTS: GUESTS, GUEST: GUEST, GUEST_OF: GUEST_OF, pickLook: pickLook, CANDY_STORE: CANDY_STORE, catalogueDone: catalogueDone, boostOn: boostOn, MAJOR: MAJOR, HW_HANG: HW_HANG, roundSeat: roundSeat, outWalk: outWalk, streetPath: streetPath, footOf: footOf, walkBlocked: walkBlocked, WALK_THROUGH: WALK_THROUGH, benchOut: benchOut, crowd: crowd, isDark: isDark, WALK: WALK, SEC: SEC, MIN: MIN

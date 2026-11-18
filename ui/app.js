@@ -1692,7 +1692,7 @@ const CHILD_ICONS = {
   "code:structures": "i-structure", "code:web": "i-web",
   "home:dashboard": "i-grid", "home:calendar": "i-calendar", "home:contacts": "i-person",
   "stuff:media": "i-disc", "stuff:shelf": "i-library", "stuff:inventories": "i-kit",
-  "settings:appearance": "i-shade", "settings:size": "i-heading",
+  "settings:appearance": "i-shade", "settings:size": "i-heading", "settings:lite": "i-bulb",
   "settings:sidebar": "i-menu", "settings:library": "i-folder",
   "settings:merge": "i-group", "settings:stats": "i-chart",
   "settings:transfer": "i-backup", "settings:datafolder": "i-move", "settings:widgets": "i-eye",
@@ -4220,6 +4220,9 @@ const SECTIONS = [
   {key: "settings", name: "Settings", children: [
     {key: "settings:appearance", name: "Appearance"},
     {key: "settings:size", name: "Text & scale"},
+    /* Cam (17 Nov 2026, the ThinkPad): "build this lighter version as an option in neuronet
+       settings that can be toggled." See lite.py and ui/lite.js. */
+    {key: "settings:lite", name: "Lite mode"},
     {key: "settings:sidebar", name: "Sections shown"},
     {key: "settings:library", name: "Photo library"},
     {key: "settings:merge", name: "Combine libraries"},
@@ -4635,6 +4638,7 @@ async function previewLibraryMerge(main) {
 const SET_SECTIONS = {
   appearance: "Appearance",
   size: "Text & scale",
+  lite: "Lite mode",
   sidebar: "Sections shown",
   library: "Photo library",
   merge: "Combine libraries",
@@ -4646,6 +4650,7 @@ const SET_SECTIONS = {
 const SET_BLURBS = {
   appearance: "The look of the whole app.",
   size: "How big the words are, and how big everything else is.",
+  lite: "NeuroNet lighter to run, for a smaller computer or a laptop on battery.",
   sidebar: "What appears in the menus. Nothing is deleted by hiding it.",
   library: "Where your photos live, and how they are shown.",
   merge: "Bringing KinCrux's photo library in alongside this one.",
@@ -4805,6 +4810,10 @@ function renderSettings(main, which) {
     <p class="stamp" style="margin:12px 0 22px" id="ss-merge-note"></p>
     </section>
 
+    <section class="set-sec" data-set="lite"${which === "lite" ? "" : " hidden"}>
+    <div id="set-lite"></div>
+    </section>
+
     <section class="set-sec" data-set="stats"${which === "stats" ? "" : " hidden"}>
     <div id="set-stats"></div>
     </section>
@@ -4868,6 +4877,7 @@ function renderSettings(main, which) {
   if (which === "transfer" && SS.Transfer) SS.Transfer.render(main.querySelector("#set-transfer"));
   if (which === "datafolder" && SS.DataFolder) SS.DataFolder.render(main.querySelector("#set-datafolder"));
   if (which === "widgets" && SS.DesktopWidgets) SS.DesktopWidgets.render(main.querySelector("#set-widgets"));
+  if (which === "lite" && window.NNLite) NNLite.renderSettings(main.querySelector("#set-lite"));
   if (which === "appearance" && SS.WindowGlow) SS.WindowGlow.render(main.querySelector("#set-glow"));
 }
 

@@ -170,7 +170,7 @@
       if (host.querySelectorAll("[data-ngpet]:checked").length > 3) { c.checked = false; toast("Three pets at most.", true); } }));
   }
 
-  const VIEWS = ["proto:grid", "pet:pyramid", "pet:islandestate", "pet:shipyard", "pet:settings", "pet:estate", "pet:house", "pet:library", "pet:storeroom", "pet:nursery", "pet:guild", "pet:market", "pet:pen", "pet:workshop", "pet:outskirts", "pet:home", "pet:skills", "pet:foraging", "pet:fishing", "pet:mining", "pet:lumbering", "pet:digging", "pet:village",
+  const VIEWS = ["pet:pyramid", "pet:islandestate", "pet:shipyard", "pet:settings", "pet:estate", "pet:house", "pet:library", "pet:storeroom", "pet:nursery", "pet:guild", "pet:market", "pet:pen", "pet:workshop", "pet:outskirts", "pet:home", "pet:skills", "pet:foraging", "pet:fishing", "pet:mining", "pet:lumbering", "pet:digging", "pet:village",
                  "pet:gear", "pet:expeditions", "pet:hunt", "pet:farm", "pet:pets", "pet:hatchery", "pet:breed", "pet:dex", "pet:graveyard", "pet:ranch", "pet:camp", "pet:bestiary", "pet:herbarium", "pet:world", "pet:dash", "pet:runecrafting", "pet:spellbook", "pet:enchants", "pet:saves", "pet:modder", "dev:tools", "dev:places"];
   SS.Pet = {
     VIEWS,

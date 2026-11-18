@@ -950,11 +950,9 @@ body.nc-snapping .nc-fog { visibility: hidden; }
 .nc-holdx { flex: none; width: 28px; height: 28px; padding: 4px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
 .nc-holdx:hover { background: rgba(120, 70, 20, .15); }
 .nc-holdx svg { width: 100%; height: 100%; }
-/* V26: run dry (a refill arrow on red), and the espresso machine standing on its counter */
+/* V26: run dry (a refill arrow on red) */
 .nc-bub.empty { background: #b8452f; border-color: #6e1e12; color: #fff; padding: 2px 5px; }
 .nc-bub.empty .nc-ic { width: 14px; height: 14px; }
-.nc-espresso { position: absolute; left: 4%; top: -22%; width: 44%; pointer-events: none; filter: drop-shadow(0 1px 1px rgba(40, 20, 6, .35)); }
-.nc-espresso.flip { left: 52%; transform: scaleX(-1); }
 /* the Terrain tools' pictures (2026-10-26: the water's second frame is gone -- still water, Cam: "happy if the water isnt animated") */
 .nc-toolic { display: block; width: 64px; height: 64px; margin: 4px auto 2px; }
 .nc-toolic svg { width: 100%; height: 100%; }
