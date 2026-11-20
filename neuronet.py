@@ -881,7 +881,9 @@ def is_video_file(name):
 
 
 def chords_dir():
-    """Chords' own folder inside the data folder.
+    """Chords' own folder inside the data folder. The music itself left NeuroNet for NeuroStream on
+    19 Nov 2026 (V31), but its files stay here (chords/music) and NeuroStream plays them from here, so
+    moving or backing up NeuroNet's data still carries them.
 
     A file per domain, not one document: the music library and the
     photo library are written by different modules at different times,
@@ -900,37 +902,6 @@ def music_dir():
     d = os.path.join(chords_dir(), "music")
     os.makedirs(d, exist_ok=True)
     return d
-
-
-def safe_audio_path(name, must_exist=True):
-    """An audio filename -> absolute path inside music/, or None if the
-    name tries anything clever (traversal, absolute path, wrong type)."""
-    base = os.path.basename(str(name or ""))
-    if base != name or not base.lower().endswith(AUDIO_EXTS):
-        return None
-    path = os.path.join(music_dir(), base)
-    if must_exist and not os.path.isfile(path):
-        return None
-    return path
-
-
-def dedupe_audio_name(base):
-    """song.mp3 -> song-2.mp3, -3... until free."""
-    stem, ext = os.path.splitext(os.path.basename(base))
-    cand, n = stem + ext, 2
-    while os.path.exists(os.path.join(music_dir(), cand)):
-        cand = f"{stem}-{n}{ext}"
-        n += 1
-    return cand
-
-
-def audio_file_url(path):
-    """The fallback when no socket could be opened at all."""
-    try:
-        from pathlib import Path
-        return Path(path).resolve().as_uri()
-    except Exception:
-        return None
 
 
 # PORTED FROM CAM'S CHORDS, UNCHANGED. This is the most carefully
@@ -1025,7 +996,6 @@ def parse_byte_range(header, size):
 # so the URL carries which folder it wants and a single server answers
 # for both. Adding a third is a line in this dict.
 MEDIA_ROOTS = {
-    "music": lambda: music_dir(),
     "meditation": lambda: meditation_dir(),
     # Pictures by address (2026-10-05, the audit's first fix). Thumbnails and
     # frames used to cross the bridge as base64 text: each one was held as
@@ -1037,8 +1007,6 @@ MEDIA_ROOTS = {
     # gets the picture's data.
     "photo-thumbs": lambda: thumbs_dir(),
     "photo-frames": lambda: frames_dir(),
-    "music-thumbs": lambda: music_thumbs_dir(),
-    "music-images": lambda: music_images_dir(),
     "cards-thumbs": lambda: cards_thumbs_dir(),
     "cards-images": lambda: cards_images_dir(),
     # 2026-10-06, the audit's remaining pictures: Assets' tiles and the journal
@@ -1046,7 +1014,7 @@ MEDIA_ROOTS = {
     "journal-images": lambda: journal.images_dir(),
     "journal-thumbs": lambda: journal.thumbs_dir(),
 }
-IMAGE_ROOTS = {"photo-thumbs", "photo-frames", "music-thumbs", "music-images",
+IMAGE_ROOTS = {"photo-thumbs", "photo-frames",
                "cards-thumbs", "cards-images", "asset-thumbs", "journal-images", "journal-thumbs"}
 IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".gif", ".webp")
 
@@ -1151,42 +1119,7 @@ def _media_handler_class(token):
                 return None, 404
             return path, None
 
-        def _cinema(self, send_body):
-            """/cinema/<token>/<film, url-encoded>?t=<seconds>&a=<audio track>:
-            the film, converted live for the page's own player (cinema.py).
-            The film is looked up under the Movies folder by media_shelf's own
-            check, never joined from the address."""
-            import media_shelf
-            import cinema
-            from urllib.parse import parse_qs
-            raw, _, query = self.path.partition("?")
-            parts = raw.split("/")
-            if len(parts) != 4 or not secrets.compare_digest(parts[2], token):
-                self._plain(403 if len(parts) == 4 else 404, "not available")
-                return
-            path = cinema.resolve(data_dir(), media_shelf.movies_dir(app_dir(), create=False), unquote(parts[3]))
-            if not path:
-                self._plain(404, "not available")
-                return
-            q = parse_qs(query)
-            try:
-                start = max(0.0, min(float((q.get("t") or ["0"])[0]), 360000.0))
-                audio = max(0, min(int((q.get("a") or ["0"])[0]), 31))
-            except ValueError:
-                self._plain(400, "bad request")
-                return
-            self.send_response(200)
-            self._common()
-            self.send_header("Content-Type", "video/mp4")
-            self.send_header("Connection", "close")
-            self.end_headers()
-            self.close_connection = True
-            if send_body:
-                cinema.serve_stream(self.wfile.write, path, start, audio)
-
         def _serve(self, send_body):
-            if self.path.startswith("/cinema/"):
-                return self._cinema(send_body)
             path, err = self._resolve()
             if err:
                 self._plain(err, "not available")
@@ -1256,15 +1189,6 @@ def _picture(kind, path):
     which only sets img.src, takes either)."""
     url = picture_url(kind, path)
     return {"dataUrl": url, "url": url} if url else _encode_file(path)
-
-
-def cinema_stream_url(rel):
-    """The address the page's player streams a film from (see _cinema)."""
-    srv = ensure_media_server()
-    if not srv:
-        return None
-    from urllib.parse import quote
-    return "http://127.0.0.1:%d/cinema/%s/%s" % (srv["port"], srv["token"], quote(str(rel), safe=""))
 
 
 def ensure_media_server():
@@ -1452,81 +1376,6 @@ def card_print_path(name):
         return dest
     except Exception:
         return src
-
-
-def music_images_dir():
-    d = os.path.join(chords_dir(), "images")
-    os.makedirs(d, exist_ok=True)
-    return d
-
-
-def music_thumbs_dir():
-    d = os.path.join(chords_dir(), "thumbs")
-    os.makedirs(d, exist_ok=True)
-    return d
-
-
-def _art_data_url(name, full=True, edge=None, as_url=False):
-    """Album art as a data: URL -- or, with as_url (thumbnails, since
-    2026-10-05), its address on the local media server, so the hundreds of
-    covers on a page no longer sit in memory as text.
-
-    edge: a copy sized for one particular place, cached per size. Used by
-    the open album's big cover, which asks for exactly the pixels it is
-    drawn at. Cam: "When in album view when scrolling the page lags." The
-    album page was the one place in Chords drawing a full-size image into a
-    smaller box (768 into 260). A GPU-composited browser scales that once
-    and keeps the result, which is why it never showed up in testing; a
-    software renderer like Cam's WebKitGTK can scale it again on every
-    repaint -- and while scrolling, that is every frame. Drawn at its real
-    size, there is nothing left to scale."""
-    base = os.path.basename(str(name or ""))
-    if not base or base != name:
-        return None
-    src = os.path.join(music_images_dir(), base)
-    if not os.path.isfile(src):
-        return None
-    path = src
-    if edge:
-        stem = os.path.splitext(base)[0]
-        dest = os.path.join(music_thumbs_dir(), "%s.%d.jpg" % (stem, edge))
-        try:
-            from PIL import Image
-            with Image.open(src) as probe:      # reads the header only
-                if max(probe.size) <= edge:
-                    # Already no bigger than asked for: a re-encoded copy
-                    # would only be a worse version of the same picture.
-                    got = _picture("music-images", src) if as_url else _encode_file(src)
-                    return got.get("dataUrl") if isinstance(got, dict) else None
-            if (not os.path.isfile(dest)
-                    or os.path.getmtime(dest) < os.path.getmtime(src)):
-                from PIL import Image
-                img = Image.open(src)
-                if img.mode in ("RGBA", "P", "LA"):
-                    img = img.convert("RGB")
-                # thumbnail() never enlarges: a small source stays as it is.
-                img.thumbnail((edge, edge), Image.LANCZOS)
-                img.save(dest, "JPEG", quality=88, optimize=True)
-            path = dest
-        except Exception:
-            path = src          # Pillow missing: full size beats nothing
-        got = (_picture("music-images" if path == src else "music-thumbs", path) if as_url
-               else _encode_file(path))
-        return got.get("dataUrl") if isinstance(got, dict) else None
-    if not full:
-        stem = os.path.splitext(base)[0]
-        dest = os.path.join(music_thumbs_dir(), stem + ".thumb.jpg")
-        try:
-            if (not os.path.isfile(dest)
-                    or os.path.getmtime(dest) < os.path.getmtime(src)):
-                _make_thumbnail(src, dest)
-            path = dest
-        except Exception:
-            path = src          # Pillow missing: full size beats nothing
-    got = (_picture("music-images" if path == src else "music-thumbs", path) if as_url
-               else _encode_file(path))
-    return got.get("dataUrl") if isinstance(got, dict) else None
-
 
 
 # ======================================================================
@@ -3102,9 +2951,9 @@ def main():
     except Exception:
         pass
 
-    # On the Linux media bus as a music player: Omarchy's audio panel,
-    # the media keys and the NeuroNet bar widget all see it (mpris.py).
-    # Started here, not at import, so no test ever claims the bus name.
+    # NeuroNet's remote on the session bus (org.neuronet.App: quick access, bar widgets, show/hide; mpris.py).
+    # Started here, not at import, so no test ever claims the bus name. (It was the music player on the
+    # media bus too, until the music went to NeuroStream, 19 Nov 2026.)
     global _mpris
     try:
         import mpris
@@ -3125,7 +2974,7 @@ def main():
                 if isinstance(cbs, dict):
                     for k in [k for k, v in list(cbs.items()) if v is None]:
                         cbs.pop(k, None)
-        _mpris = mpris.Mpris(run_js, _raise_window, music_images_dir, shown=shown)
+        _mpris = mpris.Mpris(run_js, _raise_window, shown=shown)
         if not _mpris.start():
             sys.stderr.write(f"NeuroNet: not on the media bus: {_mpris.error}\n")
             _mpris = None

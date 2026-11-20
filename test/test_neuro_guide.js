@@ -43,7 +43,7 @@ const norm = (k) => k.toUpperCase().replace(/\s*\+\s*/g, " ").replace(/\s+/g, " 
 {
   const block = fs.readFileSync(path.join(SYS, "hypr", "bindings.lua.block"), "utf8");
   // NeuroTrain's key is Training's (it opens NeuroNet's Training where NeuroTrain isn't installed)
-  const installed = [...block.matchAll(/o\.bind\("([^"]+)",\s*"Neuro(?:Net|Train)[^"]*"/g)].map((m) => norm(m[1]));
+  const installed = [...block.matchAll(/o\.bind\("([^"]+)",\s*"Neuro(?:Net|Train|Stream)[^"]*"/g)].map((m) => norm(m[1]));
   const guide = NEURONET_KEYS.map(([k]) => norm(k));
   const missing = installed.filter((k) => !guide.includes(k));
   const invented = guide.filter((k) => !installed.includes(k));

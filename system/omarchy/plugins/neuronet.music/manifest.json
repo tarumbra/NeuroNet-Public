@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "id": "neuronet.music",
-  "name": "NeuroNet Music",
-  "version": "1.0.0",
+  "name": "NeuroStream Music",
+  "version": "2.0.0",
   "author": "Cam",
-  "description": "NeuroNet's music in the top bar: what's playing, controls, and your albums and playlists one click away.",
+  "description": "NeuroStream's music in the top bar: what's playing, controls, and your albums and playlists one click away.",
   "kinds": ["bar-widget"],
   "entryPoints": {
     "barWidget": "BarWidget.qml"
   },
   "barWidget": {
-    "displayName": "NeuroNet Music",
-    "description": "Now playing, controls, albums and playlists from NeuroNet",
+    "displayName": "NeuroStream Music",
+    "description": "Now playing, controls, albums and playlists from NeuroStream",
     "category": "Media",
     "allowMultiple": false,
     "defaultSection": "right"

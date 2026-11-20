@@ -85,7 +85,13 @@ tmp = tempfile.mkdtemp(prefix="nn-menu-")
 menu = os.path.join(tmp, "omarchy-menu.jsonc")
 with open(menu, "w") as f:
     f.write('{\n  // Cam\'s own comment\n  "personal": {"icon":"x","label":"Personal"},\n}\n')
-env = dict(os.environ, NEURONET_MENU_FILE=menu)
+# NeuroStream's music library (the music left NeuroNet for it, 19 Nov 2026): a small one of the test's own
+xdg = os.path.join(tmp, "share")
+os.makedirs(os.path.join(xdg, "neurostream", "music"))
+with open(os.path.join(xdg, "neurostream", "music", "library.json"), "w") as f:
+    json.dump({"tracks": {"a.mp3": {"artist": "Jelly Roll"}}, "playlists": [{"id": "p1", "name": "Upbeat", "files": ["a.mp3"]}],
+               "albums": [{"id": "a1", "name": "Beautifully Broken", "files": ["a.mp3"]}, {"id": "a2", "name": "Empty", "files": []}]}, f)
+env = dict(os.environ, NEURONET_MENU_FILE=menu, XDG_DATA_HOME=xdg)
 r1 = subprocess.run([os.path.join(APP, "neuronet-menu")], env=env, capture_output=True, text=True)
 text1 = read(menu)
 r2 = subprocess.run([os.path.join(APP, "neuronet-menu")], env=env, capture_output=True, text=True)
@@ -99,8 +105,9 @@ except ValueError as e:
     ok("the menu file still parses the way Omarchy parses it", False, e)
 ok("Omarchy reads it: the NeuroNet menu, its tools, and Cam's own row",
    "neuronet" in items and "neuronet.tools.notes" in items and "personal" in items)
-ok("every NeuroNet tool is a row (the 12 sections + the whole app)",
-   len([k for k in items if k.startswith("neuronet.tools.")]) == 13)
+ok("every NeuroNet tool is a row (the 11 sections + the whole app; Music is NeuroStream's now)",
+   len([k for k in items if k.startswith("neuronet.tools.")]) == 12)
+ok("  and NeuroStream has a row of its own", "neurostream" in items and "neurostream" in items["neurostream"].get("action", ""))
 missing = []
 for k, v in items.items():
     if k.startswith("neuronet") and v.get("action"):
@@ -108,10 +115,10 @@ for k, v in items.items():
         if not (os.path.isabs(exe) and os.access(exe, os.X_OK)) and not shutil.which(exe):
             missing.append(k + ": " + exe)
 ok("every row runs something that exists", not missing, missing[:5])
-chords = os.path.join(APP, "neuronet_data", "chords", "chords.json")
-if os.path.exists(chords):
-    albums = [a for a in json.load(open(chords)).get("albums", []) if a.get("files")]
-    ok("every album with songs is a row", len([k for k in items if k.startswith("neuronet.albums.")]) == len(albums))
+ok("every album with songs in NeuroStream is a row, and plays through neurostream open",
+   [k for k in items if k.startswith("neuronet.albums.")] == ["neuronet.albums.a1"]
+   and "neurostream:album/a1" in items["neuronet.albums.a1"].get("action", ""), [k for k in items if k.startswith("neuronet.albums.")])
+ok("  and so is every playlist", "neurostream:playlist/p1" in items.get("neuronet.playlists.p1", {}).get("action", ""))
 note_rows = [v for k, v in items.items() if k.startswith("neuronet.notes.")]
 ok("note rows open a note through neuronet-open, by its vault path",
    all(" note " in v["action"] and v["action"].startswith(shlex.quote(os.path.join(APP, "neuronet-open"))) for v in note_rows))
@@ -173,7 +180,7 @@ def rendered_unit(template):
     data = conf.get("data") or os.path.join(app, "neuronet_data")
     return read(APP, "system", "templates", template).replace("@APP@", app).replace("@DATA@", data)
 if os.path.isdir(os.path.dirname(unit)):
-    ok("the menu refreshes itself when music, recipes or notes change (systemd path unit)",
+    ok("the menu refreshes itself when NeuroStream's music, the recipes or notes change (systemd path unit, as installed)",
        os.path.exists(unit) and read(unit) == rendered_unit("neuronet-menu.path.in"))
 print("\n%d passed, %d failed" % (passed, failed))
 sys.exit(1 if failed else 0)

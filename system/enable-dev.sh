@@ -234,8 +234,8 @@ if [ -d "$HERE/apps" ]; then
     mkdir -p "$WORKDIR" && cp -a "$f" "$dest" && ok "$n -> $dest"
     if [ "$n" = NeuroTV ] && [ -x "$dest/bin/build" ]; then
       if command -v qmake6 >/dev/null; then
-        (cd "$dest" && sh bin/build >/dev/null 2>&1) && ok "NeuroTV built (Super+Alt+W)" || warn "NeuroTV didn't build: run bin/build in $dest"
-      else warn "NeuroTV needs qt6-base, qt6-declarative and mpv to build: then run bin/build in $dest"; fi
+        (cd "$dest" && sh bin/build >/dev/null 2>&1) && ok "NeuroStream built (Super+Alt+W)" || warn "NeuroStream didn't build: run bin/build in $dest"
+      else warn "NeuroStream needs qt6-base, qt6-declarative and mpv to build: then run bin/build in $dest"; fi
     fi
   done
   command -v gh >/dev/null && gh auth status >/dev/null 2>&1 || warn "the apps' GitHub repositories are private: run  gh auth login  once, so neuronet-dev pull can update them"

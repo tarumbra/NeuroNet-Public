@@ -29,7 +29,7 @@ def ok(name, cond, detail=""):
 
 read = lambda p: open(os.path.join(UI, p), encoding="utf-8").read()
 print("\nThe dashboard\n")
-home, css, chords = read("home/home.js"), read("home/home.css"), read("music/chords.js")
+home, css = read("home/home.js"), read("home/home.css")
 
 # ---- every function Home calls must exist in it -------------------------
 # The scan that lifted Home out of KinCrux matched "function x(" and missed
@@ -65,43 +65,11 @@ ok("the block's controls have room of their own, not the heading's",
    re.search(r"\.dash-blocks\.editing \.dash-block \{[^}]*padding-top", css) is not None
    and re.search(r"\.dash-block-tools \{[^}]*position: absolute", css) is not None)
 
-# ---- the music block ----------------------------------------------------
-ok("there is a music block", '"Music"' in home and "function musicBlockBody(" in home)
-ok("  offering playlists and albums", 'data-shelf="playlists"' in home and 'data-shelf="albums"' in home)
-ok("  one click plays one", "data-play-id=" in home and "music.play(btn.dataset.play" in home)
-# Reading and playing go through the music section's own functions.
-ok("Music exposes its shelves to the dashboard",
-   "shelves()" in chords and "getAlbums()" in chords and "playAlbumById(" in chords)
-ok("  and an album is played the same way the Albums shelf plays it",
-   re.search(r"playAlbumById\(id(, from = 0)?\)\s*\{[^}]*playAlbum\(a, (0|from)\)", chords, re.S) is not None)
-# CH.tools.chords, not the right panel's own helper, which is out of scope here.
-ok("  reached through the right object",
-   "CH.tools && CH.tools.chords" in chords)
-ok("  and the block reads them fresh each time it draws, so a rename shows",
-   "music.shelves()" in home)
-
-# Cam: "the album covers don't appear in the music widget."
-#
-# shelves() reports `art` as the STORED FILE NAME -- "album_al1.jpg" --
-# because that is what an album record holds. The block put it straight into
-# an <img src>, so the browser looked for ui/album_al1.jpg, a file that has
-# never been there, and every cover came out blank. Measured in a real
-# browser: four failed requests for exactly that path, six items, zero
-# pictures.
-#
-# Album art lives in the data folder and can only be reached across the
-# bridge, which hands back a data: URL. So the block draws its placeholder
-# and asks, and fills each cover in when it lands.
-ok("the music block never puts a stored file name into an img src",
-   'src="${escA(it.art)}"' not in home,
-   "ui/album_al1.jpg has never existed; that is what a bare art name asks for")
-ok("  it asks for the picture instead, after it has drawn",
-   'data-art="${escA(it.art)}"' in home and "music.artURL(" in home)
-ok("  and Music offers that as a real, cached call",
-   "artURL(name, edge)" in chords and "cachedThumbURL" in chords,
-   "cached so a cover already fetched for the album shelf costs nothing here")
-ok("  with the note placeholder still there when an album has no art",
-   "dash-music-note" in home)
+# ---- the music widgets went with the music (NeuroStream, 19 Nov 2026) ----
+ok("Music, Random movie and Random album are no longer offered",
+   "function musicBlockBody(" not in home and "randomMovieBlockBody" not in home and "randomAlbumBlockBody" not in home)
+ok("  and one saved on a dashboard is left out rather than drawn broken",
+   'GONE_BLOCKS = new Set(["music", "randommovie", "randomalbum"])' in home and "GONE_BLOCKS.has(b.type)" in home)
 
 # ---- the chooser --------------------------------------------------------
 ok("each block in the chooser has an icon and its own lines",

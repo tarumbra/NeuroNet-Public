@@ -53,15 +53,13 @@ ch_shell = html[html.find('<div id="ch-shell"'):] if '<div id="ch-shell"' in htm
 ok("and is no longer inside the music section", 'id="ch-top-bar"' not in ch_shell)
 ok("every tool is drawn in the stage beneath it",
    all(0 <= html.find('id="ss-stage"') < html.find(f'id="{i}"')
-       for i in ("ss-main", "cf-shell", "cx-shell", "cr-shell", "cs-shell", "ch-shell")))
+       for i in ("ss-main", "cf-shell", "cx-shell", "cr-shell", "cs-shell")))   # (ch-shell went with the music, 19 Nov 2026)
 ok("the bar's styles are applied at its new home", 'href="topbar.css"' in html)
 
-# ---- the bar is filled from launch -------------------------------------
-music = read("music/chords.js")
-ok("music can start without being opened", re.search(r"start:\s*\(\)\s*=>\s*startOnce\(\)", music) is not None)
-ok("one shared boot, so opening music mid-start waits for it", "bootPromise" in music)
-ok("NeuroNet starts it at launch", "SS.Music.start()" in app)
-ok("and a failure there costs only the bar", re.search(r"SS\.Music\.start\(\)\)\.catch\(", app) is not None)
+# ---- the bar is filled from launch: its clock has a file of its own since the music left (19 Nov 2026) ----
+ok("the bar's clock is its own file, loaded with the page", '<script src="topbar.js"></script>' in html
+   and "ch-top-bar-clock" in read("topbar.js"))
+ok("  and nothing starts music at launch any more", "SS.Music.start()" not in app)
 
 # ---- UI scale -----------------------------------------------------------
 ok("UI scale exists, 90% to 200%", "const UI_SCALES = [0.9, 1, 1.15, 1.3, 1.5, 1.75, 2];" in app)
@@ -75,7 +73,7 @@ ok("Training's Lens and Notes fill the space under the bar",
 
 # ---- Text size reaches every tool --------------------------------------
 fixed = {f: len(re.findall(r"font-size\s*:\s*\d+(?:\.\d+)?px", code(read(f))))
-         for f in ("shared.css", "music/chords.css", "training/training.css",
+         for f in ("shared.css", "training/training.css",
                    "notes/notes.css", "games/cranium.css", "cards/celestial.css")}
 ok("no fixed-pixel text sizes left for Text size to miss",
    not any(fixed.values()), {k: v for k, v in fixed.items() if v})
@@ -89,7 +87,7 @@ ok("all three parts on one row", "grid-row: 1" in shared)
 ok("the player's column never shrinks below its controls",
    "minmax(min-content, 1fr) auto minmax(0, 1fr)" in shared)
 ok("the clock fits itself to the bar, stepping down only if it overflows",
-   "CLOCK_FORMS" in music and "bar.scrollWidth <= bar.clientWidth" in music)
+   "const FORMS = [" in read("topbar.js") and "bar.scrollWidth <= bar.clientWidth" in read("topbar.js"))
 
 # ---- Cranium ------------------------------------------------------------
 cr = code(read("games/cranium.css"))
@@ -156,8 +154,8 @@ ok("resting, hovered and chosen all look different",
 ok("a section reopens where it was left", "lastViewBySection" in app)
 
 # ---- the icons Cam asked for -------------------------------------------
-ok("Music's icon is a treble clef", 'id="i-clef"' in html
-   and re.search(r'music:\s*\{icon:\s*"i-clef"', app) is not None)
+ok("the treble clef drawing is still there (Music itself went to NeuroStream, 19 Nov 2026)", 'id="i-clef"' in html
+   and re.search(r'music:\s*\{icon:\s*"i-clef"', app) is None)
 ok("Photos uses what used to be Music's icon (a framed picture)",
    re.search(r'photos:\s*\{icon:\s*"i-album"', app) is not None)
 ok("  and the clef is a real drawing, not an empty shape",

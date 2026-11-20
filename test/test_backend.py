@@ -191,7 +191,8 @@ finally:
 root, app = scene()
 try:
     payload = bytes(range(256)) * 400              # 102,400 bytes
-    open(os.path.join(neuronet.music_dir(), "song.mp3"), "wb").write(payload)
+    # (it was a song in music/ until the music went to NeuroStream, 19 Nov 2026: the server is meditation's and the cafe's now)
+    open(os.path.join(neuronet.meditation_dir(), "song.mp3"), "wb").write(payload)
 
     info = neuronet.ensure_media_server()
     ok("the media server starts and reports a port", bool(info["port"]), info)
@@ -201,7 +202,7 @@ try:
     ok("and every URL carries a per-session token",
        len(info["token"]) >= 16, len(info["token"]))
 
-    url = neuronet.media_url_for("music", "song.mp3")
+    url = neuronet.media_url_for("meditation", "song.mp3")
     ok("the token is in the path, not guessable from the filename",
        info["token"] in url and "song.mp3" in url, url)
 
@@ -232,7 +233,7 @@ try:
     bad = url.replace(info["token"], "x" * len(info["token"]))
     ok("a wrong token is refused", status_of(bad) == 403, status_of(bad))
 
-    base = "http://127.0.0.1:%d/media/%s/music/" % (info["port"], info["token"])
+    base = "http://127.0.0.1:%d/media/%s/meditation/" % (info["port"], info["token"])
     for label, name in (("traversal", "..%2F..%2Fneuronet.json"),
                         ("an absolute path", "%2Fetc%2Fpasswd"),
                         ("a non-audio file", "neuronet.json")):
@@ -343,12 +344,7 @@ try:
                r.headers.get("Content-Type") == mime,
                r.headers.get("Content-Type"))
 
-    # ONE server for both libraries
-    open(os.path.join(neuronet.music_dir(), "song.mp3"), "wb").write(b"M" * 900)
-    music = api.chords_audio_url("song.mp3")
-    ok("music and meditation are served by ONE media server, on one port",
-       "/media/" in music["url"] and neuronet._MEDIA_SERVER["port"],
-       "two servers for the same job is the duplication being removed")
+    ok("music is no longer served (it's NeuroStream's, 19 Nov 2026)", "music" not in neuronet.MEDIA_ROOTS)
 
     tok = neuronet._MEDIA_SERVER["token"]
     base = "http://127.0.0.1:%d/media/%s/" % (neuronet._MEDIA_SERVER["port"], tok)
@@ -365,7 +361,7 @@ try:
     for label, path in (
             ("a folder that isn't served", "secrets/Ocean.mp3"),
             ("traversal out of it", "meditation/..%2F..%2Fneuronet.json"),
-            ("the right name in the wrong folder", "music/Ocean.mp3"),
+            ("the right name in the wrong folder", "photo-thumbs/Ocean.mp3"),
             ("a file that isn't media", "meditation/notes.txt")):
         ok("  %s is refused" % label, status(base + path) == 404,
            status(base + path))

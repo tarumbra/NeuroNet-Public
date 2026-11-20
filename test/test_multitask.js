@@ -228,7 +228,7 @@ async function run() {
 
   /* ---- every section, on either side, beside another ------------------------ */
   const sections = ["photos", "training", "stuff", "games", "divination", "mind",
-                    "cookery", "money", "notes", "creative", "settings", "home"];      // stuff = M&T (Music within)
+                    "cookery", "money", "notes", "creative", "settings", "home"];      // stuff = M&T (its inventories)
   const bad = [];
   for (const side of [0, 1]) {
     for (const sec of sections) {
@@ -246,7 +246,7 @@ async function run() {
     }
   }
   ok("every main section draws on either side, beside another", !bad.length, bad.slice(0, 3).join(" | "));
-  const pairs = [["training", "stuff"], ["notes", "games"], ["divination", "training"], ["stuff", "notes"]];
+  const pairs = [["training", "games"], ["notes", "games"], ["divination", "training"], ["games", "notes"]];   // (M&T has no shell of its own since Music left, 19 Nov 2026)
   const pairBad = [];
   for (const [a, b] of pairs) {
     MTa.open(0, a); await wait(700); MTa.open(1, b); await wait(800);

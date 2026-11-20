@@ -138,7 +138,7 @@ ok("  paths.json says where the app and the data are",
 ok("  and it made the data folder, chosen with --data on a new computer", os.path.isdir(nn_data))
 unit = os.path.join(tmp, ".config/systemd/user/neuronet-menu.path")
 ok("  the menu's path unit watches that data folder",
-   os.path.exists(unit) and ("PathChanged=%s/chords/chords.json" % nn_data) in read(unit))
+   os.path.exists(unit) and ("PathChanged=%s/kitchen/cookery.json" % nn_data) in read(unit))   # (the music library it watched is NeuroStream's now)
 shims = [c for c in ("neuronet-quick", "neuronet-path", "neuronet-menu")
          if os.access(os.path.join(tmp, ".local/bin", c), os.X_OK)]
 ok("  the commands are in ~/.local/bin", len(shims) == 3, shims)

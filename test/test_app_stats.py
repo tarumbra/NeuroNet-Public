@@ -159,7 +159,7 @@ labels = {
     "notes/books.js": ['"note-book"]'], "notes/guides.js": ['"notes-guide"]'],
     "money.js": ['"money-calculation")', '"money-sheet")'],
     # Stuff names its kind per list, in the list's settings.
-    "stuff/stuff.js": ['printKind: "stuff-media"', 'printKind: "stuff-inventory"'],
+    "stuff/stuff.js": ['printKind: "stuff-inventory"'],   # (Media's print went to NeuroStream, 19 Nov 2026)
 }
 missing = [f"{f}: {l}" for f, ls in labels.items() for l in ls if l not in ui(f)]
 ok("every print button says what it prints", not missing, missing)

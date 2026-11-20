@@ -232,7 +232,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 60));
   ok("  and tags", /Tarot/.test(right()), right());
   ok("  and the bottom bar says where we are", /Photos/.test(crumb()), crumb());
 
-  for (const [key, label, item] of [["stuff", "M&T", "Playlists"],
+  for (const [key, label, item] of [["stuff", "M&T", "Inventories"],
                                     ["games", "Puzzles", "Puzzle Books"],
                                     ["divination", "Divination", "Tarot"],
                                     ["mind", "Mindfulness", "Breathwork"],
@@ -260,8 +260,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 60));
     ok("the games module IS loaded, so its views are real",
       !!w.SS.Games && w.SS.Games.VIEWS.includes("games:home"),
       "Games was the first module ported");
-    ok("  and so are Music, Divination and Mindfulness",
-      !!w.SS.Music && !!w.SS.Cards && !!w.SS.Mind, "");
+    ok("  and so are Divination and Mindfulness (Music went to NeuroStream, 19 Nov 2026)",
+      !w.SS.Music && !!w.SS.Cards && !!w.SS.Mind, "");
 
     /* Cam: "when i click the side bar nothing changes it stays on the
        photo screen". It DID fall through to the photo library, which is

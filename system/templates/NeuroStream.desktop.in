@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroStream
+GenericName=Music, films and TV
+Comment=Your music, your films and shows (My Media) and IPTV, in one place
+Exec=neurostream
+Icon=@APP@/icons/NeuroStream.png
+Terminal=false
+Categories=AudioVideo;Audio;Video;Player;TV;
+Keywords=music;films;movies;tv;iptv;neurotv;
+StartupNotify=true
+StartupWMClass=neurostream

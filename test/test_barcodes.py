@@ -220,9 +220,7 @@ try:
     d = snips.barcodes_dir()
     ok("Picture References has Art to Action/Barcodes, with an Archive",
        d == os.path.join(tmp, "refs", "Art to Action", "Barcodes") and os.path.isdir(os.path.join(d, "Archive")))
-    src = open(os.path.join(APP, "api", "media.py"), encoding="utf-8").read()
-    ok("the backend's done-with refuses anything outside the Barcodes folder",
-       "os.path.dirname(p) != os.path.realpath(d)" in src and "media_art_archive(p, d)" in src)
+    # (Media's Scan, which used these, went with Media to NeuroStream on 19 Nov 2026: idea I51 brings it back there)
 finally:
     shutil.rmtree(tmp, ignore_errors=True)
 

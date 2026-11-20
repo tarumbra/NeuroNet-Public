@@ -259,23 +259,7 @@ const run = async (w, action, payload) => {
     && PHOTOS.photos.find((x) => x.snip === 8).folderId === snipFolder.id);
   ok("the top bar has the Snip button", !!w.document.getElementById("ss-snip"));
 
-  /* ---- Media Art (15 Nov 2026): neuronet-media-art puts a cover picture on its film ---- */
-  EFFECTS = {items: [{id: "m1", type: "film", formats: ["DVD"], title: "Aliens", year: "1986", notes: ""}], types: [], mediaVersion: 2};
-  r = await run(w, "media.cover", {path: "/home/cam/Documents/NeuroNet Picture References/Art to Action/Media Art/a.jpg",
-                                   title: "aliens", type: "film", format: "VHS"});
-  const m1 = EFFECTS.items.find((x) => x.id === "m1");
-  const coverPh = PHOTOS.photos.find((x) => x.caption === "Aliens");
-  ok("a cover picture for a film already in Media goes onto it, its format tagged, no second Aliens",
-    r.res.ok && !r.res.added && EFFECTS.items.length === 1 && m1.formats.join() === "DVD,VHS"
-    && coverPh && m1.coverPhoto === coverPh.storedName && !!m1.cover, JSON.stringify(r.res) + JSON.stringify(m1));
-  ok("  the picture is kept in Photos, Covers", coverPh && PHOTOS.folders.find((f) => f.id === coverPh.folderId).name === "Covers");
-  r = await run(w, "media.cover", {path: "/x/pm.jpg", title: "Practical Magic", type: "film", format: "VHS", year: "1998"});
-  const pm = EFFECTS.items.find((x) => x.title === "Practical Magic");
-  ok("a film that isn't in Media is added, with its format, year and cover",
-    r.res.ok && r.res.added && pm && pm.type === "film" && pm.formats.join() === "VHS" && pm.year === "1998" && !!pm.coverPhoto,
-    JSON.stringify(r.res));
-  r = await run(w, "media.cover", {path: "", title: "x"});
-  ok("  no picture, nothing done", !!r.res.error && EFFECTS.items.length === 2);
+  /* (Media Art went with Media to NeuroStream, 19 Nov 2026) */
 
   /* ---- the dashboard's app cards (15 Nov 2026, Snip 2) ---- */
   w.SS.go("home:dashboard");
@@ -286,9 +270,9 @@ const run = async (w, action, payload) => {
     appCards.length > 5 && appCards.length === shown.length && !shown.includes("home")
     && appCards.map((c) => c.dataset.appGo).join() === shown.join(), appCards.map((c) => c.dataset.appGo).join());
   ok("  each with its icon, name and pages", appCards.every((c) => c.querySelector(".fav-card-ic svg") && c.querySelector(".fav-card-name").textContent));
-  const toStuff = appCards.find((c) => c.dataset.appGo === "stuff");
-  if (toStuff) { toStuff.click(); await wait(500); }
-  ok("  a card opens its app (on its first page)", w.SS.where().section === "stuff", JSON.stringify(w.SS.where()));
+  const toMoney = appCards.find((c) => c.dataset.appGo === "money");     // (M&T has one page since Music and Media left)
+  if (toMoney) { toMoney.click(); await wait(500); }
+  ok("  a card opens its app (on its first page)", w.SS.where().section === "money", JSON.stringify(w.SS.where()));
   const tabs = [...w.document.querySelectorAll("#ss-tabs .ss-tab")];
   ok("the page tabs can be dragged into order (each carries its key, held with the left button)",
     tabs.length > 1 && tabs.every((t) => t.dataset.drag === t.dataset.view));

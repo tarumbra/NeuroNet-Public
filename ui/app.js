@@ -231,8 +231,8 @@ SS.Store = (() => {
    compact look on or off. Compact = the left menu hidden; the top bar (the
    music) and the right-hand menu stay, and a "whole NeuroNet" button
    appears. Nothing is rebuilt: it is the same app, the same page. */
-const QUICK_HALVES = {music: {prefix: "music:", first: "music:library"},
-                      stuff: {prefix: "stuff:", first: "stuff:media"}};
+/* (Music and Media left for NeuroStream, 19 Nov 2026: M&T is its Inventories now; Super+Alt+M opens NeuroStream) */
+const QUICK_HALVES = {stuff: {prefix: "stuff:", first: "stuff:inventories"}};
 const lastHalfView = {};
 
 SS.quickMode = (section, compact) => {
@@ -241,8 +241,7 @@ SS.quickMode = (section, compact) => {
   const full = $("ss-quick-full");
   if (full) full.hidden = !on;
   /* a page by name ("settings:widgets", from a desktop widget's menu) */
-  /* Super+Alt+M and Super+Alt+I both open M&T: M on its Music pages, I on
-     its Media pages -- each the page last used there. */
+  /* Super+Alt+I opens M&T on the page last used there. */
   const half = QUICK_HALVES[section];
   if (half) {
     if (!view.startsWith(half.prefix)) SS.go(lastHalfView[section] || half.first);
@@ -341,10 +340,6 @@ async function boardAction(action, p) {
       if (!path) return {error: "No picture came with that."};
       return addToPhotos({path, folder: "Captures", tag: "Capture", caption: p.caption});
     }
-    /* neuronet-media-art (15 Nov 2026): a cover picture onto its film (added if it isn't in Media) */
-    case "media.cover":
-      if (!SS.Shelf || !SS.Shelf.coverFromFile) return {error: "Media isn't loaded."};
-      return SS.Shelf.coverFromFile(p);
     /* neuronet-snip (15 Nov 2026): a snip into Photos, NeuroNet Snips */
     case "snip.add": {
       const path = String(p.path || ""), n = +p.n;
@@ -395,30 +390,8 @@ async function boardAction(action, p) {
       setTimeout(() => snipSaveAs(n), 120);
       return {ok: true};
     }
-    case "album.play":
-    case "playlist.play":
-      if (!SS.Music) return {error: "Music isn't loaded."};
-      if (SS.Music.start) await SS.Music.start();
-      return SS.Music.play(action === "album.play" ? "album" : "playlist", p.id) === false
-        ? {error: "That couldn't be played."} : {ok: true};
-    case "music.favourite":
-    case "music.playlist.add": {
-      /* The bar's music widget: ♥ the song that's playing, or add
-         it to a playlist picked from their menu -- Music's own favourites and
-         playlists (chords.js), saved the same way. */
-      const c = window.CH && CH.tools && CH.tools.chords, t = window.CH && CH.Player && CH.Player.current;
-      if (!c || !c.setFavourite) return {error: "Music isn't loaded."};
-      if (!t) return {error: "Nothing is playing."};
-      if (action === "music.favourite") {
-        const on = typeof p.on === "boolean" ? p.on : !c.isFavourite(t.file);
-        c.setFavourite(t.file, on);
-        return {ok: true, favourite: on, title: t.title || t.file};
-      }
-      const pl = c.playlistList().find((x) => x.id === p.id);
-      if (!pl) return {error: "That playlist isn't there any more."};
-      c.addFilesToPlaylist(pl.id, [t.file]);
-      return {ok: true, playlist: pl.name, title: t.title || t.file};
-    }
+    /* album.play, playlist.play, music.favourite, music.playlist.add: the bar's music widget talks to
+       NeuroStream now (19 Nov 2026), on its own bus name */
     default:
       return {error: "NeuroNet doesn't know how to do " + action + "."};
   }
@@ -1479,14 +1452,15 @@ function viewTitle() {
    moved from Notes to Mindfulness in place of Thought Journal (Cam: "fully
    migrate the journal to live in mindfullness, change the name from thought
    journal to just be journal"). */
-const MOVED_VIEWS = {"home:effects": "stuff:media", "div:readings": "mind:journal",
+const MOVED_VIEWS = {"div:readings": "mind:journal",
                      "journal:list": "mind:journal",
-                     /* Shelf and Media became one page (2026-10-02) */
-                     "stuff:shelf": "stuff:media",
-                     /* Cinema's own page went (14 Nov 2026, Cam: "remove the cinema icon. It
-                        stays hidden but is used when you click to play a linked film"):
-                        its player opens from Media's Play */
-                     "stuff:cinema": "stuff:media"};
+                     /* Music, Media, the Shelf and Cinema went to NeuroStream (19 Nov 2026, V31, Cam:
+                        "remove them from Neuronet completely"): an old link or a saved place lands on M&T's
+                        Inventories */
+                     "home:effects": "stuff:inventories", "stuff:media": "stuff:inventories",
+                     "stuff:shelf": "stuff:inventories", "stuff:cinema": "stuff:inventories",
+                     "music:library": "stuff:inventories", "music:albums": "stuff:inventories",
+                     "music:playlists": "stuff:inventories", "music:visualizer": "stuff:inventories"};
 
 function render() {
   if (MOVED_VIEWS[view]) view = MOVED_VIEWS[view];
@@ -1539,11 +1513,9 @@ function renderInto(main, pane) {
      module that is up on the other side. */
   /* Ebooks is here so an open book saves its place before the page it is
      drawn on is handed to another screen. */
-  /* Music is here so its hidden Library list can be let go after a while
-     (SS.Music.unmount); its player and the music playing never stop. */
   for (const mod of pane ? [] : [window.CP && window.CP.Training, window.CP && window.CP.Notes,
                      window.CP && window.CP.Cookery, window.CP && window.CP.Money,
-                     SS.Ebooks, SS.Music]) {
+                     SS.Ebooks]) {
     if (mod && typeof mod.unmount === "function"
         && !String(view).startsWith(mod.PREFIX)) {
       mod.unmount();
@@ -1564,12 +1536,7 @@ function renderInto(main, pane) {
   /* Each merged module owns its own screen inside this element. The
      guard is the same for all of them: a module that failed to load
      must not take the whole app down with it -- NeuroNet should still
-     be a photo library and a music player if the games file is missing.
-
-     Chords is deliberately NOT in this list. Its audio and its queue
-     have to survive every one of these, which is what background play
-     means, so the player lives above the router entirely -- see
-     SS.Music below. Only the Chords SCREENS are routed. */
+     be a photo library if the games file is missing. */
   for (const mod of routedModules()) {
     if (mod && mod.VIEWS.includes(view)) {
       /* The Kitchen works on a document of its own, fetched the first time
@@ -1636,7 +1603,6 @@ const SECTION_META = {
      old music icon is a framed picture -- it always read as photos. */
   photos: {icon: "i-album", accent: "#7bb26a", first: "all"},
   training: {icon: "i-stopwatch", accent: "#d8b23a"},
-  music: {icon: "i-clef", accent: "#e2643f"},
   /* Cam: "i want it to default to the stats page, then to access the
      puzzles i want to select from the sub section." Every puzzle is
      already its own subsection (addPuzzleSections), so landing on a grid
@@ -1647,7 +1613,7 @@ const SECTION_META = {
   home: {icon: "i-home", accent: "#6aa9e0"},
   /* Cam: "lets create a new main section called Stuff ... inventories,
      databases of all our media." A box, in cardboard. */
-  stuff: {icon: "i-box", accent: "#c0915c", first: "music:library"},   // M&T
+  stuff: {icon: "i-box", accent: "#c0915c", first: "stuff:inventories"},   // M&T
   cookery: {icon: "i-recipe", accent: "#e28a3f"},
   money: {icon: "i-target", accent: "#5f9ea0"},
   notes: {icon: "i-note-plus", accent: "#6aa9e0"},                     // Scribe
@@ -1666,8 +1632,7 @@ const SECTION_META = {
 };
 /* The icon each subsection has always had, kept so nothing changes look. */
 const CHILD_ICONS = {
-  "music:library": "i-grid", "music:albums": "i-album", "music:playlists": "i-menu",
-  "music:visualizer": "i-star", "games:home": "i-grid", "games:books": "i-book",
+  "games:home": "i-grid", "games:books": "i-book",
   "games:stats": "i-clock", "div:tarot": "i-tarot", "div:oracle": "i-oracle",
   "div:lenormand": "i-lenormand", "div:runes": "i-runes", "div:iching": "i-book",
   "div:astrology": "i-astrology", "mind:meditation": "i-clock",
@@ -1691,7 +1656,7 @@ const CHILD_ICONS = {
   "code:ide": "i-code", "code:guides": "i-guide", "code:research": "i-highlight",
   "code:structures": "i-structure", "code:web": "i-web",
   "home:dashboard": "i-grid", "home:calendar": "i-calendar", "home:contacts": "i-person",
-  "stuff:media": "i-disc", "stuff:shelf": "i-library", "stuff:inventories": "i-kit",
+  "stuff:inventories": "i-kit",
   "settings:appearance": "i-shade", "settings:size": "i-heading", "settings:lite": "i-bulb",
   "settings:sidebar": "i-menu", "settings:library": "i-folder",
   "settings:merge": "i-group", "settings:stats": "i-chart",
@@ -2278,7 +2243,7 @@ function wireNavDragGlobals() {
 
 /** The modules the router hands a view to, in the order it asks them. */
 function routedModules() {
-  return [SS.Music, SS.Games, SS.Cards, SS.Mind, SS.Boards, SS.Scrapbook, SS.Paper, SS.Assets, SS.Pixel, SS.Vector, SS.Cells,
+  return [SS.Games, SS.Cards, SS.Mind, SS.Boards, SS.Scrapbook, SS.Paper, SS.Assets, SS.Pixel, SS.Vector, SS.Cells,
           SS.Fleeting, SS.Collab, SS.Archive, SS.Journal, SS.Stuff,
           SS.Guides, SS.Notebooks, SS.Ebooks, SS.Home, SS.NeuroGuide, SS.Code,
           window.CP && window.CP.Cookery, window.CP && window.CP.Money,
@@ -4262,15 +4227,8 @@ const SECTIONS = [
   /* Albums left the menu on 2026-10-05: they are Media's CDs (covers, songs, play),
      with New album, Shuffle and Edit album there. music:albums stays as a view --
      it is the one-album editor that a CD's "Edit album…" opens. */
-  {key: "stuff", name: "M&T", lead: [
-    {key: "music:library", name: "Library"},
-    {key: "music:playlists", name: "Playlists"},
-    {key: "music:visualizer", name: "Visualizer"},
-  ], children: [
-    {key: "music:library", name: "Library"},
-    {key: "music:playlists", name: "Playlists"},
-    {key: "music:visualizer", name: "Visualizer"},
-    {key: "stuff:media", name: "Media"},
+  /* Music and Media left for NeuroStream (19 Nov 2026, V31): M&T keeps the Things, your inventories. */
+  {key: "stuff", name: "M&T", children: [
     {key: "stuff:inventories", name: "Inventories"},
   ]},
   /* Brought in from KinCrux with the merge. Their data stays in KinCrux's
@@ -5050,18 +5008,11 @@ async function boot() {
      asked, and the button brings the last layout straight back. */
   if (prefs && prefs.openWhereLeftOff && MT.last && MT.last.on) enterMultitask(MT.last);
 
-  /* The app-wide bar's player and clock belong to the music module, which
-     otherwise only boots the first time music is opened -- leaving the bar
-     as empty circles with no date or time on every other screen until then. */
-  /* Caught, so that a failure starting music -- a missing file, an audio
-     problem -- costs only the bar, never the rest of the app. Starting
-     music at launch is new; before it, only opening music could fail this. */
   addPuzzleSections();
   trainingToNeurotrain();
-  if (SS.Music && typeof SS.Music.start === "function") {
-    Promise.resolve().then(() => SS.Music.start()).catch((err) =>
-      console.error("NeuroNet: the music player could not start —", err));
-  }
+  /* The page is up: what neuronet-quick or a bar widget asked for before it was runs now (mpris.py). The
+     music player's first report used to say this, until the music went to NeuroStream (19 Nov 2026). */
+  try { const api = window.pywebview && window.pywebview.api; if (api && api.app_bus_ready) api.app_bus_ready(); } catch (e) { /* no bus: nothing waits */ }
 
   /* A new computer (NeuroNet System plan, Stage 3): the welcome -- bring a
      NeuroNet across, or start fresh -- rather than a warning about a

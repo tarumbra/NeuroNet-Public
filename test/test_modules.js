@@ -183,7 +183,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
   const doc = w.document;
 
   /* ---- every module is there -------------------------------------- */
-  for (const name of ["Music", "Games", "Cards", "Mind"]) {
+  for (const name of ["Games", "Cards", "Mind"]) {   // (Music went to NeuroStream, 19 Nov 2026)
     ok(`SS.${name} is loaded`, !!w.SS[name], "module missing");
   }
   ok("Divination and Mindfulness are one module in two sections",
@@ -193,7 +193,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
   {
     const shells = [...doc.querySelectorAll('[id$="-shell"]')].map((e) => e.id);
     ok("the host finds the shells rather than listing them",
-      shells.length >= 3 && shells.includes("ch-shell"),
+      shells.length >= 3 && shells.includes("cr-shell") && !shells.includes("ch-shell"),   // (Chords' shell went with the music, 19 Nov 2026)
       shells.join(", ") + " — a hand-written list is what let Chords' "
       + "shell stay visible beside everything else");
 
@@ -206,7 +206,6 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
     };
 
     const screens = [
-      ["music:library", "ch-shell"], ["music:playlists", "ch-shell"],   // (Albums are Media's CDs since 2026-10-05)
       ["games:home", "cr-shell"], ["div:tarot", "cs-shell"],
       ["mind:breathwork", "cs-shell"], ["all", "ss-main"],
     ];
@@ -333,83 +332,6 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
       seen.length === 0, seen.join(" | "));
   }
 
-  /* ---- music, and the thing Cam actually asked for ------------------ */
-  {
-    await w.SS.Music.mount(doc.getElementById("ss-main"), "music:library");
-    await wait(250);
-    ok("the music library loads the tracks",
-      /Track 0/.test(doc.getElementById("ch-app").textContent),
-      doc.getElementById("ch-app").textContent.slice(0, 60));
-    ok("  through its OWN backend method, not a generic one",
-      calls.includes("music_read_json") && !calls.includes("read_json"),
-      calls.filter((c) => /json/.test(c)).join(", "));
-
-    const P = w.SS.Music.Player;
-    const queue = Array.from({length: 8}, (_, i) =>
-      ({file: `t${i}.mp3`, title: `Track ${i}`}));
-    P.playQueue(queue, 0);
-    await wait(150);
-
-    /* BACKGROUND PLAY. The <audio> element is on document.body, not
-       inside Chords' shell -- which is exactly why hiding that shell to
-       show a game does not stop the music. Moving it "somewhere tidier"
-       would break this silently, so it is asserted. */
-    const audio = doc.getElementById("cc-audio");
-    ok("there is one persistent audio element", !!audio, "none found");
-    ok("  and it lives on BODY, outside every module's shell",
-      audio && audio.parentElement === doc.body,
-      audio && audio.parentElement && audio.parentElement.id);
-
-    const src = audio && audio.src;
-    w.SS._test._setView("games:home");
-    w.SS._test.render();
-    await wait(250);
-    ok("navigating to Games does not touch the audio element",
-      doc.getElementById("cc-audio") === audio
-      && doc.getElementById("cc-audio").src === src,
-      "this IS background play");
-    ok("  and the player still has the track loaded",
-      !!P.current, "the queue was lost when the shell was hidden");
-  }
-
-  /* ---- a real shuffle ---------------------------------------------- */
-  {
-    const P = w.SS.Music.Player;
-    /* The old one picked a fresh random index on every next. Over eight
-       tracks that repeats about three of them, never reaches an end (so
-       repeat-all is unreachable) and makes Previous go somewhere NEW.
-       Run several times: a real shuffle gets this right every time, and
-       the old one would fail it almost every time. */
-    let allUnique = true, alwaysStartsOnCurrent = true, everRanOn = false;
-    for (let run = 0; run < 5; run++) {
-      const queue = Array.from({length: 8}, (_, i) =>
-        ({file: `t${i}.mp3`, title: `Track ${i}`}));
-      P.playQueue(queue, 0);
-      P.setShuffle(true);
-      const seen = [];
-      for (let i = 0; i < 8; i++) {
-        if (P.current) seen.push(P.current.file);
-        P.next();
-      }
-      if (new Set(seen).size !== 8) allUnique = false;
-      if (seen[0] !== "t0.mp3") alwaysStartsOnCurrent = false;
-      if (P.current && seen.includes(P.current.file) && seen.length === 8) {
-        /* after the last next the order is spent; with repeat off it
-           must not wrap round to a ninth track */
-        if (P.current.file !== seen[7]) everRanOn = true;
-      }
-      P.setShuffle(false);
-    }
-    ok("shuffle plays every track exactly once, over 5 runs",
-      allUnique,
-      "the old shuffle picked a random index each time, so it repeated "
-      + "tracks and never finished");
-    ok("  and starts on the track already playing, not a random one",
-      alwaysStartsOnCurrent, "turning shuffle on should not skip");
-    ok("  and the order ENDS, which is what makes repeat-all reachable",
-      !everRanOn, "it ran past the end of the shuffled order");
-  }
-
   /* ---- one palette -------------------------------------------------
      Cam: "I want the UI color to be the same throughout the app for
      continuity."
@@ -438,18 +360,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
       appJs.includes('dataset.engine = "chromium"') && scoped.length >= 2
       && scoped.every((sel) => sel.includes(':not([data-engine="chromium"])') || sel.includes('[data-shape="win98"]')),
       scoped.join(" | "));
-    const homeCss = fs.readFileSync(path.join(UI, "home", "home.css"), "utf8");
-    ok("  and the Random movie and album cards fit their card instead of scrolling inside it",
-      /\.dash-card\.dash-movie \{[^}]*overflow: hidden/.test(homeCss) && /\.dash-movie-stage \{[^}]*min-height: 0/.test(homeCss));
-    const shelfJs = fs.readFileSync(path.join(UI, "stuff", "shelf.js"), "utf8");
-    const stuffJs = fs.readFileSync(path.join(UI, "stuff", "stuff.js"), "utf8");
-    ok("Media's Covers / List switch sits with the actions, not between the title and the description",
-      /data-sh="export">Export…<\/button>\s*\$\{SS\.Stuff && SS\.Stuff\.viewToggle/.test(shelfJs)
-      && /data-st="export">Export…<\/button>\s*\$\{cfg\.headExtra/.test(stuffJs));
-    ok("a cover made for something without a picture is set like a sleeve (by-line, title, format band with the year)",
-      /class="sh-plain-by"/.test(shelfJs) && shelfJs.includes("<i><span>${esc(formatsLine(it) || typeName(it.type))}</span>"));   // its formats (Media v2), else its type
-    ok("  and while covers load the shelf shows empty cases, and a newer draw wins",
-      shelfJs.includes("sh-waiting") && shelfJs.includes("if (token !== shelfPaint || !box.isConnected) return;"));
+    /* (the Random movie and album cards, the Shelf and Media's Covers / List went to NeuroStream, 19 Nov 2026) */
   }
   /* One action accent (2026-10-06, Cam approved the audit's fix): no section
      colours its filled buttons, selected chips or Save its own way. NeuroPets
@@ -481,8 +392,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
 
     const offenders = [];
     for (const [dir, file] of [["games", "cranium.css"],
-                               ["cards", "celestial.css"],
-                               ["music", "chords.css"]]) {
+                               ["cards", "celestial.css"]]) {
       const p = path.join(UI, dir, file);
       if (!fs.existsSync(p)) continue;
       const css = fs.readFileSync(p, "utf8");
@@ -505,15 +415,14 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
     /* and the module's own vocabulary IS bridged */
     let bridged = 0;
     for (const [dir, file] of [["games", "cranium.css"],
-                               ["cards", "celestial.css"],
-                               ["music", "chords.css"]]) {
+                               ["cards", "celestial.css"]]) {
       const p = path.join(UI, dir, file);
       if (fs.existsSync(p) && /ONE PALETTE/.test(fs.readFileSync(p, "utf8"))) {
         bridged += 1;
       }
     }
     ok("  and every module's own colour names are bridged to the host's",
-      bridged === 3, bridged + " of 3 stylesheets carry the bridge");
+      bridged === 2, bridged + " of 2 stylesheets carry the bridge");   // (Chords went with the music, 19 Nov 2026)
   }
 
   /* ---- meditation: uploading Cam's own guides --------------------
@@ -568,74 +477,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms || 100));
     }
   }
 
-  /* ---- photos come from the app's library, not the OS -------------
-     Cam: "When i got to add a photo to an album or song as the cover it
-     brings up the computer file browser, i want it to bring up the apps
-     photo browser like it does for KinCrux recipes."
-
-     Chords already HAD the hook -- pickAndStoreImage() calls
-     CH.PickImage if something defines it and falls back to an
-     <input type="file"> otherwise. Standalone, nothing ever defined it,
-     so the fallback was the only path there had ever been. Celestial
-     was worse: one path opened the native dialog and the other browsed
-     card_photos/, its own second photo library.
-
-     A photo should enter NeuroNet ONCE, through the library, and be
-     CHOSEN wherever it is needed -- otherwise the same sleeve exists
-     twice and renaming it in the library leaves the album pointing at
-     a name nothing has. */
-  {
-    nativeDialogs.length = 0;
-    assigned.length = 0;
-    w.__fileInputs = 0;
-
-    ok("Chords exposes the picker hook it always looked for",
-      typeof w.CH.PickImage === "function",
-      "pickAndStoreImage falls back to a file input without it");
-
-    const pending = w.CH.PickImage("album_al1", "Science And Faith");
-    await wait(300);
-
-    const grid = doc.getElementById("pick-grid");
-    ok("asking for album art opens the APP's photo browser",
-      !!grid, "no picker in the document");
-    ok("  and not the computer's file dialog",
-      nativeDialogs.length === 0, nativeDialogs.join(", "));
-    ok("  and not a raw file input either",
-      w.__fileInputs === 0, w.__fileInputs + " file inputs clicked");
-
-    if (grid) {
-      /* the picker starts empty and searches -- KinCrux's behaviour */
-      ok("  it starts empty, as KinCrux's does",
-        grid.querySelectorAll("[data-stored]").length === 0, "");
-      const input = doc.getElementById("pick-q");
-      input.value = "sleeve";
-      input.dispatchEvent(new w.Event("input", {bubbles: true}));
-      await wait(200);
-      ok("  searching finds the photo",
-        grid.querySelectorAll("[data-stored]").length === 1, "");
-
-      grid.querySelector("[data-stored]").dispatchEvent(
-        new w.Event("click", {bubbles: true}));
-      await wait(80);
-      const use = [...doc.querySelectorAll("#modal-veil button")]
-        .find((b) => /^use/i.test(b.textContent.trim()));
-      ok("  one click selects and a Use button confirms",
-        !!use && !use.disabled, use ? "disabled" : "no Use button");
-      if (use) {
-        use.dispatchEvent(new w.Event("click", {bubbles: true}));
-        const got = await pending;
-        ok("the chosen photo is COPIED into the music folder",
-          assigned.some(([where]) => where === "music"),
-          JSON.stringify(assigned));
-        ok("  and the album gets back a filename to store",
-          got === "album_cover.jpg", String(got));
-        ok("  while the library photo stays where it is",
-          !nativeDialogs.length,
-          "a copy, not a move -- it may be in an album or on another record");
-      }
-    }
-  }
+  /* (Chords' album-art picker went with the music to NeuroStream, 19 Nov 2026) */
 
   console.log("\nNeuroNet — music, divination and mindfulness\n");
   out.forEach((l) => console.log(l));

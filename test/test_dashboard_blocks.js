@@ -274,7 +274,7 @@ async function booted() {
     const broke = [...thrown, ...asyncFailures];
     ok("every kind of block draws without throwing", broke.length === 0,
       broke.slice(0, 3).join(" | "));
-    ok("  and all of them are on the page", drawn === types.length,
+    ok("  and all of them are on the page, but a saved Music widget (gone to NeuroStream, 19 Nov 2026) is left out", drawn === types.length - 1,
       drawn + " of " + types.length);
 
     /* The photo frame specifically: it must get PAST "Loading...". */

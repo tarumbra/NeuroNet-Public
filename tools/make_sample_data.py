@@ -3,12 +3,13 @@
 
 Cam: the manual's pictures are to be made "from sample data" -- never hers.
 This fills an EMPTY, throwaway data folder with a believable NeuroNet:
-recipes, bills and savings, training sessions, notes, a DVD shelf, photos,
-albums, a calendar and a journal. Everything is invented; the pictures and
-the music are generated here (the "music" is a few seconds of quiet tone).
+recipes, bills and savings, training sessions, notes, photos, albums, a
+calendar and a journal. Everything is invented; the pictures are generated
+here. (The DVD shelf and the music went to NeuroStream with Media and Music,
+19 November 2026.)
 
 It goes through NeuroNet's own save functions (Api.kc_save_data,
-kc_save_money, training_save, effects_save, journal_save, fleeting_add, the
+kc_save_money, training_save, journal_save, fleeting_add, the
 notes and photo stores), so what it writes is exactly what the app writes.
 
     NEURONET_SAMPLE=1 HOME=<temp home> XDG_CONFIG_HOME=... python3 tools/make_sample_data.py
@@ -32,7 +33,6 @@ sys.path.insert(0, HERE)
 sys.argv = sys.argv[:1]
 
 import neuronet  # noqa: E402
-import media_shelf  # noqa: E402
 from PIL import Image, ImageDraw, ImageFilter, ImageFont  # noqa: E402
 
 TODAY = dt.date.today()
@@ -349,65 +349,6 @@ def main():
             api.notes_write_note(rel, text)
     for t in ["Call Nana about Sunday lunch", "Book the car service", "Try the lemon traybake with fennel"]:
         api.fleeting_add(t)
-
-    # ---- Stuff: a DVD shelf with covers
-    films = [("The Lighthouse Keeper", "2019", "dvd", ((32, 60, 92), (12, 20, 36), (244, 226, 180))),
-             ("Paper Moon Harbour", "2014", "dvd", ((222, 146, 92), (120, 48, 40), (255, 240, 220))),
-             ("Northern Lights", "2021", "bluray", ((20, 70, 72), (8, 20, 30), (170, 255, 214))),
-             ("A Year in the Garden", "2016", "dvd", ((120, 170, 96), (40, 80, 44), (250, 248, 230))),
-             ("The Long Road Home", "2008", "dvd", ((140, 120, 96), (60, 44, 36), (250, 236, 206))),
-             ("Midnight at the Diner", "1998", "vhs", ((120, 30, 60), (30, 10, 30), (255, 210, 110))),
-             ("Tides", "2023", "bluray", ((60, 130, 190), (20, 40, 80), (240, 250, 255))),
-             ("Salt & Pepper", "2011", "dvd", ((230, 220, 200), (160, 140, 120), (40, 34, 30)))]
-    eff = api.effects_load()
-    eff.setdefault("items", [])
-    for i, (title, year, kind, cols) in enumerate(films, 1):
-        iid = "f%d" % i
-        eff["items"].append({"id": iid, "title": title, "type": kind, "year": year, "notes": "",
-                             "added": stamp(60 - i), "favourite": i in (1, 3)})
-        c = cover(title, {"dvd": "DVD", "bluray": "Blu-ray", "vhs": "VHS"}[kind], cols, 400, 600, serif=i % 2 == 0,
-                  seed=i)
-        path = os.path.join(work, iid + ".jpg")
-        c.save(path, quality=88)
-        media_shelf.set_cover_file(neuronet.data_dir(), iid, path)
-    print("stuff:", api.effects_save(eff))
-
-    # ---- Music: invented albums, generated art, a few seconds of quiet tone
-    mdir, idir = neuronet.music_dir(), neuronet.music_images_dir()
-    albums = [("The Tidelines", "Harbour Lights", "2022", ((32, 92, 120), (12, 30, 50), (240, 230, 200)),
-               ["Harbour Lights", "Low Tide", "Salt in the Air", "Paper Boats", "The Long Swim"]),
-              ("Juniper Vale", "Wildflower Season", "2020", ((200, 150, 180), (90, 60, 100), (255, 250, 240)),
-               ["Wildflower", "Kitchen Radio", "Sunday Drive", "Honey", "Slow Morning", "Home Again"]),
-              ("Northbound Static", "Signal", "2024", ((30, 30, 36), (90, 40, 60), (120, 255, 190)),
-               ["Signal", "Night Bus", "Transmission", "Neon Rain"]),
-              ("Mara Quill", "Letters", "2018", ((236, 222, 196), (190, 160, 120), (60, 40, 30)),
-               ["Dear You", "Ink", "Postmarked", "The Last Page"])]
-    ch = api.music_read_json("chords.json") or {}
-    ch.setdefault("tracks", {})
-    ch.setdefault("albums", [])
-    ch.setdefault("playlists", [])
-    added = []
-    for ai, (artist, album, year, cols, songs) in enumerate(albums, 1):
-        art = "sample_album_%d.jpg" % ai
-        cover(album, artist, cols, 600, 600, serif=ai % 2 == 0, seed=ai + 50).save(os.path.join(idir, art), quality=88)
-        files = []
-        for ti, song in enumerate(songs, 1):
-            fn = "%s - %02d. %s.ogg" % (artist, ti, song)
-            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-f", "lavfi", "-i",
-                            "sine=frequency=%d:duration=4" % (220 + 30 * ti), "-af", "volume=0.05",
-                            "-metadata", "title=" + song, "-metadata", "artist=" + artist, "-metadata", "album=" + album,
-                            os.path.join(mdir, fn)], check=True)
-            ch["tracks"][fn] = {"title": song, "artist": artist, "album": album, "art": art,
-                                "duration": 180.0 + 17 * ti + 5 * ai, "added": stamp(20 - ai), "plays": R.randint(0, 40)}
-            files.append(fn)
-            added.append(fn)
-        ch["albums"].append({"id": "al%d" % ai, "name": album, "artist": artist, "year": year, "art": art,
-                             "notes": "", "files": files, "created": stamp(20 - ai)})
-    ch["playlists"].append({"id": "pl1", "name": "Cooking", "art": None, "created": stamp(5),
-                            "files": [f for f in added if "Juniper" in f or "Mara" in f][:8]})
-    ch["playlists"].append({"id": "pl2", "name": "Training", "art": None, "created": stamp(3),
-                            "files": [f for f in added if "Northbound" in f or "Tidelines" in f]})
-    print("music:", api.music_write_json("chords.json", ch))
 
     # ---- Journal
     for d, title, text in [(0, "A good Monday", "Early gym with Sam, then a long walk at lunch. Felt steady all day."),

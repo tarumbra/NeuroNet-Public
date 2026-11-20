@@ -63,7 +63,7 @@ BIN="$HOME/.local/bin"
 UNITS="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
 APPS="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
 STAMP="$(date +%Y%m%d-%H%M%S)"
-COMMANDS="neuronet-quick neuronet-call neuronet-music neuronet-menu neuronet-capture neuronet-snip neuronet-media-art neuronet-rotate neuronet-open neuropets neurofarm neurocafe neuroarcana neurotrain neurotv claude-dock"
+COMMANDS="neuronet-quick neuronet-call neuronet-music neuronet-menu neuronet-capture neuronet-snip neuronet-rotate neuronet-open neuropets neurofarm neurocafe neuroarcana neurotrain neurotv neurostream claude-dock"
 
 # keep the data folder already set unless told otherwise
 if [ -z "$DATA" ] && [ -f "$CONF" ]; then
@@ -154,8 +154,9 @@ place "$APPS/NeuroNet.desktop" 644 < <(render NeuroNet.desktop.in)
 [ -f "$SYS/templates/NeuroArcana.desktop.in" ] && place "$APPS/NeuroArcana.desktop" 644 < <(render NeuroArcana.desktop.in)
 # NeuroTrain, the training planner (~/Work/NeuroTrain, 2026-11-10); the menu entry opens NeuroNet Training where it isn't installed
 [ -f "$SYS/templates/NeuroTrain.desktop.in" ] && place "$APPS/NeuroTrain.desktop" 644 < <(render NeuroTrain.desktop.in)
-# NeuroTV, the IPTV player (~/Work/NeuroTV, 2026-11-15)
-[ -f "$SYS/templates/NeuroTV.desktop.in" ] && place "$APPS/NeuroTV.desktop" 644 < <(render NeuroTV.desktop.in)
+# NeuroStream (was NeuroTV, the IPTV player; ~/Work/NeuroTV, 2026-11-15; renamed 19 Nov 2026, V31)
+rm -f "$APPS/NeuroTV.desktop"
+[ -f "$SYS/templates/NeuroStream.desktop.in" ] && place "$APPS/NeuroStream.desktop" 644 < <(render NeuroStream.desktop.in)
 # updates (Stage 6): installed everywhere, switched on only where there's an
 # update.json -- a computer from the ISO (neuronet-update --enable)
 place "$UNITS/neuronet-update.service" 644 < <(render neuronet-update.service.in)

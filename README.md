@@ -1189,6 +1189,9 @@ and not yet looked at.
 
 ## Stuff → Shelf (now Media's covers -- see "Media: Shelf and Media as one page")
 
+> **Moved to NeuroStream on 19 November 2026 (vote V31).** NeuroNet no longer has this; it's kept here as history. See ~/Work/NeuroTV (NeuroStream) for how it works now.
+
+
 Cam: *"a new sub section called Shelf ... select a type of media and it will
 be presented on a shelf ... as the cover image for the DVD, VHS or Bluray ...
 search ... a page where i can edit and add movie blog, year, reflections and
@@ -1226,6 +1229,9 @@ and changes only its one item. So Media and the Shelf side by side in Multitask
 can't undo each other.
 
 ## Media: Shelf and Media as one page (2026-10-02)
+
+> **Moved to NeuroStream on 19 November 2026 (vote V31).** NeuroNet no longer has this; it's kept here as history. See ~/Work/NeuroTV (NeuroStream) for how it works now.
+
 
 Cam: *"Lets combine the media and shelf, this will make it so there is only one
 add button and menu"*, *"Need to have cover allocation for media items handled
@@ -1371,6 +1377,9 @@ carries it). `package.sh`
 excludes the old folder names too. Guarded by `test_standalone.py`.
 
 ## Music tagging brought in from Cam's Collective (2026-09-26)
+
+> **Moved to NeuroStream on 19 November 2026 (vote V31).** NeuroNet no longer has this; it's kept here as history. See ~/Work/NeuroTV (NeuroStream) for how it works now.
+
 
 Cam: *"take the data from Cams Collective Chords for the music main section in
 Neuronet as Chords has all the artist and albums already assigned."* A one-off
@@ -1532,6 +1541,9 @@ it.
 
 
 ## Music in the Omarchy top bar
+
+> **Moved to NeuroStream on 19 November 2026 (vote V31).** NeuroNet no longer has this; it's kept here as history. See ~/Work/NeuroTV (NeuroStream) for how it works now.
+
 
 Cam: *"is it possible to make companion style omarchy plugins, like a top
 bar music player for NeuroNet? That uses the music library file from
@@ -1706,6 +1718,9 @@ Settings → Screensaver. Older sections below that mention the desktop
 widgets are history.
 
 ## Music keys
+
+> **Moved to NeuroStream on 19 November 2026 (vote V31).** NeuroNet no longer has this; it's kept here as history. See ~/Work/NeuroTV (NeuroStream) for how it works now.
+
 
 Cam: *"a shortcut to pause and play the music without having to click mini
 player in top bar and pause (maybe a next and previous shortcut as well)"*.
@@ -2174,6 +2189,9 @@ photo i am looking for when browsing the files on the PC."* A photo's file in
 `test/test_photo_names.py`, `test/test_photo_names.js`.
 
 ## M&T: Music and Stuff as one main section (2026-10-02)
+
+> **Moved to NeuroStream on 19 November 2026 (vote V31).** NeuroNet no longer has this; it's kept here as history. See ~/Work/NeuroTV (NeuroStream) for how it works now.
+
 
 Cam: *"remove the requirement for double album storage locations. Lets move the
 music player into the main section where i store lists of the media, however

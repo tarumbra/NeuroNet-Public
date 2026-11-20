@@ -1,8 +1,8 @@
 [Unit]
-Description=NeuroNet: watch the music library, recipes and notes vault for the Omarchy menu
+Description=NeuroNet: watch NeuroStream's music library, the recipes and notes vault for the Omarchy menu
 
 [Path]
-PathChanged=@DATA@/chords/chords.json
+PathChanged=%h/.local/share/neurostream/music/library.json
 PathChanged=@DATA@/kitchen/cookery.json
 PathModified=@DATA@/notes/vault
 Unit=neuronet-menu.service

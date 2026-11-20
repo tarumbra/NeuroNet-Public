@@ -105,12 +105,11 @@ else:
        str(api.journal_image_url("beach.jpg", False, True) or "").startswith("data:image/jpeg"))
     ok("  a name with a path in it gets nothing", api.journal_image_url("../neuronet.json", False) is None)
 
-    audio = nn.media_url_for("music", "x.mp3")
+    audio = nn.media_url_for("meditation", "x.mp3")
     ok("audio is still served as before, never cached", audio and "/media/" in audio)
 
 src = __import__("backend_src").backend_source(APP)
-ok("music and card thumbnails go by address too",
-   'return _art_data_url(name, full=False, as_url=True)' in src and '_picture("cards-thumbs"' in src)
+ok("card thumbnails go by address too (music's went with it to NeuroStream)", '_picture("cards-thumbs"' in src)
 
 print(f"\n  {passed} passed, {failed} failed\n")
 sys.exit(1 if failed else 0)

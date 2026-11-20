@@ -27,7 +27,6 @@
 <link rel="stylesheet" href="lite.css">
 <link rel="stylesheet" href="games/cranium.css">
 <link rel="stylesheet" href="cards/celestial.css">
-<link rel="stylesheet" href="music/chords.css">
 <link rel="stylesheet" href="topbar.css">
 <link rel="stylesheet" href="training/training.css">
 <link rel="stylesheet" href="notes/notes.css">
@@ -60,7 +59,6 @@
 <link rel="stylesheet" href="journal/journal.css">
 <!-- Last, so its per-side layout rules win over each module's own. -->
 <link rel="stylesheet" href="stuff/stuff.css">
-<link rel="stylesheet" href="stuff/shelf.css">
 <link rel="stylesheet" href="reader/reader.css">
 <link rel="stylesheet" href="multitask.css">
 </head>
@@ -280,49 +278,14 @@
   <div id="ss-column">
     <div id="ss-topbar">
 <div id="ch-top-bar">
-  <!-- Toggles the left-hand navigation sidebar — Cam: "add a hide
-       menu button for the menu (similar to the hide playlist
-       sidebar)." Pinned to the far left, same real pattern as the
-       right panel's own toggle below. -->
-  <button id="ch-menu-toggle" class="chord-btn sm" type="button"
-          title="Menu" aria-label="Show or hide the navigation menu"
-          aria-pressed="true"></button>
-
   <span id="ch-top-bar-clock"></span>
 
-  <div id="cc-mini" class="cc-mini">
-    <button id="cc-mini-prev" class="chord-btn sm" type="button"
-            title="Previous" aria-label="Previous track"></button>
-    <button id="cc-mini-play" class="chord-btn" type="button"
-            title="Play" aria-label="Play or pause"></button>
-    <button id="cc-mini-next" class="chord-btn sm" type="button"
-            title="Next" aria-label="Next track"></button>
-    <span id="cc-mini-art" class="cc-mini-art" aria-hidden="true"></span>
-    <div class="cc-mini-track">
-      <span id="cc-mini-title" class="cc-mini-title">Nothing playing</span>
-      <span class="cc-mini-bar"><span id="cc-mini-fill"
-            class="cc-mini-fill"></span></span>
-    </div>
-    <span id="cc-mini-elapsed" class="cc-mini-elapsed">0:00</span>
-    <button id="cc-mini-fav" class="chord-btn sm cc-mini-fav" type="button"
-            title="Favourite this song" aria-label="Favourite this song">&#9825;</button>
-    <button id="cc-mini-add" class="chord-btn sm" type="button"
-            title="Add to a playlist" aria-label="Add this song to a playlist">+</button>
-    <button id="cc-mini-note" class="chord-btn sm" type="button"
-            title="Queue" aria-label="Show the play queue"></button>
-  </div>
-
-  <!-- Toggles the right-hand playlist panel — lives in the top bar so
-       it's reachable from every section, not just Playlists. -->
   <div id="ss-topbar-end">
   <!-- Find (2026-10-06): pages, recipes, notes, sessions, albums -- Ctrl+K -->
   <button id="ss-find" type="button" title="Find anything in NeuroNet (Ctrl+K)" aria-label="Find">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
     <span>Find</span><kbd>Ctrl K</kbd>
   </button>
-  <button id="ch-panel-toggle" class="chord-btn sm" type="button"
-          title="Playlist panel" aria-label="Show or hide the playlist panel"
-          aria-pressed="false"></button>
   <!-- Cam: "a Multitask mode (Found as a icon on the top right of the top
        bar in the app) ... The icon for multitask should also match the theme
        selected, but i dont want its icon to mirror the main and sub section
@@ -354,29 +317,7 @@
   </div>
 </div>
 
-<!-- The queue popover the ♪ button opens.
 
-     IT LIVES IN THE BAR, not in the music shell. Cam: "please fix this
-     mini pop up, it only opens when in music main section."
-
-     It used to be the first child of #ch-shell, and the router hides
-     every element whose id ends in "-shell" the moment you leave its
-     section. A child of a hidden element cannot be shown, whatever
-     class you put on it -- so the popover was told to open, took the
-     class, computed display: block, and still measured 0x0. Measured
-     exactly that: open true, display block, 330x526 in Music and 0x0
-     in every other section, hidden by "ch-shell [hidden]".
-
-     The styles for this placement were already written and had never
-     matched anything: topbar.css carries both
-     "#ss-topbar .cc-queue-pop" and its ".open" rule, which is the bar
-     this belongs to. Outside #ss-topbar those never applied and the
-     shell-scoped pair in chords.css did the work instead.
-
-     position: fixed, so being in the bar does not confine it -- and
-     when the bars are hidden with F9 the popover goes with them, which
-     is right: it is the bar's own panel. -->
-<div id="cc-queue-pop" class="cc-queue-pop"></div>
     </div>
     <!-- A section's pages as tabs (2026-10-05, the audit: the right-hand menu
          took 210px from every page). Photos keeps its menu (folders, albums,
@@ -858,41 +799,7 @@
   <div id="cs-confirm-veil"></div>
 </div>
 
-<!-- ==========================================================================
-     Chords' shell: the music module, hidden until a Music view is opened.
-     ==========================================================================
-     Its own top bar is in here but not drawn -- the mini player moved to
-     NeuroNet's sidebar, where every screen can see it, which is what
-     background play has to mean. The bar stays in the document because
-     the player writes to its elements without checking they exist.
 
-     The <audio> element is NOT in here. chords_player.js appends it to
-     document.body, which is exactly why the music survives hiding this
-     shell to show a game.
-     ========================================================================= -->
-<div id="ch-shell" hidden>
-
-<!-- The app shell: a persistent left nav, the main content area
-     chords.js still owns, and a persistent, toggleable right panel.
-     Both sidebars live outside #app for the exact same reason the
-     top bar does — chords.js replaces #app's innerHTML on every
-     section switch, and an element owned by that render pass would
-     be destroyed the instant the section changed. -->
-<div id="ch-inner">
-  <nav id="ch-sidebar-left" aria-label="Main navigation"></nav>
-  <main id="ch-app"></main>
-  <aside id="ch-sidebar-right" aria-label="Playlist panel"></aside>
-</div>
-
-<!-- shared chrome -->
-<div id="ch-toasts" aria-live="polite"></div>
-<div id="ch-modal-veil"></div>
-<!-- CC.confirm's own stacking overlay, separate from #modal-veil, so a
-     confirm launched from inside an already-open dialog (a delete
-     confirmation from inside the Track details editor, say) can never
-     clobber that dialog's own live DOM. -->
-<div id="ch-confirm-veil"></div>
-</div>
 
 
           <!-- The right bar: the subsections of whatever main section is open.
@@ -952,8 +859,7 @@
 <!-- Celestial, one bundle: see build_cards.py. -->
 <script src="cards/celestial.js"></script>
 <!-- Chords, one bundle: see build_music.py. -->
-<script src="music/nnviz.js"></script>
-<script src="music/chords.js"></script>
+<script src="topbar.js"></script>
 <!-- training, from Coach Cam. bridge.js first: it creates window.CF,
      which every file below assigns itself onto as it parses. -->
 <script src="training/bridge.js"></script>
@@ -975,8 +881,6 @@
 <script src="home/home.js"></script>
 <!-- Stuff: Media (the old Personal Effects) and inventories. -->
 <script src="stuff/stuff.js"></script>
-<script src="stuff/shelf.js"></script>
-<script src="stuff/cinema-player.js"></script>
 <script src="cookery.js"></script>
 <script src="cookery-print.js"></script>
 <script src="money.js"></script>

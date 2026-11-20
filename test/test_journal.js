@@ -254,59 +254,8 @@ async function run() {
     prefs.dashBlocks.find((b) => b.id === "b-rp").deckKind === "oracle");
   ok("  and a kind with no decks says so", /No oracle decks/.test($(".dash-pull", main()).textContent));
 
-  /* ---- Music: a new album fills itself in ------------------------------- */
-  /* Albums are Media's CDs since 2026-10-05: "+ New album" there opens this dialog */
-  SS.go("music:library");
-  await wait(900);
-  const newAlbum = SS.Music && SS.Music.newAlbum;
-  if (newAlbum) {
-    await SS.Music.newAlbum();
-    await wait(200);
-    const input = $("#ch-an");
-    input.value = "rumours"; input.dispatchEvent(new w.Event("input"));
-    ok("naming an album that's on your songs says what will be filled in",
-      /3 songs are already tagged/.test($("#ch-an-hint").textContent));
-    btnByText("Create").click();
-    await wait(400);
-    const a = musicDoc.albums.find((x) => x.name === "rumours");
-    ok("  the album is made with those tracks, in track order",
-      a && JSON.stringify(a.files) === JSON.stringify(
-        ["Band - 01. First.mp3", "Band - 02. Second.mp3", "Band - 03. Third.mp3"]), a && a.files.join(", "));
-    ok("  with the cover most of them share, and their artist",
-      a && a.art === "rumours.jpg" && a.artist === "Band");
-  } else {
-    ok("Music offers New album to Media's CDs", false);
-  }
-
-  /* ---- Music: press and sweep in select mode ------------------------------ */
-  SS.go("music:library");
-  await wait(900);
-  $("#ch-select-toggle").click();
-  await wait(300);
-  let trackRows = [...doc.querySelectorAll("#ch-page [data-file], [data-file].ch-track")];
-  trackRows = trackRows.filter((x, i, arr) => arr.indexOf(x) === i);
+  /* (Music's new album and select mode went with the music to NeuroStream, 19 Nov 2026) */
   const realFromPoint = doc.elementFromPoint;
-  if (trackRows.length >= 3) {
-    doc.elementFromPoint = () => trackRows[2];
-    mouse(trackRows[0], "mousedown", {button: 0, buttons: 1});
-    mouse(doc, "mousemove", {buttons: 1, clientX: 5, clientY: 200});
-    mouse(doc, "mouseup", {button: 0});
-    doc.elementFromPoint = realFromPoint;
-    const picked = trackRows.filter((x) => x.classList.contains("ch-track-selected")).length;
-    ok("Music: pressing a track and sweeping over two more selects all three", picked === 3, picked);
-    ok("  and the bar counts them", /3 selected/.test(doc.body.textContent));
-    doc.elementFromPoint = () => trackRows[1];
-    mouse(trackRows[0], "mousedown", {button: 0, buttons: 1});
-    mouse(doc, "mousemove", {buttons: 1, clientX: 5, clientY: 100});
-    mouse(doc, "mouseup", {button: 0});
-    doc.elementFromPoint = realFromPoint;
-    ok("  a sweep that starts on a selected track clears instead",
-      trackRows.filter((x) => x.classList.contains("ch-track-selected")).length === 1);
-  } else {
-    ok("Music: the library lists the tracks", false, trackRows.length);
-  }
-  $("#ch-select-toggle").click();
-  await wait(200);
 
   /* ---- Photos: press and sweep in select mode ------------------------------ */
   SS.go("all");

@@ -55,21 +55,22 @@
     ["SUPER + ALT + N", "Scribe"],
     ["SUPER + ALT + B", "Creative"],
     ["SUPER + ALT + P", "Photos"],
-    ["SUPER + ALT + M", "Music"],
+    ["SUPER + ALT + W", "NeuroStream: music, your films and shows, and TV (again to tuck it away)"],
+    ["SUPER + ALT + M", "NeuroStream too (M for music)"],
     ["SUPER + ALT + T", "Training: NeuroTrain, where it's installed (again to tuck it away)"],
     ["SUPER + ALT + C", "Money (Cashbox)"],
     ["SUPER + ALT + R", "Kitchen"],
     ["SUPER + ALT + Z", "Mindfulness"],
     ["SUPER + ALT + Q", "Puzzles"],
     ["SUPER + ALT + D", "Divination"],
-    ["SUPER + ALT + I", "Stuff"],
+    ["SUPER + ALT + I", "M&T: your inventories"],
     ["SUPER + ALT + E", "Code (E for editor)"],
-    ["SUPER + ALT + A", "Search NeuroNet in the Omarchy menu — notes, albums, recipes"],
+    ["SUPER + ALT + A", "Search NeuroNet in the Omarchy menu — notes, recipes, and NeuroStream's albums"],
     ["SUPER + ALT + X", "Capture: drag a box on screen, and it goes into Photos"],
     ["SUPER + ALT + U", "Claude dock: tuck the chat you're in into the bar, or bring one back"],
-    ["SUPER + ALT + backslash", "Music: play / pause"],
-    ["SUPER + ALT + bracketright", "Music: next track"],
-    ["SUPER + ALT + bracketleft", "Music: previous track"],
+    ["SUPER + ALT + backslash", "NeuroStream music: play / pause"],
+    ["SUPER + ALT + bracketright", "NeuroStream music: next track"],
+    ["SUPER + ALT + bracketleft", "NeuroStream music: previous track"],
   ];
   // Omarchy's — each is in `omarchy menu keybindings` (checked by the test)
   const OMARCHY_KEYS = [
@@ -146,7 +147,7 @@
           ${know(`An import adds and replaces; it never deletes. Anything it replaces is kept
             first, in <b>import-backups</b> inside NeuroNet's data folder.`)}
           ${tip(`To bring your music too, copy the <b>chords/music</b> folder from NeuroNet's
-            data folder across, into the same place on the new computer.`)}
+            data folder across, into the same place on the new computer: NeuroStream plays it from there.`)}
           <p>There's no way into a locked export without its password — keep it somewhere safe.</p>`},
         {id: "eye", title: "Light and dark: the eye",
          blurb: "One click switches the whole computer between NeuroNet and NeuroNet Light.",
@@ -349,19 +350,13 @@
           things, <b>meditation</b> with your own recordings, and <b>breathwork</b> to follow along
           with. The desktop's Today card nudges you when the journal is still empty for the day, and
           a daily card pulled from the desktop is saved into the journal too.</p>`},
-        {id: "stuff", title: "M&T", blurb: "Media and Things: your music, films, books, games and inventories.",
-         body: `<p><b>M&amp;T</b> (Media and Things) is everything you own to watch, hear, read or play,
-          in one place. <b>Music</b> first: the <b>library</b>, <b>albums</b>, <b>playlists</b> and a
-          <b>visualizer</b>. The player sits across the top of NeuroNet, and the media keys and the
-          top bar's music icon control it from anywhere. ${keys("SUPER + ALT + M")} opens the music
-          pages, ${keys("SUPER + ALT + I")} the rest.</p>
-          <p><b>Media</b> shows your films, CDs, books and games by their covers on a shelf — each
-          case the shape of the real thing, a CD square like an album sleeve — or as a plain list
-          (the <b>Covers / List</b> switch). <b>+ Add</b> takes the title, format and cover in one go;
-          covers come from Photos, and a new picture goes into Photos → Covers. Every album in Music
-          is on the shelf as a CD, and a new album offers to join it; a CD's page lists its songs and
-          plays them. <b>Inventories</b> are lists of your own. Quick media on the desktop adds to
-          Media.</p>`},
+        {id: "stuff", title: "M&T", blurb: "Things: your inventories.",
+         body: `<p><b>M&amp;T</b> keeps your <b>inventories</b>: the tools in the garage, the
+          kitchen drawer, anything you want a list of, each with a quantity and a place.
+          ${keys("SUPER + ALT + I")} opens it.</p>
+          <p>Your <b>music</b>, <b>films</b>, <b>shows</b> and the list of everything you own (what was
+          Media) are in <b>NeuroStream</b> now, an app of its own: ${keys("SUPER + ALT + M")} or
+          ${keys("SUPER + ALT + W")}.</p>`},
         {id: "code", title: "Code", blurb: "Write code, learn to write it well, and study code you've written.",
          body: `<p><b>IDE</b> is Algorithm, built in: each <b>project</b> is a real folder of files
           (in your NeuroNet data folder, under code), with an editor that colours Python,

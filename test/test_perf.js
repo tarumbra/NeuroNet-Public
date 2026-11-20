@@ -253,15 +253,7 @@ async function boot() {
     ok("and the gate slot it took is released", after === 1, "");
   }
 
-  /* ---- 5/6. the album shelf (retired 2026-10-05) --------------------- */
-  /* Albums are M&T -> Media's CDs now; music:albums only edits one album, and
-     with none chosen it sends you to the CD covers. */
-  {
-    SS.go("music:albums");
-    await wait(700);
-    ok("the old album shelf is gone: music:albums goes to Media's CDs",
-      !doc.querySelector("#ch-shell .cc-case") && SS._test.view === "stuff:media", SS._test.view);
-  }
+  /* (5/6, the album shelf: went with the music to NeuroStream, 19 Nov 2026) */
 
   /* ---- 7. a changed picture is not remembered ---------------------- */
   {
@@ -276,50 +268,7 @@ async function boot() {
       + "everywhere else it is drawn");
   }
 
-  /* ---- 8. the open album holds its page still ---------------------- */
-  /* Cam: "Album page still lags when scrolling. I even tried it without a
-     cover and it still lags so it isnt the image."
-
-     He was right on both counts. Measured in REAL WebKitGTK 2.52 with the
-     GPU turned off -- the engine and the mode his launcher actually runs,
-     not Chromium -- scrolling an album of 100 tracks cost 55ms a frame
-     with every one of 24 frames late, and 57ms with no artwork at all,
-     while the library's 600 rows cost 16ms and never dropped a frame.
-
-     The album page scrolled the sleeve, the album information and the
-     track list together, so every frame redrew all three. Now the page
-     holds still and the list scrolls inside itself. */
-  {
-    SS.go("music:library");
-    await wait(500);
-    const shelfFixed = doc.getElementById("ch-app").classList.contains("ch-fixed-page");
-    ok("the library scrolls like any other page", !shelfFixed, "");
-
-    /* a CD's "Edit album…" (2026-10-05) */
-    await SS.Music.editAlbum(ALBUMS[0].id);
-    await wait(700);
-    ok("the open album holds its page still instead",
-      doc.getElementById("ch-app").classList.contains("ch-fixed-page"),
-      "without this the sleeve and the information panel are redrawn on "
-      + "every frame of every scroll through the tracks");
-    ok("  and carries no now-playing hero, which the top bar already has",
-      !doc.querySelector("#ch-shell #ch-hero-slot"),
-      "it cost ~250px of a page that no longer scrolls -- five tracks on "
-      + "screen instead of nine");
-
-    /* Going back must hand the page its scrolling back. The Shelf button
-       calls renderAlbums() directly and never goes through render(), so
-       this is a path that a single clear in render() would miss. */
-    const back = doc.querySelector("#ch-shell #ch-alb-back");
-    if (back) back.click();
-    await wait(700);
-    SS.go("music:library");          // (Back goes to the CD in Media; the music pages scroll again after)
-    await wait(500);
-    ok("  and going back to the shelf lets the page scroll again",
-      !doc.getElementById("ch-app").classList.contains("ch-fixed-page"),
-      "the Shelf button does not go through render(), so clearing it "
-      + "there alone would leave the shelf stuck");
-  }
+  /* (8, the open album page: went with the music to NeuroStream, 19 Nov 2026) */
 
   /* ---- 9. the launcher's --gui is honoured ------------------------- */
   /* Cam's launcher has said `--gui qt` for a long time. main() never read

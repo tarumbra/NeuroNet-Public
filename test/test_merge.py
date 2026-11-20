@@ -209,9 +209,6 @@ ok("  with a fallback where there is no observer at all",
    'typeof IntersectionObserver === "undefined"' in _lazy)
 ok("  the photo library is one of its callers, not its own copy",
    "SS.Art.get(storedName" in app and "SS.Art.lazy({" in app)
-ok("  and so is music",
-   "SS.Art.get(" in read("music/chords.js")
-   and "SS.Art.lazy({" in read("music/chords.js"))
 
 print("\n  %d passed, %d failed\n" % (passed, failed))
 sys.exit(1 if failed else 0)

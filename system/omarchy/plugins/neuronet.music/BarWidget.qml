@@ -5,32 +5,33 @@ import Quickshell.Services.Mpris
 import qs.Ui
 import qs.Commons
 
-// NeuroNet Music -- NeuroNet's player in the top bar.
+// NeuroStream Music -- NeuroStream's player in the top bar (19 Nov 2026, V31: music moved out of NeuroNet
+// into NeuroStream, NeuroTV renamed; this widget follows it).
 //
-// NeuroNet puts itself on the media bus as org.mpris.MediaPlayer2.neuronet
-// (mpris.py in the app). This widget follows THAT player only, so another
-// app playing a video never takes it over, and it reads NeuroNet's library
-// file (chords.json) for the album and playlist picker. It holds no player
-// of its own: picking an album asks NeuroNet to play it (OpenUri
-// neuronet:album/<id>), so the queue, play counts, shuffle and repeat stay
-// NeuroNet's. If NeuroNet is closed, picking something opens it first and
-// plays it once it is up.
+// NeuroStream puts itself on the media bus as org.mpris.MediaPlayer2.neurostream. This widget follows THAT
+// player only, so another app playing a video never takes it over, and it reads NeuroStream's library file
+// (~/.local/share/neurostream/music/library.json, the same shape NeuroNet's chords.json had) for the album
+// and playlist picker. It holds no player of its own: picking an album asks NeuroStream to play it (OpenUri
+// neurostream:album/<id>), so the queue, play counts, shuffle and repeat stay NeuroStream's. If NeuroStream
+// is closed, picking something opens it and plays once it is up. ♥ and "add to a playlist" call
+// NeuroStream's org.neurostream.Music methods on the same bus name.
 //
-// Bar: left or right click opens the card, middle click plays/pauses,
-// scrolling skips tracks.
+// Bar: left or right click opens the card, middle click plays/pauses, scrolling skips tracks.
 //
 // Settings (in the bar layout entry):
-//   "library": path to chords.json, if NeuroNet's data lives elsewhere.
+//   "library": path to library.json, if NeuroStream's data lives elsewhere.
 BarWidget {
   id: root
   moduleName: "neuronet.music"
 
-  readonly property string busName: "org.mpris.MediaPlayer2.neuronet"
-  // where NeuroNet is on this computer (NeuroNetPaths.qml; Stage 1, 2026-09-29)
-  NeuroNetPaths { id: nn }
+  readonly property string busName: "org.mpris.MediaPlayer2.neurostream"
   readonly property string libraryPath: (settings && settings.library)
-    || (nn.dataDir ? nn.dataDir + "/chords/chords.json" : "")
-  readonly property string imagesDir: libraryPath.substring(0, libraryPath.lastIndexOf("/")) + "/images/"
+    || ((Quickshell.env("XDG_DATA_HOME") || (Quickshell.env("HOME") + "/.local/share")) + "/neurostream/music/library.json")
+  readonly property string imagesDir: libraryPath.substring(0, libraryPath.lastIndexOf("/")) + "/art/"
+  function callApp(method, args) {
+    Quickshell.execDetached(["gdbus", "call", "--session", "--dest", busName, "--object-path", "/org/mpris/MediaPlayer2",
+                             "--method", "org.neurostream.Music." + method].concat(args))
+  }
 
   readonly property var player: {
     var list = Mpris.players ? Mpris.players.values : []
@@ -49,7 +50,7 @@ BarWidget {
 
   property bool popupOpen: false
   property string tab: "Albums"
-  property string pendingUri: ""        // asked for while NeuroNet was closed
+  property string pendingUri: ""        // asked for while NeuroStream was closed
   property real maxLabelWidth: 180
   property var library: ({ albums: [], playlists: [] })
 
@@ -58,22 +59,22 @@ BarWidget {
   // ♥ and "add to a playlist" (2026-10-02). Cam: "for the music player widget,
   // top bar and in general have the ability to favourite a song and also one
   // to add to a playlist which i select from a menu that comes up ... not
-  // intrusive". NeuroNet does it (neuronet-call music.favourite /
-  // music.playlist.add -- Music's own favourites and playlists); the ♥ shows
-  // what the media bus says (xesam:userRating, from NeuroNet).
+  // intrusive". NeuroStream does it (org.neurostream.Music.Favourite /
+  // AddToPlaylist -- Music's own favourites and playlists); the ♥ shows
+  // what the media bus says (xesam:userRating, from NeuroStream).
   readonly property bool favourite: hasTrack && Number((player.metadata || {})["xesam:userRating"] || 0) > 0.5
   property bool addOpen: false
   property string note: ""
   Timer { id: noteClear; interval: 2500; onTriggered: root.note = "" }
   function toggleFavourite() {
     if (!hasTrack) return
-    Quickshell.execDetached(["neuronet-call", "music.favourite", JSON.stringify({ on: !favourite })])
+    callApp("Favourite", [favourite ? "false" : "true"])
     note = favourite ? "Taken out of favourites" : "♥ Added to favourites"
     noteClear.restart()
   }
   function addTo(pl) {
     addOpen = false
-    Quickshell.execDetached(["neuronet-call", "music.playlist.add", JSON.stringify({ id: pl.id })])
+    callApp("AddToPlaylist", [String(pl.id)])
     note = "Added to “" + pl.name + "”"
     noteClear.restart()
   }
@@ -96,14 +97,14 @@ BarWidget {
         playlists: (d.playlists || []).filter(function(p) { return (p.files || []).length > 0 }).sort(byName)
       }
     } catch (e) {
-      // NeuroNet writes this file whole; a read mid-write just waits for
+      // NeuroStream writes this file whole; a read mid-write just waits for
       // the next change.
     }
   }
 
   // ---- playing things -----------------------------------------------
   function playCollection(kind, id) {
-    var uri = "neuronet:" + kind + "/" + encodeURIComponent(id)
+    var uri = "neurostream:" + kind + "/" + encodeURIComponent(id)
     if (running) {
       player.openUri(uri)
       return
@@ -111,13 +112,12 @@ BarWidget {
     pendingUri = uri
     // started hidden, just to play: the music plays, the desktop stays as it
     // was (Cam, 2026-10-02: things that should close shouldn't open a tool).
-    // `gtk-launch NeuroNet` put the whole app on the screen.
-    root.bar.run("neuronet-quick start")
+    root.bar.run("neurostream")
   }
 
   onPlayerChanged: {
     if (player && pendingUri !== "") {
-      // NeuroNet holds commands until its page is ready, so it is safe
+      // NeuroStream takes commands as soon as it is on the bus, so it is safe
       // to ask straight away.
       player.openUri(pendingUri)
       pendingUri = ""
@@ -126,7 +126,7 @@ BarWidget {
 
   function openApp() {
     if (running && player.canRaise) player.raise()
-    else root.bar.run("gtk-launch NeuroNet")
+    else root.bar.run("neurostream")
     popupOpen = false
   }
 
@@ -226,8 +226,8 @@ BarWidget {
       if (wheel.angleDelta.y > 0) root.player.previous()
       else if (wheel.angleDelta.y < 0) root.player.next()
     }
-    onEntered: if (root.bar) root.bar.showTooltip(root, !root.running ? "NeuroNet Music: NeuroNet is closed"
-      : root.hasTrack ? root.title + (root.artist ? " — " + root.artist : "") : "NeuroNet Music")
+    onEntered: if (root.bar) root.bar.showTooltip(root, !root.running ? "NeuroStream Music: NeuroStream is closed"
+      : root.hasTrack ? root.title + (root.artist ? " — " + root.artist : "") : "NeuroStream Music")
     onExited: if (root.bar) root.bar.hideTooltip(root)
   }
 
@@ -288,7 +288,7 @@ BarWidget {
 
           Text {
             textFormat: Text.PlainText
-            text: root.hasTrack ? root.title : (root.running ? "Nothing playing" : "NeuroNet is closed")
+            text: root.hasTrack ? root.title : (root.running ? "Nothing playing" : "NeuroStream is closed")
             color: root.bar.foreground
             font.family: root.bar.fontFamily
             font.pixelSize: Style.font.subtitle
@@ -462,7 +462,7 @@ BarWidget {
                         onClicked: root.addTo(parent.modelData) }
           }
         }
-        Text { visible: root.library.playlists.length === 0; text: "No playlists yet: make one in NeuroNet's Music"
+        Text { visible: root.library.playlists.length === 0; text: "No playlists yet: make one in NeuroStream"
                color: Util.alpha(root.bar.foreground, 0.6); font.family: Style.font.family; font.pixelSize: Style.font.caption }
       }
       Text {
@@ -491,7 +491,7 @@ BarWidget {
         Button {
           anchors.right: parent.right
           anchors.verticalCenter: tabs.verticalCenter
-          text: root.running ? "Show NeuroNet" : "Open NeuroNet"
+          text: root.running ? "Show NeuroStream" : "Open NeuroStream"
           foreground: root.bar.foreground
           fontSize: Style.font.bodySmall
           onClicked: root.openApp()
@@ -510,7 +510,7 @@ BarWidget {
         Text {
           anchors.centerIn: parent
           visible: list.count === 0
-          text: root.tab === "Albums" ? "No albums in NeuroNet yet" : "No playlists in NeuroNet yet"
+          text: root.tab === "Albums" ? "No albums in NeuroStream yet" : "No playlists in NeuroStream yet"
           color: Qt.darker(root.bar.foreground, 1.5)
           font.family: root.bar.fontFamily
           font.pixelSize: Style.font.bodySmall
@@ -577,7 +577,7 @@ BarWidget {
               Text {
                 textFormat: Text.PlainText
                 readonly property int n: (rowItem.modelData.files || []).length
-                text: rowItem.isPending ? "Opening NeuroNet…"
+                text: rowItem.isPending ? "Opening NeuroStream…"
                   : (rowItem.modelData.artist ? rowItem.modelData.artist + "  ·  " : "")
                     + n + (n === 1 ? " song" : " songs")
                 color: Qt.darker(root.bar.foreground, 1.5)

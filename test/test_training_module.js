@@ -156,7 +156,7 @@ async function boot({skipTraining = false} = {}) {
        one would shadow the other — which is exactly what happened to
        Money's dashboard. */
     /* NeuroNet's own modules, rather than KinCrux's Kitchen and Money. */
-    const others = ["Music", "Games", "Cards", "Mind"]
+    const others = ["Games", "Cards", "Mind"]   // (Music went to NeuroStream, 19 Nov 2026)
       .map((n) => ({name: n, views: (w.SS[n] && w.SS[n].VIEWS) || []}));
     const clash = views.filter((v) => others.some((o) => o.views.includes(v)));
     ok("no training view collides with another module's",

@@ -148,148 +148,23 @@ async function run() {
     titles: [...s.querySelectorAll(".bd-name")].map((n) => n.textContent)}));
   await wait(300);
 
-  /* ---- where it lives -------------------------------------------------- */
-  ok("Stuff is a main section of its own", !!$('#ss-nav [data-section="stuff"]'));
-  w.SS.go("home:dashboard"); await wait(700);
-  ok("  and Personal Effects has left Home",
-    !$$("#ss-subnav-body [data-view]").some((b) => b.dataset.view === "home:effects"));
-  w.SS.go("home:effects"); await wait(900);
-  ok("the old Personal Effects view lands on Stuff → Media", w.SS._test.view === "stuff:media");
-  /* Media opens on its covers (Shelf and Media became one page, 2026-10-02);
-     List is the plain list the rest of this test reads. */
-  ok("  on its covers, with Covers / List to switch", !!$(".sh-shelf") && !!$('[data-mview="list"]')
-    && $('[data-mview="covers"]').classList.contains("on"));
-  $('[data-mview="list"]').click(); await wait(600);
-  ok("  List shows every item already in it", $$(".bd-name").length === 5, $$(".bd-name").length);
-  ok("  and the switch says so", $('[data-mview="list"]').classList.contains("on"));
-
-  /* ---- alphabetical ------------------------------------------------------ */
-  const secs = sections();
-  ok("items appear under their type's name", secs.map((s) => s.name).join() === "Film,Music", JSON.stringify(secs));
-  ok("  the sections are alphabetical", true);
-  ok("  and so are the titles inside them, case ignored, numbers read as numbers",
-    secs[0].titles.join("|") === "aliens|Rocky 2|Rocky 10|Zulu", secs[0].titles.join("|"));
-  ok("the new By field shows", $$(".bd-meta").some((m) => /The Beatles/.test(m.textContent)));
-  ok("  and the formats it's owned in", $$(".bd-meta").some((m) => /VHS/.test(m.textContent)));
-
-  /* ---- adding: formats are tags, the same film again joins it ------------ */
-  // Cam (15 Nov 2026): "Practical magic ... a tag for Dvd, VHS, Blu-ray, Digital ... This way we remove the double ups"
-  $('[data-st="add"]').click(); await wait(200);
-  ok("Add has the film formats as tags", $$("#st-formats [data-fmt]").map((b) => b.dataset.fmt).join()
-    === "DVD,Blu-ray,4K UHD,VHS,Digital", $$("#st-formats [data-fmt]").map((b) => b.dataset.fmt).join());
-  $("#st-type").value = "music"; $("#st-type").dispatchEvent(new w.Event("change")); await wait(50);
-  ok("  and music's when the type is Music", $$("#st-formats [data-fmt]").map((b) => b.dataset.fmt).join()
-    === "Cassette,Vinyl,CD,MP3,FLAC");
-  $("#st-type").value = "film"; $("#st-type").dispatchEvent(new w.Event("change")); await wait(50);
-  $("#st-f-title").value = "  zulu ";
-  $('#st-formats [data-fmt="Blu-ray"]').click(); await wait(30);
-  button("Add").click(); await wait(300);
-  ok("the same film again asks to add the new format to it, case and spacing ignored",
-    /already have that/i.test(doc.body.textContent) && !!button("Add to it"));
-  ok("  nothing is added while it asks", effects.items.length === 5);
-  [...$$("button")].reverse().find((b) => b.textContent.trim() === "Cancel").click(); await wait(200);
-  ok("  and going back leaves the half-filled form as it was", $("#st-f-title") && $("#st-f-title").value === "  zulu ");
-  button("Add").click(); await wait(300);
-  button("Add to it").click(); await wait(400);
-  ok("  Add to it: one Zulu, now on DVD and Blu-ray, no double up",
-    effects.items.length === 5 && JSON.stringify(effects.items.find((i) => i.id === "a").formats) === '["DVD","Blu-ray"]',
-    JSON.stringify(effects.items.find((i) => i.id === "a")));
-  $('[data-st="add"]').click(); await wait(200);
-  $("#st-f-title").value = "Practical Magic";
-  $('#st-formats [data-fmt="VHS"]').click(); await wait(30);
-  button("Add").click(); await wait(400);
-  const pm = effects.items.find((i) => i.title === "Practical Magic");
-  ok("a new film tagged only VHS is added", effects.items.length === 6 && pm && pm.type === "film"
-    && JSON.stringify(pm.formats) === '["VHS"]', JSON.stringify(pm));
-  ok("what is stored is stored alphabetically too",
-    effects.items.map((i) => i.type + ":" + i.title).join(",")
-      === "film:aliens,film:Practical Magic,film:Rocky 2,film:Rocky 10,film:Zulu,music:Abbey Road",
-    effects.items.map((i) => i.type + ":" + i.title).join(","));
-  $('[data-st="add"]').click(); await wait(200);
-  ok("  and the next one starts on the type last used", $("#st-type").value === "film");
-  [...$$("button")].reverse().find((b) => b.textContent.trim() === "Cancel").click(); await wait(150);
-
-  /* ---- search ------------------------------------------------------------- */
-  const q = $('[data-st="q"]');
-  q.value = "rocky"; q.dispatchEvent(new w.Event("input")); await wait(100);
-  ok("searching narrows the list, still grouped and in order",
-    JSON.stringify(sections()) === JSON.stringify([{name: "Film", titles: ["Rocky 2", "Rocky 10"]}]),
-    JSON.stringify(sections()));
-
-  /* ---- print: choose, letterhead, alphabetical ---------------------------- */
-  $('[data-st="print"]').click(); await wait(200);
-  ok("Print lets Cam choose what goes on the page", $$("[data-pick]").length >= 2 && !!$('[data-pick="film"]'),
-    $$("[data-pick]").map((b) => b.dataset.pick).join());
-  ok("  everything ticked to start", $$("[data-pick]").every((b) => b.checked));
-  for (const b of $$("[data-pick]")) { if (b.dataset.pick !== "film") { b.checked = false; b.dispatchEvent(new w.Event("change")); } }
-  ok("  and it says what that comes to", /5 items from 1 ticked/.test($("[data-sum]").textContent), $("[data-sum]").textContent);
-  button("Print").click(); await wait(400);
-  const [page, kind] = printed[0] || [];
-  ok("printing prints only what was ticked: films, no music",
-    page && /<h2>Film/.test(page) && !/<h2>Music/.test(page) && !/Abbey Road/.test(page));
-  ok("  each section alphabetical", page && page.indexOf("aliens") < page.indexOf("Zulu"));
-  ok("  a search left in the box does not cut the printout down", page && /Practical Magic/.test(page));
-  ok("  with a Formats column", page && /<th>Formats<\/th>/.test(page) && /DVD, Blu-ray/.test(page));
-  ok("  on the shared letterhead, carrying the collection mark on the right",
-    page && /NN \| Media list \| {2}\| collection\.png collection/.test(page)
-    && page.indexOf("LH") < page.indexOf("<h2>") && /class="nn-title">Media</.test(page) && /<b>Items<\/b> 5/.test(page));
-  ok("  in the house style: a table per section under its heading, a title block, a footer",
-    page && (page.match(/<table>/g) || []).length === 1 && (page.match(/<h2>/g) || []).length === 1
-    && /class="nn-title-block"/.test(page) && /class="nn-foot"/.test(page));
-  ok("  counted as a Media print", kind === "stuff-media");
-  q.value = ""; q.dispatchEvent(new w.Event("input")); await wait(100);
-
-  /* ---- exports ---------------------------------------------------------------- */
-  $('[data-st="export"]').click(); await wait(200);
-  ok("Export remembers what was ticked last",
-    $$("[data-pick]").filter((b) => b.checked).map((b) => b.dataset.pick).sort().join() === "film");
-  button("Excel").click(); await wait(300);
-  const [fmt, payload] = exported[0] || [];
-  ok("Excel gets the ticked sections, in the screen's order", fmt === "xlsx"
-    && payload.sections.map((s) => s.name + ":" + s.items.map((i) => i.title).join("|")).join(";")
-      === "Film:aliens|Practical Magic|Rocky 2|Rocky 10|Zulu");
-  ok("  with every field as a column, the formats after the title",
-    payload.columns.map((c) => c.label).join() === "Title,Formats,By,Year,Notes"
-    && payload.sections[0].items[4].formats === "DVD, Blu-ray", payload.columns.map((c) => c.label).join());
-  ok("  and the collection mark for its letterhead", payload.logo === "collection.png");
-  $('[data-st="export"]').click(); await wait(200);
-  button("Word").click(); await wait(300);
-  ok("Word gets the very same sections", exported[1] && exported[1][0] === "docx"
-    && JSON.stringify(exported[1][1].sections) === JSON.stringify(payload.sections));
-  $('[data-st="export"]').click(); await wait(200);
-  button("Send to Cells").click(); await wait(400);
-  const [cid, sheet] = cells[0] || [];
-  ok("Send to Cells makes a sheet in Notes → Cells", !!sheet && /^Media /.test(cid));
-  ok("  a header row, then every item with its type first, alphabetical",
-    sheet && sheet.grid.rows.slice(0, 4).map((r) => r.slice(0, 3).join("/")).join("|")
-      === "Type/Title/Formats|Film/aliens/DVD|Film/Practical Magic/VHS|Film/Rocky 2/VHS",
-    sheet && sheet.grid.rows.slice(0, 4).map((r) => r.slice(0, 3).join("/")).join("|"));
-  ok("  the header in bold, and kept on screen while scrolling",
-    sheet && sheet.grid.fmt.A1 && sheet.grid.fmt.A1.b && sheet.grid.freeze === 1);
-
-  /* ---- types ---------------------------------------------------------------- */
-  ok("Media's types are what a thing is", w.SS.Stuff.MEDIA_KINDS.map((t) => t.name).join() === "Film,TV,Music,Book,Game,Other");
-  ok("  and its formats are tags per type", w.SS.Stuff.MEDIA_FORMATS.music.join() === "Cassette,Vinyl,CD,MP3,FLAC"
-    && w.SS.Stuff.MEDIA_FORMATS.film.includes("Digital") && w.SS.Stuff.MEDIA_FORMATS.game.includes("Switch") && w.SS.Stuff.MEDIA_FORMATS.tv.includes("Digital"));
-  $('[data-st="types"]').click(); await wait(200);
-  $("#st-newtype").value = "Board games"; $("#st-addtype").click(); await wait(400);
-  ok("a type Cam adds is kept", effects.types.some((t) => t.name === "Board games"));
-  [...$$("button")].reverse().find((b) => b.textContent.trim() === "Done").click(); await wait(100);
-  $('[data-st="add"]').click(); await wait(200);
-  ok("  and offered straight away, among the built-in ones",
-    [...$("#st-type").options].some((o) => o.textContent === "Board games")
-    && [...$("#st-type").options].some((o) => o.textContent === "Film"));
-  [...$$("button")].reverse().find((b) => b.textContent.trim() === "Cancel").click(); await wait(100);
+  /* ---- where it lives (Media went to NeuroStream's My Media, 19 Nov 2026) ---- */
+  ok("Stuff (M&T) is a main section of its own", !!$('#ss-nav [data-section="stuff"]'));
+  w.SS.go("home:effects"); await wait(700);
+  ok("the old Personal Effects and Media views land on M&T's Inventories", w.SS._test.view === "stuff:inventories", w.SS._test.view);
+  w.SS.go("stuff:media"); await wait(500);
+  ok("  and so does the old Media page", w.SS._test.view === "stuff:inventories", w.SS._test.view);
+  w.SS.go("music:library"); await wait(500);
+  ok("  and the old Music pages", w.SS._test.view === "stuff:inventories", w.SS._test.view);
 
   /* ---- inventories ---------------------------------------------------------- */
   w.SS.go("stuff:inventories"); await wait(600);
   $("#st-newinv").click(); await wait(200);
   $("#st-invname").value = "Garage"; button("Create").click(); await wait(800);
   ok("a new inventory opens", /^stuff:inv:/.test(w.SS._test.view));
-  // 15 Nov 2026: Cinema has no page of its own (its films are Media's, Play opens the player)
-  ok("  and joins the M&T menu by name: Music's pages, Media, it, then Inventories (no Shelf: it's Media's covers, no Cinema)",
+  ok("  and joins the M&T menu by name, then Inventories (Music and Media are NeuroStream's now)",
     $$("#ss-subnav-body [data-view]").map((b) => b.dataset.view.replace(/^stuff:inv:.*/, "inv"))
-      .join() === "music:library,music:playlists,music:visualizer,stuff:media,inv,stuff:inventories",   // no Albums: they're Media's CDs
+      .join() === "inv,stuff:inventories",
     $$("#ss-subnav-body [data-view]").map((b) => b.dataset.view).join());
   $('[data-st="add"]').click(); await wait(200);
   ok("an inventory has an item, a category, a quantity and a place",
@@ -302,10 +177,10 @@ async function run() {
   ok("  and listed with its quantity and place", /× 2 · Top shelf/.test($(".bd-meta").textContent));
   $('[data-st="print"]').click(); await wait(200);
   button("Print").click(); await wait(400);
-  const invPage = (printed[1] || [])[0] || "";
+  const invPage = (printed[0] || [])[0] || "";
   ok("an inventory prints on the same letterhead, under its own name",
     /NN \| Inventory \| {2}\| collection\.png collection/.test(invPage) && /class="nn-title">Garage</.test(invPage));
-  ok("  counted as an inventory print", (printed[1] || [])[1] === "stuff-inventory");
+  ok("  counted as an inventory print", (printed[0] || [])[1] === "stuff-inventory");
 
   const broke = [...thrown, ...asyncFailures];
   ok("the app threw nothing", broke.length === 0, broke.slice(0, 3).join(" | "));

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Stuff — inventories, and the database of all our media.
+   Stuff — inventories (the database of all our media went to NeuroStream's My Media, 19 Nov 2026).
    ==========================================================================
    Cam: "a more built out personal effects feature. However lets create a new
    main section called Stuff, this will act as the section where i can make
@@ -43,57 +43,6 @@
     + Math.random().toString(36).slice(2, 7);
   const today = () => new Date().toLocaleDateString(undefined,
     {day: "numeric", month: "long", year: "numeric"});
-
-  /* The formats Personal Effects shipped with -- the "reference point" Cam
-     named. Ids never change (items point at them); names can. */
-  const MEDIA_TYPES = [
-    ["dvd", "DVD"], ["bluray", "Blu-ray"], ["vhs", "VHS"], ["cd", "CD"],
-    ["cassette", "Cassette"], ["books", "Books"], ["vinyl", "Vinyl"],
-    ["ps1", "PS1"], ["ps2", "PS2"], ["ps3", "PS3"], ["ps4", "PS4"],
-    ["ps5", "PS5"], ["psp", "PSP"], ["psvita", "PS Vita"],
-    ["xbox", "Xbox"], ["xbox360", "Xbox 360"], ["xboxone", "Xbox One"],
-    ["snes", "SNES"], ["n64", "Nintendo 64"], ["gamecube", "GameCube"],
-    ["wii", "Wii"], ["switch", "Switch"], ["switch2", "Switch 2"],
-    ["gameboy", "Game Boy"], ["gba", "Game Boy Advance"],
-    ["nds", "Nintendo DS"], ["n3ds", "Nintendo 3DS"],
-    ["other", "Other"],
-  ].map(([id, name]) => ({id, name, builtIn: true}));
-
-  /* Media by WHAT a thing is, with the formats it's owned in as tags (Cam,
-     14 Nov 2026): "add a movie, then click what category it is. For example
-     for Practical magic ... a tag for Dvd, VHS, Blu-ray, Digital ... Same with
-     music ... Cassette, Vinyl, Cd, Mp3, Flac. This way we remove the double
-     ups". One Practical Magic, owned on DVD and VHS -- not two. The old
-     per-format types (above) are still how a cover is shaped, and how the
-     backend turned old items into these (api/effects.py, media v2). */
-  // (tv: 18 Nov 2026, Cam: "add TV to medica and things ... my TV Series") -- a show, with the episodes you have
-  const MEDIA_KINDS = [["film", "Film"], ["tv", "TV"], ["music", "Music"], ["book", "Book"], ["game", "Game"], ["other", "Other"]]
-    .map(([id, name]) => ({id, name, builtIn: true}));
-  const GAME_PLATFORMS = ["PS1", "PS2", "PS3", "PS4", "PS5", "PSP", "PS Vita", "Xbox", "Xbox 360", "Xbox One",
-    "SNES", "Nintendo 64", "GameCube", "Wii", "Switch", "Switch 2", "Game Boy", "Game Boy Advance",
-    "Nintendo DS", "Nintendo 3DS", "PC", "Digital"];
-  const MEDIA_FORMATS = {
-    film: ["DVD", "Blu-ray", "4K UHD", "VHS", "Digital"],
-    tv: ["DVD", "Blu-ray", "4K UHD", "VHS", "Digital"],
-    music: ["Cassette", "Vinyl", "CD", "MP3", "FLAC"],
-    book: ["Hardcover", "Paperback", "eBook", "Audiobook"],
-    game: GAME_PLATFORMS,
-  };
-  /** The cover's shape: from the old per-format looks (shelf.css) */
-  function coverShape(it) {
-    const f = it.formats || [];
-    const has = (x) => f.includes(x);
-    switch (it.type) {
-      case "music": return has("Vinyl") ? "vinyl" : has("Cassette") && !has("CD") ? "cassette" : "cd";
-      case "film": case "tv": return has("Blu-ray") || has("4K UHD") ? "bluray" : f.length && f.every((x) => x === "VHS") ? "vhs" : "dvd";
-      case "book": return "books";
-      case "game": {
-        const t = MEDIA_TYPES.find((x) => f.includes(x.name));
-        return t ? t.id : "other";
-      }
-      default: return MEDIA_TYPES.some((x) => x.id === it.type) ? it.type : "other";
-    }
-  }
 
   /* Printouts and exports carry the collection mark on the right of the
      shared letterhead, as Money carries Cashbox and the Kitchen carries its
@@ -693,87 +642,8 @@
      THE SECTION -- Media, each inventory, and the page that manages them.
      ====================================================================== */
 
-  const media = Catalogue({
-    name: "Media",
-    blurb: "Films, music, books and games.",
-    typeLabel: "Type", typePlural: "Types", typeExample: "Comics",
-    builtIn: MEDIA_KINDS,
-    formats: MEDIA_FORMATS,
-    empty: "Nothing here yet. Add the first film, album, book or game.",
-    printKind: "stuff-media",
-    keepOthers: true,
-    /* Covers or a plain list (2026-10-02): one Media page, one Add. */
-    headExtra: () => `<button class="btn" data-mscan title="Add by barcode: typed, a barcode scanner, or photos">Scan</button>`
-      + viewToggle("list"),
-    onPainted: (host) => {
-      wireViewToggle(host);
-      const b = host.querySelector("[data-mscan]");
-      if (b) b.onclick = () => SS.Shelf && SS.Shelf.scanDialog && SS.Shelf.scanDialog();
-    },
-    get cover() { return SS.Shelf && SS.Shelf.coverField; },
-    /* Its cover goes with it. */
-    onDelete: (id) => call("media_cover_clear", [id], ""),
-    fields: [
-      {key: "title", label: "Title", placeholder: "Aliens", required: true},
-      {key: "creator", label: "By", placeholder: "James Cameron — director, artist or author"},
-      {key: "year", label: "Year", placeholder: "1986", numeric: true,
-       format: (v) => `(${v})`},
-      {key: "notes", label: "Notes", placeholder: "Special edition, lent to James…"},
-    ],
-    load: () => call("effects_load", [], "Your media"),
-    save: (doc) => call("effects_save", [doc], "Saving"),
-  });
-
-  /* ---- Media: covers or a list ---------------------------------------------
-     Cam (2026-10-02): "Lets combine the media and shelf, this will make it so
-     there is only one add button and menu." Media opens on its covers (the
-     Shelf, as it was); List is the plain list it had, for printing, exporting
-     and quick edits. Which one is remembered on this computer. */
-  const VIEW_KEY = "nn:media:view";
-  let viewNow = null;                 // this session's choice; storage may refuse
-  function mediaView() {
-    if (viewNow) return viewNow;
-    try { viewNow = localStorage.getItem(VIEW_KEY) === "list" ? "list" : "covers"; }
-    catch (e) { viewNow = "covers"; }
-    return viewNow;
-  }
-  function viewToggle(on) {
-    return `<div class="st-view" role="group" aria-label="Show as">
-      <button class="chip ${on === "covers" ? "on" : ""}" data-mview="covers">Covers</button>
-      <button class="chip ${on === "list" ? "on" : ""}" data-mview="list">List</button></div>`;
-  }
-  function wireViewToggle(root) {
-    root.querySelectorAll("[data-mview]").forEach((b) => b.onclick = () => {
-      if (b.classList.contains("on")) return;
-      viewNow = b.dataset.mview === "list" ? "list" : "covers";
-      try { localStorage.setItem(VIEW_KEY, viewNow); } catch (e) { /* this session only */ }
-      if (mediaHost) mount(mediaHost, "stuff:media");
-    });
-  }
-  let mediaHost = null;
-
-  /** A Music album onto the shelf as a CD (Music asks when one is made). Its
-      songs stay the album's: the CD keeps albumId and reads them live. */
-  media.addAlbum = async function (albumId) {
-    const got = SS.Music && SS.Music.albumSongs ? await SS.Music.albumSongs(albumId) : null;
-    if (!got) return {error: "That album isn't in Music."};
-    const doc = await media.reload();
-    const key = (t) => String(t || "").trim().replace(/\s+/g, " ").toLowerCase();
-    if ((doc.items || []).some((x) => x.albumId === albumId)) return {duplicate: true};
-    const same = (doc.items || []).find((x) => (x.type === "music" || x.type === "cd") && !x.albumId && key(x.title) === key(got.name));
-    if (same) {
-      if (SS.Shelf && SS.Shelf.patch) await SS.Shelf.patch(same.id, {albumId});
-      return {ok: true, linked: true, id: same.id};
-    }
-    const item = {id: newId(), type: "music", formats: ["CD"], title: got.name, creator: got.artist || "",
-                  year: got.year || "", notes: "", albumId, added: new Date().toISOString()};
-    if (!(await media.addItem(item))) return {error: "Couldn't save it."};
-    if (got.art) {
-      const c = await call("media_cover_from_album", [item.id, got.art], "The cover");
-      if (c && !c.error && SS.Shelf && SS.Shelf.patch) await SS.Shelf.patch(item.id, {cover: new Date().toISOString()});
-    }
-    return {ok: true, id: item.id};
-  };
+  /* (Media, the Shelf and its covers went to NeuroStream's My Media on 19 Nov 2026, V31: tags, Digital /
+     Non-digital / All, and the same export. M&T keeps the inventories.) */
 
   let inventories = [];
   let loaded = false;
@@ -823,12 +693,10 @@
     return invCats.get(inv.id);
   }
 
-  /** The right-hand menu: Media, each inventory by name, then the page
-      that makes and manages them. */
+  /** The right-hand menu: each inventory by name, then the page that makes and manages them. */
   function syncMenu() {
     if (!SS.setSectionChildren) return;
     SS.setSectionChildren("stuff", [
-      {key: "stuff:media", name: "Media", icon: "i-disc"},
       ...inventories.map((inv) => ({key: "stuff:inv:" + inv.id, name: inv.name, icon: "i-box"})),
       {key: "stuff:inventories", name: "Inventories", icon: "i-kit"},
     ]);
@@ -928,14 +796,6 @@
     const page = document.createElement("div");
     page.className = "page";
     host.appendChild(page);
-    if (which === "stuff:inventories") return renderInventories(page);
-    if (which === "stuff:shelf" || (which === "stuff:media"
-        && (mediaView() === "covers" || (SS.Shelf && SS.Shelf.hasOpen && SS.Shelf.hasOpen())))) {
-      mediaHost = host;
-      host.innerHTML = "";
-      return SS.Shelf.mount(host);
-    }
-    if (which === "stuff:media") mediaHost = host;
     if (String(which).startsWith("stuff:inv:")) {
       if (!loaded) await loadInventories();
       const inv = inventories.find((x) => "stuff:inv:" + x.id === which);
@@ -945,23 +805,19 @@
       }
       return catalogueFor(inv).render(page);
     }
-    return media.render(page);
+    return renderInventories(page);
   }
 
   SS.Stuff = {
     PREFIX: "stuff:",
     /* A getter: every inventory is a view of its own. */
     get VIEWS() {
-      return ["stuff:media", "stuff:inventories"]
+      return ["stuff:inventories"]
         .concat(inventories.map((inv) => "stuff:inv:" + inv.id));
     },
     mount,
-    media,
     get inventories() { return inventories; },
-    Catalogue, MEDIA_TYPES, MEDIA_KINDS, MEDIA_FORMATS, coverShape,
-    viewToggle, wireViewToggle, mediaView,
-    /** Covers or List, from code (the old Albums page sends you to the CD covers). */
-    setMediaView(v) { viewNow = v === "list" ? "list" : "covers"; try { localStorage.setItem(VIEW_KEY, viewNow); } catch (e) { /* session only */ } },
+    Catalogue,
     _test: {loadInventories, catalogueFor, syncMenu},
   };
 

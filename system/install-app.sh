@@ -120,11 +120,11 @@ if [ -n "$UNINSTALL" ]; then
   say "NeuroNet itself ($APP) and its data are left exactly where they are."
   if [ -z "$CHECK" ]; then ask "Go ahead?" || die "nothing was changed."; fi
   gone=( "$OURS" "$KFILE" "$KLINK" "$KAUTO" "$HOME/.local/share/applications/NeuroNet.desktop"
-         "$HOME/.local/share/applications/NeuroPets.desktop" "$HOME/.local/share/applications/NeuroFarm.desktop" "$HOME/.local/share/applications/NeuroCafe.desktop" "$HOME/.local/share/applications/NeuroArcana.desktop" "$HOME/.local/share/applications/NeuroTrain.desktop" "$HOME/.local/share/applications/NeuroTV.desktop"
+         "$HOME/.local/share/applications/NeuroPets.desktop" "$HOME/.local/share/applications/NeuroFarm.desktop" "$HOME/.local/share/applications/NeuroCafe.desktop" "$HOME/.local/share/applications/NeuroArcana.desktop" "$HOME/.local/share/applications/NeuroTrain.desktop" "$HOME/.local/share/applications/NeuroTV.desktop" "$HOME/.local/share/applications/NeuroStream.desktop"
          "$HOME/.config/systemd/user/neuronet-update.service" "$HOME/.config/systemd/user/neuronet-update.timer"
          "$HOME/.config/neuronet/paths.json" )
   for c in neuronet-path neuronet-doctor neuronet-update neuronet-quick neuronet-call neuronet-music neuronet-menu \
-           neuronet-capture neuronet-snip neuronet-media-art neuronet-rotate neuronet-open neuronet-shell neuronet-desk-edit neuropets neuropets-call neurofarm neurofarm-call neurocafe neuroarcana neurotrain neurotv; do
+           neuronet-capture neuronet-snip neuronet-rotate neuronet-open neuronet-shell neuronet-desk-edit neuropets neuropets-call neurofarm neurofarm-call neurocafe neuroarcana neurotrain neurotv neurostream; do
     gone+=("$HOME/.local/bin/$c")
   done
   if [ -f "$MAIN" ] && grep -qxF -e "$BEGIN" "$MAIN"; then
@@ -235,7 +235,7 @@ BIN="$HOME/.local/bin"
 N|Scribe|$BIN/neuronet-quick notes
 B|Creative|$BIN/neuronet-quick creative
 T|NeuroTrain|$BIN/neurotrain
-W|NeuroTV|$BIN/neurotv
+W|NeuroStream|$BIN/neurostream
 P|Photos|$BIN/neuronet-quick photos
 M|M&T: music|$BIN/neuronet-quick music
 C|Cashbox (Money)|$BIN/neuronet-quick money
@@ -385,7 +385,7 @@ else
   # keys already taken here (not by NeuroNet): read from the running Hyprland
   taken=""
   if hypr_live; then
-    taken=$(hyprctl binds -j 2>/dev/null | jq -r '.[] | select((.arg // "") | test("neuronet|neuropets|neurofarm|neurocafe|neuroarcana|neurotrain|neurotv") | not)
+    taken=$(hyprctl binds -j 2>/dev/null | jq -r '.[] | select((.arg // "") | test("neuronet|neuropets|neurofarm|neurocafe|neuroarcana|neurotrain|neurotv|neurostream") | not)
               | "\(.modmask) \(.key | ascii_downcase)"' 2>/dev/null || true)
   fi
   body=""; skipped=()

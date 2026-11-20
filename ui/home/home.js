@@ -77,10 +77,6 @@
     album:     {name: "Album", hint: "A shortcut straight into one album"},
     quickadd:  {name: "Quick add", hint: "Add an event without leaving here"},
     frame:    {name: "Photo frame", hint: "A slideshow of chosen photos"},
-    /* Cam: "add a music widget where i can select music to play in the form
-       of saved playlists or albums ... so when i first open the app i can
-       start music quicker in less clicks." */
-    music:    {name: "Music", hint: "Start a playlist or album in one click"},
     /* Cam: "a random circuit generator, which displays a random circuit in
        the widget windows that is scrollable" and "quick note, a little text
        widget where I can write a quick thought". */
@@ -91,20 +87,13 @@
     puzzle:   {name: "Puzzle", hint: "Sudoku, Kakuro, Minesweeper or a word search"},
     quickrecipe: {name: "Quick recipe", hint: "Title, ingredients, directions — saved to Recipes"},
     fleetview: {name: "Fleeting viewer", hint: "Read and clear your fleeting notes"},
-    /* Cam: "a new widget called Random Movie, this will bring up a random
-       movie from the shelf presented upside down so you dont know what it
-       is, but when clicked it flips over an presents the movie cover. When
-       movie cover is clicked it opens the shelf entry for the movie." */
-    randommovie: {name: "Random movie", hint: "A film off the Shelf, face down until you turn it"},
     /* Cam: "a random pull widget for the dashboard, where i select the type
        of deck and it pulls a random card. Have the card presented like the
        random dvd, where it is upside down then i click to flip (it can be
        either upright or reversed). From here i can add a quick journal
        entry" -- saved to Mindfulness → Journal. */
     randompull: {name: "Random pull", hint: "One card from a Tarot, Oracle or Lenormand deck, face down"},
-    /* Cam: "a random album player much like the random dvd". An album from
-       Music, dealt face down; turn it over, press the cover to play it. */
-    randomalbum: {name: "Random album", hint: "An album from Music, face down until you turn it; press it to play"},
+    /* (Music, Random movie and Random album went with the music and the Shelf to NeuroStream, 19 Nov 2026.) */
   };
   
   /* THE BLOCKS YOU CAN SET UP, AND SO THE ONES YOU CAN HAVE SEVERAL OF.
@@ -136,12 +125,13 @@
     today: "i-calendar", upcoming: "i-clock", photos: "i-album",
     phonebook: "i-person", onthisday: "i-clock", countdown: "i-target",
     notice: "i-note-plus", week: "i-calendar", album: "i-album",
-    quickadd: "i-plus", frame: "i-album", music: "i-clef",
+    quickadd: "i-plus", frame: "i-album",
     circuit: "i-session", quicknote: "i-note-plus",
     puzzle: "i-grid", quickrecipe: "i-recipe", fleetview: "i-book",
-    randommovie: "i-library", randompull: "i-tarot", randomalbum: "i-clef",
+    randompull: "i-tarot",
   };
 
+  const GONE_BLOCKS = new Set(["music", "randommovie", "randomalbum"]);
   const DEFAULT_BLOCKS = [
     {id: "b-today", type: "today"},
     {id: "b-upcoming", type: "upcoming"},
@@ -621,6 +611,8 @@ const columnIsFull = (blocks, c) => columnOf(blocks, c).length >= PER_COL;
     /* Every block comes back with a square, whether it was saved with one or
        not, so nothing anywhere else has to cope with a block that has none. */
     if (!Array.isArray(dashBlocks)) return placeBlocks(DEFAULT_BLOCKS.map((b) => ({...b})));
+    /* Music, Random movie and Random album left with the music and the Shelf (NeuroStream, 19 Nov 2026) */
+    if (dashBlocks.some((b) => GONE_BLOCKS.has(b.type))) dashBlocks = dashBlocks.filter((b) => !GONE_BLOCKS.has(b.type));
     return placeBlocks(dashBlocks);
   }
   
@@ -730,58 +722,6 @@ const columnIsFull = (blocks, c) => columnOf(blocks, c).length >= PER_COL;
        they sat on top of its own text. */
     if (dashEditing) wireBlockDragging(page);
 
-    /* The covers arrive after the widget is drawn.
-
-       `art` on a playlist or an album is the stored FILE NAME, not
-       anything a page can load -- putting it in an <img src> made the
-       browser ask for ui/album_al1.jpg and get nothing, which is why
-       every cover was blank. The picture has to be fetched across the
-       bridge, so the note placeholder is drawn first and replaced when
-       each one lands. SS.Music.artURL goes through the app's one art
-       cache, so a cover already fetched for the album shelf costs
-       nothing here. */
-    page.querySelectorAll(".dash-music-art[data-art]").forEach((slot) => {
-      const music = window.SS && window.SS.Music;
-      if (!music || typeof music.artURL !== "function") return;
-      music.artURL(slot.dataset.art, 220).then((url) => {
-        if (!url || !slot.isConnected) return;
-        const note = slot.querySelector(".dash-music-note");
-        const img = document.createElement("img");
-        img.src = url;
-        img.alt = "";
-        if (note) note.replaceWith(img);
-        else slot.insertBefore(img, slot.firstChild);
-      }).catch(() => { /* no cover is the placeholder, which is already there */ });
-    });
-
-    page.querySelectorAll("[data-shelf]").forEach((tab) =>
-      tab.addEventListener("click", async () => {
-        const arr = blocksOrDefault();
-        const block = arr.find((x) => x.id === tab.dataset.block);
-        if (!block) return;
-        block.shelf = tab.dataset.shelf;
-        dashBlocks = arr;
-        await saveBlocks();
-        render();
-      }));
-
-    const movieCard = page.querySelector("#dash-movie-card");
-    if (movieCard) movieCard.addEventListener("click", () => {
-      if (!dealtFilm || !dealtFilm.item) return;
-      if (!filmTurned) {
-        /* Turned in place rather than re-rendered, so the flip is seen. */
-        filmTurned = true;
-        movieCard.classList.add("turned");
-        movieCard.title = "Open it on the Shelf";
-        const card = movieCard.closest(".dash-movie");
-        const h = card && card.querySelector(".dash-card-h b");
-        if (h) h.textContent = dealtFilm.item.title;
-        const sub = card && card.querySelector(".dash-movie-sub");
-        if (sub) sub.textContent = `${dealtFilm.item.year ? dealtFilm.item.year + " · " : ""}press the cover to open it`;
-        return;
-      }
-      window.SS.Shelf.openEntry(dealtFilm.item.id);
-    });
     page.querySelectorAll("[data-pull-kind]").forEach((tab) =>
       tab.addEventListener("click", async () => {
         const arr = blocksOrDefault();
@@ -823,45 +763,6 @@ const columnIsFull = (blocks, c) => columnOf(blocks, c).length >= PER_COL;
     page.querySelectorAll("[data-go-div]").forEach((a) => a.addEventListener("click", (e) => {
       e.preventDefault(); window.SS.go("div:" + a.dataset.goDiv);
     }));
-
-    const albumCard = page.querySelector("#dash-album-card");
-    if (albumCard) albumCard.addEventListener("click", () => {
-      const a = dealtAlbum && dealtAlbum.album;
-      if (!a) return;
-      if (!albumTurned) {
-        /* Turned in place rather than re-rendered, so the flip is seen. */
-        albumTurned = true;
-        albumCard.classList.add("turned");
-        albumCard.title = "Play it";
-        albumCard.setAttribute("aria-label", "Play " + a.name);
-        const card = albumCard.closest(".dash-album");
-        const h = card && card.querySelector(".dash-card-h b");
-        if (h) h.textContent = a.name;
-        const sub = card && card.querySelector(".dash-movie-sub");
-        if (sub) sub.textContent = [a.artist, `${a.count} track${a.count === 1 ? "" : "s"}`]
-          .filter(Boolean).join(" · ") + " · press the cover to play";
-        return;
-      }
-      window.SS.Music.play("album", a.id);
-    });
-    const albumAgain = page.querySelector("#dash-album-again");
-    if (albumAgain) albumAgain.addEventListener("click", () =>
-      dealAlbum(dealtAlbum && dealtAlbum.album && dealtAlbum.album.id));
-    const albumGo = page.querySelector("#dash-album-go");
-    // albums are Media's CDs now (2026-10-05): open this one's CD, or the CD covers
-    if (albumGo) albumGo.addEventListener("click", (e) => {
-      e.preventDefault();
-      const id = dealtAlbum && dealtAlbum.album && dealtAlbum.album.id;
-      if (id && window.SS.Shelf && window.SS.Shelf.openAlbum) window.SS.Shelf.openAlbum(id);
-      else if (window.SS.Shelf && window.SS.Shelf.showCDs) window.SS.Shelf.showCDs();
-      else window.SS.go("stuff:media");
-    });
-
-    const toShelf = page.querySelector("#dash-movie-shelf");
-    if (toShelf) toShelf.addEventListener("click", (e) => { e.preventDefault(); window.SS.go("stuff:media"); });
-    const movieAgain = page.querySelector("#dash-movie-again");
-    if (movieAgain) movieAgain.addEventListener("click", () =>
-      dealFilm(dealtFilm && dealtFilm.item && dealtFilm.item.id));
 
     const again = page.querySelector("#dash-circuit-again");
     if (again) again.addEventListener("click", async () => {
@@ -906,11 +807,6 @@ const columnIsFull = (blocks, c) => columnOf(blocks, c).length >= PER_COL;
     wireQuickRecipes(page);
     wireFleetViewers(page);
 
-    page.querySelectorAll("[data-play-id]").forEach((btn) =>
-      btn.addEventListener("click", () => {
-        const music = window.SS && window.SS.Music;
-        if (music && music.play) music.play(btn.dataset.play, btn.dataset.playId);
-      }));
   
     page.querySelectorAll("[data-remove]").forEach((b) =>
       b.addEventListener("click", async () => {
@@ -942,60 +838,6 @@ const columnIsFull = (blocks, c) => columnOf(blocks, c).length >= PER_COL;
     wireDashboardBlocks(page, blocks);
   }
   
-  /** The music block: the playlists and albums Cam already has, each one
-      click from playing. Nothing is stored here but which shelf is showing --
-      the lists come from Chords itself every time it draws, so a playlist
-      renamed there reads correctly here. */
-  function musicBlockBody(b) {
-    const music = window.SS && window.SS.Music;
-    if (!music || !music.shelves) {
-      return `<div class="panel dash-card">
-        <div class="dash-card-h"><b>Music</b></div>
-        <p class="cm-page-sub">The music library isn't loaded.</p></div>`;
-    }
-    const shelves = music.shelves();
-    const showing = b.shelf === "albums" ? "albums" : "playlists";
-    const items = shelves[showing] || [];
-    return `<div class="panel dash-card dash-music">
-      <div class="dash-card-h">
-        <b>Music</b>
-        <div class="dash-music-tabs" role="group" aria-label="Playlists or albums">
-          <button class="dash-music-tab ${showing === "playlists" ? "on" : ""}"
-                  data-shelf="playlists" data-block="${escA(b.id)}">Playlists</button>
-          <button class="dash-music-tab ${showing === "albums" ? "on" : ""}"
-                  data-shelf="albums" data-block="${escA(b.id)}">Albums</button>
-        </div>
-      </div>
-      ${items.length ? `<div class="dash-music-grid">
-        ${items.slice(0, 12).map((it) => `
-          <button class="dash-music-item" data-play="${showing === "albums" ? "album" : "playlist"}"
-                  data-play-id="${escA(it.id)}" title="Play ${escA(it.name)}">
-            <span class="dash-music-art"${it.art ? ` data-art="${escA(it.art)}"` : ""}>
-              <span class="dash-music-note">\u266A</span>
-              <span class="dash-music-play">\u25B6</span>
-            </span>
-            <span class="dash-music-name">${esc(it.name)}</span>
-            <span class="dash-music-sub">${it.count} track${it.count === 1 ? "" : "s"}</span>
-          </button>`).join("")}
-      </div>`
-      : `<p class="cm-page-sub">No ${showing} yet \u2014 make one in Music.</p>`}
-    </div>`;
-  }
-
-  /** Blocks are dragged into place while the layout is being edited.
-      Ordinary HTML drag events: they give the threshold, the ghost and the
-      give-up-on-escape behaviour for free. */
-
-  /* ---- placing a widget ---------------------------------------------------
-
-     Cam: "3 collums with the ability to add 3 widgets into each collumn."
-
-     A drag picks a COLUMN and a PLACE in it -- there is nothing else to get
-     right, no size to fight with. The column under the pointer highlights and
-     a line shows where the widget will sit; a column already holding three
-     says so rather than taking a fourth. */
-  let draggingBlock = null;
-
   function columnUnder(page, clientX) {
     const cols = [...page.querySelectorAll(".dash-col")];
     for (const el of cols) {
@@ -1088,116 +930,6 @@ const columnIsFull = (blocks, c) => columnOf(blocks, c).length >= PER_COL;
         grip.addEventListener("pointerup", up);
       });
     });
-  }
-
-  /* ---- Random movie ---------------------------------------------------------
-     A film off the Shelf, dealt face down. The first press turns it over;
-     pressing the cover then opens its Shelf entry. ↻ deals another, face down
-     again. Held here, like the circuit, so dealing is not a layout change. */
-  let dealtFilm = null;          // {item, cover, plain}
-  let filmTurned = false;
-  let filmDealing = false;
-
-  function dealFilm(notId) {
-    if (!window.SS.Shelf || filmDealing) return;
-    filmDealing = true;
-    window.SS.Shelf.randomFilm(notId).then((f) => {
-      filmDealing = false;
-      dealtFilm = f || {none: true};
-      filmTurned = false;
-      render();
-    }, () => { filmDealing = false; });
-  }
-
-  function randomMovieBlockBody() {
-    if (!window.SS.Shelf) {
-      return `<div class="panel dash-card"><div class="dash-card-h"><b>Random movie</b></div>
-        <p class="cm-page-sub">The Shelf isn't loaded.</p></div>`;
-    }
-    if (!dealtFilm) dealFilm(null);
-    const f = dealtFilm && !dealtFilm.none ? dealtFilm : null;
-    const it = f && f.item;
-    return `<div class="panel dash-card dash-movie">
-      <div class="dash-card-h"><b>${filmTurned && it ? esc(it.title) : "Random movie"}</b>
-        ${f ? `<button class="btn btn-quiet dash-circuit-again" id="dash-movie-again"
-          title="Deal another, face down">Another</button>` : ""}</div>
-      ${dealtFilm && dealtFilm.none
-        ? `<p class="cm-page-sub">No films in Media yet. Add DVDs, Blu-rays or tapes in
-            M&amp;T → Media. <a href="#" id="dash-movie-shelf">Open Media &rarr;</a></p>`
-        : !f ? `<p class="cm-page-sub">Dealing…</p>`
-        : `<div class="dash-movie-stage">
-            <button class="dash-movie-card ${filmTurned ? "turned" : ""}" id="dash-movie-card"
-              aria-label="${filmTurned ? `Open ${escA(it.title)} on the Shelf` : "Turn the card over"}"
-              title="${filmTurned ? "Open it on the Shelf" : "Turn it over"}">
-              <span class="dash-movie-face dash-movie-back"><span>?</span></span>
-              <span class="dash-movie-face dash-movie-front">${f.cover
-                ? `<img src="${escA(f.cover)}" alt="">` : f.plain}</span>
-            </button>
-          </div>
-          <p class="cm-page-sub dash-movie-sub">${filmTurned
-            ? `${it.year ? `${esc(it.year)} · ` : ""}press the cover to open it`
-            : "Press to turn it over"}</p>`}
-    </div>`;
-  }
-
-  /* ---- Random album ---------------------------------------------------------
-     The Random movie again, for music: an album dealt face down. The first
-     press turns it over; pressing the cover then plays the album, through
-     the same SS.Music.play the music widget and the album shelf use. The
-     card is the movie card made square, with a disc on its back. */
-  let dealtAlbum = null;         // {album, cover} | {none: true}
-  let albumTurned = false;
-  let albumDealing = false;
-
-  async function dealAlbum(notId) {
-    const music = window.SS && window.SS.Music;
-    if (!music || albumDealing) return;
-    albumDealing = true;
-    try {
-      if (music.start) await music.start();
-      const all = ((music.shelves() || {}).albums || []).filter((a) => a.count > 0);
-      if (!all.length) { dealtAlbum = {none: true}; return; }
-      const pool = all.length > 1 && notId ? all.filter((a) => a.id !== notId) : all;
-      const album = pool[Math.floor(Math.random() * pool.length)];
-      const cover = album.art ? await music.artURL(album.art, 320).catch(() => null) : null;
-      dealtAlbum = {album, cover};
-      albumTurned = false;
-    } finally {
-      albumDealing = false;
-      render();
-    }
-  }
-
-  function randomAlbumBlockBody() {
-    if (!window.SS.Music) {
-      return `<div class="panel dash-card"><div class="dash-card-h"><b>Random album</b></div>
-        <p class="cm-page-sub">Music isn't loaded.</p></div>`;
-    }
-    if (!dealtAlbum && !albumDealing) dealAlbum(null);
-    const d = dealtAlbum && !dealtAlbum.none ? dealtAlbum : null;
-    const a = d && d.album;
-    const sub = (x) => [x.artist, `${x.count} track${x.count === 1 ? "" : "s"}`].filter(Boolean).join(" · ");
-    return `<div class="panel dash-card dash-movie dash-album">
-      <div class="dash-card-h"><b>${albumTurned && a ? esc(a.name) : "Random album"}</b>
-        ${d ? `<button class="btn btn-quiet dash-circuit-again" id="dash-album-again"
-          title="Deal another, face down">Another</button>` : ""}</div>
-      ${dealtAlbum && dealtAlbum.none
-        ? `<p class="cm-page-sub">No albums yet. <a href="#" id="dash-album-go">Open the CDs in Media &rarr;</a></p>`
-        : !d ? `<p class="cm-page-sub">Dealing…</p>`
-        : `<div class="dash-movie-stage">
-            <button class="dash-movie-card dash-album-card ${albumTurned ? "turned" : ""}" id="dash-album-card"
-              aria-label="${albumTurned ? `Play ${escA(a.name)}` : "Turn the album over"}"
-              title="${albumTurned ? "Play it" : "Turn it over"}">
-              <span class="dash-movie-face dash-movie-back"><span></span></span>
-              <span class="dash-movie-face dash-movie-front">${d.cover
-                ? `<img src="${escA(d.cover)}" alt="">`
-                : `<span class="dash-album-plain"><b>${esc(a.name)}</b></span>`}</span>
-            </button>
-          </div>
-          <p class="cm-page-sub dash-movie-sub">${albumTurned
-            ? `${esc(sub(a))} · press the cover to play`
-            : "Press to turn it over"}</p>`}
-    </div>`;
   }
 
   /* ---- Random pull ----------------------------------------------------------
@@ -2049,14 +1781,11 @@ const columnIsFull = (blocks, c) => columnOf(blocks, c).length >= PER_COL;
   }
 
   function renderBlockBody(b) {
-    if (b.type === "music") return musicBlockBody(b);
     if (b.type === "circuit") return circuitBlockBody();
     if (b.type === "quicknote") return quickNoteBlockBody();
     if (b.type === "puzzle") return puzzleBlockBody(b);
     if (b.type === "quickrecipe") return quickRecipeBlockBody(b);
     if (b.type === "fleetview") return fleetViewBlockBody(b);
-    if (b.type === "randommovie") return randomMovieBlockBody();
-    if (b.type === "randomalbum") return randomAlbumBlockBody();
     if (b.type === "randompull") return randomPullBlockBody(b);
     const today = todayD();
     const todayKey = iso(today);

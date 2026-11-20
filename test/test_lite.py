@@ -156,8 +156,7 @@ try:
     ok("lite.css: no blur, animations end at once, no held layers",
        all(k in css for k in ("backdrop-filter: none", "animation-iteration-count: 1", "will-change: auto")))
     ok("lite.css: only under html[data-lite]", all(line.startswith(("html[data-lite]", " ", "}", "/*", "   ", "")) for line in css.splitlines()))
-    ch = read("ui/music/chords.js")
-    ok("the clock to the minute, the visualizer at 15 fps", "!(window.NNLite && NNLite.on)" in ch and "< 66) return;" in ch)
+    ok("the clock to the minute (its own file since the music went to NeuroStream)", "!(window.NNLite && NNLite.on)" in read("ui/topbar.js"))
     ok("NeuroCafe: Balanced runs as Light", 'fx === "balanced" && lite() ? "light" : fx' in read("ui/cafe/cafe.js"))
 finally:
     shutil.rmtree(scratch, ignore_errors=True)

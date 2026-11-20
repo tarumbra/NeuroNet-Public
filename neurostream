@@ -1,0 +1,50 @@
+#!/bin/bash
+# neurostream: open NeuroStream (was NeuroTV; V31, 19 Nov 2026): music, My Media and IPTV in one window. Super+Alt+W.
+#
+#     neurostream            open it, or bring the open one here
+#     neurostream toggle     the same, but if it's already on this workspace, tuck it away (special:neurostream)
+#     neurostream open URI   play neurostream:album/<id> or neurostream:playlist/<id> (started first if it's closed;
+#                            the Omarchy menu's albums and playlists use this)
+#
+# It runs the installed package (/usr/bin/neurostream) if there is one, otherwise the build in ~/Work/NeuroTV.
+set -u
+DEV="${NEUROTV_DIR:-$HOME/Work/NeuroTV}"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/neurostream.log"
+mkdir -p "$(dirname "$LOG")"
+BIN=""
+if [ -x /usr/bin/neurostream ]; then BIN=/usr/bin/neurostream
+elif [ -x "$DEV/build/neurostream" ]; then BIN="$DEV/build/neurostream"; fi
+if [ -z "$BIN" ]; then
+  command -v notify-send >/dev/null 2>&1 && notify-send "NeuroStream" "NeuroStream isn't built on this computer yet: run bin/build in ~/Work/NeuroTV."
+  exit 1
+fi
+
+if [ "${1:-}" = open ]; then
+  NAME=org.mpris.MediaPlayer2.neurostream
+  owned() { busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus NameHasOwner s "$NAME" 2>/dev/null | grep -q true; }
+  if ! owned; then
+    run=("$BIN"); command -v uwsm-app >/dev/null 2>&1 && run=(uwsm-app -- "${run[@]}")
+    setsid -f "${run[@]}" >"$LOG" 2>&1
+    for _ in $(seq 1 60); do owned && break; sleep 0.5; done
+    owned || exit 1
+  fi
+  exec busctl --user --timeout=10 call "$NAME" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player OpenUri s "${2:-}"
+fi
+
+if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+  j=$(hyprctl clients -j 2>/dev/null | jq -c '[.[] | select(.class == "neurostream")][0] // empty')
+  if [ -n "$j" ]; then
+    win="address:$(jq -r .address <<<"$j")"; ws=$(jq -r .workspace.name <<<"$j")
+    target=$(hyprctl activeworkspace -j | jq -r .name)
+    if [ "${1:-}" = toggle ] && [ "$ws" = "$target" ]; then
+      hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"special:neurostream\", follow = false })" >/dev/null 2>&1
+      exit 0
+    fi
+    [ "$ws" != "$target" ] && hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\" })" >/dev/null 2>&1
+    hyprctl dispatch "hl.dsp.focus({ window = \"$win\" })" >/dev/null 2>&1
+    exit 0
+  fi
+fi
+run=("$BIN")
+if command -v uwsm-app >/dev/null 2>&1; then run=(uwsm-app -- "${run[@]}"); fi
+exec setsid -f "${run[@]}" >"$LOG" 2>&1

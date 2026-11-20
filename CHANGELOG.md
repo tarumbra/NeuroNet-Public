@@ -8,6 +8,28 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.189 — Music, Cinema and Media moved to NeuroStream; NeuroTrain 0.6.1 (20 November 2026)
+
+Cam (vote V31): "taking the features of neuronets music player and movie theartre to the NeuroTV and changing its
+name ... I reckon we could remove them from Neuronet completely ... This way we can remove the feature from NeuroNet
+itself and remove the clutter. Our goal is to create all standalone apps that can be used seperately from neuronet."
+
+- **NeuroTV is NeuroStream**, an app of its own (Super+Alt+W, and Super+Alt+M): your music, everything you own
+  (what was Media, with tags and Digital / Non-digital / All), your films and shows, and IPTV, Spotify style.
+  The first time it opens it brings NeuroNet's Media, Cinema and Music over (the music files stay in
+  `chords/music`, where NeuroStream plays them from).
+- **M&T is your inventories now.** Music (Library, Playlists, Visualizer), Media, the Shelf and Cinema are gone
+  from NeuroNet, with the music player in the top bar and the Music, Random movie and Random album widgets on
+  Today (a dashboard that had one simply leaves it out). Old links to those pages land on Inventories.
+- **The bar's music widget, the media keys (Super+Alt+\ ] [) and the Omarchy menu's albums and playlists** play
+  NeuroStream's music. NeuroNet's quick-access remote (org.neuronet.App) carries on as before; NeuroNet is no
+  longer a music player on the media bus.
+- Find no longer lists songs and Media; `neuronet-media-art` went with Media.
+- **NeuroTrain 0.6.1**: nine more athlete profiles (Strength sport, Endurance, Hybrid, Combat, Return to training,
+  Older adult, Youth, Pre and postnatal, Weight and health), each with its own tests first and a loading guide; dated
+  athlete notes that go in a report only when ticked; a Signals panel on each athlete (how they feel against what
+  they did, the last 7 days against their own 4 weeks before); and a "Reading the data" guide.
+
 ## 1.0.188 — Lite mode, TV in Media, NeuroTV's guide, recordings and picture in picture (19 November 2026)
 
 Cam, on the ThinkPad T470s: "We will be using this as the benchmark for creating neuronet for less powerful compute,

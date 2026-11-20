@@ -161,8 +161,8 @@ const $ = (w, s) => w.document.querySelector(s);
     names.slice(0, 2).sort().join() === "Creme Anglaise,Creme Circuit", names.join());
   ok("a note, by its name", (await type("garden")).includes("Garden plans"));
   ok("a Training session", (await type("sit up")).includes("Recon Ariel - Plan B - Sit Up Program"));
-  ok("Media, by who it's by too", (await type("gold abba"))[0] === "Gold");
-  ok("a song (as the Library has it)", (await type("track 4")).includes("Track 4"));
+  ok("Media and songs aren't searched here any more (they're NeuroStream's, 19 Nov 2026)",
+    !(await type("gold abba")).includes("Gold") && !(await type("track 4")).includes("Track 4"));
   names = await type("sessions");
   ok("a page by its name", names[0] === "Sessions");
   key(q, "Enter");

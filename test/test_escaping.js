@@ -68,7 +68,6 @@ const SAFE = new Set([
   "guide/guide.js ${topic.body}",
   "home/home.js ${k.name}",                // puzzle kinds, built in
   "home/home.js ${s.label}",               // a guided routine's steps, built in
-  "music/chords.js ${ICON.note}",          // an icon
   "notes/guides.js ${g.body}",             // a guide's rich text (HTML by design)
   "pet/pet.js ${Core.SKILLS[w.skill].name}",   // the game's skill names
   "scrapbook/materials.js ${p.body}",      // built-in paper bodies (SVG)

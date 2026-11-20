@@ -161,17 +161,7 @@ try:
         dest2 = snips.media_art_archive(os.path.join(art, "a.png"))
         ok("  done ones go into its Archive, a second of the same name numbered",
            dest.endswith("Media Art/Archive/a.png") and dest2.endswith("Media Art/Archive/a (2).png"))
-        env_art = dict(env, NEURONET_REFERENCES_DIR=refs)
-        open(log, "w").close()
-        r = subprocess.run([sys.executable, os.path.join(APP, "neuronet-media-art"), "apply", os.path.join(art, "b.jpg"),
-                            "--title", "Practical Magic", "--format", "VHS", "--year", "1998"],
-                           env=env_art, capture_output=True, text=True, timeout=30)
-        calls = open(log).read()
-        ok("neuronet-media-art apply hands the picture, title, type, format and year to NeuroNet (media.cover)",
-           r.returncode == 0 and "call media.cover" in calls and '"title": "Practical Magic"' in calls
-           and '"format": "VHS"' in calls and '"type": "film"' in calls, r.stderr + calls)
-        ok("  and the picture moves to Media Art/Archive", not os.path.exists(os.path.join(art, "b.jpg"))
-           and os.path.isfile(os.path.join(art, "Archive", "b.jpg")))
+        # (neuronet-media-art, which put a picture onto Media, went with Media to NeuroStream, 19 Nov 2026)
     finally:
         snips.documents_dir = real_docs
         os.environ["NEURONET_SNIPS_DIR"] = saved_env

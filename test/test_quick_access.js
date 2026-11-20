@@ -152,26 +152,24 @@ const view = (w) => w.document.querySelector("#ss-app") && w.SS.currentView
   ok("the whole-app button exists and is hidden normally", full && full.hidden
     && !app.classList.contains("nn-quick"));
 
-  w.SS.quickMode("music", true); await wait(400);
-  ok("Quick(music, compact) turns the compact look on", app.classList.contains("nn-quick"));
+  /* (Music was the example here until it went to NeuroStream, 19 Nov 2026: Money behaves the same) */
+  w.SS.quickMode("money", true); await wait(400);
+  ok("Quick(money, compact) turns the compact look on", app.classList.contains("nn-quick"));
   ok("  shows the whole-app button", !full.hidden);
-  ok("  and opens Music", !$(w, "#ch-shell").hidden, "the music shell is hidden");
+  ok("  and opens Money", /^money:/.test(w.SS._test.view), w.SS._test.view);
   const css = require("fs").readFileSync(require("path").join(UI, "multitask.css"), "utf8");
   ok("compact hides the left menu (and only that)",
     /#ss-app\.nn-quick #ss-sidebar \{ display: none; \}/.test(css)
     && !/nn-quick #ss-topbar|nn-quick #ss-subnav/.test(css));
 
-  w.SS.go("music:playlists"); await wait(300);
+  w.SS.go("money:goals"); await wait(300);
   w.SS.quickMode("photos", true); await wait(300);
-  w.SS.quickMode("music", true); await wait(300);
-  ok("a section reopens on the page last used in it (Playlists)",
-    /Playlists/.test(($(w, "#ss-bottombar") || w.document.body).textContent)
-    && !!$(w, "#ch-shell") && !$(w, "#ch-shell").hidden, ($(w, "#ss-bottombar") || {}).textContent);
+  w.SS.quickMode("money", true); await wait(300);
+  ok("a section reopens on the page last used in it (Savings)", w.SS._test.view === "money:goals", w.SS._test.view);
 
-  w.SS.go("music:visualizer"); await wait(300);
-  w.SS.quickMode("music", true); await wait(300);
-  ok("asking for the section already open leaves the page as it is",
-    /Visualizer/.test(($(w, "#ss-bottombar") || w.document.body).textContent), ($(w, "#ss-bottombar") || {}).textContent);
+  w.SS.go("money:calc"); await wait(300);
+  w.SS.quickMode("money", true); await wait(300);
+  ok("asking for the section already open leaves the page as it is", w.SS._test.view === "money:calc", w.SS._test.view);
 
   let called = 0;
   w.pywebview.api = new Proxy(w.pywebview.api, {get: (t, n) => n === "quick_full"
@@ -187,18 +185,17 @@ const view = (w) => w.document.querySelector("#ss-app") && w.SS.currentView
      in Neuronet"), so every section must open in the popup on one of its
      own pages -- Kitchen's pages aren't named after it, and Stuff's are made
      at run time, so each is checked, not assumed. */
-  const TOOLS = ["notes", "training", "photos", "music", "money", "home",
+  const TOOLS = ["notes", "training", "photos", "money", "home",
                  "mind", "games", "divination", "stuff", "cookery", "code", "creative"];
   const missed = [];
   for (const sec of TOOLS) {
     w.SS.go("photos"); await wait(150);
-    if (sec === "photos") w.SS.go("music:library"), await wait(150);
+    if (sec === "photos") w.SS.go("money:dashboard"), await wait(150);
     w.SS.quickMode(sec, true); await wait(300);
     const v = w.SS._test.view;
-    /* M&T (2026-10-02): Music and Stuff are one section; Super+Alt+M opens
-       its music pages, Super+Alt+I its media pages. */
-    const want = {music: "stuff"}[sec] || sec;
-    const half = {music: "music:", stuff: "stuff:"}[sec];
+    /* M&T: Super+Alt+I opens its inventories (Music, Super+Alt+M, is NeuroStream's since 19 Nov 2026) */
+    const want = sec;
+    const half = {stuff: "stuff:"}[sec];
     if (w.SS._test.sectionOf(v) !== want || (half && !v.startsWith(half))) missed.push(`${sec} -> ${v}`);
   }
   ok("every tool with a key opens in the popup on one of its own pages",

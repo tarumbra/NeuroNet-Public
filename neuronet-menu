@@ -10,7 +10,7 @@ this WRITES the rows: a block between the two marker lines below, leaving
 everything else in the file alone. The menu reloads the file by itself.
 
 Run it again when NeuroNet's things change -- the systemd user unit
-neuronet-menu.path does that whenever the music library, the recipes or the
+neuronet-menu.path does that whenever the recipes or the
 notes vault change (see the NeuroNet README, "The Omarchy menu").
 
     neuronet-menu            write the block (only if it changed)
@@ -36,10 +36,10 @@ END = "  // <<< NeuroNet"
 
 SECTIONS = [  # (neuronet-quick name, label, icon, key)
     ("home", "Home", "󰋜", "H"), ("notes", "Scribe", "󰎞", "N"), ("creative", "Creative", "󰏘", "B"),
-    ("music", "M&T: Music", "󰎆", "M"), ("photos", "Photos", "󰉏", "P"),
+    ("photos", "Photos", "󰉏", "P"),
     ("training", "Training", "󰖏", "T"), ("cookery", "Kitchen", "󰩰", "R"),
     ("money", "Money", "󰄔", "C"), ("mind", "Mindfulness", "󰧱", "Z"),
-    ("divination", "Divination", "󰫢", "D"), ("stuff", "M&T: Media", "󰆧", "I"),
+    ("divination", "Divination", "󰫢", "D"), ("stuff", "M&T: Inventories", "󰆧", "I"),
     ("games", "Puzzles", "󰐱", "Q"),
 ]
 QS = "qs ipc -p /usr/share/omarchy/shell call"
@@ -96,14 +96,17 @@ def rows():
     add("neuronet.oracle", icon="☾", label="Today's oracle & Lenormand cards",
         action=QS + " neuronet.oracle toggle")
 
-    # ---- music -------------------------------------------------------------
-    chords = load(os.path.join(DATA, "chords", "chords.json"), {})
+    # ---- music: NeuroStream's (the music left NeuroNet for it, 19 Nov 2026) -------
+    add("neurostream", icon="󰎆", label="NeuroStream", description="Music, My Media and TV",
+        action=tool("neurostream"))
+    lib_home = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
+    music = load(os.path.join(lib_home, "neurostream", "music", "library.json"), {})
     artist_of = {}
-    tracks = chords.get("tracks") or {}
+    tracks = music.get("tracks") or {}
     for f, t in (tracks.items() if isinstance(tracks, dict) else []):
         if isinstance(t, dict):
             artist_of[f] = t.get("artist") or ""
-    albums = [a for a in chords.get("albums") or [] if isinstance(a, dict) and a.get("files")]
+    albums = [a for a in music.get("albums") or [] if isinstance(a, dict) and a.get("files")]
     if albums:
         add("neuronet.albums", icon="󰀥", label="Play an album",
             description="%d albums" % len(albums))
@@ -111,14 +114,14 @@ def rows():
             artist = a.get("artist") or next((artist_of.get(f) for f in a["files"] if artist_of.get(f)), "")
             add("neuronet.albums." + slug(a["id"]), icon="󰀥", label=a.get("name") or "Album",
                 description=artist, aliases=[artist] if artist else [],
-                action=tool("neuronet-call", "album.play", json.dumps({"id": a["id"]})))
-    lists = [p for p in chords.get("playlists") or [] if isinstance(p, dict) and p.get("files")]
+                action=tool("neurostream", "open", "neurostream:album/" + str(a["id"])))
+    lists = [p for p in music.get("playlists") or [] if isinstance(p, dict) and p.get("files")]
     if lists:
         add("neuronet.playlists", icon="󰲸", label="Play a playlist")
         for p in lists:
             add("neuronet.playlists." + slug(p["id"]), icon="󰲸", label=p.get("name") or "Playlist",
                 description="%d songs" % len(p["files"]),
-                action=tool("neuronet-call", "playlist.play", json.dumps({"id": p["id"]})))
+                action=tool("neurostream", "open", "neurostream:playlist/" + str(p["id"])))
 
     # ---- notes -------------------------------------------------------------
     vault = os.path.join(DATA, "notes", "vault")

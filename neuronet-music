@@ -1,5 +1,5 @@
 #!/bin/bash
-# neuronet-music -- NeuroNet's music from a key, without touching the bar.
+# neuronet-music -- the music from a key, without touching the bar (NeuroStream's since 19 Nov 2026, V31).
 #
 # Cam: "a shortcut to pause and play the music without having to click mini
 # player in top bar and pause (maybe a next and previous shortcut as well)".
@@ -8,10 +8,10 @@
 #     neuronet-music next           Super+Alt+]
 #     neuronet-music previous       Super+Alt+[
 #
-# Always NeuroNet's player (org.mpris.MediaPlayer2.neuronet, mpris.py) --
+# Always NeuroStream's player (org.mpris.MediaPlayer2.neurostream) --
 # not "whatever is playing", as Omarchy's media keys are, so a video in the
-# browser doesn't take the key. If NeuroNet isn't running it's started,
-# hidden, first; commands wait until its player is ready.
+# browser doesn't take the key. If NeuroStream isn't running it's started
+# first; commands wait until its player is ready.
 set -u
 HERE="$(dirname "$(readlink -f "$0")")"
 case "${1:-play-pause}" in
@@ -20,13 +20,13 @@ case "${1:-play-pause}" in
   previous|prev)     method=Previous ;;
   *) echo "Usage: neuronet-music play-pause|next|previous" >&2; exit 2 ;;
 esac
-NAME=org.mpris.MediaPlayer2.neuronet
+NAME=org.mpris.MediaPlayer2.neurostream
 owned() {
   busctl --user call org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
     NameHasOwner s "$NAME" 2>/dev/null | grep -q true
 }
 if ! owned; then
-  "$HERE/neuronet-quick" start >/dev/null 2>&1
+  "$HERE/neurostream" >/dev/null 2>&1
   for _ in $(seq 1 60); do owned && break; sleep 0.5; done
   owned || exit 1
 fi

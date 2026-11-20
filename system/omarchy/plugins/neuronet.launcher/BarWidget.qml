@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell
-import Quickshell.Services.Mpris
+import Quickshell.Io
 import qs.Ui
 import qs.Commons
 
@@ -29,9 +29,8 @@ BarWidget {
     { key: "money", name: "Cashbox", glyph: "󰄔", keys: "Super+Alt+C" },
     { key: "games", name: "Puzzles", glyph: "󰐱", keys: "Super+Alt+Q" },
     { key: "divination", name: "Divination", glyph: "✦", keys: "Super+Alt+D" },
-    // M&T (2026-10-02): Music and Stuff are one section now -- M opens its
-    // music pages, I its media pages (neuronet-quick music | stuff).
-    { key: "stuff", name: "M&T", glyph: "󰏗", keys: "Super+Alt+M · I" },
+    // M&T: the inventories (Music and Media went to NeuroStream, Super+Alt+M / W, 19 Nov 2026)
+    { key: "stuff", name: "M&T", glyph: "󰏗", keys: "Super+Alt+I" },
     { key: "cookery", name: "Kitchen", glyph: "󰩰", keys: "Super+Alt+R" },
     { key: "training", name: "Training", glyph: "󰔛", keys: "Super+Alt+T" },
     { key: "home", name: "Home", glyph: "󰋜", keys: "Super+Alt+H" },
@@ -39,13 +38,18 @@ BarWidget {
     { key: "creative", name: "Creative", glyph: "󰏘", keys: "Super+Alt+B" },
     { key: "code", name: "Code", glyph: "󰅩", keys: "Super+Alt+E" }
   ]
-  // NeuroNet is running when its player is on the media bus.
-  readonly property bool running: {
-    var list = Mpris.players ? Mpris.players.values : []
-    for (var i = 0; i < list.length; i++)
-      if (list[i] && list[i].dbusName === "org.mpris.MediaPlayer2.neuronet") return true
-    return false
+  // NeuroNet is running when its remote (org.neuronet.App) is on the session bus. (It used to be its music
+  // player on the media bus; the music went to NeuroStream, 19 Nov 2026.) Asked when the bar loads and when
+  // you hover or open it, never on a timer.
+  property bool running: false
+  Process {
+    id: check
+    command: ["busctl", "--user", "call", "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+              "NameHasOwner", "s", "org.neuronet.App"]
+    stdout: StdioCollector { onStreamFinished: root.running = this.text.indexOf("true") >= 0 }
   }
+  function recheck() { if (!check.running) check.running = true }
+  Component.onCompleted: recheck()
 
   property bool popupOpen: false
   function close() { popupOpen = false }
@@ -79,8 +83,8 @@ BarWidget {
       if (m.button === Qt.MiddleButton) root.go("toggle")
       else root.popupOpen = !root.popupOpen
     }
-    onEntered: if (root.bar) root.bar.showTooltip(root, "NeuroNet quick access"
-      + (root.running ? "" : " · NeuroNet will open"))
+    onEntered: { root.recheck(); if (root.bar) root.bar.showTooltip(root, "NeuroNet quick access"
+      + (root.running ? "" : " · NeuroNet will open")) }
     onExited: if (root.bar) root.bar.hideTooltip(root)
   }
 
