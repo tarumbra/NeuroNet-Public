@@ -289,6 +289,7 @@ SS.pagesIndex = () => orderedSections().flatMap((sec) => {
 SS.openItem = (kind, p) => openItem(kind, p);
 
 async function openItem(kind, p) {
+  if (kind === "note" && scribeHandedOver("notes:vault", {path: p && p.path})) return {ok: true};
   const want = kind === "note" ? "notes:vault" : "recipes";
   if (view !== want) SS.go(want);
   const ready = kind === "note"
@@ -322,6 +323,7 @@ async function boardAction(action, p) {
          clicking it opens that document on the desk */
       const ref = String(p.ref || "");
       if (!/^(PT|Q|B|I|N|V|C)\d+$/.test(ref)) return {error: "Which document?"};
+      if (scribeHandedOver("collab:board", {ref})) return {ok: true};
       if (!SS.Collab) return {error: "Collaboration isn't loaded."};
       SS.Collab.open(ref);
       if (view === "collab:board") render(); else SS.go("collab:board");   // (already on the desk: shown again, on it)
@@ -416,6 +418,7 @@ SS.openSection = (key) => {
 
 SS.go = (next) => {
   if (!next || next === view) return;
+  if (scribeHandedOver(next)) return;
   view = next;
   selection.clear();
   SS.Store.setPrefs({view});
@@ -1464,6 +1467,12 @@ const MOVED_VIEWS = {"div:readings": "mind:journal",
 
 function render() {
   if (MOVED_VIEWS[view]) view = MOVED_VIEWS[view];
+  /* left on a Scribe page before Scribe went to NeuroScribe: NeuroNet opens on its first section instead */
+  if (sectionOf(view) === "notes" && !sectionOn("notes")) {
+    const first = orderedSections().find((k) => k !== "notes" && sectionOn(k));
+    const next = first && firstViewOf(first);
+    if (next) { view = next; SS.Store.setPrefs({view}); }
+  }
   /* Multitask: the view belongs to the ACTIVE side, and only that side is
      drawn -- the other side is never touched by navigation on this one. */
   if (MT.on) { renderMultitask(); return; }
@@ -4439,6 +4448,39 @@ async function migrateTrainingNav(prefs) {
                            trainingNavMigrated: true});
 }
 
+/* SCRIBE IS NEUROSCRIBE (21 Nov 2026, Cam: "Now hide the scribe inside of the neuronet main app please").
+
+   NeuroScribe has every Scribe page now (V32, Parts 1 to 6): the Vault, Collaboration, Cells, Fleeting, Notebooks,
+   Ebooks and Bookmarks, Guides, the Archive. So on a computer where NeuroScribe is built, Scribe is switched off here
+   ONCE, the same switch Settings > Sections shown has (it can be turned back on there), and from then on anything
+   that would open one of its pages -- Find, the dashboard, a favourite, a link, Multitask -- opens NeuroScribe
+   instead. The notes stay where they are; NeuroNet keeps the jobs on them (the ship list, starter notes, exports).
+   Where NeuroScribe isn't built yet, nothing changes, and it's asked again next time. */
+async function hideScribeOnce(prefs) {
+  if (!prefs || prefs.scribeHiddenForNeuroScribe) return;
+  let installed = false;
+  try { installed = !!(await SS.Store.call("neuroscribe_installed", [], "")).installed; } catch (e) { installed = false; }
+  if (!installed) return;
+  hiddenSections.add("notes");
+  await SS.Store.setPrefs({hiddenSections: [...hiddenSections], scribeHiddenForNeuroScribe: true});
+}
+
+/* A Scribe page asked for while Scribe is switched off: NeuroScribe opens on it. */
+const SCRIBE_PAGES = {"collab": "collab", "fleeting": "fleeting", "ebooks:library": "page ebooks",
+                      "ebooks:bookmarks": "page ebook-marks", "cells": "page cells", "books": "page notebooks",
+                      "guides": "page guides", "archive": "page archive"};
+function scribeHandedOver(next, extra) {
+  if (sectionOf(next) !== "notes" || sectionOn("notes")) return false;
+  const v = String(next);
+  let request = SCRIBE_PAGES[v] || SCRIBE_PAGES[v.split(":")[0]] || "";
+  if (request === "collab" && extra && extra.ref) request = "collab " + extra.ref;
+  else if (request === "collab") request = "page collab";
+  SS.Store.call("open_neuroscribe", [request, (extra && extra.path) || ""], "Opening NeuroScribe")
+    .then((r) => { if (r && r.error) toast(r.error, "error"); else toast("Scribe is NeuroScribe now: it's opening.", "good"); })
+    .catch(() => {});
+  return true;
+}
+
 function sectionOn(key) {
   /* Settings can never be switched off. Nothing offers to, but a pref file
      carried over from an older build could still name it, and the way back
@@ -4922,6 +4964,7 @@ async function boot() {
     hiddenSections = new Set(prefs.hiddenSections);
   }
   await migrateTrainingNav(prefs);
+  await hideScribeOnce(prefs);
   /* in the background: the app needn't wait for 700 files to be renamed */
   setTimeout(() => namePhotoFilesOnce(prefs).catch(() => {}), 4000);
   if (prefs && Array.isArray(prefs.moreSections)) moreSections = new Set(prefs.moreSections);

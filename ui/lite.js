@@ -90,7 +90,7 @@
           <li>The music visualizer draws 15 frames a second instead of 60.</li>
           <li>Everything else works exactly the same: every section, game and tool is still there.</li>
         </ul>
-        <p class="stamp" style="margin:0 0 22px">Shared with NeuroTrain, NeuroPets, NeuroFarm, NeuroCafe and
+        <p class="stamp" style="margin:0 0 22px">Shared with NeuroTrain, NeuroPets, NeuroCafe and
           NeuroArcana: each picks it up the next time it opens. A few calmer animations (the pages' own
           reduced-motion styles) come in with NeuroNet's next start.</p>
       </div>`;

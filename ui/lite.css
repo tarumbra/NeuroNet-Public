@@ -38,4 +38,3 @@ html[data-lite] #ss-topbar .cc-queue-pop {
 html[data-lite] .wel-veil { background: var(--bg, #111) !important; }
 html[data-lite] .df-veil { background: rgba(0, 0, 0, 0.88) !important; }
 html[data-lite] .rk-facts span { background: rgba(0, 0, 0, 0.55) !important; }
-html[data-lite] .nf-sheet { background: rgba(60, 40, 20, 0.55) !important; }   /* NeuroFarm: its blur was most of the dimming */

@@ -80,7 +80,7 @@ for path in tests:
 for path in tests:
     src = open(path, encoding="utf-8").read()
     lines = src.splitlines()
-    imps = [i for i, l in enumerate(lines) if __import__("re").match(r"\s*(import|from)\s+(neuronet|neuropets|neurofarm)\b", l)]
+    imps = [i for i, l in enumerate(lines) if __import__("re").match(r"\s*(import|from)\s+(neuronet|neuropets)\b", l)]
     provs = [i for i, l in enumerate(lines) if "DATA_DIR_PROVIDER = " in l and not l.strip().startswith("#")]
     if imps and provs:
         check(max(provs) > max(imps), "%s points DATA_DIR_PROVIDER at its scratch folder after importing neuronet/neuropets" % os.path.basename(path))

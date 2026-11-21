@@ -2260,7 +2260,7 @@ class ShownWindow:
     KDE desktop environment and still have the app run in the background and
     brought up with the shortcuts"). Hidden is really hidden: unmapped, out of
     the taskbar, still running. The desktop's own script (neuronet-quick,
-    neuropets, neurofarm) asks over the session bus -- Show <mode>, Hide,
+    neuropets, neurocafe) asks over the session bus -- Show <mode>, Hide,
     State -- and brings it to the front (neuronet-raise). On Hyprland none of
     this is used: the scratchpad does it.
 

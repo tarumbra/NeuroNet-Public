@@ -27,7 +27,7 @@ o.bind("SUPER + ALT + bracketleft", "NeuroStream music: previous track", "neuron
 -- had it since 1.0.9 (Cam's choice), so the default is unbound first.
 hl.unbind("SUPER + ALT + G")
 o.bind("SUPER + ALT + G", "NeuroPets (the game; again to tuck it away)", "neuropets toggle")
--- Super+Alt+Y was NeuroFarm's; NeuroArcana's from 1 Nov 2026 (NeuroFarm is moving into NeuroCafe)
+-- Super+Alt+Y was NeuroFarm's; NeuroArcana's from 1 Nov 2026 (NeuroFarm was taken out in 1.0.191)
 o.bind("SUPER + ALT + Y", "NeuroArcana (the tarot card game)", "neuroarcana")
 o.bind("SUPER + ALT + J", "NeuroCafe (the cafe game; again to tuck it away)", "neurocafe toggle")
 -- the Claude dock (1 Nov 2026 on the PC; in NeuroNet from 10 Nov): the chat you're in tucks into the top bar

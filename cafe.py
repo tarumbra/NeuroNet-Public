@@ -1,6 +1,6 @@
 """NeuroCafe -- where the cafe is kept (neuronet_data/cafe/cafe.json).
 
-Cam (2026-10-20, V19): a Cafeland-style cafe game, its own app like NeuroFarm.
+Cam (2026-10-20, V19): a Cafeland-style cafe game, its own app like NeuroPets.
 THE RULES ARE NOT HERE -- they're ui/cafe/cafecore.js. The page applies an
 action and hands the result here to keep: checked, written safely, the
 previous copy kept as cafe.json.bak.

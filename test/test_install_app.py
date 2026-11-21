@@ -104,10 +104,11 @@ try:
     paths = json.load(open(os.path.join(home, ".config", "neuronet", "paths.json")))
     ok("paths.json names NeuroNet and its data", paths == {"app": APP, "data": data}, paths)
     ok("NeuroNet's commands are in ~/.local/bin",
-       all(os.access(os.path.join(home, ".local", "bin", c), os.X_OK) for c in ("neuronet-quick", "neuropets", "neurofarm", "neuronet-path")))
+       all(os.access(os.path.join(home, ".local", "bin", c), os.X_OK) for c in ("neuronet-quick", "neuropets", "neuronet-path")))
     apps = os.path.join(home, ".local", "share", "applications")
-    ok("launcher entries for NeuroNet, NeuroPets, NeuroFarm, NeuroCafe",
-       all(os.path.isfile(os.path.join(apps, n + ".desktop")) for n in ("NeuroNet", "NeuroPets", "NeuroFarm", "NeuroCafe")))
+    ok("launcher entries for NeuroNet, NeuroPets, NeuroCafe (and NeuroFarm gone, 1.0.191)",
+       all(os.path.isfile(os.path.join(apps, n + ".desktop")) for n in ("NeuroNet", "NeuroPets", "NeuroCafe"))
+       and not os.path.exists(os.path.join(apps, "NeuroFarm.desktop")))
     units = os.path.join(home, ".config", "systemd", "user")
     ok("no widget shell and no Omarchy-menu indexer",
        not os.path.exists(os.path.join(units, "neuronet-desktop.service"))

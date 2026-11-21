@@ -6,6 +6,8 @@
 #     neuroscribe open PATH    open a note (a vault path, or a file inside the vault) in a new tab
 #     neuroscribe new | daily | fleeting     a new note, today's note, or the Fleeting box
 #     neuroscribe collab CODE  a Collaboration document (PT93, V32 ...): the pop-ups' Open comes here
+#     neuroscribe page NAME    a page: ebooks, ebook-marks, cells, notebooks, guides, archive, collab, search, graph
+#                              (NeuroNet hands its Scribe pages over with this, 21 Nov 2026)
 #
 # It runs the installed package (/usr/bin/neuroscribe) if there is one, otherwise the build in ~/Work/NeuroScribe;
 # where neither is there, NeuroNet's own Scribe opens instead, so Super+Alt+N always opens the notes.
@@ -21,7 +23,7 @@ if [ -z "$BIN" ]; then
 fi
 
 # a request for the open window (it hands itself over through its own socket, so this is quick)
-if [ "${1:-}" = open ] || [ "${1:-}" = new ] || [ "${1:-}" = daily ] || [ "${1:-}" = fleeting ] || [ "${1:-}" = collab ]; then
+if [ "${1:-}" = open ] || [ "${1:-}" = new ] || [ "${1:-}" = daily ] || [ "${1:-}" = fleeting ] || [ "${1:-}" = collab ] || [ "${1:-}" = page ]; then
   run=("$BIN" "$@"); command -v uwsm-app >/dev/null 2>&1 && run=(uwsm-app -- "${run[@]}")
   setsid -f "${run[@]}" >>"$LOG" 2>&1
   # already open: it got the request through its socket; bring its window here

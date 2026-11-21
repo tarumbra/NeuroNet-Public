@@ -1,6 +1,6 @@
 #!/bin/bash
 # install-app.sh -- NeuroNet on an Arch computer running Hyprland, WITHOUT
-# Omarchy: the app, NeuroPets, NeuroFarm and NeuroCafe, their commands, launcher entries
+# Omarchy: the app, NeuroPets and NeuroCafe, their commands, launcher entries
 # and shortcuts. No desktop widgets, bar widget, themes or Omarchy menu --
 # those are Omarchy's shell (system/install.sh does them, on Omarchy).
 #

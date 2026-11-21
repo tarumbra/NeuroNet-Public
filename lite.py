@@ -8,7 +8,7 @@ settings that can be toggled. This way we get a cross polinaton of benefits thro
 ONE SETTING FOR THE WHOLE ECOSYSTEM, KEPT ON THIS COMPUTER: ~/.config/neuronet/lite.json, {"mode": "auto"|"on"|"off"}.
 It sits beside paths.json because it's about this machine, not about Cam's things: the PC can stay full while the
 ThinkPad is lite, and a data mirror never carries it across. NeuroNet's Settings > Lite mode writes it; NeuroNet,
-NeuroPets, NeuroFarm, NeuroCafe and NeuroArcana read it here; NeuroTrain reads the same file (its shell/lite.js
+NeuroPets, NeuroCafe and NeuroArcana read it here; NeuroTrain reads the same file (its shell/lite.js
 follows the same rule, kept in step by test_lite.py).
 
 AUTO (the default) is on when this computer is a small one (4 threads or fewer, or 8 GB of memory or less) or when
@@ -155,7 +155,7 @@ def css():
 
 
 def attach(window, environ=None):
-    """A game window (NeuroPets, NeuroFarm, NeuroCafe, NeuroArcana): when lite, its page gets ui/lite.css and
+    """A game window (NeuroPets, NeuroCafe, NeuroArcana): when lite, its page gets ui/lite.css and
     html[data-lite] as it loads. (The games are served from their own folders, so they can't link ../lite.css.)"""
     environ = os.environ if environ is None else environ
     if environ.get("NEURONET_NO_LITE") or not state(environ)["on"]:

@@ -1,4 +1,4 @@
-"""neuronet-quick, neuropets, neurofarm and neurocafe without Hyprland -- KDE Plasma.
+"""neuronet-quick, neuropets and neurocafe without Hyprland -- KDE Plasma.
 
 Cam, 2026-10-14: "is it possible to have a KDE desktop environment and still
 have the app run in the background and brought up with the shortcuts" ...
@@ -65,7 +65,7 @@ exit 0
 H="%s"
 echo "python3 $*" >> "$H/calls.log"
 case "$1" in
-  *neuronet.py) n=org.neuronet.App ;; *neuropets.py) n=org.neuropets.App ;; *neurofarm.py) n=org.neurofarm.App ;; *neurocafe.py) n=org.neurocafe.App ;; *) exit 0 ;;
+  *neuronet.py) n=org.neuronet.App ;; *neuropets.py) n=org.neuropets.App ;; *neurocafe.py) n=org.neurocafe.App ;; *) exit 0 ;;
 esac
 : > "$H/owned-$n"
 case " $* " in *" --hidden "*) echo hidden > "$H/state-$n" ;; *) echo window > "$H/state-$n" ;; esac
@@ -151,8 +151,8 @@ case " $* " in *" --hidden "*) echo hidden > "$H/state-$n" ;; *) echo window > "
     ok("not running: a tool's key starts it, then shows that tool",
        "neuronet.py --gui qt --hidden" in calls and "Quick sb photos true" in calls and state() == "popup", calls + out)
 
-    # ---- NeuroPets, NeuroFarm, NeuroCafe -----------------------------------------------------------------
-    for script, svc in (("neuropets", "org.neuropets.App"), ("neurofarm", "org.neurofarm.App"), ("neurocafe", "org.neurocafe.App")):
+    # ---- NeuroPets, NeuroCafe -----------------------------------------------------------------
+    for script, svc in (("neuropets", "org.neuropets.App"), ("neurocafe", "org.neurocafe.App")):
         code, calls, out = run(script, "toggle")
         settle(svc)
         calls = open(LOG).read()

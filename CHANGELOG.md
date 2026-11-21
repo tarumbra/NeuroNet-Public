@@ -8,6 +8,28 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.191 — Scribe hidden, NeuroFarm taken out (21 November 2026)
+
+Cam (21 Nov 2026): "Remove Neurofarm completely please".
+
+- **NeuroFarm is gone**: the game, its window, the `neurofarm` command, its launcher entry and its icon. An update
+  takes the old files out of an installed NeuroNet (system/retired.txt) and `neuronet-setup` removes
+  `~/.local/bin/neurofarm` and NeuroFarm.desktop. A farm save in the data folder is left where it is, and so are
+  the NeuroFarm notes and the art in ~/Pictures. NeuroCafe's farm across the street keeps its own copies of the
+  crop pictures, so it is unchanged.
+
+Cam (21 Nov 2026): "Now hide the scribe inside of the neuronet main app please".
+
+Cam (21 Nov 2026): "Now hide the scribe inside of the neuronet main app please".
+
+- **Scribe is switched off in NeuroNet** on each computer where NeuroScribe is built, once (Settings > Sections shown
+  can turn it back on, and that's never undone). Where NeuroScribe isn't built yet, Scribe stays until it is.
+- **Every way in opens NeuroScribe instead**: Find's notes, the dashboard, favourites, links, Multitask, the Omarchy
+  menu's notes, the bar and Super+Alt+N. A Scribe page asked for (Cells, Notebooks, Ebooks, Bookmarks, Guides,
+  the Archive, Collaboration, Fleeting) opens on the same page in NeuroScribe.
+- Nothing is deleted: the notes stay where they are, and NeuroNet keeps its jobs on them (the ship list, the notes
+  that ship with releases, exports). Boards, Scrapbook and the cover maker are in Creative, as before.
+
 ## 1.0.190 — NeuroScribe, Scribe as an app of its own (21 November 2026)
 
 Cam (vote V32): "a new application ... a standalone notes app like obsidian which we already have most of the features

@@ -22,6 +22,11 @@ kind="${1:-}"; what="${2:-}"
 if [ "$kind" = collab ] && { [ -x /usr/bin/neuroscribe ] || [ -x "${NEUROSCRIBE_DIR:-$HOME/Work/NeuroScribe}/build/neuroscribe" ]; }; then
   exec "$HERE/neuroscribe" collab "$what"
 fi
+# a note from the Omarchy menu: in NeuroScribe where it's built (the file in the main vault, as the menu lists them)
+if [ "$kind" = note ] && { [ -x /usr/bin/neuroscribe ] || [ -x "${NEUROSCRIBE_DIR:-$HOME/Work/NeuroScribe}/build/neuroscribe" ]; }; then
+  case "/$what/" in */../*) echo "neuronet-open: no such note" >&2; exit 2 ;; esac
+  exec "$HERE/neuroscribe" open "$(neuronet-path data)/notes/vault/$what"
+fi
 case "$kind" in
   note)   section=notes;   payload=$(jq -nc --arg v "$what" '{path: $v}') ;;
   recipe) section=cookery; payload=$(jq -nc --arg v "$what" '{id: $v}') ;;
