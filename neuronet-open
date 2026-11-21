@@ -18,6 +18,10 @@
 set -u
 HERE="$(dirname "$(readlink -f "$0")")"
 kind="${1:-}"; what="${2:-}"
+# Collaboration lives in NeuroScribe now (V32 q4, 20 Nov 2026): where NeuroScribe is built, the pop-up's Open goes there
+if [ "$kind" = collab ] && { [ -x /usr/bin/neuroscribe ] || [ -x "${NEUROSCRIBE_DIR:-$HOME/Work/NeuroScribe}/build/neuroscribe" ]; }; then
+  exec "$HERE/neuroscribe" collab "$what"
+fi
 case "$kind" in
   note)   section=notes;   payload=$(jq -nc --arg v "$what" '{path: $v}') ;;
   recipe) section=cookery; payload=$(jq -nc --arg v "$what" '{id: $v}') ;;

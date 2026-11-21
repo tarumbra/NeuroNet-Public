@@ -40,17 +40,34 @@ data_sync() {
 # (8 Nov 2026, Cam: "so i cant use neuronet-dev pull ... for neurocode?": the standalone games live in their own repos in
 #  ~/Work, so pull brings each one up to date too. Not there or no GitHub repo: skipped. Changes not committed, or its own
 #  commits not on GitHub: left alone and said so. Same list as tools/push_apps.sh)
-APPS=(NeuroCafe NeuroCode NeuroArcana NeuroTrain NeuroTV)
+APPS=(NeuroCafe NeuroCode NeuroArcana NeuroTrain NeuroTV NeuroScribe)
+# (21 Nov 2026, NeuroNet 1.0.190) apps NeuroNet itself starts, fetched the first time pull finds them missing: the
+# neuroscribe launcher runs ~/Work/NeuroScribe's build (NeuroNet's Scribe until it's there). The others stay a choice.
+FETCH=(NeuroScribe)
 apps_sync() {
-  local root="${NEURO_APPS_DIR:-$HOME/Work}" a d br lock
+  local root="${NEURO_APPS_DIR:-$HOME/Work}" a d br lock was f
   for a in "${APPS[@]}"; do
     d="$root/$a"
+    if [ ! -d "$d/.git" ]; then
+      for f in "${FETCH[@]}"; do
+        if [ "$f" = "$a" ] && mkdir -p "$root" && git clone -q "https://github.com/tarumbra/$a.git" "$d" 2>/dev/null; then
+          echo "$a: fetched (new on this computer)"
+        fi
+      done
+    fi
     [ -d "$d/.git" ] || { echo "$a: not on this computer"; continue; }
     git -C "$d" remote get-url origin >/dev/null 2>&1 || { echo "$a: no GitHub repo yet, skipped"; continue; }
     if [ -n "$(git -C "$d" status --porcelain --untracked-files=no)" ]; then echo "$a: changes not committed here, not updated (commit them first)"; continue; fi
     br=$(git -C "$d" branch --show-current)
     lock=$(git -C "$d" rev-parse -q --verify "HEAD:package-lock.json" 2>/dev/null)
+    was=$(git -C "$d" rev-parse -q HEAD)
     if ! git -C "$d" pull --ff-only -q origin "$br" 2>/dev/null; then echo "$a: couldn't update (no network, or commits here and on GitHub both: git pull it yourself)"; continue; fi
+    # a Qt app (NeuroStream, NeuroScribe): built again when its code changed, or the first time (a log beside it)
+    if [ -x "$d/bin/build" ] && ls "$d"/*.pro >/dev/null 2>&1 && { [ "$was" != "$(git -C "$d" rev-parse -q HEAD)" ] || [ ! -d "$d/build" ]; }; then
+      if ! command -v qmake6 >/dev/null; then echo "$a: needs building, but qmake6 isn't here (sudo pacman -S qt6-base qt6-declarative)"
+      elif mkdir -p "$d/build" && "$d/bin/build" >"$d/build/build.log" 2>&1; then echo "$a: built"
+      else echo "$a: the build failed (see $d/build/build.log)"; fi
+    fi
     git -C "$d" fetch -q --tags origin 2>/dev/null
     echo "$a: $(git -C "$d" log -1 --format='%h %s' | cut -c1-70)"
     if [ -f "$d/package.json" ] && { [ ! -d "$d/node_modules" ] || [ "$lock" != "$(git -C "$d" rev-parse -q --verify "HEAD:package-lock.json" 2>/dev/null)" ]; }; then

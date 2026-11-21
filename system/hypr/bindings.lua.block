@@ -1,6 +1,7 @@
 -- >>> NeuroNet desktop integration (install.sh)
 -- Added by the NeuroNet migration; see QUICK-ACCESS.md in the NeuroNet folder.
-o.bind("SUPER + ALT + N", "NeuroNet Scribe", "neuronet-quick notes")
+-- Super+Alt+N opens NeuroScribe, the notes in their own window (20 Nov 2026); NeuroNet Scribe where it isn't built
+o.bind("SUPER + ALT + N", "NeuroScribe (your notes; again to tuck it away)", "neuroscribe toggle")
 o.bind("SUPER + ALT + B", "NeuroNet Creative", "neuronet-quick creative")
 -- Super+Alt+T opens NeuroTrain, the training planner in its own window (10 Nov 2026); NeuroNet Training where it isn't installed
 o.bind("SUPER + ALT + T", "NeuroTrain (training planner; again to tuck it away)", "neurotrain toggle")

@@ -8,6 +8,24 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.190 — NeuroScribe, Scribe as an app of its own (21 November 2026)
+
+Cam (vote V32): "a new application ... a standalone notes app like obsidian which we already have most of the features
+already built into scribe ... The goal is to pull each application out of the combine NeuroNet Suite so they can be
+their own app completely."
+
+- **NeuroScribe 0.6.0** (Super+Alt+N, its own repository, built on each computer by `neuronet-dev pull`): your vaults
+  in place, Obsidian style. Tabs, two notes side by side, links, backlinks, graph, search, Fleeting, the Archive;
+  tables you type into while reading, a toolbar, slash commands, callouts, footnotes, block links, properties, hover
+  previews, earlier versions; the Collaboration desk; Ebooks (the same shelf, highlights and bookmarks); Cells and
+  grids (NeuroNet's own formula engine), canvases, Notebooks, Guides; focus mode and a folding side bar; Lite mode.
+  NeuroNet's Scribe stays as it is until Cam says the time has come to take it out.
+- **The team's pop-ups open in NeuroScribe** where it's built (`neuronet-open collab CODE`).
+- **Ebooks**: a highlight made in NeuroScribe is found here too, whatever spaces its words were kept with.
+- **NeuroStream**: the side bar's keys show only on the row you point at.
+- **`neuronet-dev pull`** fetches NeuroScribe the first time and builds NeuroStream and NeuroScribe whenever their code
+  changes (a log in each one's build folder).
+
 ## 1.0.189 — Music, Cinema and Media moved to NeuroStream; NeuroTrain 0.6.1 (20 November 2026)
 
 Cam (vote V31): "taking the features of neuronets music player and movie theartre to the NeuroTV and changing its
