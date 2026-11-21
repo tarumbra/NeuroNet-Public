@@ -8,6 +8,12 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.192 — The barista counter sounds like coffee (21 November 2026)
+
+Cam (21 Nov 2026): "Now can you fix the barista counter with coffee sounds because at the moment it has the cooking sounds."
+
+- **NeuroCafe:** starting a coffee there plays an espresso machine (the pump, the coffee running into the cup, a breath of steam, about two and a half seconds, fading out by itself) instead of the stove's sizzle. There was no coffee recording, so this one is made by `tools/make_cafe_brew.py`; a recording saved as `~/Music/Neurocafe Coffee` replaces it with `python3 tools/cut_cafe_sounds.py brew`.
+
 ## 1.0.191 — Scribe hidden, NeuroFarm taken out (21 November 2026)
 
 Cam (21 Nov 2026): "Remove Neurofarm completely please".

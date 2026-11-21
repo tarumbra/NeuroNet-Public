@@ -161,8 +161,10 @@
   // to random"), and the door chime was taken out
   // (8 Nov, Cam's milkshake recording: "when selecting and making a milkshake") the blender, a short spin-up and wind-down
   // (tools/cut_cafe_sounds.py blend), once as the shake is started, never running on behind
-  const SFX = { blend: .3, plate: .38, clean: .25, sizzle: .32, click: .035, place: .3, pick: .3, no: .4, page: .4, bell: .45, coin: .5, heal: .5, tear: .55, keeper: .6, rare: .7, unlock: .8, victory: .8 };
-  const RANK = [ "click", "pick", "sizzle", "blend", "clean", "plate", "place", "page", "no", "coin", "bell", "heal", "tear", "keeper", "rare", "unlock", "victory"];
+  // (21 Nov, Cam: "fix the barista counter with coffee sounds because at the moment it has the cooking sounds") the
+  // espresso machine, brew.ogg (tools/make_cafe_brew.py: pump, the coffee running, a breath of steam), once per coffee
+  const SFX = { brew: .3, blend: .3, plate: .38, clean: .25, sizzle: .32, click: .035, place: .3, pick: .3, no: .4, page: .4, bell: .45, coin: .5, heal: .5, tear: .55, keeper: .6, rare: .7, unlock: .8, victory: .8 };
+  const RANK = [ "click", "pick", "sizzle", "blend", "brew", "clean", "plate", "place", "page", "no", "coin", "bell", "heal", "tear", "keeper", "rare", "unlock", "victory"];
   // what a move sounds like when it works (the events it brings -- coins, a level -- can outrank it)
   const ACT_SFX = {
     halfWall: "place", halfWallRemove: "place", place: "place", move: "place", decorPlace: "place", decorMove: "place", hang: "place", moveHang: "place", ceilPut: "place", ceilMove: "place",
@@ -172,6 +174,8 @@
     sell: "coin", sellWare: "coin", sellPware: "coin", sellHang: "coin", sellCware: "coin", decorSell: "coin", ceilSell: "coin",
     usePotion: "heal", expand: "unlock", patio: "unlock", aunty: "tear", hauntOpen: "keeper",
   };
+  // a counter that isn't a stove has its own sound when it makes something (in place of the sizzle)
+  const COOK_SFX = { shakebar: "blend", coffeebar: "brew" };
   const EV_SFX = { level: "victory", expand: "unlock", patio: "unlock", mastery: "rare", lucky: "rare", cart: "rare", coins: "coin", tip: "coin", delivered: "coin" };
   const sfxEl = {};
   let sfxLast = 0, sfxNext = null;
@@ -218,7 +222,7 @@
     const before = state;
     const r = C.act(state, action, opts || {}, now());
     if (!r.ok) { if (!quiet) { toast(r.error, true); cue("no"); } return r; }
-    if (!quiet) cue(action === "cook" && (before.items.find((i) => i.uid === (opts || {}).uid) || {}).kind === "shakebar" ? "blend" : ACT_SFX[action]);
+    if (!quiet) cue(action === "cook" && COOK_SFX[(before.items.find((i) => i.uid === (opts || {}).uid) || {}).kind] || ACT_SFX[action]);
     if (build && UNDOABLE.has(action)) { undo.push(before); if (undo.length > 30) undo.shift(); }
     state = r.state;
     save();

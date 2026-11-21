@@ -20,6 +20,8 @@ CUTS = {
     # makes sense and doesnt keep playing in the back ground"): the recording is 25 s of one steady whir, so the take is
     # its start, the blender spinning up (the first half second is lower), a short whir, and a long fade as it winds down
     "blend": ("~/Music/Neurocafe Milkshake", 0.00, 2.60, 0.90),
+    # (21 Nov 2026) the barista counter: brew.ogg is MADE by tools/make_cafe_brew.py until there's a recording here
+    "brew": ("~/Music/Neurocafe Coffee", 0.00, 2.60, 0.90),
 }
 SONGS = {"jazz": "Music/cafe Jazz"}                         # the café radio's second song (Cam: "another option to the lofi")
 

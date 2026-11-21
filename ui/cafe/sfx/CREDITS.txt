@@ -8,3 +8,6 @@ sizzle.ogg, clean.ogg, plate.ogg (the "eating" recording) are the café's own: C
 (3 Nov 2026), cut by tools/cut_cafe_sounds.py (it says which take of each).
 blend.ogg is Cam's milkshake recording (~/Music/Neurocafe Milkshake.mp3, 8 Nov 2026): its first 2.6 s, the blender
 spinning up and a short whir, faded out over the last 0.9 s; cut by tools/cut_cafe_sounds.py blend.
+brew.ogg is the barista counter's espresso machine (21 Nov 2026): not a recording (there wasn't one), made by
+tools/make_cafe_brew.py (pump buzz, the coffee running with a gurgle, a breath of steam, 2.6 s, faded out over 0.9 s).
+A recording at ~/Music/Neurocafe Coffee.<ext> replaces it: python3 tools/cut_cafe_sounds.py brew.
