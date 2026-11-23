@@ -18,7 +18,7 @@
 # makes a user "tester" with sudo, and as tester:
 #   1. runs install-app.sh --yes (pacman installs NeuroNet's software)
 #   2. Hyprland --verify-config on the hyprland.conf AND the hyprland.lua it made
-#   3. starts NeuroNet, NeuroPets and NeuroFarm with no screen (Qt offscreen)
+#   3. starts NeuroNet and NeuroPets with no screen (Qt offscreen)
 #      and checks each is still running 25 s later with no Python error
 #   4. --uninstall, and checks the person's config is as it was
 # Nothing on this computer is touched but Docker's own storage; the container
@@ -86,8 +86,8 @@ out=$(T Hyprland --verify-config -c /home/tester/.config/hypr/hyprland.lua 2>&1)
 echo "$out" | grep -iE "error|ok|neuronet|lua" | head -12
 ok "hyprland.lua + neuronet.lua verify (this Hyprland may not take Lua -- then it's the .conf that counts)" "$( [ $r = 0 ] && ! grep -qi "error" <<<"$out"; echo $?)"
 
-echo; echo "== 3. NeuroNet, NeuroPets and NeuroFarm start (no screen)"
-for app in neuronet neuropets neurofarm; do
+echo; echo "== 3. NeuroNet and NeuroPets start (no screen)"
+for app in neuronet neuropets; do
   log=/tmp/$app.log
   T env QT_QPA_PLATFORM=offscreen QTWEBENGINE_DISABLE_SANDBOX=1 QTWEBENGINE_CHROMIUM_FLAGS="--disable-gpu" \
     bash -c "cd ~/NeuroNet && exec python3 $app.py --gui qt" >"$log" 2>&1 &
@@ -125,7 +125,7 @@ if [ "$MODE" = --show ]; then
   [ -S "$RT/$WL" ] || { echo "No Wayland socket at $RT/$WL"; exit $rc; }
   docker commit "$NAME" neuronet-cachyos-tested >/dev/null
   echo; echo "== NeuroNet from CachyOS opens on your desktop; close its window to finish."
-  echo "   (NeuroPets: run this again with SHOW_APP=neuropets.py; NeuroFarm: neurofarm.py)"
+  echo "   (NeuroPets: run this again with SHOW_APP=neuropets.py)"
   # Its window is named NeuroNet-CachyOS: under "NeuroNet" this desktop's own
   # window rule hid it on the NeuroNet workspace, beside the real NeuroNet,
   # and the shortcuts could have picked either (2026-10-14). Drawn without

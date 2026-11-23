@@ -553,6 +553,7 @@
     const root = host.querySelector(".eb-text");
     if (!root) return;
     const full = root.textContent;
+    let squeezed = null;              // the chapter's words without spaces, made once if a highlight needs it
     for (const h of sortedHighlights(b).filter((x) => x.chapter === open.chapter)) {
       let {start, end} = h;
       /* The text is the check. If it is not where it was, it is looked for
@@ -560,9 +561,24 @@
          than painted over the wrong words. */
       if (full.slice(start, end) !== h.text) {
         const at = full.indexOf(h.text, Math.max(0, start - 2000));
-        const found = at >= 0 ? at : full.indexOf(h.text);
-        if (found < 0) continue;
-        start = found; end = found + h.text.length;
+        let found = at >= 0 ? at : full.indexOf(h.text), len = h.text.length;
+        if (found < 0) {
+          /* NeuroScribe (2026-11-21) keeps a highlight's words with the spaces
+             its own reader has, which can differ from these where a line or a
+             paragraph breaks: matched with every space left out, the nearest. */
+          if (!squeezed) {
+            squeezed = {text: "", at: []};
+            for (let i = 0; i < full.length; i++) if (!/\s/.test(full[i])) { squeezed.text += full[i]; squeezed.at.push(i); }
+          }
+          const want = String(h.text || "").replace(/\s+/g, "");
+          let best = -1;
+          for (let k = squeezed.text.indexOf(want); want && k >= 0; k = squeezed.text.indexOf(want, k + 1))
+            if (best < 0 || Math.abs(squeezed.at[k] - start) < Math.abs(squeezed.at[best] - start)) best = k;
+          if (best < 0) continue;
+          found = squeezed.at[best];
+          len = squeezed.at[best + want.length - 1] + 1 - found;
+        }
+        start = found; end = found + len;
       }
       wrapRange(root, start, end, h);
     }

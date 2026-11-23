@@ -6,7 +6,62 @@ the updater take the version from `VERSION`; a release is a git tag
 `v<version>` on the NeuroNet repository. Before tagging, run
 `python3 tools/make_starter.py` (the starter data below, 1.0.39) and push the
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
-NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
+NeuroTrain's starter library (since 1.0.193 the programs too, never athletes) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
+
+## 1.0.193 — Your MasterCook cookbooks in the Kitchen, in metric; NeuroTrain 0.7.0 (23 November 2026)
+
+Cam (23 Nov 2026): "Please recreate all the cookbooks but in metric. So not ounces please ... also place into cookery and do the recipe categories please", then "bring the neurotrain changes from the laptop to this PC then bundle with the changes we made here to the recipes then push and release".
+
+- **Kitchen → Recipes has 28 cookbooks in it**: the Cooking Fundamentals, Deluxe and Premium MasterCook collections, 7,879 recipes, decoded from their .mc2 files and converted to metric (cups are 240 ml, dry goods in grams, °C, cm; teaspoons and tablespoons stay). Each cookbook is a recipe book too.
+- A picker beside the search: everything, your own recipes, or one cookbook, with that cookbook's own categories as the chips (20 cookbooks have their own categories, Happy Hour is sorted by the spirits in each drink, 8 couldn't be read and have none). The cards come 60 at a time with Show more, and the pickers that add recipes to a book, menu or shopping list are searchable.
+- The cookbooks live in their own files beside your recipes (kitchen/library/), so a save stays small. Favourite, edit or delete one and it is kept as yours; your own recipe file is unchanged. They come to your other computers with the release (not to the public one).
+- **NeuroTrain 0.7.0** (from the laptop): paired sessions (a strength session with a conditioning session on the same day), progressive overload by time ("60 Seconds" -> "70 Seconds") and by any rep step. Its starter library now carries the programs (never athletes) and the laptop's 11 new exercises and 7 exercise guides; an exercise with no notes on a computer takes its guide.
+
+## 1.0.192 — The barista counter sounds like coffee (21 November 2026)
+
+Cam (21 Nov 2026): "Now can you fix the barista counter with coffee sounds because at the moment it has the cooking sounds."
+
+- **NeuroCafe:** starting a coffee there plays an espresso machine (the pump, the coffee running into the cup, a breath of steam, about two and a half seconds, fading out by itself) instead of the stove's sizzle. There was no coffee recording, so this one is made by `tools/make_cafe_brew.py`; a recording saved as `~/Music/Neurocafe Coffee` replaces it with `python3 tools/cut_cafe_sounds.py brew`.
+
+## 1.0.191 — Scribe hidden, NeuroFarm taken out (21 November 2026)
+
+Cam (21 Nov 2026): "Remove Neurofarm completely please".
+
+- **NeuroFarm is gone**: the game, its window, the `neurofarm` command, its launcher entry and its icon. An update
+  takes the old files out of an installed NeuroNet (system/retired.txt) and `neuronet-setup` removes
+  `~/.local/bin/neurofarm` and NeuroFarm.desktop. A farm save in the data folder is left where it is, and so are
+  the NeuroFarm notes and the art in ~/Pictures. NeuroCafe's farm across the street keeps its own copies of the
+  crop pictures, so it is unchanged.
+
+Cam (21 Nov 2026): "Now hide the scribe inside of the neuronet main app please".
+
+Cam (21 Nov 2026): "Now hide the scribe inside of the neuronet main app please".
+
+- **Scribe is switched off in NeuroNet** on each computer where NeuroScribe is built, once (Settings > Sections shown
+  can turn it back on, and that's never undone). Where NeuroScribe isn't built yet, Scribe stays until it is.
+- **Every way in opens NeuroScribe instead**: Find's notes, the dashboard, favourites, links, Multitask, the Omarchy
+  menu's notes, the bar and Super+Alt+N. A Scribe page asked for (Cells, Notebooks, Ebooks, Bookmarks, Guides,
+  the Archive, Collaboration, Fleeting) opens on the same page in NeuroScribe.
+- Nothing is deleted: the notes stay where they are, and NeuroNet keeps its jobs on them (the ship list, the notes
+  that ship with releases, exports). Boards, Scrapbook and the cover maker are in Creative, as before.
+
+## 1.0.190 — NeuroScribe, Scribe as an app of its own (21 November 2026)
+
+Cam (vote V32): "a new application ... a standalone notes app like obsidian which we already have most of the features
+already built into scribe ... The goal is to pull each application out of the combine NeuroNet Suite so they can be
+their own app completely."
+
+- **NeuroScribe 0.6.0** (Super+Alt+N, its own repository, built on each computer by `neuronet-dev pull`): your vaults
+  in place, Obsidian style. Tabs, two notes side by side, links, backlinks, graph, search, Fleeting, the Archive;
+  tables you type into while reading, a toolbar, slash commands, callouts, footnotes, block links, properties, hover
+  previews, earlier versions; the Collaboration desk; Ebooks (the same shelf, highlights and bookmarks); Cells and
+  grids (NeuroNet's own formula engine), canvases, Notebooks, Guides; focus mode and a folding side bar; Lite mode.
+  NeuroNet's Scribe stays as it is until Cam says the time has come to take it out.
+- **The team's pop-ups open in NeuroScribe** where it's built (`neuronet-open collab CODE`).
+- **Ebooks**: a highlight made in NeuroScribe is found here too, whatever spaces its words were kept with.
+- **NeuroStream**: the side bar's keys show only on the row you point at.
+- **`neuronet-dev pull`** fetches NeuroScribe the first time and builds NeuroStream and NeuroScribe whenever their code
+  changes (a log in each one's build folder).
 
 ## 1.0.189 — Music, Cinema and Media moved to NeuroStream; NeuroTrain 0.6.1 (20 November 2026)
 

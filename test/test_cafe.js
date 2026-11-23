@@ -844,15 +844,19 @@ console.log("\nSettings (PT52)\n");
        /data-fx=/.test(page) && /function resting\(\)/.test(page) && /if \(resting\(\)\) return;/.test(page)
        && /!focused && C\.prefs\(state\)\.fx !== "full"/.test(page) && /window\.NCFocus = /.test(page));
      // sound effects (3 Nov 2026, Cam: NeuroArcana's victory, click and Moonstones, and the rest the Sound Engineer picked)
-    const want = [...page.matchAll(/"(click|place|pick|no|page|bell|coin|heal|tear|keeper|rare|unlock|victory|sizzle|clean|plate|blend)"/g)].map((m) => m[1]);
+    const want = [...page.matchAll(/"(click|place|pick|no|page|bell|coin|heal|tear|keeper|rare|unlock|victory|sizzle|clean|plate|blend|brew)"/g)].map((m) => m[1]);
     ok("  sound effects in Settings; each one the page can play is in cafe/sfx; a level up is the victory, coins the Moonstones",
        /data-sfx /.test(page) && /data-sfxvol/.test(page) && want.every((n) => fs.existsSync(path.join(__dirname, "..", "ui", "cafe", "sfx", n + ".ogg")))
        && /level: "victory"/.test(page) && /coins: "coin", tip: "coin", delivered: "coin"/.test(page));
     ok("  Cam's café recordings (3 Nov): a dish sizzles, a stove scrubs clean, serving clinks a fork on a plate; nothing plays by itself (no door chime, no eating)",
        /cook: "sizzle", clean: "clean"/.test(page) && /serve: "plate"/.test(page) && !/"chime"|"eating"|function ambient/.test(page));
     ok("  the milkshake counter blends (Cam, 8 Nov): a shake started there plays the blender once, a short cut, never a loop",
-       /action === "cook" && \(before\.items\.find\(\(i\) => i\.uid === \(opts \|\| \{\}\)\.uid\) \|\| \{\}\)\.kind === "shakebar" \? "blend"/.test(page)
+       /action === "cook" && COOK_SFX\[\(before\.items\.find\(\(i\) => i\.uid === \(opts \|\| \{\}\)\.uid\) \|\| \{\}\)\.kind\] \|\| ACT_SFX\[action\]/.test(page)
+       && /shakebar: "blend"/.test(page)
        && fs.existsSync(path.join(__dirname, "..", "ui", "cafe", "sfx", "blend.ogg")) && !/loop = true|\.loop\b/.test(page.slice(page.indexOf("function sfx("), page.indexOf("function sfx(") + 700)));
+    ok("  the barista counter brews (Cam, 21 Nov): a coffee started there plays the espresso machine, not the stove's sizzle",
+       /const COOK_SFX = \{[^}]*coffeebar: "brew"/.test(page) && /brew: \.3/.test(page) && /const RANK = \[[^\]]*"brew"/.test(page)
+       && fs.existsSync(path.join(__dirname, "..", "ui", "cafe", "sfx", "brew.ogg")) && fs.existsSync(path.join(__dirname, "..", "tools", "make_cafe_brew.py")));
     ok("  the café radio has the jazz too, and the lofi and the jazz are stations of their own",
        fs.existsSync(path.join(__dirname, "..", "ui", "cafe", "music", "jazz.ogg")) && /url: "cafe\/music\/jazz\.ogg"/.test(page)
        && C.prefs(A(s, "prefs", {src: "game:jazz"}, T0).state).src === "game:jazz" && C.prefs({prefs: {src: "game:rock"}}).src === "radio");

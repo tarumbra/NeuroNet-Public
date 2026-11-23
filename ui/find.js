@@ -35,7 +35,9 @@
         out.push({kind: "page", id: p.key, name: p.name, where: p.section}));
     } catch (e) { /* the sidebar isn't ready yet */ }
     const jobs = [
-      call("kc_get_data").then((d) => ((d && d.recipes) || []).forEach((r) => r && r.id && out.push(
+      /* names and tags only (23 Nov 2026): with the cookbook library the
+         whole Kitchen is ~10 MB, far too much to fetch for a search box */
+      call("kc_recipe_index").then((list) => (Array.isArray(list) ? list : []).forEach((r) => r && r.id && out.push(
         {kind: "recipe", id: r.id, name: r.name || "Recipe", where: (r.tags || []).join(", ")}))),
       call("notes_list_tree").then((tree) => {
         const walk = (nodes, folder) => (nodes || []).forEach((n) => {

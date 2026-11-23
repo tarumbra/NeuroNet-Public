@@ -79,7 +79,7 @@ KWIN_PID=$!
 # stopped before this session's bus goes: left running, KWin aborts when the
 # bus vanishes and the host's crash notifier reports it (2026-10-14)
 finish() {
-  pkill -u "$(id -u)" -f '[n]euronet.py|[n]europets.py|[n]eurofarm.py' 2>/dev/null
+  pkill -u "$(id -u)" -f '[n]euronet.py|[n]europets.py' 2>/dev/null
   [ -n "${KGA_PID:-}" ] && kill "$KGA_PID" 2>/dev/null
   if kill -0 "$KWIN_PID" 2>/dev/null; then
     kill -TERM "$KWIN_PID"; for _ in $(seq 1 20); do kill -0 "$KWIN_PID" 2>/dev/null || break; sleep 0.25; done

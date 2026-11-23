@@ -144,7 +144,7 @@ try:
     ok("NeuroNet's Api has the lite part", '("lite", "LiteApi")' in read("neuronet.py") and "class LiteApi" in read("api/lite.py"))
     nnpy = read("neuronet.py")
     ok("NeuroNet asks for the flag before webview starts", 0 < nnpy.index("lite.apply_flags()") < nnpy.index("        import webview\n    except ImportError"))
-    for g in ("neuropets.py", "neurofarm.py", "neurocafe.py", "neuroarcana.py"):
+    for g in ("neuropets.py", "neurocafe.py", "neuroarcana.py"):
         s = read(g)
         ok(f"{g}: flag before webview, stylesheet on its window",
            "lite.apply_flags()" in s and "lite.attach(window)" in s

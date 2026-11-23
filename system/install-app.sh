@@ -1,6 +1,6 @@
 #!/bin/bash
 # install-app.sh -- NeuroNet on an Arch computer running Hyprland, WITHOUT
-# Omarchy: the app, NeuroPets, NeuroFarm and NeuroCafe, their commands, launcher entries
+# Omarchy: the app, NeuroPets and NeuroCafe, their commands, launcher entries
 # and shortcuts. No desktop widgets, bar widget, themes or Omarchy menu --
 # those are Omarchy's shell (system/install.sh does them, on Omarchy).
 #
@@ -120,11 +120,11 @@ if [ -n "$UNINSTALL" ]; then
   say "NeuroNet itself ($APP) and its data are left exactly where they are."
   if [ -z "$CHECK" ]; then ask "Go ahead?" || die "nothing was changed."; fi
   gone=( "$OURS" "$KFILE" "$KLINK" "$KAUTO" "$HOME/.local/share/applications/NeuroNet.desktop"
-         "$HOME/.local/share/applications/NeuroPets.desktop" "$HOME/.local/share/applications/NeuroFarm.desktop" "$HOME/.local/share/applications/NeuroCafe.desktop" "$HOME/.local/share/applications/NeuroArcana.desktop" "$HOME/.local/share/applications/NeuroTrain.desktop" "$HOME/.local/share/applications/NeuroTV.desktop" "$HOME/.local/share/applications/NeuroStream.desktop"
+         "$HOME/.local/share/applications/NeuroPets.desktop" "$HOME/.local/share/applications/NeuroFarm.desktop" "$HOME/.local/share/applications/NeuroCafe.desktop" "$HOME/.local/share/applications/NeuroArcana.desktop" "$HOME/.local/share/applications/NeuroTrain.desktop" "$HOME/.local/share/applications/NeuroTV.desktop" "$HOME/.local/share/applications/NeuroStream.desktop" "$HOME/.local/share/applications/NeuroScribe.desktop"
          "$HOME/.config/systemd/user/neuronet-update.service" "$HOME/.config/systemd/user/neuronet-update.timer"
          "$HOME/.config/neuronet/paths.json" )
   for c in neuronet-path neuronet-doctor neuronet-update neuronet-quick neuronet-call neuronet-music neuronet-menu \
-           neuronet-capture neuronet-snip neuronet-rotate neuronet-open neuronet-shell neuronet-desk-edit neuropets neuropets-call neurofarm neurofarm-call neurocafe neuroarcana neurotrain neurotv neurostream; do
+           neuronet-capture neuronet-snip neuronet-rotate neuronet-open neuronet-shell neuronet-desk-edit neuropets neuropets-call neurofarm neurofarm-call neurocafe neuroarcana neurotrain neurotv neurostream neuroscribe; do
     gone+=("$HOME/.local/bin/$c")
   done
   if [ -f "$MAIN" ] && grep -qxF -e "$BEGIN" "$MAIN"; then
@@ -232,7 +232,7 @@ case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *)
 BIN="$HOME/.local/bin"
   # keys (mods key), what, command -- SUPER = 64, ALT = 8
   KEYS=$(cat <<EOF
-N|Scribe|$BIN/neuronet-quick notes
+N|NeuroScribe|$BIN/neuroscribe
 B|Creative|$BIN/neuronet-quick creative
 T|NeuroTrain|$BIN/neurotrain
 W|NeuroStream|$BIN/neurostream
@@ -385,7 +385,7 @@ else
   # keys already taken here (not by NeuroNet): read from the running Hyprland
   taken=""
   if hypr_live; then
-    taken=$(hyprctl binds -j 2>/dev/null | jq -r '.[] | select((.arg // "") | test("neuronet|neuropets|neurofarm|neurocafe|neuroarcana|neurotrain|neurotv|neurostream") | not)
+    taken=$(hyprctl binds -j 2>/dev/null | jq -r '.[] | select((.arg // "") | test("neuronet|neuropets|neurofarm|neurocafe|neuroarcana|neurotrain|neurotv|neurostream|neuroscribe") | not)
               | "\(.modmask) \(.key | ascii_downcase)"' 2>/dev/null || true)
   fi
   body=""; skipped=()

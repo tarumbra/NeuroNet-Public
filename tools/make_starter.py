@@ -64,13 +64,22 @@ def build(data):
     files = {}                                  # rel path under the data folder -> source
 
     kitchen = read(os.path.join(data, "kitchen", "cookery.json"))
-    recipes = [r for r in kitchen.get("recipes", []) if isinstance(r, dict)]
+    # not the cookbook library (23 Nov 2026): Cam's own copies of MasterCook
+    # recipes (a favourite, an edit) sit in cookery.json too, flagged "library"
+    recipes = [r for r in kitchen.get("recipes", []) if isinstance(r, dict) and not r.get("library")]
     pics = {im["storedName"] for r in recipes for im in (r.get("images") or [])
             if isinstance(im, dict) and im.get("storedName")}
     for p in sorted(pics):
         src = os.path.join(data, "photos", p)
         if os.path.isfile(src):
             files["photos/" + p] = src
+    # the Kitchen's cookbook library (23 Nov 2026, Cam: "so other systems can get the update"): whole files, one per
+    # cookbook; the recipes themselves stay out of starter.json (kitchen_backend joins them in on load)
+    libdir = os.path.join(data, "kitchen", "library")
+    if os.path.isdir(libdir):
+        for n in sorted(os.listdir(libdir)):
+            if n.endswith(".json"):
+                files["kitchen/library/" + n] = os.path.join(libdir, n)
     index = read(os.path.join(data, "neuronet.json"))
     photo_entries = [dict(e, albumIds=[], folderId="") for e in index.get("photos", [])
                      if isinstance(e, dict) and e.get("storedName") in pics]

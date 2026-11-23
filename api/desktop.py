@@ -190,6 +190,42 @@ class DesktopApi:
     def notes_list_tree(self):
         return _notes.list_tree()
 
+    # -- NeuroScribe (21 Nov 2026, Cam: "hide the scribe inside of the neuronet main app") -------------------------
+    # Scribe is NeuroScribe now. Where NeuroScribe is built, NeuroNet's own Scribe pages are switched off once and
+    # every way into them (Find, the dashboard, favourites, links) hands over to NeuroScribe instead.
+    def neuroscribe_installed(self):
+        d = os.environ.get("NEUROSCRIBE_DIR") or os.path.join(os.path.expanduser("~"), "Work", "NeuroScribe")
+        ok = os.access("/usr/bin/neuroscribe", os.X_OK) or os.access(os.path.join(d, "build", "neuroscribe"), os.X_OK)
+        return {"installed": bool(ok)}
+
+    def open_neuroscribe(self, request="", path=""):
+        """request: "" (just open it) | new | daily | fleeting | collab CODE | page NAME; or path: a note in NeuroNet's
+        vault (opened there, in NeuroScribe's matching vault)."""
+        if not self.neuroscribe_installed()["installed"]:
+            return {"error": "NeuroScribe isn't on this computer."}
+        args = []
+        if path:
+            real = notes_backend.safe_vault_path(str(path), must_exist="file")
+            if not real:
+                return {"error": "That note isn't there any more."}
+            args = ["open", real]
+        elif request:
+            parts = str(request).split()
+            if parts[0] in ("new", "daily", "fleeting") and len(parts) == 1:
+                args = parts
+            elif parts[0] == "collab" and len(parts) == 2 and re.fullmatch(r"(PT|Q|B|I|N|V|C)\d+", parts[1]):
+                args = parts
+            elif parts[0] == "page" and len(parts) == 2 and re.fullmatch(r"[a-z-]{1,20}", parts[1]):
+                args = parts
+            else:
+                return {"error": "NeuroScribe doesn't know how to do that."}
+        try:
+            subprocess.Popen([os.path.join(os.path.dirname(quick_script()), "neuroscribe")] + args, start_new_session=True,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return {"ok": True}
+        except OSError as e:
+            return {"error": str(e)}
+
     # separate vaults (2026-10-12): like Money's cash books
     def notes_list_vaults(self):
         return _notes.list_vaults()

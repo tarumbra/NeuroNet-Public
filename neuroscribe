@@ -1,0 +1,58 @@
+#!/bin/bash
+# neuroscribe: open NeuroScribe (20 Nov 2026), NeuroNet's Scribe as its own Obsidian-style app. Super+Alt+N.
+#
+#     neuroscribe              open it, or bring the open one here
+#     neuroscribe toggle       the same, but if it's already on this workspace, tuck it away (special:neuroscribe)
+#     neuroscribe open PATH    open a note (a vault path, or a file inside the vault) in a new tab
+#     neuroscribe new | daily | fleeting     a new note, today's note, or the Fleeting box
+#     neuroscribe collab CODE  a Collaboration document (PT93, V32 ...): the pop-ups' Open comes here
+#     neuroscribe page NAME    a page: ebooks, ebook-marks, cells, notebooks, guides, archive, collab, search, graph
+#                              (NeuroNet hands its Scribe pages over with this, 21 Nov 2026)
+#
+# It runs the installed package (/usr/bin/neuroscribe) if there is one, otherwise the build in ~/Work/NeuroScribe;
+# where neither is there, NeuroNet's own Scribe opens instead, so Super+Alt+N always opens the notes.
+set -u
+DEV="${NEUROSCRIBE_DIR:-$HOME/Work/NeuroScribe}"
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/neuronet/neuroscribe.log"
+mkdir -p "$(dirname "$LOG")"
+BIN=""
+if [ -x /usr/bin/neuroscribe ]; then BIN=/usr/bin/neuroscribe
+elif [ -x "$DEV/build/neuroscribe" ]; then BIN="$DEV/build/neuroscribe"; fi
+if [ -z "$BIN" ]; then
+  exec neuronet-quick notes
+fi
+
+# a request for the open window (it hands itself over through its own socket, so this is quick)
+if [ "${1:-}" = open ] || [ "${1:-}" = new ] || [ "${1:-}" = daily ] || [ "${1:-}" = fleeting ] || [ "${1:-}" = collab ] || [ "${1:-}" = page ]; then
+  run=("$BIN" "$@"); command -v uwsm-app >/dev/null 2>&1 && run=(uwsm-app -- "${run[@]}")
+  setsid -f "${run[@]}" >>"$LOG" 2>&1
+  # already open: it got the request through its socket; bring its window here
+  if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    sleep 0.3
+    j=$(hyprctl clients -j 2>/dev/null | jq -c '[.[] | select(.class == "neuroscribe")][0] // empty')
+    if [ -n "$j" ]; then
+      win="address:$(jq -r .address <<<"$j")"; ws=$(jq -r .workspace.name <<<"$j"); target=$(hyprctl activeworkspace -j | jq -r .name)
+      [ "$ws" != "$target" ] && hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\" })" >/dev/null 2>&1
+      hyprctl dispatch "hl.dsp.focus({ window = \"$win\" })" >/dev/null 2>&1
+    fi
+  fi
+  exit 0
+fi
+
+if command -v hyprctl >/dev/null 2>&1 && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+  j=$(hyprctl clients -j 2>/dev/null | jq -c '[.[] | select(.class == "neuroscribe")][0] // empty')
+  if [ -n "$j" ]; then
+    win="address:$(jq -r .address <<<"$j")"; ws=$(jq -r .workspace.name <<<"$j")
+    target=$(hyprctl activeworkspace -j | jq -r .name)
+    if [ "${1:-}" = toggle ] && [ "$ws" = "$target" ]; then
+      hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"special:neuroscribe\", follow = false })" >/dev/null 2>&1
+      exit 0
+    fi
+    [ "$ws" != "$target" ] && hyprctl dispatch "hl.dsp.window.move({ window = \"$win\", workspace = \"$target\" })" >/dev/null 2>&1
+    hyprctl dispatch "hl.dsp.focus({ window = \"$win\" })" >/dev/null 2>&1
+    exit 0
+  fi
+fi
+run=("$BIN")
+if command -v uwsm-app >/dev/null 2>&1; then run=(uwsm-app -- "${run[@]}"); fi
+exec setsid -f "${run[@]}" >"$LOG" 2>&1

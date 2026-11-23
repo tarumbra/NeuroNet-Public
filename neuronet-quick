@@ -330,6 +330,13 @@ plain_full() {
   "$APP_DIR/neuronet-raise" "$CLASS"
 }
 
+# Scribe is NeuroScribe (21 Nov 2026): where it's built, Scribe's key, the bar and the menu open it rather than
+# NeuroNet's own (switched off there)
+scribe_built() { [ -x /usr/bin/neuroscribe ] || [ -x "${NEUROSCRIBE_DIR:-$HOME/Work/NeuroScribe}/build/neuroscribe" ]; }
+if [ -z "${NEURONET_QUICK_CLASS:-}" ] && { [ "$action" = notes ] || { [ "$action" = open ] && [ "${2:-}" = notes ]; }; } && scribe_built; then
+  exec "$(dirname "$(readlink -f "$0")")/neuroscribe"
+fi
+
 if ! on_hyprland && [ -z "${NEURONET_QUICK_CLASS:-}" ]; then
   case "$action" in
     dock) exit 0 ;;                      # only Hyprland opens other apps inside the popup

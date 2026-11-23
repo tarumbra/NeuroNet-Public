@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=NeuroScribe
+GenericName=Notes
+Comment=Your notes and vaults, Obsidian style
+Exec=neuroscribe
+Icon=@APP@/icons/NeuroScribe.png
+Terminal=false
+Categories=Office;TextEditor;Utility;
+Keywords=notes;scribe;vault;markdown;obsidian;fleeting;
+StartupNotify=true
+StartupWMClass=neuroscribe

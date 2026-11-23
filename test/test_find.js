@@ -74,6 +74,8 @@ async function boot({tracks = 12} = {}) {
         {id: "r2", name: "Pavlova", tags: []}], menus: [],
       shoppingLists: [], books: [], tagList: []}),
     kc_save_data: async () => ({ok: true}),
+    kc_recipe_index: async () => [{id: "r1", name: "Creme Anglaise", tags: ["Sauce"]},
+      {id: "r2", name: "Pavlova", tags: []}],
     kc_get_money: async () => ({templates: [], oneoffs: [], payments: {},
       goals: [], spendingLog: {periodStart: "", entries: []},
       calc: {bills: [], income: []}}),

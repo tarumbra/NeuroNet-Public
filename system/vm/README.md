@@ -65,7 +65,7 @@ in the lock screen after five minutes.
 ## CachyOS, app only (no Omarchy, no widgets), in Docker
 
 `system/install-app.sh` puts NeuroNet on any Arch with Hyprland -- the app,
-NeuroPets, NeuroFarm, their commands and shortcuts, no desktop widgets
+NeuroPets, NeuroCafe, their commands and shortcuts, no desktop widgets
 (Cam, 2026-10-14, thinking of moving to CachyOS). To try it on a fresh
 CachyOS without a VM:
 
