@@ -69,7 +69,7 @@ OWNED_KEYS = ("photos", "albums", "photoTagList", "folders",
 # camily.json as well. The copy already in camily.json is left exactly as
 # it was, so Cam's existing Hearth install keeps working and there is a
 # pre-split snapshot to fall back on.
-COOKERY_KEYS = ("recipes", "menus", "shoppingLists", "tagList", "books")
+COOKERY_KEYS = ("recipes", "menus", "shoppingLists", "tagList", "books", "libraryHidden")
 
 
 def app_dir():
@@ -1683,6 +1683,134 @@ def read_cookery():
 
 def write_cookery(doc):
     crux_store.atomic_write_json(cookery_file(), normalize_cookery(doc))
+
+
+# ---------------------------------------------------------------------------
+# The cookbook library (23 Nov 2026). Cam: "place into cookery" -- the 28
+# MasterCook cookbooks decoded from his USB drive, about 7,900 recipes.
+#
+# They live in <kitchen>/library/*.json, one file per cookbook, and are NOT
+# copied into cookery.json: that file is sent whole through the bridge on
+# every Kitchen save, and 10 MB of someone else's recipes riding along with
+# every favourite tick is exactly the waste the CPU/memory rule is about.
+# Loading joins them in; saving takes back out every library recipe Cam has
+# not touched. One he edits (or favourites) is kept in cookery.json as his
+# own copy, and wins over the library's from then on. One he deletes goes in
+# libraryHidden, so it stays deleted. make_starter only reads cookery.json,
+# so the cookbooks never ride along in a release either.
+# ---------------------------------------------------------------------------
+def library_dir():
+    return os.path.join(cookery_dir(), "library")
+
+
+def _library_files():
+    folder = library_dir()
+    try:
+        names = sorted(n for n in os.listdir(folder) if n.endswith(".json"))
+    except OSError:
+        return ()
+    key = []
+    for n in names:
+        try:
+            st = os.stat(os.path.join(folder, n))
+            key.append((n, st.st_size, st.st_mtime_ns))
+        except OSError:
+            pass
+    return tuple(key)
+
+
+def read_library():
+    """(recipes, books) from every cookbook file. Read fresh each time, not
+    kept: ~50 ms to read, against ~22 MB held for the whole session for the
+    odd save (measured 23 Nov 2026), and Cam's rule is memory first."""
+    recipes, books = [], []
+    folder = library_dir()
+    for n, _, _ in _library_files():
+        doc = crux_store.as_dict(crux_store.read_json(os.path.join(folder, n), {}))
+        book = crux_store.as_dict(doc.get("book"))
+        for r in crux_store.as_list(doc.get("recipes")):
+            if isinstance(r, dict) and r.get("id"):
+                recipes.append(r)
+        if book.get("id"):
+            books.append(book)
+    return recipes, books
+
+
+def library_token():
+    """Changes whenever the set of library files changes. A save only hides
+    library recipes it doesn't carry when it was loaded against the same
+    library -- an older window (or a pre-library one) can never hide them."""
+    import hashlib
+    return hashlib.sha1(repr(_library_files()).encode()).hexdigest()[:16]
+
+
+def join_library(doc):
+    """cookery.json's half plus the library, Cam's own copies winning."""
+    recipes, books = read_library()
+    if not recipes and not books:
+        return doc
+    hidden = set(x for x in doc.get("libraryHidden", []) if isinstance(x, str))
+    own_r = {r.get("id") for r in doc["recipes"] if isinstance(r, dict)}
+    own_b = {b.get("id") for b in doc["books"] if isinstance(b, dict)}
+    doc["recipes"] = doc["recipes"] + [r for r in recipes if r["id"] not in own_r and r["id"] not in hidden]
+    doc["books"] = doc["books"] + [b for b in books if b["id"] not in own_b and b["id"] not in hidden]
+    doc["libraryToken"] = library_token()
+    return doc
+
+
+def split_library(doc):
+    """The reverse of join_library, for saving: untouched library items are
+    dropped (they're still in their cookbook file), changed ones are kept as
+    Cam's own, missing ones are remembered as deleted."""
+    recipes, books = read_library()
+    if not recipes and not books:
+        return doc
+    orig = {r["id"]: r for r in recipes}
+    orig.update({b["id"]: b for b in books})
+    out = dict(doc)
+    seen = set()
+    def keep(items):
+        kept = []
+        for x in crux_store.as_list(items):
+            xid = x.get("id") if isinstance(x, dict) else None
+            if xid in orig:
+                seen.add(xid)
+                if x == orig[xid]:
+                    continue
+            kept.append(x)
+        return kept
+    out["recipes"] = keep(doc.get("recipes"))
+    out["books"] = keep(doc.get("books"))
+    if "libraryGone" in doc:
+        # Cam's own copies of library items that this save didn't carry
+        # (unchanged since the window loaded them) stay as they are on disk
+        gone = set(x for x in crux_store.as_list(doc.get("libraryGone")) if isinstance(x, str))
+        on_disk = read_cookery()
+        for key in ("recipes", "books"):
+            have = {x.get("id") for x in out[key] if isinstance(x, dict)}
+            for x in on_disk[key]:
+                xid = x.get("id") if isinstance(x, dict) else None
+                if xid in orig and xid not in have and xid not in gone and xid not in seen:
+                    out[key].append(x)
+    hidden = set(x for x in crux_store.as_list(doc.get("libraryHidden")) if isinstance(x, str))
+    same_library = bool(doc.get("libraryToken")) and doc.get("libraryToken") == library_token()
+    if "libraryGone" in doc:
+        # the window already left out what it hadn't changed (app.js
+        # saveKitchen), so absence means nothing; it says what it deleted
+        if same_library:
+            hidden |= set(x for x in crux_store.as_list(doc.get("libraryGone")) if x in orig)
+    elif same_library:
+        hidden |= set(orig) - seen
+    hidden -= seen
+    out["libraryHidden"] = sorted(hidden)
+    return out
+
+
+def recipe_index():
+    """Just names and tags, for Find -- not the whole Kitchen."""
+    doc = join_library(read_cookery())
+    return [{"id": r.get("id"), "name": r.get("name") or "Recipe", "tags": r.get("tags") or []}
+            for r in doc["recipes"] if isinstance(r, dict) and r.get("id")]
 
 
 def import_cookery_from(source_root):

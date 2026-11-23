@@ -6,7 +6,16 @@ the updater take the version from `VERSION`; a release is a git tag
 `v<version>` on the NeuroNet repository. Before tagging, run
 `python3 tools/make_starter.py` (the starter data below, 1.0.39) and push the
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
-NeuroTrain's starter library (everything but programs) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
+NeuroTrain's starter library (since 1.0.193 the programs too, never athletes) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
+
+## 1.0.193 — Your MasterCook cookbooks in the Kitchen, in metric; NeuroTrain 0.7.0 (23 November 2026)
+
+Cam (23 Nov 2026): "Please recreate all the cookbooks but in metric. So not ounces please ... also place into cookery and do the recipe categories please", then "bring the neurotrain changes from the laptop to this PC then bundle with the changes we made here to the recipes then push and release".
+
+- **Kitchen → Recipes has 28 cookbooks in it**: the Cooking Fundamentals, Deluxe and Premium MasterCook collections, 7,879 recipes, decoded from their .mc2 files and converted to metric (cups are 240 ml, dry goods in grams, °C, cm; teaspoons and tablespoons stay). Each cookbook is a recipe book too.
+- A picker beside the search: everything, your own recipes, or one cookbook, with that cookbook's own categories as the chips (20 cookbooks have their own categories, Happy Hour is sorted by the spirits in each drink, 8 couldn't be read and have none). The cards come 60 at a time with Show more, and the pickers that add recipes to a book, menu or shopping list are searchable.
+- The cookbooks live in their own files beside your recipes (kitchen/library/), so a save stays small. Favourite, edit or delete one and it is kept as yours; your own recipe file is unchanged. They come to your other computers with the release (not to the public one).
+- **NeuroTrain 0.7.0** (from the laptop): paired sessions (a strength session with a conditioning session on the same day), progressive overload by time ("60 Seconds" -> "70 Seconds") and by any rep step. Its starter library now carries the programs (never athletes) and the laptop's 11 new exercises and 7 exercise guides; an exercise with no notes on a computer takes its guide.
 
 ## 1.0.192 — The barista counter sounds like coffee (21 November 2026)
 

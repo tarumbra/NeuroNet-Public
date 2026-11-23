@@ -609,20 +609,61 @@
   /* ------------------------------------------------------------ library */
   let recQuery = "";
   let recTagFilter = null;
+  /* The cookbook library (23 Nov 2026) put ~7,900 MasterCook recipes in
+     here beside Cam's own, so: a cookbook picker ("" = everything, "own" =
+     Cam's own, else a cookbook's name), its own categories as the chips, the
+     cards painted a page at a time, and each recipe's search text worked out
+     once instead of on every key press. */
+  let recBook = "";
+  let recShown = 0;
+  const REC_PAGE = 60;
+  const recHay = new WeakMap();
+  const byName = new Intl.Collator(undefined, {sensitivity: "base"}).compare;
+  const ownTag = (r) => !r.library;
+
+  function hayOf(r) {
+    const c = recHay.get(r);
+    if (c && c.name === r.name && c.desc === r.description && c.ing === r.ingredients
+        && c.src === r.source) return c.hay;
+    /* v4 - description is rich HTML now, so search on its visible
+       text: otherwise typing "bold" would match a <b> tag, and a word
+       genuinely inside formatting wouldn't match at all. */
+    const hay = [r.name, r.source, richToText(r.description), ...r.ingredients]
+      .join(" ").toLowerCase();
+    recHay.set(r, {name: r.name, desc: r.description, ing: r.ingredients, src: r.source, hay});
+    return hay;
+  }
+
+  function inBook(r) {
+    if (!recBook) return true;
+    if (recBook === "own") return ownTag(r);
+    return r.library === recBook;
+  }
 
   function filteredRecipes() {
     const q = recQuery.trim().toLowerCase();
     return S.data.recipes.filter((r) => {
+      if (!inBook(r)) return false;
       if (recTagFilter && !r.tags.includes(recTagFilter)) return false;
       if (!q) return true;
-      /* v4 - description is rich HTML now, so search on its visible
-         text: otherwise typing "bold" would match a <b> tag, and a word
-         genuinely inside formatting wouldn't match at all. */
-      const hay = [r.name, r.source, richToText(r.description), ...r.ingredients]
-        .join(" ").toLowerCase();
-      return hay.includes(q);
+      return hayOf(r).includes(q);
     }).sort((a, b) => (!!b.favourite - !!a.favourite)
-      || String(a.name || "").localeCompare(String(b.name || ""), undefined, {sensitivity: "base"}));
+      || byName(String(a.name || ""), String(b.name || "")));
+  }
+
+  /** The cookbooks in the library, by name. */
+  function libraryBooks() {
+    const names = new Set();
+    for (const r of S.data.recipes) if (r.library) names.add(r.library);
+    return [...names].sort(byName);
+  }
+
+  /** The chips: Cam's own tags, or the chosen cookbook's own categories. */
+  function chipTags() {
+    if (!recBook || recBook === "own") return S.data.tagList;
+    const tags = new Set();
+    for (const r of S.data.recipes) if (r.library === recBook) for (const t of r.tags || []) tags.add(t);
+    return [...tags].sort(byName);
   }
 
   /* Favourites (2026-10-02). Cam: "when i favourite either from the widget
@@ -679,23 +720,42 @@
 
   function renderRecipes(page) {
     const list = filteredRecipes();
-    const favs = list.filter((r) => r.favourite), rest = list.filter((r) => !r.favourite);
+    recShown = REC_PAGE;
+    const shown = list.slice(0, recShown);
+    const favs = shown.filter((r) => r.favourite), rest = shown.filter((r) => !r.favourite);
+    const favCount = list.filter((r) => r.favourite).length;
+    const books = libraryBooks();
+    const own = S.data.recipes.filter(ownTag).length;
+    if (recBook && recBook !== "own" && !books.includes(recBook)) recBook = "";
     page.innerHTML = `
       <div class="rk">
         <header class="rk-head">
           <div>
             <h2 class="cc-page-h">Recipes</h2>
-            <p class="cc-page-sub">${S.data.recipes.length} recipe${S.data.recipes.length === 1 ? "" : "s"} in your library${
-              favs.length ? ` · ${favs.length} favourite${favs.length === 1 ? "" : "s"}` : ""}.</p>
+            <p class="cc-page-sub">${books.length
+              ? `${own} of your own · ${S.data.recipes.length - own} in ${books.length} cookbook${books.length === 1 ? "" : "s"}`
+              : `${S.data.recipes.length} recipe${S.data.recipes.length === 1 ? "" : "s"} in your library`}${
+              favCount ? ` · ${favCount} favourite${favCount === 1 ? "" : "s"}` : ""}.</p>
           </div>
           <button class="btn btn-save" id="rec-add">+ Add Recipe</button>
         </header>
         <div class="rk-tools">
-          <input class="input rk-search" id="rec-q" type="search" placeholder="Search recipes, ingredients&hellip;" value="${escA(recQuery)}">
+          <div class="rk-tools-row">
+            <input class="input rk-search" id="rec-q" type="search" placeholder="Search recipes, ingredients&hellip;" value="${escA(recQuery)}">
+            ${books.length ? `<select class="input rk-book" id="rec-book" title="Which recipes">
+              <option value="">Everything</option>
+              <option value="own" ${recBook === "own" ? "selected" : ""}>Your own recipes</option>
+              <optgroup label="Cookbooks">
+                ${books.map((b) => `<option value="${escA(b)}" ${recBook === b ? "selected" : ""}>${esc(b)}</option>`).join("")}
+              </optgroup>
+            </select>` : ""}
+          </div>
           <div class="rk-filter" id="rec-tag-filter"></div>
         </div>
+        ${list.length && (recQuery.trim() || recBook || recTagFilter) ? `<p class="stamp rk-count">${list.length} recipe${list.length === 1 ? "" : "s"}</p>` : ""}
         ${favs.length ? `<h3 class="rk-section">♥ Favourites</h3><div class="rk-grid">${favs.map(recipeCard).join("")}</div>` : ""}
         ${rest.length ? `${favs.length ? `<h3 class="rk-section">A to Z</h3>` : ""}<div class="rk-grid">${rest.map(recipeCard).join("")}</div>` : ""}
+        ${list.length > shown.length ? `<div class="rk-more-row"><button class="btn" id="rec-more">Show more (${list.length - shown.length} to go)</button></div>` : ""}
         ${list.length ? "" : `<p class="cc-empty rk-empty">${S.data.recipes.length ? "No recipes match." : "Nothing here yet — add your first recipe."}</p>`}
       </div>`;
 
@@ -705,20 +765,49 @@
       const q = page.querySelector("#rec-q");
       q.focus(); q.setSelectionRange(q.value.length, q.value.length);
     });
-    page.querySelector("#rec-add").onclick = () => { S.go("add-recipe"); S.render(); };
-    page.querySelectorAll("[data-open]").forEach((card) => {
-      card.addEventListener("click", (e) => { if (!e.target.closest("[data-fav]")) openInSplit("recipe", card.dataset.open); });
-      card.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target === card) openInSplit("recipe", card.dataset.open); });
+    const bookSel = page.querySelector("#rec-book");
+    if (bookSel) bookSel.addEventListener("change", () => {
+      recBook = bookSel.value;
+      recTagFilter = null;
+      renderRecipes(page);
     });
-    page.querySelectorAll("[data-fav]").forEach((b) => b.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const r = S.data.recipes.find((x) => x.id === b.dataset.fav);
-      if (r) toggleFavourite(r);
-    }));
+    /* Show more adds the next cards to the end of the A to Z grid, so the
+       page doesn't jump back to the top. */
+    const moreBtn = page.querySelector("#rec-more");
+    if (moreBtn) moreBtn.onclick = () => {
+      const next = list.slice(recShown, recShown + REC_PAGE * 2);
+      recShown += next.length;
+      const grids = page.querySelectorAll(".rk-grid");
+      const grid = grids[grids.length - 1];
+      const tmp = document.createElement("div");
+      tmp.innerHTML = next.map(recipeCard).join("");
+      paintCovers(tmp);
+      grid.append(...tmp.children);
+      if (recShown >= list.length) moreBtn.parentElement.remove();
+      else moreBtn.textContent = `Show more (${list.length - recShown} to go)`;
+    };
+    page.querySelector("#rec-add").onclick = () => { S.go("add-recipe"); S.render(); };
+    /* one listener for every card, painted now or by Show more */
+    const rk = page.querySelector(".rk");
+    rk.addEventListener("click", (e) => {
+      const fav = e.target.closest("[data-fav]");
+      if (fav) {
+        e.stopPropagation();
+        const r = S.data.recipes.find((x) => x.id === fav.dataset.fav);
+        if (r) toggleFavourite(r);
+        return;
+      }
+      const card = e.target.closest("[data-open]");
+      if (card) openInSplit("recipe", card.dataset.open);
+    });
+    rk.addEventListener("keydown", (e) => {
+      const card = e.target.closest && e.target.closest("[data-open]");
+      if (e.key === "Enter" && card && e.target === card) openInSplit("recipe", card.dataset.open);
+    });
     paintCovers(page);
 
     const tagBox = page.querySelector("#rec-tag-filter");
-    tagBox.innerHTML = S.data.tagList.map((t) => `
+    tagBox.innerHTML = chipTags().map((t) => `
       <button class="chip ${recTagFilter === t ? "on" : ""}"
               data-tag-filter="${escA(t)}"
               data-picked="${recTagFilter === t ? "1" : "0"}">
@@ -1332,6 +1421,10 @@
       }));
   }
 
+  const PICK_MAX = 200;
+  const pickMore = (n) => n > PICK_MAX
+    ? `<p class="stamp" style="margin:10px 0 0">Showing ${PICK_MAX} of ${n}. Type to find the rest.</p>` : "";
+
   function addRecipesDialog(book) {
     const already = new Set(book.recipeIds || []);
     const available = [...S.data.recipes]
@@ -1342,20 +1435,35 @@
         : "Add some recipes first.", "error");
       return;
     }
+    /* With the cookbook library there can be thousands to choose from, so
+       the list is searchable and paints PICK_MAX rows at most; ticks are
+       kept in `ticked`, so searching doesn't lose them. */
+    const ticked = new Set();
     const d = S.openDlg(`Add to “${book.name}”`, `
       <p class="stamp" style="margin:0 0 10px">Tick everything you want in
         the book.</p>
-      <div class="bk-chooser">
-        ${available.map((r) => `
+      <input class="input" id="bk-q" placeholder="Search recipes&hellip;"
+             style="width:100%;margin-bottom:10px">
+      <div class="bk-chooser" id="bk-choose"></div>`);
+    const paint = () => {
+      const q = d.body.querySelector("#bk-q").value.trim().toLowerCase();
+      const hits = available.filter((r) => !q || (r.name || "").toLowerCase().includes(q));
+      d.body.querySelector("#bk-choose").innerHTML = hits.slice(0, PICK_MAX).map((r) => `
           <label class="bk-choose-row">
-            <input type="checkbox" value="${escA(r.id)}">
+            <input type="checkbox" value="${escA(r.id)}" ${ticked.has(r.id) ? "checked" : ""}>
             <span style="flex:1">${esc(r.name)}</span>
-            <span class="stamp">${(r.tags || []).join(", ")}</span>
-          </label>`).join("")}
-      </div>`);
+            <span class="stamp">${esc((r.tags || []).join(", "))}</span>
+          </label>`).join("") + pickMore(hits.length);
+    };
+    d.body.querySelector("#bk-q").addEventListener("input", paint);
+    d.body.querySelector("#bk-choose").addEventListener("change", (e) => {
+      if (e.target.type !== "checkbox") return;
+      if (e.target.checked) ticked.add(e.target.value); else ticked.delete(e.target.value);
+    });
+    paint();
     d.btn("Cancel", "btn-quiet", d.close);
     d.btn("Add", "btn-save", async () => {
-      const picked = [...d.body.querySelectorAll("input:checked")].map((i) => i.value);
+      const picked = [...ticked];
       if (!picked.length) { S.toast("Nothing ticked.", "error"); return; }
       book.recipeIds = [...(book.recipeIds || []), ...picked];
       await S.save();
@@ -1694,11 +1802,11 @@
     const paintList = () => {
       const q = d.body.querySelector("#mar-q").value.trim().toLowerCase();
       const filtered = available.filter((r) => !q || r.name.toLowerCase().includes(q));
-      d.body.querySelector("#mar-list").innerHTML = filtered.map((r) => `
+      d.body.querySelector("#mar-list").innerHTML = (filtered.slice(0, PICK_MAX).map((r) => `
         <button class="picker-item" data-rid="${escA(r.id)}" style="width:100%">
           <span>${esc(r.name)}</span>
-          <span class="stamp">${r.tags.join(", ")}</span>
-        </button>`).join("") || `<p class="cc-empty">${available.length ?
+          <span class="stamp">${esc(r.tags.join(", "))}</span>
+        </button>`).join("") + pickMore(filtered.length)) || `<p class="cc-empty">${available.length ?
           "No recipes match." : "Every recipe is already in this menu."}</p>`;
       d.body.querySelectorAll("[data-rid]").forEach((btn) =>
         btn.addEventListener("click", async () => {
@@ -1832,11 +1940,11 @@
     const paintList = () => {
       const q = d.body.querySelector("#saf-q").value.trim().toLowerCase();
       const filtered = S.data.recipes.filter((r) => !q || r.name.toLowerCase().includes(q));
-      d.body.querySelector("#saf-list").innerHTML = filtered.map((r) => `
+      d.body.querySelector("#saf-list").innerHTML = (filtered.slice(0, PICK_MAX).map((r) => `
         <button class="picker-item" data-rid="${escA(r.id)}" style="width:100%">
           <span>${esc(r.name)}</span>
           <span class="stamp">${r.ingredients.length} ingredients</span>
-        </button>`).join("") || `<p class="cc-empty">No recipes match.</p>`;
+        </button>`).join("") + pickMore(filtered.length)) || `<p class="cc-empty">No recipes match.</p>`;
       d.body.querySelectorAll("[data-rid]").forEach((btn) =>
         btn.addEventListener("click", async () => {
           const r = S.data.recipes.find((x) => x.id === btn.dataset.rid);

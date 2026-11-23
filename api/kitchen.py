@@ -40,8 +40,15 @@ class KitchenApi:
             return {"error": "The Kitchen half of the app didn't load."}
         doc = kitchen_backend.normalize_data(
             kitchen_backend.crux_store.read_json(kitchen_backend.data_file(), {}))
-        doc.update(kitchen_backend.read_cookery())
+        doc.update(kitchen_backend.join_library(kitchen_backend.read_cookery()))
         return doc
+
+    def kc_recipe_index(self):
+        """Names and tags only, for Find (23 Nov 2026): the Kitchen with the
+        cookbook library is ~10 MB, too much to fetch for a search box."""
+        if kitchen_backend is None:
+            return []
+        return kitchen_backend.recipe_index()
 
     def kc_save_data(self, data):
         """Writes the two halves back to their own files, as KinCrux did:
@@ -49,7 +56,7 @@ class KitchenApi:
         if kitchen_backend is None:
             return {"error": "The Kitchen half of the app didn't load."}
         try:
-            kitchen_backend.write_cookery(data)
+            kitchen_backend.write_cookery(kitchen_backend.split_library(data))
             family = kitchen_backend.normalize_data(data)
             kitchen_backend.crux_store.atomic_write_json(
                 kitchen_backend.data_file(), family)

@@ -690,7 +690,75 @@ async function loadKitchen() {
   const got = await SS.Store.call("kc_get_data", [], "The Kitchen");
   kitchenDoc = (got && !got.error) ? got : null;
   kitchenLoaded = true;
+  snapLibrary(kitchenDoc);
   return kitchenDoc;
+}
+
+/* The cookbook library (23 Nov 2026): ~7,900 recipes from Cam's MasterCook
+   cookbooks, joined in by kc_get_data from kitchen/library/. A save must not
+   push all ~10 MB of them back through the bridge, so each library item is
+   fingerprinted as it arrives; saveKitchen sends only Cam's own items, the
+   library ones whose fingerprint changed (edited, favourited, added to a
+   book), and the ids of the ones he deleted. kitchen_backend.split_library
+   does the rest. */
+let kitchenLibPrint = null;   // id -> fingerprint, library items only
+function fingerprint(x) {
+  const s = JSON.stringify(x);
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 2654435761);
+    h2 = Math.imul(h2 ^ c, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+}
+/* Fingerprinting all ~7,900 recipes on every save took over a second, so a
+   recipe is checked the cheap way: every field's value, and each list by
+   identity and length. The Kitchen never edits a recipe's lists in place
+   (the recipe builder works on copies and saving assigns new ones, a photo
+   added or removed changes the length), so that catches every real edit.
+   Books are reordered in place (the up/down arrows swap two ids), and there
+   are only a few dozen, so they keep the full fingerprint. */
+function shallowPrint(x) {
+  const keys = Object.keys(x);
+  const s = {n: keys.length};
+  for (const k of keys) {
+    const v = x[k];
+    s[k] = Array.isArray(v) ? [v, v.length] : v;
+  }
+  return s;
+}
+function sameShallow(x, s) {
+  const keys = Object.keys(x);
+  if (keys.length !== s.n) return false;
+  for (const k of keys) {
+    const v = x[k], was = s[k];
+    if (Array.isArray(v)) { if (!Array.isArray(was) || was[0] !== v || was[1] !== v.length) return false; }
+    else if (v !== was) return false;
+  }
+  return true;
+}
+function snapLibrary(doc) {
+  kitchenLibPrint = null;
+  if (!doc || !doc.libraryToken) return;
+  kitchenLibPrint = new Map();
+  for (const x of doc.recipes || []) if (x && x.library) kitchenLibPrint.set(x.id, shallowPrint(x));
+  for (const x of doc.books || []) if (x && x.library) kitchenLibPrint.set(x.id, fingerprint(x));
+}
+function kitchenPayload(doc) {
+  if (!kitchenLibPrint) return doc;
+  const present = new Set();
+  const pick = (items, isBook) => (items || []).filter((x) => {
+    if (!x || !kitchenLibPrint.has(x.id)) return true;
+    present.add(x.id);
+    const was = kitchenLibPrint.get(x.id);
+    return isBook ? fingerprint(x) !== was : !sameShallow(x, was);
+  });
+  const out = {...doc, recipes: pick(doc.recipes, false), books: pick(doc.books, true)};
+  out.libraryGone = [...kitchenLibPrint.keys()].filter((id) => !present.has(id));
+  return out;
 }
 
 /* A recipe book's printed document by id, for NeuroNet's reader (the desktop
@@ -707,7 +775,7 @@ SS.KitchenBooks = {
 
 async function saveKitchen() {
   if (!kitchenDoc) return;
-  const res = await SS.Store.call("kc_save_data", [kitchenDoc], "Saving the Kitchen");
+  const res = await SS.Store.call("kc_save_data", [kitchenPayload(kitchenDoc)], "Saving the Kitchen");
   if (res && res.error) toast(res.error, "error");
 }
 
