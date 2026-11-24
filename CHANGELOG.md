@@ -8,6 +8,14 @@ the updater take the version from `VERSION`; a release is a git tag
 `starter-files-…` tag it names along with the release. Then `python3 tools/make_public.py` makes the public release: the same version without any of Cam's data (the starter), as one commit in its own repository (tools/public.json names it).
 NeuroTrain's starter library (since 1.0.193 the programs too, never athletes) is made the same way: `node ~/Work/NeuroTrain/tools/make_library.js`, then commit `library/starter.json` in NeuroTrain before `tools/push_apps.sh`.
 
+## 1.0.194 — NeuroTrain 0.8.0: flexible programs (24 November 2026)
+
+Cam (24 Nov 2026): "an option called flexible which doesnt add a date to the sessions. This will allow a member to complete them on anyday."
+
+- **NeuroTrain 0.8.0**: a program can be **Flexible** (New program, its Settings, or Tools). Its sessions have no dates or weekdays, on screen and in the PDF, and keep their order (Session 1 to 4 each week). The start date is kept, so switching it off brings every date back. Recording offers the next session not done yet, and nothing is overdue by date.
+- NeuroTrain's starter library has the two new flexible programs (Kathryn's Gym and Home programs).
+- NeuroNet itself and the starter data are the same as 1.0.193.
+
 ## 1.0.193 — Your MasterCook cookbooks in the Kitchen, in metric; NeuroTrain 0.7.0 (23 November 2026)
 
 Cam (23 Nov 2026): "Please recreate all the cookbooks but in metric. So not ounces please ... also place into cookery and do the recipe categories please", then "bring the neurotrain changes from the laptop to this PC then bundle with the changes we made here to the recipes then push and release".
